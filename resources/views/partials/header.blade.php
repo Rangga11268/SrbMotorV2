@@ -1,0 +1,58 @@
+<header class="header">
+    <div id="menu-btn" class="fas fa-bars"></div>
+
+    <a href="{{ url('/') }}" class="logo">
+        <img src="{{ asset('OldWeb/assets/icon/logo trans.png') }}" alt="SRB Motors Logo">
+        SRB<span>Motors</span>
+    </a>
+
+    <nav class="navbar">
+        <a href="{{ url('/') }}#home">home</a>
+        <a href="{{ url('/') }}#advantages">keunggulan</a>
+        <a href="{{ url('/') }}#popular-motors">motor populer</a>
+        <a href="{{ url('/') }}#about-us">tentang kami</a>
+        <a href="{{ url('/') }}#motors-gallery">galeri</a>
+        <a href="{{ url('/') }}#tips-tricks">tips & trik</a>
+        <a href="{{ url('/') }}#contact">kontak</a>
+    </nav>
+
+    <div id="auth-btn">
+        @auth
+            <div class="dropdown">
+                <button class="btn login login-text-btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ Auth::user()->name }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    @if(Auth::user()->isAdmin())
+                        <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Admin Panel</a></li>
+                    @endif
+                    <li><a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </ul>
+            </div>
+        @else
+            <a href="{{ route('login') }}" class="btn login login-text-btn">login</a>
+            <i class="far fa-user login-icon-btn"></i>
+        @endauth
+    </div>
+</header>
+
+<div class="login-form-container">
+    <span id="close-login-form" class="fas fa-times"></span>
+
+    <form action="">
+        <h3>user login</h3>
+        <input type="email" placeholder="email" class="box" />
+        <input type="password" placeholder="password" class="box" />
+        <p>forget your password <a href="#">click here</a></p>
+        <input type="submit" value="login" class="btn" />
+        <p>or login with</p>
+        <div class="buttons">
+            <a href="#" class="btn"> google </a>
+            <a href="#" class="btn"> facebook </a>
+        </div>
+        <p>don't have an account <a href="#">create one</a></p>
+    </form>
+</div>
