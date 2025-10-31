@@ -4,9 +4,21 @@
 ## NEXT
 Role owner / admin / user biasa
 fitur forgot password (notes untuk development jadi tidak menggunakan third party) dan profil management
+fix responsive admin
+tambah crud lagi di admin atau fitur baru
 
-fix login regis logo 
-percantik dashboard admin
+## Recent Progress
+- Fixed navbar height issue making it less tall and more proportionally sized
+- Organized frontend assets by moving CSS, JS, and image files to proper Laravel directories
+- Integrated custom CSS with Tailwind CSS through Vite build process
+- Fixed login button size in navbar to match other navbar elements
+- Fixed responsive navbar mobile menu where login button icon wasn't clickable
+- Fixed login and register form logo positioning to prevent it from being cut off
+- Improved password toggle icon positioning in login and register forms
+- Made navbar height consistent across all pages (homepage, login, register)
+- Translated login and register pages to Indonesian
+- Completely redesigned admin dashboard with improved styling
+- Added dropdown menu for "View Website" and "Logout" options in admin navbar
 
 ## Overview
 

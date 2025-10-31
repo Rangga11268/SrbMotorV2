@@ -3,74 +3,138 @@
 @section('title', 'Motor Details')
 
 @section('content')
-<div class="container py-5">
-    <h1 class="text-center mb-5">Motor Details</h1>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Motor Details</h1>
+            <p class="text-muted mb-0">View information for {{ $motor->name }}</p>
+        </div>
+        <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Motors
+        </a>
+    </div>
     
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{{ $motor->name }}</h3>
-                </div>
-                <div class="card-body">
-                    <div class="text-center mb-3">
-                        <img src="{{ asset('storage/' . $motor->image_path) }}" alt="{{ $motor->name }}" class="img-fluid" style="max-height: 300px;">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-5 mb-4 mb-md-0">
+                            <div class="d-flex flex-column align-items-center">
+                                <img src="{{ asset('storage/' . $motor->image_path) }}" 
+                                     alt="{{ $motor->name }}" 
+                                     class="img-fluid rounded shadow-sm" 
+                                     style="max-height: 300px; object-fit: cover;">
+                                
+                                <div class="mt-3 text-center">
+                                    <h4 class="mb-1">{{ $motor->name }}</h4>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <span class="badge bg-primary bg-opacity-10 text-primary">{{ $motor->brand }}</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success">{{ $motor->type }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-7">
+                            <div class="ps-md-4">
+                                <h5 class="mb-4 pb-2 border-bottom">Motor Information</h5>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <p class="text-muted mb-1">Brand</p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p class="mb-0">{{ $motor->brand }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <p class="text-muted mb-1">Model</p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p class="mb-0">{{ $motor->model }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <p class="text-muted mb-1">Type</p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p class="mb-0">{{ $motor->type }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <p class="text-muted mb-1">Year</p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p class="mb-0">{{ $motor->year }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <p class="text-muted mb-1">Price</p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p class="mb-0 fw-bold">Rp {{ number_format($motor->price, 0, ',', '.') }}</p>
+                                    </div>
+                                </div>
+                                
+                                @if($motor->details)
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <p class="text-muted mb-1">Details</p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p class="mb-0">{{ $motor->details }}</p>
+                                    </div>
+                                </div>
+                                @endif
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <p class="text-muted mb-1">Created At</p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p class="mb-0">{{ $motor->created_at ? $motor->created_at->format('M d, Y H:i') : 'N/A' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <table class="table table-borderless">
-                        <tr>
-                            <td><strong>Brand:</strong></td>
-                            <td>{{ $motor->brand }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Model:</strong></td>
-                            <td>{{ $motor->model }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Price:</strong></td>
-                            <td>Rp {{ number_format($motor->price, 0, ',', '.') }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Year:</strong></td>
-                            <td>{{ $motor->year }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Type:</strong></td>
-                            <td>{{ $motor->type }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Details:</strong></td>
-                            <td>{{ $motor->details }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Specifications:</strong></td>
-                            <td>
-                                @if($motor->specifications)
-                                    @if(is_array($motor->specifications))
-                                        <ul>
-                                            @foreach($motor->specifications as $key => $value)
-                                                <li><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @else
-                                        {{ $motor->specifications }}
-                                    @endif
-                                @else
-                                    No specifications available
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Created At:</strong></td>
-                            <td>{{ $motor->created_at ? $motor->created_at->format('M d, Y H:i') : 'N/A' }}</td>
-                        </tr>
-                    </table>
-                    
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ route('admin.motors.index') }}" class="btn btn-secondary">Back to List</a>
-                        <div>
-                            <a href="{{ route('admin.motors.edit', $motor) }}" class="btn btn-warning">Edit</a>
+                    @if($motor->specifications)
+                    <div class="mt-4 pt-4 border-top">
+                        <h5 class="mb-3">Specifications</h5>
+                        <div class="row">
+                            @if(is_array($motor->specifications))
+                                @foreach($motor->specifications as $key => $value)
+                                <div class="col-md-6 mb-2">
+                                    <span class="text-muted">{{ ucfirst(str_replace('_', ' ', $key)) }}:</span> 
+                                    <span class="fw-medium">{{ $value }}</span>
+                                </div>
+                                @endforeach
+                            @else
+                                <div class="col-12">
+                                    <pre class="bg-light p-3 rounded">{{ $motor->specifications }}</pre>
+                                </div>
+                            @endif
                         </div>
+                    </div>
+                    @endif
+                    
+                    <div class="d-flex justify-content-end gap-2 mt-5">
+                        <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                        <a href="{{ route('admin.motors.edit', $motor) }}" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Edit Motor
+                        </a>
                     </div>
                 </div>
             </div>

@@ -9,60 +9,81 @@ use Illuminate\Support\Str;
 @section('content')
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0" style="color: #043680;">Admin Dashboard</h1>
-        <div class="text-muted">Welcome back, {{ Auth::user()->name }}!</div>
+        <div>
+            <h1 class="h3 mb-0">Admin Dashboard</h1>
+            <p class="text-muted mb-0">Welcome back, {{ Auth::user()->name }}!</p>
+        </div>
+        <div class="text-end">
+            <p class="mb-0">Last updated: <span class="text-muted">{{ now()->format('M d, Y H:i') }}</span></p>
+        </div>
     </div>
     
     <!-- Stats -->
     <div class="row mb-4">
         <div class="col-md-6 col-lg-3 mb-3">
-            <div class="card border-0 shadow-sm h-100" style="background-color: #f8f9fa;">
-                <div class="card-body text-center">
-                    <div class="d-flex align-items-center mb-2" style="color: #043680;">
-                        <i class="fas fa-motorcycle fa-2x me-2"></i>
-                        <h5 class="card-title mb-0">Motors</h5>
+            <div class="card bg-primary text-white h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-1 opacity-75">Motors</h6>
+                            <h3 class="card-title mb-0">{{ $motorsCount }}</h3>
+                        </div>
+                        <div class="bg-primary bg-opacity-20 p-3 rounded-circle">
+                            <i class="fas fa-motorcycle fa-2x"></i>
+                        </div>
                     </div>
-                    <h2 class="text-primary mb-0">{{ $motorsCount }}</h2>
-                    <a href="{{ route('admin.motors.index') }}" class="btn btn-sm mt-2" style="background-color: #d6eaf8; color: #043680; border: none;">Manage</a>
+                    <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-light btn-sm mt-3">Manage Motors</a>
                 </div>
             </div>
         </div>
         
         <div class="col-md-6 col-lg-3 mb-3">
-            <div class="card border-0 shadow-sm h-100" style="background-color: #f8f9fa;">
-                <div class="card-body text-center">
-                    <div class="d-flex align-items-center mb-2" style="color: #043680;">
-                        <i class="fas fa-envelope fa-2x me-2"></i>
-                        <h5 class="card-title mb-0">Messages</h5>
+            <div class="card bg-success text-white h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-1 opacity-75">Messages</h6>
+                            <h3 class="card-title mb-0">{{ $contactMessagesCount }}</h3>
+                        </div>
+                        <div class="bg-success bg-opacity-20 p-3 rounded-circle">
+                            <i class="fas fa-envelope fa-2x"></i>
+                        </div>
                     </div>
-                    <h2 class="text-primary mb-0">{{ $contactMessagesCount }}</h2>
-                    <a href="{{ route('admin.contact.index') }}" class="btn btn-sm mt-2" style="background-color: #d6eaf8; color: #043680; border: none;">View</a>
+                    <a href="{{ route('admin.contact.index') }}" class="btn btn-outline-light btn-sm mt-3">View Messages</a>
                 </div>
             </div>
         </div>
         
         <div class="col-md-6 col-lg-3 mb-3">
-            <div class="card border-0 shadow-sm h-100" style="background-color: #f8f9fa;">
-                <div class="card-body text-center">
-                    <div class="d-flex align-items-center mb-2" style="color: #043680;">
-                        <i class="fas fa-users fa-2x me-2"></i>
-                        <h5 class="card-title mb-0">Users</h5>
+            <div class="card bg-info text-white h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-1 opacity-75">Users</h6>
+                            <h3 class="card-title mb-0">{{ $usersCount ?? \App\Models\User::count() }}</h3>
+                        </div>
+                        <div class="bg-info bg-opacity-20 p-3 rounded-circle">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
                     </div>
-                    <h2 class="text-primary mb-0">{{ $usersCount ?? \App\Models\User::count() }}</h2>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-sm mt-2" style="background-color: #d6eaf8; color: #043680; border: none;">Manage</a>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-light btn-sm mt-3">Manage Users</a>
                 </div>
             </div>
         </div>
         
         <div class="col-md-6 col-lg-3 mb-3">
-            <div class="card border-0 shadow-sm h-100" style="background-color: #f8f9fa;">
-                <div class="card-body text-center">
-                    <div class="d-flex align-items-center mb-2" style="color: #043680;">
-                        <i class="fas fa-user-shield fa-2x me-2"></i>
-                        <h5 class="card-title mb-0">Admins</h5>
+            <div class="card bg-warning text-dark h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-1 opacity-75">Admins</h6>
+                            <h3 class="card-title mb-0">{{ \App\Models\User::where('role', 'admin')->count() }}</h3>
+                        </div>
+                        <div class="bg-warning bg-opacity-20 p-3 rounded-circle">
+                            <i class="fas fa-user-shield fa-2x"></i>
+                        </div>
                     </div>
-                    <h2 class="text-primary mb-0">{{ \App\Models\User::where('role', 'admin')->count() }}</h2>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-sm mt-2" style="background-color: #d6eaf8; color: #043680; border: none;">Manage</a>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-dark btn-sm mt-3">Manage Admins</a>
                 </div>
             </div>
         </div>
@@ -71,20 +92,30 @@ use Illuminate\Support\Str;
     <!-- Recent Items -->
     <div class="row">
         <div class="col-lg-4 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header" style="background: #043680; color: white; border: none;">
-                    <h5 class="card-title mb-0"><i class="fas fa-motorcycle me-2"></i>Recent Motors</h5>
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-transparent border-bottom">
+                    <h5 class="card-title mb-0"><i class="fas fa-motorcycle me-2 text-primary"></i>Recent Motors</h5>
                 </div>
                 <div class="card-body p-0">
                     @if($recentMotors->count() > 0)
                         <div class="list-group list-group-flush">
                             @foreach($recentMotors as $motor)
                                 <a href="{{ route('admin.motors.show', $motor) }}" class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">{{ Str::limit($motor->name, 20) }}</h6>
-                                        <small class="text-muted">{{ $motor->created_at->diffForHumans() }}</small>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            <img src="{{ $motor->image_path ? asset('storage/' . $motor->image_path) : asset('assets/icon/logo trans.png') }}" 
+                                                 alt="{{ $motor->name }}" 
+                                                 class="rounded" 
+                                                 style="width: 50px; height: 50px; object-fit: cover;">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="mb-1">{{ Str::limit($motor->name, 20) }}</h6>
+                                                <small class="text-muted">{{ $motor->created_at->diffForHumans() }}</small>
+                                            </div>
+                                            <p class="mb-0 text-muted">Rp {{ number_format($motor->price, 0, ',', '.') }}</p>
+                                        </div>
                                     </div>
-                                    <p class="mb-1 text-muted">Rp {{ number_format($motor->price, 0, ',', '.') }}</p>
                                 </a>
                             @endforeach
                         </div>
@@ -96,9 +127,9 @@ use Illuminate\Support\Str;
         </div>
         
         <div class="col-lg-4 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header" style="background: #043680; color: white; border: none;">
-                    <h5 class="card-title mb-0"><i class="fas fa-envelope me-2"></i>Recent Messages</h5>
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-transparent border-bottom">
+                    <h5 class="card-title mb-0"><i class="fas fa-envelope me-2 text-success"></i>Recent Messages</h5>
                 </div>
                 <div class="card-body p-0">
                     @if($recentContactMessages->count() > 0)
@@ -121,9 +152,9 @@ use Illuminate\Support\Str;
         </div>
         
         <div class="col-lg-4 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header" style="background: #043680; color: white; border: none;">
-                    <h5 class="card-title mb-0"><i class="fas fa-users me-2"></i>Recent Users</h5>
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-transparent border-bottom">
+                    <h5 class="card-title mb-0"><i class="fas fa-users me-2 text-info"></i>Recent Users</h5>
                 </div>
                 <div class="card-body p-0">
                     @if($recentUsers->count() > 0)
