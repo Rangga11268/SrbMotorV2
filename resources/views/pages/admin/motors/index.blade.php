@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
-@section('title', 'Motors')
+@section('title', 'Motor')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h1 class="h3 mb-0">Motor Management</h1>
-            <p class="text-muted mb-0 d-md-none d-block">Manage all motors in the system</p>
+            <h1 class="h3 mb-0">Manajemen Motor</h1>
+            <p class="text-muted mb-0 d-md-none d-block">Kelola semua motor di sistem</p>
         </div>
         <a href="{{ route('admin.motors.create') }}" class="btn btn-primary w-md-auto w-100">
-            <i class="fas fa-plus me-2"></i>Add New Motor
+            <i class="fas fa-plus me-2"></i>Tambah Motor Baru
         </a>
     </div>
     
@@ -18,17 +18,17 @@
         <div class="card-body">
             <form method="GET" class="row g-3">
                 <div class="col-12 col-md-6">
-                    <label for="search" class="form-label">Search Motors</label>
-                    <input type="text" name="search" class="form-control" placeholder="Search by name, brand or type..." value="{{ request('search') }}">
+                    <label for="search" class="form-label">Cari Motor</label>
+                    <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nama, merek atau tipe..." value="{{ request('search') }}">
                 </div>
                 <div class="col-6 col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-search me-1"></i> Search
+                        <i class="fas fa-search me-1"></i> Cari
                     </button>
                 </div>
                 <div class="col-6 col-md-3 d-flex align-items-end">
                     <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary w-100">
-                        <i class="fas fa-sync-alt me-1"></i> Reset
+                        <i class="fas fa-sync-alt me-1"></i> Atur Ulang
                     </a>
                 </div>
             </form>
@@ -42,12 +42,12 @@
                     <thead class="table-light">
                         <tr>
                             <th class="border-top-0" style="width: 5%">ID</th>
-                            <th class="border-top-0" style="width: 20%">Name</th>
-                            <th class="border-top-0" style="width: 10%" class="d-none d-lg-table-cell">Brand</th>
-                            <th class="border-top-0" style="width: 10%" class="d-none d-xl-table-cell">Price</th>
-                            <th class="border-top-0" style="width: 8%" class="d-none d-lg-table-cell">Year</th>
-                            <th class="border-top-0" style="width: 12%" class="d-none d-xl-table-cell">Type</th>
-                            <th class="border-top-0" style="width: 35%">Actions</th>
+                            <th class="border-top-0" style="width: 20%">Nama</th>
+                            <th class="border-top-0" style="width: 10%" class="d-none d-lg-table-cell">Merek</th>
+                            <th class="border-top-0" style="width: 10%" class="d-none d-xl-table-cell">Harga</th>
+                            <th class="border-top-0" style="width: 8%" class="d-none d-lg-table-cell">Tahun</th>
+                            <th class="border-top-0" style="width: 12%" class="d-none d-xl-table-cell">Tipe</th>
+                            <th class="border-top-0" style="width: 35%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,8 +77,8 @@
                             </td>
                             <td>
                                 <div class="d-flex flex-md-row flex-column gap-md-2 gap-2">
-                                    <a href="{{ route('admin.motors.show', $motor) }}" class="btn btn-sm btn-outline-info flex-fill" title="View">
-                                        <i class="fas fa-eye d-none d-md-inline me-1"></i><span class="d-md-none d-inline">View</span>
+                                    <a href="{{ route('admin.motors.show', $motor) }}" class="btn btn-sm btn-outline-info flex-fill" title="Lihat">
+                                        <i class="fas fa-eye d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Lihat</span>
                                     </a>
                                     <a href="{{ route('admin.motors.edit', $motor) }}" class="btn btn-sm btn-outline-warning flex-fill" title="Edit">
                                         <i class="fas fa-edit d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Edit</span>
@@ -86,8 +86,8 @@
                                     <form action="{{ route('admin.motors.destroy', ['motor' => $motor->id]) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill" title="Delete" onclick="return confirm('Are you sure you want to delete this motor?')">
-                                            <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Delete</span>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus motor ini?')">
+                                            <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Hapus</span>
                                         </button>
                                     </form>
                                 </div>
@@ -98,8 +98,8 @@
                             <td colspan="7" class="text-center py-4">
                                 <div class="empty-state">
                                     <i class="fas fa-motorcycle fa-3x text-muted mb-3"></i>
-                                    <h5 class="text-muted">No motors found</h5>
-                                    <p class="text-muted mb-0">Try changing your search or add a new motor</p>
+                                    <h5 class="text-muted">Tidak ada motor ditemukan</h5>
+                                    <p class="text-muted mb-0">Coba ubah pencarian atau tambahkan motor baru</p>
                                 </div>
                             </td>
                         </tr>
@@ -112,7 +112,7 @@
             <div class="card-footer bg-white">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
                     <div class="mb-2 mb-md-0">
-                        Showing {{ $motors->firstItem() ? $motors->firstItem() : 0 }} to {{ $motors->lastItem() }} of {{ $motors->total() }} results
+                        Menampilkan {{ $motors->firstItem() ? $motors->firstItem() : 0 }} hingga {{ $motors->lastItem() }} dari {{ $motors->total() }} hasil
                     </div>
                     {{ $motors->appends(['search' => request('search')])->links() }}
                 </div>

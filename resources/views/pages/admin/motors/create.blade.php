@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
-@section('title', 'Create Motor')
+@section('title', 'Tambah Motor')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h1 class="h3 mb-0">Create New Motor</h1>
-            <p class="text-muted mb-0 d-md-none d-block">Add a new motorcycle to the system</p>
+            <h1 class="h3 mb-0">Tambah Motor Baru</h1>
+            <p class="text-muted mb-0 d-md-none d-block">Tambahkan sepeda motor baru ke sistem</p>
         </div>
         <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary w-md-auto w-100">
-            <i class="fas fa-arrow-left me-2"></i>Back to Motors
+            <i class="fas fa-arrow-left me-2"></i>Kembali ke Motor
         </a>
     </div>
     
@@ -22,13 +22,13 @@
                         @csrf
                         
                         <div class="mb-4">
-                            <h5 class="card-title">Motor Details</h5>
+                            <h5 class="card-title">Detail Motor</h5>
                             <hr>
                         </div>
                         
                         <div class="row mb-3">
                             <div class="col-12 col-md-6 mb-3">
-                                <label for="name" class="form-label">Motor Name <span class="text-danger">*</span></label>
+                                <label for="name" class="form-label">Nama Motor <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -46,9 +46,9 @@
                         
                         <div class="row mb-3">
                             <div class="col-12 col-md-4 mb-3">
-                                <label for="brand" class="form-label">Brand <span class="text-danger">*</span></label>
+                                <label for="brand" class="form-label">Merek <span class="text-danger">*</span></label>
                                 <select class="form-select @error('brand') is-invalid @enderror" id="brand" name="brand" required>
-                                    <option value="">Select Brand</option>
+                                    <option value="">Pilih Merek</option>
                                     <option value="Honda" {{ old('brand') == 'Honda' ? 'selected' : '' }}>Honda</option>
                                     <option value="Yamaha" {{ old('brand') == 'Yamaha' ? 'selected' : '' }}>Yamaha</option>
                                 </select>
@@ -58,7 +58,7 @@
                             </div>
                             
                             <div class="col-12 col-md-4 mb-3">
-                                <label for="type" class="form-label">Type</label>
+                                <label for="type" class="form-label">Tipe</label>
                                 <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type" value="{{ old('type') }}">
                                 @error('type')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -66,7 +66,7 @@
                             </div>
                             
                             <div class="col-12 col-md-4 mb-3">
-                                <label for="year" class="form-label">Year</label>
+                                <label for="year" class="form-label">Tahun</label>
                                 <input type="number" class="form-control @error('year') is-invalid @enderror" id="year" name="year" value="{{ old('year') }}" min="1900" max="2100">
                                 @error('year')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -76,7 +76,7 @@
                         
                         <div class="row mb-3">
                             <div class="col-12 col-md-6 mb-3">
-                                <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+                                <label for="price" class="form-label">Harga <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}" min="0" step="0.01" required>
@@ -88,20 +88,20 @@
                         </div>
                         
                         <div class="mb-4">
-                            <h5 class="card-title mt-4">Specifications & Details</h5>
+                            <h5 class="card-title mt-4">Spesifikasi & Detail</h5>
                             <hr>
                         </div>
                         
                         <div class="row mb-3">
                             <div class="col-12 col-md-6">
-                                <label for="engine_type" class="form-label">Engine Type</label>
+                                <label for="engine_type" class="form-label">Tipe Mesin</label>
                                 <input type="text" class="form-control @error('engine_type') is-invalid @enderror" id="engine_type" name="specifications[engine_type]" value="{{ old('specifications.engine_type') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 col-md-6">
-                                <label for="engine_size" class="form-label">Engine Size</label>
+                                <label for="engine_size" class="form-label">Ukuran Mesin</label>
                                 <input type="text" class="form-control @error('engine_size') is-invalid @enderror" id="engine_size" name="specifications[engine_size]" value="{{ old('specifications.engine_size') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -111,14 +111,14 @@
                         
                         <div class="row mb-3">
                             <div class="col-12 col-md-6">
-                                <label for="fuel_system" class="form-label">Fuel System</label>
+                                <label for="fuel_system" class="form-label">Sistem Bahan Bakar</label>
                                 <input type="text" class="form-control @error('fuel_system') is-invalid @enderror" id="fuel_system" name="specifications[fuel_system]" value="{{ old('specifications.fuel_system') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 col-md-6">
-                                <label for="transmission" class="form-label">Transmission</label>
+                                <label for="transmission" class="form-label">Transmisi</label>
                                 <input type="text" class="form-control @error('transmission') is-invalid @enderror" id="transmission" name="specifications[transmission]" value="{{ old('specifications.transmission') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -128,14 +128,14 @@
                         
                         <div class="row mb-3">
                             <div class="col-12 col-md-6">
-                                <label for="max_power" class="form-label">Max Power</label>
+                                <label for="max_power" class="form-label">Daya Maksimal</label>
                                 <input type="text" class="form-control @error('max_power') is-invalid @enderror" id="max_power" name="specifications[max_power]" value="{{ old('specifications.max_power') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 col-md-6">
-                                <label for="max_torque" class="form-label">Max Torque</label>
+                                <label for="max_torque" class="form-label">Torsi Maksimal</label>
                                 <input type="text" class="form-control @error('max_torque') is-invalid @enderror" id="max_torque" name="specifications[max_torque]" value="{{ old('specifications.max_torque') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -144,16 +144,16 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="additional_specs" class="form-label">Additional Specifications</label>
+                            <label for="additional_specs" class="form-label">Spesifikasi Tambahan</label>
                             <textarea class="form-control @error('additional_specs') is-invalid @enderror" id="additional_specs" name="specifications[additional_specs]" rows="2">{{ old('specifications.additional_specs') }}</textarea>
-                            <div class="form-text">Other specifications not covered above</div>
+                            <div class="form-text">Spesifikasi lain yang tidak tercantum di atas</div>
                             @error('specifications')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         
                         <div class="mb-3">
-                            <label for="details" class="form-label">Details</label>
+                            <label for="details" class="form-label">Detail</label>
                             <textarea class="form-control @error('details') is-invalid @enderror" id="details" name="details" rows="3">{{ old('details') }}</textarea>
                             @error('details')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -161,23 +161,23 @@
                         </div>
                         
                         <div class="mb-4">
-                            <h5 class="card-title mt-4">Motor Image</h5>
+                            <h5 class="card-title mt-4">Gambar Motor</h5>
                             <hr>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="image" class="form-label">Motor Image <span class="text-danger">*</span></label>
+                            <label for="image" class="form-label">Gambar Motor <span class="text-danger">*</span></label>
                             <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*" required>
-                            <div class="form-text">Upload a clear image of the motorcycle</div>
+                            <div class="form-text">Unggah gambar yang jelas dari sepeda motor</div>
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         
                         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-5">
-                            <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary w-100 w-md-auto">Cancel</a>
+                            <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary w-100 w-md-auto">Batal</a>
                             <button type="submit" class="btn btn-primary w-100 w-md-auto px-4">
-                                <i class="fas fa-save me-2"></i>Create Motor
+                                <i class="fas fa-save me-2"></i>Tambah Motor
                             </button>
                         </div>
                     </form>

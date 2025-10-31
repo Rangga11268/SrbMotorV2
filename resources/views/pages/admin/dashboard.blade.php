@@ -4,17 +4,17 @@ use Illuminate\Support\Str;
 
 @extends('layouts.admin')
 
-@section('title', 'Dashboard')
+@section('title', 'Dasbor')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h1 class="h3 mb-0">Admin Dashboard</h1>
-            <p class="text-muted mb-0 d-md-none d-block">Welcome back, {{ Auth::user()->name }}!</p>
+            <h1 class="h3 mb-0">Dasbor Admin</h1>
+            <p class="text-muted mb-0 d-md-none d-block">Selamat datang kembali, {{ Auth::user()->name }}!</p>
         </div>
         <div class="text-md-end text-center w-100 w-md-auto">
-            <p class="mb-0">Last updated: <span class="text-muted">{{ now()->format('M d, Y H:i') }}</span></p>
+            <p class="mb-0">Terakhir diperbarui: <span class="text-muted">{{ now()->format('d M Y H:i') }}</span></p>
         </div>
     </div>
     
@@ -25,14 +25,14 @@ use Illuminate\Support\Str;
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-subtitle mb-1 opacity-75">Motors</h6>
+                            <h6 class="card-subtitle mb-1 opacity-75">Motor</h6>
                             <h3 class="card-title mb-0">{{ $motorsCount }}</h3>
                         </div>
                         <div class="bg-primary bg-opacity-20 p-3 rounded-circle">
                             <i class="fas fa-motorcycle fa-2x"></i>
                         </div>
                     </div>
-                    <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-light btn-sm mt-3">Manage Motors</a>
+                    <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-light btn-sm mt-3">Kelola Motor</a>
                 </div>
             </div>
         </div>
@@ -42,14 +42,14 @@ use Illuminate\Support\Str;
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-subtitle mb-1 opacity-75">Messages</h6>
+                            <h6 class="card-subtitle mb-1 opacity-75">Pesan</h6>
                             <h3 class="card-title mb-0">{{ $contactMessagesCount }}</h3>
                         </div>
                         <div class="bg-success bg-opacity-20 p-3 rounded-circle">
                             <i class="fas fa-envelope fa-2x"></i>
                         </div>
                     </div>
-                    <a href="{{ route('admin.contact.index') }}" class="btn btn-outline-light btn-sm mt-3">View Messages</a>
+                    <a href="{{ route('admin.contact.index') }}" class="btn btn-outline-light btn-sm mt-3">Lihat Pesan</a>
                 </div>
             </div>
         </div>
@@ -59,14 +59,14 @@ use Illuminate\Support\Str;
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-subtitle mb-1 opacity-75">Users</h6>
+                            <h6 class="card-subtitle mb-1 opacity-75">Pengguna</h6>
                             <h3 class="card-title mb-0">{{ $usersCount ?? \App\Models\User::count() }}</h3>
                         </div>
                         <div class="bg-info bg-opacity-20 p-3 rounded-circle">
                             <i class="fas fa-users fa-2x"></i>
                         </div>
                     </div>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-light btn-sm mt-3">Manage Users</a>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-light btn-sm mt-3">Kelola Pengguna</a>
                 </div>
             </div>
         </div>
@@ -76,14 +76,14 @@ use Illuminate\Support\Str;
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-subtitle mb-1 opacity-75">Admins</h6>
+                            <h6 class="card-subtitle mb-1 opacity-75">Admin</h6>
                             <h3 class="card-title mb-0">{{ \App\Models\User::where('role', 'admin')->count() }}</h3>
                         </div>
                         <div class="bg-warning bg-opacity-20 p-3 rounded-circle">
                             <i class="fas fa-user-shield fa-2x"></i>
                         </div>
                     </div>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-dark btn-sm mt-3">Manage Admins</a>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-dark btn-sm mt-3">Kelola Admin</a>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@ use Illuminate\Support\Str;
         <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
-                    <h5 class="card-title mb-0"><i class="fas fa-motorcycle me-2 text-primary"></i>Recent Motors</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-motorcycle me-2 text-primary"></i>Motor Terbaru</h5>
                 </div>
                 <div class="card-body p-0">
                     @if($recentMotors->count() > 0)
@@ -121,7 +121,7 @@ use Illuminate\Support\Str;
                             @endforeach
                         </div>
                     @else
-                        <div class="p-3 text-center text-muted">No motors found</div>
+                        <div class="p-3 text-center text-muted">Tidak ada motor ditemukan</div>
                     @endif
                 </div>
             </div>
@@ -130,7 +130,7 @@ use Illuminate\Support\Str;
         <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
-                    <h5 class="card-title mb-0"><i class="fas fa-envelope me-2 text-success"></i>Recent Messages</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-envelope me-2 text-success"></i>Pesan Terbaru</h5>
                 </div>
                 <div class="card-body p-0">
                     @if($recentContactMessages->count() > 0)
@@ -146,7 +146,7 @@ use Illuminate\Support\Str;
                             @endforeach
                         </div>
                     @else
-                        <div class="p-3 text-center text-muted">No messages found</div>
+                        <div class="p-3 text-center text-muted">Tidak ada pesan ditemukan</div>
                     @endif
                 </div>
             </div>
@@ -155,7 +155,7 @@ use Illuminate\Support\Str;
         <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
-                    <h5 class="card-title mb-0"><i class="fas fa-users me-2 text-info"></i>Recent Users</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-users me-2 text-info"></i>Pengguna Terbaru</h5>
                 </div>
                 <div class="card-body p-0">
                     @if($recentUsers->count() > 0)
@@ -167,12 +167,12 @@ use Illuminate\Support\Str;
                                         <small class="text-muted">{{ $user->created_at->diffForHumans() }}</small>
                                     </div>
                                     <p class="mb-1 text-muted">{{ $user->email }}</p>
-                                    <span class="badge rounded-pill bg-{{ $user->role === 'admin' ? 'danger' : 'secondary' }}">{{ ucfirst($user->role) }}</span>
+                                    <span class="badge rounded-pill bg-{{ $user->role === 'admin' ? 'danger' : 'secondary' }}">{{ ucfirst($user->role == 'admin' ? 'Admin' : 'Pengguna') }}</span>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <div class="p-3 text-center text-muted">No users found</div>
+                        <div class="p-3 text-center text-muted">Tidak ada pengguna ditemukan</div>
                     @endif
                 </div>
             </div>

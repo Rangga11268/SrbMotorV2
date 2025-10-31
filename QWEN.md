@@ -7,6 +7,7 @@ fitur forgot password (notes untuk development jadi tidak menggunakan third part
 fix responsive admin
 tambah crud lagi di admin yaitu data penjualan motor dan ini pasti datanya dari luar atau di luar webiste misal ada yang datang ke dealer langsung
 dan tambahkan sweetalert 2 di admin
+spek dapat di tambah form nya jadi user bisa milih misah awal tampilkan 1 form spek lalu ada opsi plus tambah spek nanti muncul form baru lagi
 
 ## Recent Progress
 - Fixed navbar height issue making it less tall and more proportionally sized

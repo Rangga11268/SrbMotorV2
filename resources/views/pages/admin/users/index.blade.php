@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Users')
+@section('title', 'Pengguna')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h1 class="h3 mb-0">User Management</h1>
-            <p class="text-muted mb-0 d-md-none d-block">Manage all system users and their roles</p>
+            <h1 class="h3 mb-0">Manajemen Pengguna</h1>
+            <p class="text-muted mb-0 d-md-none d-block">Kelola semua pengguna sistem dan peran mereka</p>
         </div>
     </div>
     
@@ -15,17 +15,17 @@
         <div class="card-body">
             <form method="GET" class="row g-3">
                 <div class="col-12 col-md-8">
-                    <label for="search" class="form-label">Search Users</label>
-                    <input type="text" name="search" class="form-control" placeholder="Search by name or email..." value="{{ request('search') }}">
+                    <label for="search" class="form-label">Cari Pengguna</label>
+                    <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nama atau email..." value="{{ request('search') }}">
                 </div>
                 <div class="col-6 col-md-2 d-flex align-items-end">
                     <button type="submit" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-search me-1"></i> Search
+                        <i class="fas fa-search me-1"></i> Cari
                     </button>
                 </div>
                 <div class="col-6 col-md-2 d-flex align-items-end">
                     <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary w-100">
-                        <i class="fas fa-sync-alt me-1"></i> Reset
+                        <i class="fas fa-sync-alt me-1"></i> Atur Ulang
                     </a>
                 </div>
             </form>
@@ -39,11 +39,11 @@
                     <thead class="table-light">
                         <tr>
                             <th class="border-top-0" style="width: 5%">ID</th>
-                            <th class="border-top-0" style="width: 20%">Name</th>
+                            <th class="border-top-0" style="width: 20%">Nama</th>
                             <th class="border-top-0" style="width: 25%" class="d-none d-lg-table-cell">Email</th>
-                            <th class="border-top-0" style="width: 15%">Role</th>
-                            <th class="border-top-0" style="width: 20%" class="d-none d-xl-table-cell">Created</th>
-                            <th class="border-top-0" style="width: 15%">Actions</th>
+                            <th class="border-top-0" style="width: 15%">Peran</th>
+                            <th class="border-top-0" style="width: 20%" class="d-none d-xl-table-cell">Dibuat</th>
+                            <th class="border-top-0" style="width: 15%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,11 +58,11 @@
                                     <div>
                                         <span class="fw-medium d-block d-md-inline">{{ $user->name }}</span>
                                         @if($user->id === auth()->id())
-                                        <span class="badge bg-info bg-opacity-10 text-info ms-2 d-block d-md-inline">You</span>
+                                        <span class="badge bg-info bg-opacity-10 text-info ms-2 d-block d-md-inline">Anda</span>
                                         @else
                                         <span class="d-block d-md-none text-muted small">{{ $user->email }}</span>
                                         @endif
-                                        <span class="d-md-none d-block text-muted small">{{ $user->created_at ? $user->created_at->format('M d, Y') : 'N/A' }}</span>
+                                        <span class="d-md-none d-block text-muted small">{{ $user->created_at ? $user->created_at->format('d M Y') : 'Tidak Tersedia' }}</span>
                                     </div>
                                 </div>
                             </td>
@@ -73,27 +73,27 @@
                                 <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('PUT')
-                                    <select name="role" class="form-select form-select-sm bg-white" onchange="if(confirm('Are you sure you want to change the role?')) this.form.submit(); else return false;">
-                                        <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
+                                    <select name="role" class="form-select form-select-sm bg-white" onchange="if(confirm('Apakah Anda yakin ingin mengubah peran?')) this.form.submit(); else return false;">
+                                        <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>Pengguna</option>
                                         <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                     </select>
                                 </form>
                             </td>
-                            <td class="d-none d-xl-table-cell">{{ $user->created_at ? $user->created_at->format('M d, Y') : 'N/A' }}</td>
+                            <td class="d-none d-xl-table-cell">{{ $user->created_at ? $user->created_at->format('d M Y') : 'Tidak Tersedia' }}</td>
                             <td>
                                 <div class="d-flex flex-md-row flex-column gap-md-2 gap-2">
                                     @if($user->id !== auth()->id())
                                     <form action="{{ route('admin.users.destroy', ['user' => $user->id]) }}" method="POST" class="d-inline w-100">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill" title="Delete" onclick="return confirm('Are you sure you want to delete this user? All their data will be removed.')">
-                                            <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Delete</span>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini? Semua data mereka akan dihapus.')">
+                                            <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Hapus</span>
                                         </button>
                                     </form>
                                     @else
                                     <!-- For current user, show disabled button -->
-                                    <button class="btn btn-sm btn-outline-secondary flex-fill" disabled title="Cannot delete own account">
-                                        <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Delete</span>
+                                    <button class="btn btn-sm btn-outline-secondary flex-fill" disabled title="Tidak dapat menghapus akun sendiri">
+                                        <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Hapus</span>
                                     </button>
                                     @endif
                                 </div>
@@ -104,8 +104,8 @@
                             <td colspan="6" class="text-center py-4">
                                 <div class="empty-state">
                                     <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                    <h5 class="text-muted">No users found</h5>
-                                    <p class="text-muted mb-0">No users have been registered yet</p>
+                                    <h5 class="text-muted">Tidak ada pengguna ditemukan</h5>
+                                    <p class="text-muted mb-0">Belum ada pengguna yang terdaftar</p>
                                 </div>
                             </td>
                         </tr>
@@ -118,7 +118,7 @@
             <div class="card-footer bg-white">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
                     <div class="mb-2 mb-md-0">
-                        Showing {{ $users->firstItem() ? $users->firstItem() : 0 }} to {{ $users->lastItem() }} of {{ $users->total() }} results
+                        Menampilkan {{ $users->firstItem() ? $users->firstItem() : 0 }} hingga {{ $users->lastItem() }} dari {{ $users->total() }} hasil
                     </div>
                     {{ $users->appends(['search' => request('search')])->links() }}
                 </div>

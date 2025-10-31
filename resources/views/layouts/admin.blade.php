@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRB Motors Admin - @yield('title', 'Dashboard')</title>
+    <title>Admin SRB Motors - @yield('title', 'Dasbor')</title>
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -25,7 +25,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #043680;">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('admin.dashboard') }}">
-                <img src="{{ asset('assets/icon/logo trans.png') }}" alt="SRB Motors Logo" style="height: 30px; width: 30px; margin-right: 0.5rem; border-radius: 50%;">
+                <img src="{{ asset('assets/icon/logo trans.png') }}" alt="Logo SRB Motors" style="height: 30px; width: 30px; margin-right: 0.5rem; border-radius: 50%;">
                 SRB Admin
             </a>
             
@@ -36,16 +36,16 @@
             <div class="collapse navbar-collapse" id="adminNavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                        <a class="nav-link" href="{{ route('admin.dashboard') }}">Dasbor</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.motors.index') }}">Motors</a>
+                        <a class="nav-link" href="{{ route('admin.motors.index') }}">Motor</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.contact.index') }}">Contact Messages</a>
+                        <a class="nav-link" href="{{ route('admin.contact.index') }}">Pesan Kontak</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.users.index') }}">Users</a>
+                        <a class="nav-link" href="{{ route('admin.users.index') }}">Pengguna</a>
                     </li>
                 </ul>
                 
@@ -57,13 +57,13 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
                                 <a class="dropdown-item" href="{{ url('/') }}">
-                                    <i class="fas fa-globe me-2"></i>View Website
+                                    <i class="fas fa-globe me-2"></i>Lihat Website
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}" 
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                 </a>
                             </li>
                         </ul>

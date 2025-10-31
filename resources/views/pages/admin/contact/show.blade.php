@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
-@section('title', 'Contact Message')
+@section('title', 'Pesan Kontak')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h1 class="h3 mb-0">Contact Message Details</h1>
-            <p class="text-muted mb-0 d-md-none d-block">Message from {{ $contact->name }}</p>
+            <h1 class="h3 mb-0">Detail Pesan Kontak</h1>
+            <p class="text-muted mb-0 d-md-none d-block">Pesan dari {{ $contact->name }}</p>
         </div>
         <a href="{{ route('admin.contact.index') }}" class="btn btn-outline-secondary w-md-auto w-100">
-            <i class="fas fa-arrow-left me-2"></i>Back to Messages
+            <i class="fas fa-arrow-left me-2"></i>Kembali ke Pesan
         </a>
     </div>
     
@@ -31,7 +31,7 @@
                     </div>
                     
                     <div class="border-start border-4 border-primary ps-3 py-1 mb-4">
-                        <h5 class="mb-2">Subject: {{ $contact->subject ?: 'No Subject' }}</h5>
+                        <h5 class="mb-2">Subjek: {{ $contact->subject ?: 'Tanpa Subjek' }}</h5>
                         <p class="mb-0">{{ $contact->message }}</p>
                     </div>
                     
@@ -39,11 +39,11 @@
                         <div class="col-12 col-md-6">
                             <div class="card bg-light h-100">
                                 <div class="card-body">
-                                    <h6 class="card-title text-muted">Message Information</h6>
+                                    <h6 class="card-title text-muted">Informasi Pesan</h6>
                                     <ul class="list-unstyled">
                                         <li class="mb-2">
                                             <i class="fas fa-calendar-alt text-primary me-2"></i>
-                                            <strong>Date:</strong> {{ $contact->created_at ? $contact->created_at->format('M d, Y H:i') : 'N/A' }}
+                                            <strong>Tanggal:</strong> {{ $contact->created_at ? $contact->created_at->format('d M Y H:i') : 'Tidak Tersedia' }}
                                         </li>
                                         <li>
                                             <i class="fas fa-id-card text-primary me-2"></i>
@@ -56,16 +56,16 @@
                         <div class="col-12 col-md-6">
                             <div class="card bg-light h-100">
                                 <div class="card-body">
-                                    <h6 class="card-title text-muted">Actions</h6>
+                                    <h6 class="card-title text-muted">Aksi</h6>
                                     <div class="d-flex flex-column gap-2">
                                         <a href="mailto:{{ $contact->email }}" class="btn btn-primary">
-                                            <i class="fas fa-reply me-2"></i>Reply
+                                            <i class="fas fa-reply me-2"></i>Balas
                                         </a>
                                         <form action="{{ route('admin.contact.destroy', ['contact' => $contact->id]) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this message?')">
-                                                <i class="fas fa-trash me-2"></i>Delete Message
+                                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pesan ini?')">
+                                                <i class="fas fa-trash me-2"></i>Hapus Pesan
                                             </button>
                                         </form>
                                     </div>
@@ -76,7 +76,7 @@
                     
                     <div class="d-flex justify-content-end mt-4">
                         <a href="{{ route('admin.contact.index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Messages
+                            <i class="fas fa-arrow-left me-2"></i>Kembali ke Pesan
                         </a>
                     </div>
                 </div>
