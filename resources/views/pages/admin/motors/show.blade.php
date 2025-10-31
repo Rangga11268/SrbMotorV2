@@ -98,12 +98,48 @@
                         <h5 class="mb-3">Specifications</h5>
                         <div class="row">
                             @if(is_array($motor->specifications))
-                                @foreach($motor->specifications as $key => $value)
+                                @if(!empty($motor->specifications['engine_type']))
                                 <div class="col-12 col-md-6 mb-2">
-                                    <span class="text-muted">{{ ucfirst(str_replace('_', ' ', $key)) }}:</span> 
-                                    <span class="fw-medium">{{ Str::limit($value, 40) }}</span>
+                                    <span class="text-muted">Engine Type:</span> 
+                                    <span class="fw-medium">{{ $motor->specifications['engine_type'] }}</span>
                                 </div>
-                                @endforeach
+                                @endif
+                                @if(!empty($motor->specifications['engine_size']))
+                                <div class="col-12 col-md-6 mb-2">
+                                    <span class="text-muted">Engine Size:</span> 
+                                    <span class="fw-medium">{{ $motor->specifications['engine_size'] }}</span>
+                                </div>
+                                @endif
+                                @if(!empty($motor->specifications['fuel_system']))
+                                <div class="col-12 col-md-6 mb-2">
+                                    <span class="text-muted">Fuel System:</span> 
+                                    <span class="fw-medium">{{ $motor->specifications['fuel_system'] }}</span>
+                                </div>
+                                @endif
+                                @if(!empty($motor->specifications['transmission']))
+                                <div class="col-12 col-md-6 mb-2">
+                                    <span class="text-muted">Transmission:</span> 
+                                    <span class="fw-medium">{{ $motor->specifications['transmission'] }}</span>
+                                </div>
+                                @endif
+                                @if(!empty($motor->specifications['max_power']))
+                                <div class="col-12 col-md-6 mb-2">
+                                    <span class="text-muted">Max Power:</span> 
+                                    <span class="fw-medium">{{ $motor->specifications['max_power'] }}</span>
+                                </div>
+                                @endif
+                                @if(!empty($motor->specifications['max_torque']))
+                                <div class="col-12 col-md-6 mb-2">
+                                    <span class="text-muted">Max Torque:</span> 
+                                    <span class="fw-medium">{{ $motor->specifications['max_torque'] }}</span>
+                                </div>
+                                @endif
+                                @if(!empty($motor->specifications['additional_specs']))
+                                <div class="col-12 mb-2">
+                                    <span class="text-muted">Additional Specs:</span> 
+                                    <span class="fw-medium">{{ $motor->specifications['additional_specs'] }}</span>
+                                </div>
+                                @endif
                             @else
                                 <div class="col-12">
                                     <pre class="bg-light p-3 rounded">{{ $motor->specifications }}</pre>

@@ -6,6 +6,7 @@ Role owner / admin / user biasa
 fitur forgot password (notes untuk development jadi tidak menggunakan third party) dan profil management
 fix responsive admin
 tambah crud lagi di admin yaitu data penjualan motor dan ini pasti datanya dari luar atau di luar webiste misal ada yang datang ke dealer langsung
+dan tambahkan sweetalert 2 di admin
 
 ## Recent Progress
 - Fixed navbar height issue making it less tall and more proportionally sized

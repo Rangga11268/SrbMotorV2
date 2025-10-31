@@ -20,12 +20,16 @@ class MotorController extends Controller
         $query = Motor::query();
         
         if (request('search')) {
-            $query->where('name', 'like', '%' . request('search') . '%')
-                  ->orWhere('model', 'like', '%' . request('search') . '%')
-                  ->orWhere('brand', 'like', '%' . request('search') . '%');
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('model', 'like', '%' . $search . '%')
+                  ->orWhere('brand', 'like', '%' . $search . '%')
+                  ->orWhere('type', 'like', '%' . $search . '%');
+            });
         }
         
-        $motors = $query->get();
+        $motors = $query->orderBy('created_at', 'desc')->paginate(10);
         
         return view('pages.admin.motors.index', compact('motors'));
     }
@@ -50,12 +54,31 @@ class MotorController extends Controller
             'price' => 'required|numeric|min:0',
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
-            'specifications' => 'nullable|string',
+            'specifications' => 'nullable|array',
+            'specifications.engine_type' => 'nullable|string|max:255',
+            'specifications.engine_size' => 'nullable|string|max:255',
+            'specifications.fuel_system' => 'nullable|string|max:255',
+            'specifications.transmission' => 'nullable|string|max:255',
+            'specifications.max_power' => 'nullable|string|max:255',
+            'specifications.max_torque' => 'nullable|string|max:255',
+            'specifications.additional_specs' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'details' => 'nullable|string',
         ]);
 
         $imagePath = $request->file('image')->store('motors', 'public');
+        
+        // Clean specifications array by removing empty values
+        $specifications = $request->specifications;
+        if (is_array($specifications)) {
+            $specifications = array_filter($specifications, function($value) {
+                return !empty($value) && trim($value) !== '';
+            });
+            // If the array is now empty, set it to null
+            if (empty($specifications)) {
+                $specifications = null;
+            }
+        }
 
         Motor::create([
             'name' => $request->name,
@@ -64,7 +87,7 @@ class MotorController extends Controller
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
-            'specifications' => $request->specifications,
+            'specifications' => $specifications,
             'image_path' => $imagePath,
             'details' => $request->details,
         ]);
@@ -100,10 +123,29 @@ class MotorController extends Controller
             'price' => 'required|numeric|min:0',
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
-            'specifications' => 'nullable|string',
+            'specifications' => 'nullable|array',
+            'specifications.engine_type' => 'nullable|string|max:255',
+            'specifications.engine_size' => 'nullable|string|max:255',
+            'specifications.fuel_system' => 'nullable|string|max:255',
+            'specifications.transmission' => 'nullable|string|max:255',
+            'specifications.max_power' => 'nullable|string|max:255',
+            'specifications.max_torque' => 'nullable|string|max:255',
+            'specifications.additional_specs' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'details' => 'nullable|string',
         ]);
+
+        // Clean specifications array by removing empty values
+        $specifications = $request->specifications;
+        if (is_array($specifications)) {
+            $specifications = array_filter($specifications, function($value) {
+                return !empty($value) && trim($value) !== '';
+            });
+            // If the array is now empty, set it to null
+            if (empty($specifications)) {
+                $specifications = null;
+            }
+        }
 
         $data = [
             'name' => $request->name,
@@ -112,7 +154,7 @@ class MotorController extends Controller
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
-            'specifications' => $request->specifications,
+            'specifications' => $specifications,
             'details' => $request->details,
         ];
 
