@@ -32,15 +32,16 @@
                     <td>{{ $message->name }}</td>
                     <td>{{ $message->email }}</td>
                     <td>{{ $message->subject ?: 'No Subject' }}</td>
-                    <td>{{ $message->created_at->format('M d, Y H:i') }}</td>
+                    <td>{{ $message->created_at ? $message->created_at->format('M d, Y H:i') : 'N/A' }}</td>
                     <td>
                         <a href="{{ route('admin.contact.show', $message) }}" class="btn btn-sm btn-info">View</a>
-                        <form action="{{ route('admin.contact.destroy', $message) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.contact.destroy', ['contact' => $message->id]) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this message?')">Delete</button>
                         </form>
                     </td>
+                </tr>
                 </tr>
                 @empty
                 <tr>

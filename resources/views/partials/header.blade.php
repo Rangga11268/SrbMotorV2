@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header" id="header">
     <div id="menu-btn" class="fas fa-bars"></div>
 
     <a href="{{ url('/') }}" class="logo">
@@ -19,14 +19,22 @@
     <div id="auth-btn">
         @auth
             <div class="dropdown">
-                <button class="btn login login-text-btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ Auth::user()->name }}
+                <button class="btn login login-text-btn dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user me-2"></i>{{ Auth::user()->name }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     @if(Auth::user()->isAdmin())
-                        <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Admin Panel</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-tachometer-alt"></i> Admin Panel
+                            </a>
+                        </li>
                     @endif
-                    <li><a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
                     </form>

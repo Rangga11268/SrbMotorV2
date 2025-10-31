@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');

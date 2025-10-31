@@ -60,6 +60,10 @@
                                 @endif
                             </td>
                         </tr>
+                        <tr>
+                            <td><strong>Created At:</strong></td>
+                            <td>{{ $motor->created_at ? $motor->created_at->format('M d, Y H:i') : 'N/A' }}</td>
+                        </tr>
                     </table>
                     
                     <div class="d-flex justify-content-between mt-4">

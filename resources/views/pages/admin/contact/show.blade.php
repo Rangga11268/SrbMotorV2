@@ -10,39 +10,41 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3>Contact from: {{ $contactMessage->name }}</h3>
+                    <h3>Contact from: {{ $contact->name }}</h3>
                 </div>
                 <div class="card-body">
                     <table class="table table-borderless">
                         <tr>
                             <td><strong>Name:</strong></td>
-                            <td>{{ $contactMessage->name }}</td>
+                            <td>{{ $contact->name }}</td>
                         </tr>
                         <tr>
                             <td><strong>Email:</strong></td>
-                            <td>{{ $contactMessage->email }}</td>
+                            <td>{{ $contact->email }}</td>
                         </tr>
                         <tr>
                             <td><strong>Subject:</strong></td>
-                            <td>{{ $contactMessage->subject ?: 'No Subject' }}</td>
+                            <td>{{ $contact->subject ?: 'No Subject' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Message:</strong></td>
-                            <td>{{ $contactMessage->message }}</td>
+                            <td>{{ $contact->message }}</td>
                         </tr>
                         <tr>
                             <td><strong>Sent At:</strong></td>
-                            <td>{{ $contactMessage->created_at->format('M d, Y H:i') }}</td>
+                            <td>{{ $contact->created_at ? $contact->created_at->format('M d, Y H:i') : 'N/A' }}</td>
                         </tr>
                     </table>
                     
                     <div class="d-flex justify-content-between mt-4">
                         <a href="{{ route('admin.contact.index') }}" class="btn btn-secondary">Back to List</a>
-                        <form action="{{ route('admin.contact.destroy', $contactMessage) }}" method="POST" class="d-inline">
+                        @if($contact && $contact->id)
+                        <form action="{{ route('admin.contact.destroy', ['contact' => $contact->id]) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this message?')">Delete Message</button>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>

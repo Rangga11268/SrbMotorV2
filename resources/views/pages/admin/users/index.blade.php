@@ -41,10 +41,10 @@
                             </select>
                         </form>
                     </td>
-                    <td>{{ $user->created_at->format('M d, Y') }}</td>
+                    <td>{{ $user->created_at ? $user->created_at->format('M d, Y') : 'N/A' }}</td>
                     <td>
                         @if($user->id !== auth()->id())
-                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.users.destroy', ['user' => $user->id]) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>

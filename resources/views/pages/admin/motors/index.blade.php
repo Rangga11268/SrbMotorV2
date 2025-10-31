@@ -40,7 +40,7 @@
                     <td>
                         <a href="{{ route('admin.motors.show', $motor) }}" class="btn btn-sm btn-info">View</a>
                         <a href="{{ route('admin.motors.edit', $motor) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('admin.motors.destroy', $motor) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.motors.destroy', ['motor' => $motor->id]) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this motor?')">Delete</button>

@@ -23,6 +23,13 @@ window.onscroll = () => {
   } else {
     document.querySelector(".header").classList.remove("active");
   }
+  
+  // Additional functionality for navbar shrinking
+  if (window.scrollY > 50) {
+    document.querySelector(".header").classList.add("scrolled");
+  } else {
+    document.querySelector(".header").classList.remove("scrolled");
+  }
 };
 
 document.querySelector(".home").onmousemove = (e) => {
