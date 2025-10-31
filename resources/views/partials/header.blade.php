@@ -2,7 +2,7 @@
     <div id="menu-btn" class="fas fa-bars"></div>
 
     <a href="{{ url('/') }}" class="logo">
-        <img src="{{ asset('OldWeb/assets/icon/logo trans.png') }}" alt="SRB Motors Logo">
+        <img src="{{ asset('assets/icon/logo trans.png') }}" alt="SRB Motors Logo">
         SRB<span>Motors</span>
     </a>
 

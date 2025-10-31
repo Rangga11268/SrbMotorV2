@@ -23,10 +23,10 @@ class UserSeeder extends Seeder
         ]);
 
         // Create a regular user
-        \App\Models\User::create([
+        User::create([
             'name' => 'Regular User',
             'email' => 'user@srbmotors.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'), // Use a strong password in production
+            'password' => Hash::make('password'),
             'role' => 'user'
         ]);
     }

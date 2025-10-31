@@ -1,5 +1,12 @@
 # SRB Motors Laravel Implementation
 
+
+## NEXT
+Role owner / admin / user biasa
+fix navbar
+fix login regis logo 
+percantik dashboard admin
+
 ## Overview
 
 The SRB Motors website has been successfully converted from a static HTML/CSS/JS site to a dynamic Laravel application. The implementation maintains the original design and user experience while adding powerful backend functionality through Laravel.

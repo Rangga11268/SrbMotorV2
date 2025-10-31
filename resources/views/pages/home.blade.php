@@ -10,7 +10,7 @@
     <img
         data-speed="5"
         class="home-parallax"
-        src="{{ asset('OldWeb/assets/img/home.svg') }}"
+        src="{{ asset('assets/img/home.svg') }}"
         alt="Motor Image"
     />
 
