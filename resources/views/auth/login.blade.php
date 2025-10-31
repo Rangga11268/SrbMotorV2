@@ -6,12 +6,12 @@
 <style>
     /* Add space for fixed navbar */
     body {
-        padding-top: 100px; /* Increase padding to fully account for navbar height */
+        padding-top: 120px; /* Adjusted to better match the homepage navbar height */
         background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
     }
     
     .auth-container {
-        min-height: calc(100vh - 100px); /* Adjust based on increased navbar height */
+        min-height: calc(100vh - 120px); /* Adjust based on navbar height */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -72,7 +72,7 @@
     
     .logo-container {
         position: absolute;
-        top: -50px; /* Position further above the header */
+        top: 10px; /* Positioned closer to the top */
         left: 50%;
         transform: translateX(-50%);
         width: 90px;
@@ -99,9 +99,18 @@
         border-radius: 50%;
     }
     
+    .auth-header {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary) 100%);
+        color: white;
+        padding: 80px 1.5rem 2.5rem; /* Increased top padding to create more space */
+        text-align: center;
+        position: relative;
+        overflow: visible;
+    }
+    
     .auth-header h3 {
         font-weight: 600;
-        margin: 55px 0 8px 0; /* Increased margin to accommodate the positioned logo */
+        margin: 20px 0 8px 0; /* Increased margin to create more space from logo */
         font-size: 1.8rem;
         position: relative;
         z-index: 1;
@@ -265,20 +274,21 @@
     .password-toggle {
         position: absolute;
         right: 15px;
-        top: 40px;
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
         color: #6c757d;
         z-index: 5;
-        background: rgba(255, 255, 255, 0.8);
-        padding: 0.2rem;
+        background: transparent;
+        padding: 0.3rem;
         border-radius: 0.25rem;
         transition: all 0.3s ease;
     }
     
     .password-toggle:hover {
         color: var(--primary);
-        transform: scale(1.1);
-        background: rgba(255, 255, 255, 1);
+        transform: translateY(-50%) scale(1.1);
+        background: rgba(255, 255, 255, 0.8);
     }
     
     .error-message {
@@ -307,18 +317,18 @@
     
     @media (max-width: 768px) {
         body {
-            padding-top: 90px; /* Adjusted mobile padding */
+            padding-top: 100px; /* Adjusted mobile padding to match desktop ratio */
         }
         
         .auth-container {
-            min-height: calc(100vh - 90px);
+            min-height: calc(100vh - 100px);
             padding: 1rem;
         }
         
         .logo-container {
             width: 80px;
             height: 80px;
-            top: -45px;
+            top: 5px; /* Positioned closer to the top for mobile */
         }
         
         .logo {
@@ -326,9 +336,13 @@
             height: 64px;
         }
         
+        .auth-header {
+            padding: 75px 1.5rem 2.5rem; /* Increased padding for mobile to create space */
+        }
+        
         .auth-header h3 {
             font-size: 1.6rem;
-            margin: 50px 0 8px 0; /* Adjusted for mobile */
+            margin: 15px 0 8px 0; /* Increased margin for mobile */
         }
         
         .auth-body {
@@ -343,10 +357,10 @@
     <div class="auth-card">
         <div class="auth-header">
             <div class="logo-container">
-                <img src="{{ asset('OldWeb/assets/icon/logo trans.png') }}" alt="SRB Motors Logo" class="logo">
+                <img src="{{ asset('assets/icon/logo trans.png') }}" alt="Logo SRB Motors" class="logo">
             </div>
-            <h3>Welcome Back</h3>
-            <p class="mb-0">Sign in to continue to your account</p>
+            <h3>Selamat Datang Kembali</h3>
+            <p class="mb-0">Masuk untuk melanjutkan ke akun Anda</p>
         </div>
         
         <div class="auth-body">
@@ -354,10 +368,10 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label for="email" class="form-label">Email Address</label>
+                    <label for="email" class="form-label">Alamat Email</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
                            name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
-                           autocapitalize="none" placeholder="Enter your email">
+                           autocapitalize="none" placeholder="Masukkan email Anda">
                     
                     @error('email')
                         <div class="error-message">
@@ -367,11 +381,11 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">Kata Sandi</label>
                     <div class="input-group">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
                                name="password" required autocomplete="current-password"
-                               autocapitalize="none" placeholder="Enter your password">
+                               autocapitalize="none" placeholder="Masukkan kata sandi Anda">
                         <span class="password-toggle" onclick="togglePassword('password', 'togglePasswordIcon')">
                             <i id="togglePasswordIcon" class="fas fa-eye"></i>
                         </span>
@@ -388,20 +402,20 @@
                     <input class="form-check-input me-2" type="checkbox" name="remember" id="remember" 
                            {{ old('remember') ? 'checked' : '' }}>
                     <label class="form-check-label" for="remember">
-                        Remember Me
+                        Ingat Saya
                     </label>
                 </div>
 
                 <div class="d-grid mb-3">
                     <button type="submit" class="btn btn-auth btn-lg">
-                        Sign In
+                        Masuk
                     </button>
                 </div>
                 
                 <div class="auth-footer">
-                    <p class="mb-2">Don't have an account? <a href="{{ route('register') }}" class="btn-link">Register here</a></p>
+                    <p class="mb-2">Belum punya akun? <a href="{{ route('register') }}" class="btn-link">Daftar di sini</a></p>
                     @if (Route::has('password.request'))
-                        <p class="mb-0"><a href="{{ route('password.request') }}" class="btn-link">Forgot your password?</a></p>
+                        <p class="mb-0"><a href="{{ route('password.request') }}" class="btn-link">Lupa kata sandi Anda?</a></p>
                     @endif
                 </div>
             </form>

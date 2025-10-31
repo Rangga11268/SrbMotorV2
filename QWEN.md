@@ -3,7 +3,8 @@
 
 ## NEXT
 Role owner / admin / user biasa
-fix navbar
+fitur forgot password (notes untuk development jadi tidak menggunakan third party) dan profil management
+
 fix login regis logo 
 percantik dashboard admin
 
