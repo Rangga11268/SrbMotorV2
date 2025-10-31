@@ -7,20 +7,20 @@ use Illuminate\Support\Str;
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid py-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
             <h1 class="h3 mb-0">Admin Dashboard</h1>
-            <p class="text-muted mb-0">Welcome back, {{ Auth::user()->name }}!</p>
+            <p class="text-muted mb-0 d-md-none d-block">Welcome back, {{ Auth::user()->name }}!</p>
         </div>
-        <div class="text-end">
+        <div class="text-md-end text-center w-100 w-md-auto">
             <p class="mb-0">Last updated: <span class="text-muted">{{ now()->format('M d, Y H:i') }}</span></p>
         </div>
     </div>
     
     <!-- Stats -->
-    <div class="row mb-4">
-        <div class="col-md-6 col-lg-3 mb-3">
+    <div class="row mb-4 g-3">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
             <div class="card bg-primary text-white h-100 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -37,7 +37,7 @@ use Illuminate\Support\Str;
             </div>
         </div>
         
-        <div class="col-md-6 col-lg-3 mb-3">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
             <div class="card bg-success text-white h-100 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -54,7 +54,7 @@ use Illuminate\Support\Str;
             </div>
         </div>
         
-        <div class="col-md-6 col-lg-3 mb-3">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
             <div class="card bg-info text-white h-100 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -71,7 +71,7 @@ use Illuminate\Support\Str;
             </div>
         </div>
         
-        <div class="col-md-6 col-lg-3 mb-3">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
             <div class="card bg-warning text-dark h-100 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -90,8 +90,8 @@ use Illuminate\Support\Str;
     </div>
     
     <!-- Recent Items -->
-    <div class="row">
-        <div class="col-lg-4 mb-4">
+    <div class="row g-4">
+        <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
                     <h5 class="card-title mb-0"><i class="fas fa-motorcycle me-2 text-primary"></i>Recent Motors</h5>
@@ -111,9 +111,10 @@ use Illuminate\Support\Str;
                                         <div class="flex-grow-1">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1">{{ Str::limit($motor->name, 20) }}</h6>
-                                                <small class="text-muted">{{ $motor->created_at->diffForHumans() }}</small>
+                                                <small class="text-muted d-md-none d-block">{{ $motor->created_at->diffForHumans() }}</small>
                                             </div>
                                             <p class="mb-0 text-muted">Rp {{ number_format($motor->price, 0, ',', '.') }}</p>
+                                            <small class="text-muted d-none d-md-block">{{ $motor->created_at->diffForHumans() }}</small>
                                         </div>
                                     </div>
                                 </a>
@@ -126,7 +127,7 @@ use Illuminate\Support\Str;
             </div>
         </div>
         
-        <div class="col-lg-4 mb-4">
+        <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
                     <h5 class="card-title mb-0"><i class="fas fa-envelope me-2 text-success"></i>Recent Messages</h5>
@@ -151,7 +152,7 @@ use Illuminate\Support\Str;
             </div>
         </div>
         
-        <div class="col-lg-4 mb-4">
+        <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
                     <h5 class="card-title mb-0"><i class="fas fa-users me-2 text-info"></i>Recent Users</h5>

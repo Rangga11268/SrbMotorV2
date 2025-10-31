@@ -3,21 +3,21 @@
 @section('title', 'Create Motor')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid py-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
             <h1 class="h3 mb-0">Create New Motor</h1>
-            <p class="text-muted mb-0">Add a new motorcycle to the system</p>
+            <p class="text-muted mb-0 d-md-none d-block">Add a new motorcycle to the system</p>
         </div>
-        <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary">
+        <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary w-md-auto w-100">
             <i class="fas fa-arrow-left me-2"></i>Back to Motors
         </a>
     </div>
     
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-12 col-lg-10 col-xl-8">
             <div class="card shadow-sm">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <form action="{{ route('admin.motors.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
@@ -27,7 +27,7 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="name" class="form-label">Motor Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                                 @error('name')
@@ -35,7 +35,7 @@
                                 @enderror
                             </div>
                             
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="model" class="form-label">Model</label>
                                 <input type="text" class="form-control @error('model') is-invalid @enderror" id="model" name="model" value="{{ old('model') }}">
                                 @error('model')
@@ -45,7 +45,7 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-12 col-md-4 mb-3">
                                 <label for="brand" class="form-label">Brand <span class="text-danger">*</span></label>
                                 <select class="form-select @error('brand') is-invalid @enderror" id="brand" name="brand" required>
                                     <option value="">Select Brand</option>
@@ -57,7 +57,7 @@
                                 @enderror
                             </div>
                             
-                            <div class="col-md-4 mb-3">
+                            <div class="col-12 col-md-4 mb-3">
                                 <label for="type" class="form-label">Type</label>
                                 <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type" value="{{ old('type') }}">
                                 @error('type')
@@ -65,7 +65,7 @@
                                 @enderror
                             </div>
                             
-                            <div class="col-md-4 mb-3">
+                            <div class="col-12 col-md-4 mb-3">
                                 <label for="year" class="form-label">Year</label>
                                 <input type="number" class="form-control @error('year') is-invalid @enderror" id="year" name="year" value="{{ old('year') }}" min="1900" max="2100">
                                 @error('year')
@@ -75,7 +75,7 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
@@ -123,9 +123,9 @@
                             @enderror
                         </div>
                         
-                        <div class="d-flex justify-content-between mt-5">
-                            <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary px-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-5">
+                            <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary w-100 w-md-auto">Cancel</a>
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto px-4">
                                 <i class="fas fa-save me-2"></i>Create Motor
                             </button>
                         </div>
