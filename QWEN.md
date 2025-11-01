@@ -20,6 +20,7 @@ Blog / Artikel: Buat sistem blog sederhana (ini juga CRUD, tapi untuk artikel) d
 Fitur Perbandingan Motor:
 Memungkinkan pengguna membandingkan spesifikasi dua atau lebih motor secara berdampingan, sangat berguna dalam proses pengambilan 
 keputusan pembelian.
+Perkecil Footer
 
 
 

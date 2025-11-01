@@ -9,7 +9,7 @@
     <!-- Motors Gallery Section -->
     <section class="motors-gallery" id="motors-gallery">
         <div class="container">
-            <h1 class="heading text-center mb-4 fs-1"><span>Semua</span> Motor</h1>
+            <h1 class="heading text-center mb-4"><span>Semua</span> Motor</h1>
 
             <!-- Search and Filter Section -->
             <form method="GET" action="{{ route('motors.index') }}" class="search-filter-container mb-4">
