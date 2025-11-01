@@ -457,15 +457,6 @@
         });
     });
     
-    // Show error messages with SweetAlert2 if any
-    @if($errors->any())
-        Swal.fire({
-            title: 'Kesalahan!',
-            text: 'Mohon periksa kembali inputan Anda. Ada {{ $errors->count() }} masalah yang ditemukan.',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#dc3545'
-        });
-    @endif
+
 </script>
 @endsection

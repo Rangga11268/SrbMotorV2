@@ -12,6 +12,7 @@ spek dapat di tambah input nya jadi user bisa milih misah awal tampilkan 1 input
 MEMISAHKAN HALAMAN HALAMAN DAN
 HALAMAN GALERI MOTOR NANTI BAKAL ADA FILTER DAN SEARCH UNTUK USER DAN BERBAGAI FITUR LAGI
 SERTA ADA HALAMAN BERITA JUGA
+DI admin saya ingin gambar motor ada default nya nanti saya kasih gambar default nya jadi gambar itu tidak harus ada
 
 ## Recent Progress
 
