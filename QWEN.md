@@ -4,10 +4,12 @@
 
 tambah crud lagi di admin atau fitur baru
 Role owner / admin / user biasa  
+Middleware atau aturan masuk dll juga harus di pastikan sudah benar
 Fitur forgot password (notes untuk development jadi tidak menggunakan third party) dan profil management
 tambah crud lagi di admin yaitu data penjualan motor dan ini pasti datanya dari luar atau di luar webiste misal ada yang datang ke dealer langsung  
 dan tambahkan sweetalert 2 di admin
 spek dapat di tambah input nya jadi user bisa milih misah awal tampilkan 1 input spek lalu ada opsi plus tambah spek nanti muncul input baru lagi
+FIX BUG DI FRONTEND DIMANA TAMPILAN MOTOR TIDAK SESUAI JUMLAH NYA ATAU TERLOOP 3 KALI
 
 ## Recent Progress
 

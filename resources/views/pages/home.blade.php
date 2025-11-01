@@ -289,12 +289,13 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize Swiper for popular motors slider
+    // Initialize Swiper for popular motors slider - disable loop if there aren't enough slides
+    var popularMotorsSlides = document.querySelectorAll('.popular-motors-slider .swiper-slide').length;
     var popularMotorsSlider = new Swiper(".popular-motors-slider", {
         grabCursor: true,
         centeredSlides: true,
         spaceBetween: 20,
-        loop: false, // Disable loop to prevent duplication
+        loop: popularMotorsSlides > 3, // Only loop if there are enough slides to support it
         autoplay: {
             delay: 9500,
             disableOnInteraction: false,
@@ -316,32 +317,67 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
 
-    // Initialize Swiper for motors gallery slider
-    var motorsGallerySlider = new Swiper(".motors-gallery-slider", {
-        grabCursor: true,
-        centeredSlides: true,
-        spaceBetween: 20,
-        loop: false, // Disable loop to prevent duplication
-        autoplay: {
-            delay: 9500,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-        breakpoints: {
-            0: {
-                slidesPerView: 1,
+    // Initialize Swiper for Yamaha motors gallery slider - disable loop if there aren't enough slides
+    var yamahaSliderElement = document.querySelector('.motors-gallery-slider:first-of-type');
+    if (yamahaSliderElement) {
+        var yamahaMotorsSlides = yamahaSliderElement.querySelectorAll('.swiper-slide').length;
+        var yamahaMotorsSlider = new Swiper(yamahaSliderElement, {
+            grabCursor: true,
+            centeredSlides: true,
+            spaceBetween: 20,
+            loop: yamahaMotorsSlides > 3, // Only loop if there are enough slides to support it
+            autoplay: {
+                delay: 9500,
+                disableOnInteraction: false,
             },
-            768: {
-                slidesPerView: 2,
+            pagination: {
+                el: yamahaSliderElement.querySelector('.swiper-pagination'),
+                clickable: true,
             },
-            1024: {
-                slidesPerView: 3,
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
             },
-        },
-    });
+        });
+    }
+
+    // Initialize Swiper for Honda motors gallery slider - disable loop if there aren't enough slides
+    var hondaSliderElement = document.querySelector('.motors-gallery-slider:last-of-type');
+    if (hondaSliderElement) {
+        var hondaMotorsSlides = hondaSliderElement.querySelectorAll('.swiper-slide').length;
+        var hondaMotorsSlider = new Swiper(hondaSliderElement, {
+            grabCursor: true,
+            centeredSlides: true,
+            spaceBetween: 20,
+            loop: hondaMotorsSlides > 3, // Only loop if there are enough slides to support it
+            autoplay: {
+                delay: 9500,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: hondaSliderElement.querySelector('.swiper-pagination'),
+                clickable: true,
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    }
 
     // Update the modal event listener to work with dynamic content
     var motorDetailModal = document.getElementById("motorDetailModal");
