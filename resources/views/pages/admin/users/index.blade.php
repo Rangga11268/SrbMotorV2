@@ -129,4 +129,20 @@
 </div>
 @endsection
 
-@endsection
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle role change confirmations
+    document.querySelectorAll('select[name="role"]').forEach(select => {
+        select.addEventListener('change', function() {
+            if (confirm('Apakah Anda yakin ingin mengubah peran pengguna ini?')) {
+                this.form.submit();
+            } else {
+                // Reset to original value if user cancels
+                this.form.reset(); 
+            }
+        });
+    });
+});
+</script>
+@endpush

@@ -122,3 +122,18 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete confirmations with standard JavaScript confirm
+    document.querySelectorAll('form[method="POST"][class*="d-inline"]').forEach(form => {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            // The confirm logic is already handled by the onclick attribute in the button
+            // Just make sure it works properly
+        }
+    });
+});
+</script>
+@endpush
