@@ -4,76 +4,96 @@
 
 @section('content')
     <!-- Spacer to prevent navbar overlap -->
-    <div style="height: 8rem; visibility: hidden;"></div>
+    {{-- <div style="height: 8rem; visibility: hidden;"></div> --}}
     
     <section class="motor-detail" id="motor-detail">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="main-image-container">
-                        <img src="{{ asset('storage/' . $motor->image_path) }}" class="img-fluid main-motor-image"
-                            alt="{{ $motor->name }}">
+            <!-- Motor Info Section -->
+            <div class="card shadow-sm border-0 mb-5">
+                <div class="row g-0">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="main-image-container p-4">
+                            <img 
+                                src="{{ asset('storage/' . $motor->image_path) }}" 
+                                class="img-fluid main-motor-image w-100 rounded" 
+                                alt="{{ $motor->name }}"
+                                style="object-fit: cover; max-height: 400px;"
+                            >
+                        </div>
                     </div>
-
-                    <!-- Additional images section (if available) -->
-                    <div class="additional-images mt-3">
-                        <!-- In the future, we could add multiple images for each motor -->
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <h1>{{ $motor->name }}</h1>
-
-                    <div class="motor-info">
-                        <table class="table table-borderless">
-                            <tr>
-                                <td><strong>Brand:</strong></td>
-                                <td>{{ $motor->brand }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Model:</strong></td>
-                                <td>{{ $motor->model ?: 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Tahun:</strong></td>
-                                <td>{{ $motor->year ?: 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Tipe:</strong></td>
-                                <td>{{ $motor->type ?: 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Harga:</strong></td>
-                                <td><strong class="text-primary">Rp.
-                                        {{ number_format($motor->price, 0, ',', '.') }},-</strong></td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="motor-details mt-4">
-                        <h4>Deskripsi</h4>
-                        <p>{{ $motor->details ?: 'Deskripsi tidak tersedia.' }}</p>
-                    </div>
-
-                    <div class="actions mt-4">
-                        {{-- <a href="{{ route('contact') }}#contact" class="btn btn-primary">Booking Test Drive</a> --}}
-                        <a href="{{ route('motors.credit-calculation', $motor->id) }}"
-                            class="btn btn-outline-primary">Simulasi Kredit</a>
+                    
+                    <div class="col-lg-6 col-md-12">
+                        <div class="card-body p-4">
+                            <div class="motor-header">
+                                <h1 class="fw-bold text-dark">{{ $motor->name }}</h1>
+                                <div class="badge bg-primary mb-3">{{ $motor->brand }}</div>
+                            </div>
+                            
+                            <div class="motor-info mb-4">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <div class="text-muted text-uppercase small fs-5">Model</div>
+                                            <div class="fw-bold fs-4">{{ $motor->model ?: 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <div class="text-muted text-uppercase small fs-5">Tahun</div>
+                                            <div class="fw-bold fs-4">{{ $motor->year ?: 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <div class="text-muted text-uppercase small fs-5">Tipe</div>
+                                            <div class="fw-bold fs-4">{{ $motor->type ?: 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <div class="text-muted text-uppercase small fs-5">Harga</div>
+                                            <div class="fw-bold text-primary fs-4">Rp. {{ number_format($motor->price, 0, ',', '.') }},-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="motor-details mb-4">
+                                <h5 class="fw-bold fs-4">Deskripsi</h5>
+                                <p class="text-muted fs-5">{{ $motor->details ?: 'Deskripsi tidak tersedia.' }}</p>
+                            </div>
+                            
+                            <div class="actions d-grid gap-2 d-md-flex">
+                                <a href="#" class="btn btn-success flex-fill" onclick="openWhatsApp()">
+                                    <i class="fab fa-whatsapp me-2"></i>Kontak Kami
+                                </a>
+                                <a href="{{ route('motors.credit-calculation', $motor->id) }}" class="btn btn-outline-primary flex-fill">
+                                    <i class="fas fa-calculator me-2"></i>Simulasi Kredit
+                                </a>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <a href="{{ route('motors.index') }}" class="btn btn-link text-decoration-none">
+                                    <i class="fas fa-arrow-left me-1"></i>Kembali ke Daftar Motor
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Specifications Section -->
-            <div class="specifications-section mt-5">
-                <h3>Spesifikasi Lengkap</h3>
-                <div class="row">
-                    @if ($motor->specifications->count() > 0)
-                        <div class="col-12">
-                            <div class="specs-container">
-                                @foreach ($motor->specifications as $spec)
-                                    <div class="spec-row row mb-2">
-                                        <div class="col-md-4 spec-key">
-                                            <strong>
+            <div class="specifications-section mb-5">
+                <h3 class="fw-bold mb-4 fs-2">Spesifikasi Lengkap</h3>
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        @if($motor->specifications->count() > 0)
+                            <div class="row g-4">
+                                @foreach($motor->specifications as $spec)
+                                    <div class="col-lg-6 col-md-12">
+                                        <div class="spec-item d-flex justify-content-between border-bottom pb-3">
+                                            <div class="spec-key">
+                                                <div class="text-muted text-uppercase small fs-5"> 
                                                 @php
                                                     $formattedKey = ucwords(str_replace('_', ' ', $spec->spec_key));
                                                     $translations = [
@@ -127,50 +147,94 @@
                                                         'Seat Type' => 'Tipe Jok',
                                                         'Handlebar Type' => 'Tipe Setang',
                                                         'Ground Clearance' => 'Jarak Bebas ke Tanah',
-                                                    ];
-                                                    $indonesianKey = isset($translations[$formattedKey])
-                                                        ? $translations[$formattedKey]
-                                                        : $formattedKey;
+                                                        'Additional Specs' => 'Spesifikasi Tambahan'
+                                                    ]; 
+                                                    $indonesianKey = isset($translations[$formattedKey]) ? $translations[$formattedKey] : $formattedKey;
                                                     echo $indonesianKey;
                                                 @endphp
-                                            </strong>
+                                                </div>
+                                            </div>
+                                            <div class="spec-value fw-bold fs-4">{{ $spec->spec_value }}</div>
                                         </div>
-                                        <div class="col-md-8 spec-value">{{ $spec->spec_value }}</div>
                                     </div>
                                 @endforeach
                             </div>
-                        </div>
-                    @else
-                        <div class="col-12">
-                            <p class="text-muted">Spesifikasi lengkap tidak tersedia.</p>
-                        </div>
-                    @endif
+                        @else
+                            <div class="text-center py-4">
+                                <i class="fas fa-info-circle fa-2x text-muted mb-3"></i>
+                                <p class="text-muted fs-4">Spesifikasi lengkap tidak tersedia.</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 
             <!-- Related Motors Section -->
-            <div class="related-motors-section mt-5">
-                <h3>Motor Lainnya</h3>
-                <div class="row">
-                    @foreach ($relatedMotors as $relatedMotor)
-                        <div class="col-md-3 col-sm-6 mb-4">
-                            <div class="card motor-card h-100">
-                                <img src="{{ asset('storage/' . $relatedMotor->image_path) }}" class="card-img-top"
-                                    alt="{{ $relatedMotor->name }}" style="height: 150px; object-fit: cover;">
+            <div class="related-motors-section">
+                <h3 class="fw-bold mb-4 fs-2">Motor Lainnya</h3>
+                @if($relatedMotors->count() > 0)
+                    <div class="row g-4">
+                        @foreach($relatedMotors as $relatedMotor)
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                            <div class="card motor-card h-100 shadow-sm border-0">
+                                <div class="image-container position-relative">
+                                    <img 
+                                        src="{{ asset('storage/' . $relatedMotor->image_path) }}" 
+                                        class="card-img-top img-fluid" 
+                                        alt="{{ $relatedMotor->name }}"
+                                        style="height: 180px; object-fit: cover;"
+                                    >
+                                    <div class="badge brand-badge position-absolute top-0 start-0 m-2">
+                                        <span class="badge bg-primary">{{ $relatedMotor->brand }}</span>
+                                    </div>
+                                </div>
                                 <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ $relatedMotor->name }}</h5>
-                                    <p class="card-text">
-                                        <strong>Harga:</strong> Rp.
-                                        {{ number_format($relatedMotor->price, 0, ',', '.') }},-
+                                    <h5 class="card-title fw-bold text-dark fs-4">{{ $relatedMotor->name }}</h5>
+                                    <div class="price mb-2">
+                                        <span class="fw-bold text-primary fs-4">Rp. {{ number_format($relatedMotor->price, 0, ',', '.') }},-</span>
+                                    </div>
+                                    <div class="specs mb-2">
+                                        <small class="text-muted fs-5">
+                                            <i class="fas fa-calendar-alt me-1"></i> {{ $relatedMotor->year }}
+                                            <i class="fas fa-motorcycle ms-2 me-1"></i> {{ $relatedMotor->type }}
+                                        </small>
+                                    </div>
+                                    <p class="card-text flex-grow-1 text-truncate fs-5">
+                                        {{ Str::limit($relatedMotor->details, 60) }}
                                     </p>
-                                    <a href="{{ route('motors.show', $relatedMotor->id) }}"
-                                        class="btn btn-primary mt-auto">Lihat Detail</a>
+                                    <div class="mt-auto pt-2">
+                                        <a href="{{ route('motors.show', $relatedMotor->id) }}" class="btn btn-primary w-100 fs-4 py-2">
+                                            <i class="fas fa-info-circle me-1"></i> Lihat Detail
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-motorcycle fa-2x text-muted mb-3"></i>
+                        <p class="text-muted fs-3">Tidak ada motor lainnya saat ini.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+    <script>
+        function openWhatsApp() {
+            // Default phone number, you can replace with the actual dealership number
+            const phoneNumber = "6281234567890"; // Example Indonesian number format without leading zero
+            const motorName = "{{ addslashes($motor->name) }}";
+            const motorPrice = "{{ number_format($motor->price, 0, ',', '.') }}";
+            const message = encodeURIComponent(`Halo, saya ingin bertanya tentang motor ${motorName} yang harganya Rp. ${motorPrice},-`);
+            const url = `https://wa.me/${phoneNumber}?text=${message}`;
+            
+            // Open WhatsApp in new tab
+            window.open(url, '_blank');
+        }
+    </script>
 @endsection

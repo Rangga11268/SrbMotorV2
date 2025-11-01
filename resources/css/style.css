@@ -24,7 +24,7 @@
 html {
   font-size: 62.5%;
   overflow-x: hidden;
-  scroll-padding-top: 7rem;
+  scroll-padding-top: 3rem;
   scroll-behavior: smooth;
 }
 
@@ -34,11 +34,11 @@ section {
 
 /* More aggressive fix for motor pages to prevent navbar overlap */
 .motors-gallery {
-  padding-top: 12rem !important; /* More significant padding to prevent navbar overlap */
+  padding-top: 3rem; /* Reduced padding to prevent navbar overlap */
 }
 
 .motor-detail {
-  padding-top: 12rem !important; /* More significant padding to prevent navbar overlap */
+  padding-top: 3rem !important; /* Reduced padding to prevent navbar overlap */
 }
 
 a {
@@ -474,7 +474,7 @@ a {
 }
 
 .home {
-  padding-top: 18rem; /* Increased padding to account for navbar */
+  padding-top: 5rem; /* Reduced padding to account for navbar */
   margin-bottom: 4rem;
   text-align: center;
   overflow-x: hidden;
@@ -804,6 +804,193 @@ a {
   font-weight: normal;
 }
 
+/* Motors index page styles */
+.search-filter-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1.8rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(4, 54, 128, 0.15);
+  margin-bottom: 2rem;
+}
+
+.search-filter-container .form-label {
+  font-weight: 600;
+  color: var(--dark-blue);
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.search-filter-container .form-select,
+.search-filter-container .form-control {
+  font-size: 1.4rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(4, 54, 128, 0.2);
+  border-radius: 0.5rem;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.search-filter-container .form-select:focus,
+.search-filter-container .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  outline: 0;
+}
+
+.search-filter-container .search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-filter-container .search-container .form-control {
+  padding-right: 3rem;
+  border-radius: 50px;
+  padding-left: 1.5rem;
+  height: 3.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.search-filter-container .search-container .btn-search {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.search-filter-container .search-container .btn-search:hover {
+  background-color: var(--dark-blue);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.search-filter-container .search-container .btn-search i {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.search-filter-container .btn-primary {
+  font-size: 1.4rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background-color: var(--dark-blue);
+  border: 1px solid var(--dark-blue);
+}
+
+.search-filter-container .btn-primary:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 0.25rem 0.5rem rgba(74, 144, 226, 0.4);
+}
+
+.search-filter-container .btn-outline-secondary {
+  font-size: 1.4rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: var(--dark-blue);
+  border-color: var(--dark-blue);
+}
+
+.search-filter-container .btn-outline-secondary:hover {
+  background-color: var(--dark-blue);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 0.25rem 0.5rem rgba(4, 54, 128, 0.4);
+}
+
+.search-filter-container .input-group .form-control {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.search-filter-container .input-group .input-group-text {
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 1.4rem;
+  padding: 0.8rem 1rem;
+  background-color: #fff;
+  border: 1px solid rgba(4, 54, 128, 0.2);
+  color: var(--dark-blue);
+}
+
+.search-filter-container .input-group .form-control:not(:first-child) {
+  border-left: 0;
+}
+
+/* Brand badge styling */
+.motor-card .brand-badge .badge {
+  font-size: 1.6rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.motors-grid .motor-card {
+  transition: all 0.3s ease;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.motors-grid .motor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.75rem 1.5rem rgba(4, 54, 128, 0.2);
+  border-color: var(--primary);
+}
+
+.motors-grid .motor-card .card-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+  color: var(--dark-blue);
+}
+
+.motors-grid .motor-card .price {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.motors-grid .motor-card .specs {
+  margin-bottom: 1rem;
+}
+
+.motors-grid .motor-card .specs small {
+  font-size: 1.2rem;
+}
+
+.motors-grid .motor-card .card-text {
+  font-size: 1.3rem;
+  margin-bottom: 1.25rem;
+  color: var(--light-color);
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.motors-grid .motor-card .btn {
+  font-size: 1.4rem;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+}
+
 .motors-gallery .motors-gallery-slider .box .content p {
   color: var(--light-color);
   font-size: 1.4rem;
@@ -1056,8 +1243,9 @@ a {
 }
 
 /* Fix for navbar overlap with page sections */
-section:target {
-  scroll-margin-top: 8rem;
+/* Only apply to sections that don't already have sufficient top padding */
+section:target:not(.home, .motors-gallery) {
+  scroll-margin-top: 3rem;
 }
 
 .motor-detail {
