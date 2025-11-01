@@ -21,6 +21,8 @@ Fitur Perbandingan Motor:
 Memungkinkan pengguna membandingkan spesifikasi dua atau lebih motor secara berdampingan, sangat berguna dalam proses pengambilan 
 keputusan pembelian.
 
+
+
 ## Recent Progress
 
 -   Fixed navbar height issue making it less tall and more proportionally sized

@@ -147,6 +147,15 @@
                     Tutup
                 </button>
                 <a
+                    href="javascript:void(0);"
+                    id="modalCreditCalculationButton"
+                    class="btn btn-outline-primary me-2"
+                    style="color: var(--primary); border-color: var(--primary);"
+                    onclick="navigateToCreditCalculation()"
+                >
+                    <i class="fas fa-calculator"></i> Simulasi Kredit
+                </a>
+                <a
                     href="https://wa.me/628978638849?text=Halo%20SRB%20Motors%2C%20saya%20tertarik%20untuk%20bertanya%20lebih%20lanjut%20mengenai%20motor%20yang%20ada%20di%20website."
                     id="modalOrderButton"
                     class="btn"

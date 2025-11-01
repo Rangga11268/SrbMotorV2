@@ -8,12 +8,7 @@
 
     <nav class="navbar">
         <a href="{{ url('/') }}#home">home</a>
-        <a href="{{ url('/') }}#advantages">keunggulan</a>
-        <a href="{{ url('/') }}#popular-motors">motor populer</a>
-        <a href="{{ url('/') }}#about-us">tentang kami</a>
-        <a href="{{ url('/') }}#motors-gallery">galeri</a>
-        <a href="{{ url('/') }}#tips-tricks">tips & trik</a>
-        <a href="{{ url('/') }}#contact">kontak</a>
+        <a href="{{ route('motors.index') }}">motor</a>
     </nav>
 
     <div id="auth-btn">

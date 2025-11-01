@@ -79,73 +79,7 @@
                         <span class="fas fa-circle"></span> {{ $motor->type }}
                         <span class="fas fa-circle"></span> {{ $motor->details }}
                     </p>
-                    <a
-                        href="javascript:void(0);"
-                        class="btn detail-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#motorDetailModal"
-                        data-motor-name="{{ $motor->name }}"
-                        data-motor-price-value="Rp. {{ number_format($motor->price, 0, ',', '.') }},-"
-                        data-motor-image="{{ asset('storage/' . $motor->image_path) }}"
-                        data-motor-details-html="{{ $motor->details }}"
-                        data-motor-specifications-html="{{ $motor->specifications->count() ? '<div class=\'specs-container\'>' . implode('', $motor->specifications->map(function($spec) { 
-                            $formattedKey = ucwords(str_replace('_', ' ', $spec->spec_key)); 
-                            $translations = [
-                                'Engine Type' => 'Tipe Mesin',
-                                'Engine Size' => 'Ukuran Mesin',
-                                'Engine Power' => 'Daya Mesin',
-                                'Max Power' => 'Daya Maksimal',
-                                'Max Torque' => 'Torsi Maksimal',
-                                'Fuel System' => 'Sistem Bahan Bakar',
-                                'Fuel Tank' => 'Tangki Bahan Bakar',
-                                'Fuel Capacity' => 'Kapasitas Bensin',
-                                'Brake System' => 'Sistem Rem',
-                                'Front Brake' => 'Rem Depan',
-                                'Rear Brake' => 'Rem Belakang',
-                                'Transmission' => 'Transmisi',
-                                'Suspension Front' => 'Suspensi Depan',
-                                'Suspension Rear' => 'Suspensi Belakang',
-                                'Tire Front' => 'Ban Depan',
-                                'Tire Rear' => 'Ban Belakang',
-                                'Dimensions' => 'Dimensi',
-                                'Length' => 'Panjang',
-                                'Width' => 'Lebar',
-                                'Height' => 'Tinggi',
-                                'Weight' => 'Berat',
-                                'Color Options' => 'Pilihan Warna',
-                                'Frame Type' => 'Tipe Rangka',
-                                'Cooling System' => 'Sistem Pendingin',
-                                'Starting System' => 'Sistem Starter',
-                                'Electrical System' => 'Sistem Kelistrikan',
-                                'Battery' => 'Aki',
-                                'Wheelbase' => 'Jarak Sumbu Roda',
-                                'Ground Clearance' => 'Jarak ke Tanah',
-                                'Seat Height' => 'Ketinggian Jok',
-                                'Compression Ratio' => 'Rasio Kompresi',
-                                'Bore X Stroke' => 'Diameter X Langkah',
-                                'Max Speed' => 'Kecepatan Maksimal',
-                                'Acceleration' => 'Akselerasi',
-                                'Mileage' => 'Konsumsi Bahan Bakar',
-                                'Fuel Efficiency' => 'Efisiensi Bahan Bakar',
-                                'Emission Standard' => 'Standar Emisi',
-                                'Warranty' => 'Garansi',
-                                'Features' => 'Fitur',
-                                'Safety Features' => 'Fitur Keamanan',
-                                'Comfort Features' => 'Fitur Kenyamanan',
-                                'Technology Features' => 'Fitur Teknologi',
-                                'Special Edition' => 'Edisi Spesial',
-                                'Body Type' => 'Tipe Body',
-                                'Headlight' => 'Lampu Depan',
-                                'Taillight' => 'Lampu Belakang',
-                                'Instrument Panel' => 'Panel Instrumen',
-                                'Seat Type' => 'Tipe Jok',
-                                'Handlebar Type' => 'Tipe Setang',
-                                'Ground Clearance' => 'Jarak Bebas ke Tanah'
-                            ]; 
-                            $indonesianKey = isset($translations[$formattedKey]) ? $translations[$formattedKey] : $formattedKey; 
-                            return '<div class=\'spec-row\'><span class=\'fw-bold spec-key\'>' . e($indonesianKey) . ':</span> <span class=\'spec-value\'>' . e($spec->spec_value) . '</span></div>'; 
-                        })->toArray()) . '</div>' : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
-                    >
+                    <a href="{{ route('motors.show', $motor->id) }}" class="btn detail-btn">
                         Lihat Detail
                     </a>
                 </div>
@@ -187,188 +121,35 @@
     </div>
 </section>
 
-<!-- Motors Gallery Section -->
-<section class="motors-gallery" id="motors-gallery">
-    <h1 class="heading"><span>Galeri</span> Motors</h1>
-
-    <h2 class="heading">
-        <img
-            src="{{ asset('OldWeb/assets/icon/yamaha-3d-vector.jpg') }}"
-            alt="Yamaha Logo"
-            class="brand-logo"
-        />
-        Yamaha
-    </h2>
-    <div class="swiper motors-gallery-slider">
-        <div class="swiper-wrapper">
-            @foreach($yamahaMotors->unique('id') as $motor)
-            <div class="swiper-slide box">
-                <img src="{{ asset('storage/' . $motor->image_path) }}" alt="{{ $motor->name }}" />
-                <div class="content">
-                    <h3>{{ $motor->name }}</h3>
-                    <div class="price">Rp. {{ number_format($motor->price, 0, ',', '.') }},-</div>
-                    <a
-                        href="javascript:void(0);"
-                        class="btn detail-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#motorDetailModal"
-                        data-motor-name="{{ $motor->name }}"
-                        data-motor-price-value="Rp. {{ number_format($motor->price, 0, ',', '.') }},-"
-                        data-motor-image="{{ asset('storage/' . $motor->image_path) }}"
-                        data-motor-details-html="{{ $motor->details }}"
-                        data-motor-specifications-html="{{ $motor->specifications->count() ? '<div class=\'specs-container\'>' . implode('', $motor->specifications->map(function($spec) { 
-                            $formattedKey = ucwords(str_replace('_', ' ', $spec->spec_key)); 
-                            $translations = [
-                                'Engine Type' => 'Tipe Mesin',
-                                'Engine Size' => 'Ukuran Mesin',
-                                'Engine Power' => 'Daya Mesin',
-                                'Max Power' => 'Daya Maksimal',
-                                'Max Torque' => 'Torsi Maksimal',
-                                'Fuel System' => 'Sistem Bahan Bakar',
-                                'Fuel Tank' => 'Tangki Bahan Bakar',
-                                'Fuel Capacity' => 'Kapasitas Bensin',
-                                'Brake System' => 'Sistem Rem',
-                                'Front Brake' => 'Rem Depan',
-                                'Rear Brake' => 'Rem Belakang',
-                                'Transmission' => 'Transmisi',
-                                'Suspension Front' => 'Suspensi Depan',
-                                'Suspension Rear' => 'Suspensi Belakang',
-                                'Tire Front' => 'Ban Depan',
-                                'Tire Rear' => 'Ban Belakang',
-                                'Dimensions' => 'Dimensi',
-                                'Length' => 'Panjang',
-                                'Width' => 'Lebar',
-                                'Height' => 'Tinggi',
-                                'Weight' => 'Berat',
-                                'Color Options' => 'Pilihan Warna',
-                                'Frame Type' => 'Tipe Rangka',
-                                'Cooling System' => 'Sistem Pendingin',
-                                'Starting System' => 'Sistem Starter',
-                                'Electrical System' => 'Sistem Kelistrikan',
-                                'Battery' => 'Aki',
-                                'Wheelbase' => 'Jarak Sumbu Roda',
-                                'Ground Clearance' => 'Jarak ke Tanah',
-                                'Seat Height' => 'Ketinggian Jok',
-                                'Compression Ratio' => 'Rasio Kompresi',
-                                'Bore X Stroke' => 'Diameter X Langkah',
-                                'Max Speed' => 'Kecepatan Maksimal',
-                                'Acceleration' => 'Akselerasi',
-                                'Mileage' => 'Konsumsi Bahan Bakar',
-                                'Fuel Efficiency' => 'Efisiensi Bahan Bakar',
-                                'Emission Standard' => 'Standar Emisi',
-                                'Warranty' => 'Garansi',
-                                'Features' => 'Fitur',
-                                'Safety Features' => 'Fitur Keamanan',
-                                'Comfort Features' => 'Fitur Kenyamanan',
-                                'Technology Features' => 'Fitur Teknologi',
-                                'Special Edition' => 'Edisi Spesial',
-                                'Body Type' => 'Tipe Body',
-                                'Headlight' => 'Lampu Depan',
-                                'Taillight' => 'Lampu Belakang',
-                                'Instrument Panel' => 'Panel Instrumen',
-                                'Seat Type' => 'Tipe Jok',
-                                'Handlebar Type' => 'Tipe Setang',
-                                'Ground Clearance' => 'Jarak Bebas ke Tanah'
-                            ]; 
-                            $indonesianKey = isset($translations[$formattedKey]) ? $translations[$formattedKey] : $formattedKey; 
-                            return '<div class=\'spec-row\'><span class=\'fw-bold spec-key\'>' . e($indonesianKey) . ':</span> <span class=\'spec-value\'>' . e($spec->spec_value) . '</span></div>'; 
-                        })->toArray()) . '</div>' : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
-                        >Lihat Detail</a
-                    >
-                </div>
-            </div>
-            @endforeach
-        </div>
-
-        <div class="swiper-pagination"></div>
+<!-- Motors Gallery Section - Now linked to dedicated page -->
+<section class="motors-preview" id="motors-preview">
+    <h1 class="heading text-center mb-4"><span>Galeri</span> Motor</h1>
+    <p class="text-center mb-4">Temukan berbagai pilihan motor yang sesuai dengan kebutuhan Anda</p>
+    
+    <div class="text-center mb-4">
+        <a href="{{ route('motors.index') }}" class="btn btn-primary btn-lg">Lihat Semua Motor</a>
     </div>
     
-    <h2 class="heading">
-        <img src="{{ asset('OldWeb/assets/icon/honda.svg') }}" alt="Honda Logo" class="brand-logo" />
-        Honda
-    </h2>
-    <div class="swiper motors-gallery-slider">
-        <div class="swiper-wrapper">
-            @foreach($hondaMotors->unique('id') as $motor)
-            <div class="swiper-slide box">
-                <img src="{{ asset('storage/' . $motor->image_path) }}" alt="{{ $motor->name }}" />
-                <div class="content">
-                    <h3>{{ $motor->name }}</h3>
-                    <div class="price">Rp. {{ number_format($motor->price, 0, ',', '.') }},-</div>
-                    <a
-                        href="javascript:void(0);"
-                        class="btn detail-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#motorDetailModal"
-                        data-motor-name="{{ $motor->name }}"
-                        data-motor-price-value="Rp. {{ number_format($motor->price, 0, ',', '.') }},-"
-                        data-motor-image="{{ asset('storage/' . $motor->image_path) }}"
-                        data-motor-details-html="{{ $motor->details }}"
-                        data-motor-specifications-html="{{ $motor->specifications->count() ? '<div class=\'specs-container\'>' . implode('', $motor->specifications->map(function($spec) { 
-                            $formattedKey = ucwords(str_replace('_', ' ', $spec->spec_key)); 
-                            $translations = [
-                                'Engine Type' => 'Tipe Mesin',
-                                'Engine Size' => 'Ukuran Mesin',
-                                'Engine Power' => 'Daya Mesin',
-                                'Max Power' => 'Daya Maksimal',
-                                'Max Torque' => 'Torsi Maksimal',
-                                'Fuel System' => 'Sistem Bahan Bakar',
-                                'Fuel Tank' => 'Tangki Bahan Bakar',
-                                'Fuel Capacity' => 'Kapasitas Bensin',
-                                'Brake System' => 'Sistem Rem',
-                                'Front Brake' => 'Rem Depan',
-                                'Rear Brake' => 'Rem Belakang',
-                                'Transmission' => 'Transmisi',
-                                'Suspension Front' => 'Suspensi Depan',
-                                'Suspension Rear' => 'Suspensi Belakang',
-                                'Tire Front' => 'Ban Depan',
-                                'Tire Rear' => 'Ban Belakang',
-                                'Dimensions' => 'Dimensi',
-                                'Length' => 'Panjang',
-                                'Width' => 'Lebar',
-                                'Height' => 'Tinggi',
-                                'Weight' => 'Berat',
-                                'Color Options' => 'Pilihan Warna',
-                                'Frame Type' => 'Tipe Rangka',
-                                'Cooling System' => 'Sistem Pendingin',
-                                'Starting System' => 'Sistem Starter',
-                                'Electrical System' => 'Sistem Kelistrikan',
-                                'Battery' => 'Aki',
-                                'Wheelbase' => 'Jarak Sumbu Roda',
-                                'Ground Clearance' => 'Jarak ke Tanah',
-                                'Seat Height' => 'Ketinggian Jok',
-                                'Compression Ratio' => 'Rasio Kompresi',
-                                'Bore X Stroke' => 'Diameter X Langkah',
-                                'Max Speed' => 'Kecepatan Maksimal',
-                                'Acceleration' => 'Akselerasi',
-                                'Mileage' => 'Konsumsi Bahan Bakar',
-                                'Fuel Efficiency' => 'Efisiensi Bahan Bakar',
-                                'Emission Standard' => 'Standar Emisi',
-                                'Warranty' => 'Garansi',
-                                'Features' => 'Fitur',
-                                'Safety Features' => 'Fitur Keamanan',
-                                'Comfort Features' => 'Fitur Kenyamanan',
-                                'Technology Features' => 'Fitur Teknologi',
-                                'Special Edition' => 'Edisi Spesial',
-                                'Body Type' => 'Tipe Body',
-                                'Headlight' => 'Lampu Depan',
-                                'Taillight' => 'Lampu Belakang',
-                                'Instrument Panel' => 'Panel Instrumen',
-                                'Seat Type' => 'Tipe Jok',
-                                'Handlebar Type' => 'Tipe Setang',
-                                'Ground Clearance' => 'Jarak Bebas ke Tanah'
-                            ]; 
-                            $indonesianKey = isset($translations[$formattedKey]) ? $translations[$formattedKey] : $formattedKey; 
-                            return '<div class=\'spec-row\'><span class=\'fw-bold spec-key\'>' . e($indonesianKey) . ':</span> <span class=\'spec-value\'>' . e($spec->spec_value) . '</span></div>'; 
-                        })->toArray()) . '</div>' : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
-                        >Lihat Detail</a
-                    >
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">Yamaha</h5>
+                    <p class="card-text">Temukan berbagai pilihan motor Yamaha dengan kualitas terjamin.</p>
+                    <a href="{{ route('motors.index', ['brand' => 'Yamaha']) }}" class="btn btn-outline-primary mt-auto">Lihat Motor Yamaha</a>
                 </div>
             </div>
-            @endforeach
         </div>
-
-        <div class="swiper-pagination"></div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">Honda</h5>
+                    <p class="card-text">Berbagai pilihan motor Honda terbaru dengan teknologi canggih.</p>
+                    <a href="{{ route('motors.index', ['brand' => 'Honda']) }}" class="btn btn-outline-primary mt-auto">Lihat Motor Honda</a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 

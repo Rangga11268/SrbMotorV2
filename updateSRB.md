@@ -14,6 +14,7 @@ Versi 0.04 dari SRB Motors akan fokus pada perancangan ulang arsitektur halaman 
 - Hero section
 - Our Advantages
 - Popular Motors Slider (preview beberapa motor)
+- tips 
 - About Us Section
 - Footer dan navigasi utama
 
@@ -53,16 +54,8 @@ Versi 0.04 dari SRB Motors akan fokus pada perancangan ulang arsitektur halaman 
 - Pilihan tenor (12, 24, 36 bulan)
 - Informasi tentang persyaratan kredit
 
-### 5. Tips & Tricks (`/tips`)
-**Deskripsi:**
-- Menyajikan artikel-artikel tentang perawatan motor, modifikasi, dll.
 
-**Fitur:**
-- Kategori artikel
-- Pagination
-- Fitur search artikel
-
-### 6. Berita/Artikel (`/news`)
+### 5. Berita/Artikel (`/news`)
 **Deskripsi:**
 - Menyajikan update terbaru, promo, atau informasi industri otomotif
 
@@ -71,7 +64,7 @@ Versi 0.04 dari SRB Motors akan fokus pada perancangan ulang arsitektur halaman 
 - Kategori dan tag
 - Fitur search artikel
 
-### 7. Halaman Kontak (`/contact`)
+### 6. Halaman Kontak (`/contact`)
 **Deskripsi:**
 - Form kontak dan informasi kontak dealer
 
@@ -80,6 +73,8 @@ Versi 0.04 dari SRB Motors akan fokus pada perancangan ulang arsitektur halaman 
 - Lokasi dealer
 - Informasi kontak lainnya
 
+
+### belum prioritas
 ### 8. Profil Pengguna (`/profile`)
 **Deskripsi:**
 - Tersedia hanya untuk pengguna yang sudah login
@@ -90,14 +85,7 @@ Versi 0.04 dari SRB Motors akan fokus pada perancangan ulang arsitektur halaman 
 - Aktivitas lainnya
 - Pengaturan akun
 
-### 9. FAQ (`/faq`)
-**Deskripsi:**
-- Halaman khusus untuk pertanyaan-pertanyaan umum
 
-**Fitur:**
-- Pertanyaan dan jawaban umum
-- Kategori pertanyaan
-- Fitur search FAQ
 
 ## Struktur Navigasi
 ```
@@ -105,10 +93,8 @@ Home (/)
 ├── Motors (/motors)
 │   ├── Motor Detail (/motors/{id})
 │   └── Credit Calculator (/motors/{id}/credit-calculation)
-├── Tips (/tips)
 ├── News (/news)
 ├── Contact (/contact)
-├── FAQ (/faq)
 └── Profile (/profile) [for logged-in users]
 ```
 

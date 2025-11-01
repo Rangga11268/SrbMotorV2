@@ -32,6 +32,15 @@ section {
   padding: 2rem 9%;
 }
 
+/* More aggressive fix for motor pages to prevent navbar overlap */
+.motors-gallery {
+  padding-top: 12rem !important; /* More significant padding to prevent navbar overlap */
+}
+
+.motor-detail {
+  padding-top: 12rem !important; /* More significant padding to prevent navbar overlap */
+}
+
 a {
   text-decoration: none;
 }
@@ -111,6 +120,10 @@ a {
   background-color: rgba(4, 54, 128, 0.6);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   backdrop-filter: saturate(180%) blur(10px);
+  
+  /* Define height explicitly to help calculate overlap */
+  height: 80px;
+  box-sizing: border-box;
 }
 
 .header.scrolled {
@@ -118,6 +131,7 @@ a {
   background-color: rgba(4, 54, 128, 0.95);
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
   backdrop-filter: saturate(180%) blur(20px);
+  height: 70px; /* Smaller height when scrolled */
 }
 
 .header .logo {
@@ -460,7 +474,7 @@ a {
 }
 
 .home {
-  padding-top: 10rem;
+  padding-top: 18rem; /* Increased padding to account for navbar */
   margin-bottom: 4rem;
   text-align: center;
   overflow-x: hidden;
@@ -702,6 +716,10 @@ a {
   padding: 1rem 0;
   font-size: 1.4rem;
   color: var(--light-color);
+}
+
+.motors-gallery {
+  padding-top: 8rem; /* Add padding to prevent navbar overlap */
 }
 
 .motors-gallery .motors-gallery-slider {
@@ -1035,6 +1053,26 @@ a {
 
 .spec-row:last-child {
   border-bottom: none;
+}
+
+/* Fix for navbar overlap with page sections */
+section:target {
+  scroll-margin-top: 8rem;
+}
+
+.motor-detail {
+  padding-top: 8rem; /* Add padding to prevent navbar overlap */
+}
+
+/* Ensure headings are visible under fixed navbar */
+section .heading {
+  position: relative;
+  z-index: 2; /* Ensure headings appear above any potential overlapping */
+}
+
+/* Additional fix: Ensure first section is not covered by navbar when page loads */
+section:first-of-type {
+  margin-top: 8rem;
 }
 
 .modal-footer {

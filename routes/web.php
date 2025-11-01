@@ -8,8 +8,15 @@ use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MotorGalleryController;
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
+Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
+Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
+Route::get('/motors/{motor}/credit-calculation', [MotorGalleryController::class, 'showCreditCalculation'])->name('motors.credit-calculation');
+Route::get('/contact', function() {
+    return redirect('/#contact');
+})->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
 
 // Authentication routes
