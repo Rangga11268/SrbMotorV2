@@ -126,14 +126,14 @@
                             >
                                 Spesifikasi:
                             </h4>
-                            <p
+                            <div
                                 id="modalMotorDetails"
                                 style="
                                     font-size: 1.5rem;
                                     color: var(--light-color);
                                     line-height: 1.7;
                                 "
-                            ></p>
+                            ></div>
                         </div>
                     </div>
                 </div>

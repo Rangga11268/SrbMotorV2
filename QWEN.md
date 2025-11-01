@@ -9,7 +9,9 @@ Fitur forgot password (notes untuk development jadi tidak menggunakan third part
 tambah crud lagi di admin yaitu data penjualan motor dan ini pasti datanya dari luar atau di luar webiste misal ada yang datang ke dealer langsung  
 dan tambahkan sweetalert 2 di admin
 spek dapat di tambah input nya jadi user bisa milih misah awal tampilkan 1 input spek lalu ada opsi plus tambah spek nanti muncul input baru lagi
-FIX BUG DI FRONTEND DIMANA TAMPILAN MOTOR TIDAK SESUAI JUMLAH NYA ATAU TERLOOP 3 KALI
+MEMISAHKAN HALAMAN HALAMAN DAN
+HALAMAN GALERI MOTOR NANTI BAKAL ADA FILTER DAN SEARCH UNTUK USER DAN BERBAGAI FITUR LAGI
+SERTA ADA HALAMAN BERITA JUGA
 
 ## Recent Progress
 
@@ -28,6 +30,11 @@ FIX BUG DI FRONTEND DIMANA TAMPILAN MOTOR TIDAK SESUAI JUMLAH NYA ATAU TERLOOP 3
 -   Enhanced responsive design for all admin pages, especially for mobile and tablet devices
 -   Replaced JSON specifications input with user-friendly form fields for motor specifications
 -   Translated entire admin panel to Indonesian
+-   Fixed Swiper.js duplication issue when there are only 1-2 items in sliders
+-   Improved styling of motor gallery cards for better visual appeal
+-   Enhanced specification display in modal with structured format
+-   Implemented separate specifications table with proper relationships
+-   Added full rollback capability for database migrations
 
 ## Overview
 
@@ -58,6 +65,7 @@ The SRB Motors website has been successfully converted from a static HTML/CSS/JS
 -   User management in admin panel
 -   Search functionality in admin panels
 -   Dashboard with statistics
+-   Separated motor specifications into dedicated table for better organization
 
 ### 3. Database Schema
 
@@ -70,9 +78,17 @@ The SRB Motors website has been successfully converted from a static HTML/CSS/JS
     -   price (decimal)
     -   year (integer)
     -   type (string) - Metic, Automatic, Sport, etc.
-    -   specifications (text) - JSON or serialized data
     -   image_path (string) - path to the motor image
     -   details (text) - brief details about the motor
+    -   created_at
+    -   updated_at
+
+-   Motor Specifications Table (newly added):
+
+    -   id (primary key)
+    -   motor_id (foreign key) - references motors table
+    -   spec_key (string) - the specification name (e.g., engine_type, engine_size)
+    -   spec_value (text) - the specification value (e.g., "4 tak", "155cc")
     -   created_at
     -   updated_at
 
@@ -113,6 +129,7 @@ The SRB Motors website has been successfully converted from a static HTML/CSS/JS
 -   User management (role assignment, deletion)
 -   Search functionality across all admin sections
 -   Recent items panels for quick overview
+-   Separate specifications management in motor forms
 
 ### 6. Security Measures
 
@@ -140,6 +157,8 @@ The SRB Motors website has been successfully converted from a static HTML/CSS/JS
 5. **User Management**: Admin can manage user roles and accounts
 6. **Search Functionality**: Search across motors, messages, and users in admin panel
 7. **Dashboard**: Overview of all system activity
+8. **Proper Specifications Management**: Separated specifications into a dedicated table for better organization and retrieval
+9. **Clean Specification Display**: Specifications now display properly formatted in modals without horizontal scrolling
 
 ## Project Structure
 
@@ -158,6 +177,7 @@ app/
 │       └── AdminMiddleware.php
 ├── Models/
 │   ├── Motor.php
+│   ├── MotorSpecification.php
 │   ├── ContactMessage.php
 │   └── User.php
 config/
@@ -209,6 +229,8 @@ After seeding the database, you can log in with:
 
 2. **Navbar Dropdown Fix**: Updated the navbar authentication element ID from `login-btn` to `auth-btn` to prevent conflicts with original JavaScript that was opening the login modal. Now authenticated users get a proper dropdown menu with user name, admin panel access (for admins), and logout option, while unauthenticated users get a link to the login page.
 
+3. **Specifications Display Fix**: Fixed issue where specifications were displaying horizontally by implementing a proper structured format with vertical layout.
+
 ## Key Features & Enhancements
 
 1. **Complete Authentication System**:
@@ -225,6 +247,7 @@ After seeding the database, you can log in with:
     - User management with role assignment
     - Image upload for motors
     - Search functionality across all sections
+    - Proper specifications management
 
 3. **Preserved Original Design**:
 
@@ -237,6 +260,8 @@ After seeding the database, you can log in with:
     - Backend processing for contact form
     - Image upload for motor listings
     - User role management
+    - Proper specifications storage and retrieval
+    - Migration with full rollback capability
 
 ## Project Architecture
 
@@ -279,4 +304,8 @@ The application follows Laravel best practices with:
     - Better visual feedback for user interactions
     - Refined styling throughout the application
 
-This implementation successfully transforms the static HTML site into a fully functional Laravel application while preserving the original aesthetics and user experience, and addressing all identified bugs.
+9. **Database Normalization**:
+    - Separated specifications into a dedicated table
+    - Maintained referential integrity with foreign keys
+    - Improved query performance and data organization
+    - Added full migration rollback capability

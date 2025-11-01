@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Motor;
+use App\Models\MotorSpecification;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class MotorController extends Controller
 {
@@ -17,7 +19,7 @@ class MotorController extends Controller
      */
     public function index(): View
     {
-        $query = Motor::query();
+        $query = Motor::with('specifications'); // Eager load specifications
         
         if (request('search')) {
             $search = request('search');
@@ -67,30 +69,30 @@ class MotorController extends Controller
         ]);
 
         $imagePath = $request->file('image')->store('motors', 'public');
-        
-        // Clean specifications array by removing empty values
-        $specifications = $request->specifications;
-        if (is_array($specifications)) {
-            $specifications = array_filter($specifications, function($value) {
-                return !empty($value) && trim($value) !== '';
-            });
-            // If the array is now empty, set it to null
-            if (empty($specifications)) {
-                $specifications = null;
-            }
-        }
 
-        Motor::create([
+        $motor = Motor::create([
             'name' => $request->name,
             'brand' => $request->brand,
             'model' => $request->model,
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
-            'specifications' => $specifications,
             'image_path' => $imagePath,
             'details' => $request->details,
         ]);
+
+        // Save specifications to the separate table
+        $specifications = $request->input('specifications', []);
+        if (!empty($specifications)) {
+            foreach ($specifications as $key => $value) {
+                if (!empty($value) && trim($value) !== '') {
+                    $motor->specifications()->create([
+                        'spec_key' => $key,
+                        'spec_value' => $value,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.motors.index')->with('success', 'Motor created successfully.');
     }
@@ -100,6 +102,7 @@ class MotorController extends Controller
      */
     public function show(Motor $motor): View
     {
+        $motor->load('specifications'); // Load specifications
         return view('pages.admin.motors.show', compact('motor'));
     }
 
@@ -108,6 +111,7 @@ class MotorController extends Controller
      */
     public function edit(Motor $motor): View
     {
+        $motor->load('specifications'); // Load specifications
         return view('pages.admin.motors.edit', compact('motor'));
     }
 
@@ -135,18 +139,6 @@ class MotorController extends Controller
             'details' => 'nullable|string',
         ]);
 
-        // Clean specifications array by removing empty values
-        $specifications = $request->specifications;
-        if (is_array($specifications)) {
-            $specifications = array_filter($specifications, function($value) {
-                return !empty($value) && trim($value) !== '';
-            });
-            // If the array is now empty, set it to null
-            if (empty($specifications)) {
-                $specifications = null;
-            }
-        }
-
         $data = [
             'name' => $request->name,
             'brand' => $request->brand,
@@ -154,7 +146,6 @@ class MotorController extends Controller
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
-            'specifications' => $specifications,
             'details' => $request->details,
         ];
 
@@ -168,6 +159,24 @@ class MotorController extends Controller
         }
 
         $motor->update($data);
+
+        // Update specifications in the separate table
+        $newSpecs = $request->input('specifications', []);
+        
+        // Delete existing specifications
+        $motor->specifications()->delete();
+        
+        // Add new specifications
+        if (!empty($newSpecs)) {
+            foreach ($newSpecs as $key => $value) {
+                if (!empty($value) && trim($value) !== '') {
+                    $motor->specifications()->create([
+                        'spec_key' => $key,
+                        'spec_value' => $value,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.motors.index')->with('success', 'Motor updated successfully.');
     }

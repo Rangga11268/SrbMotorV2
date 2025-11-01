@@ -115,3 +115,71 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete confirmations with SweetAlert2
+    document.querySelectorAll('form[method="POST"][class*="d-inline"]').forEach(form => {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn && submitBtn.getAttribute('onclick')) {
+            submitBtn.removeAttribute('onclick');
+            
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get the item name for the confirmation message
+                const row = form.closest('tr');
+                const itemName = row ? row.querySelector('td:nth-child(2) .fw-medium').textContent.trim() || 'pesan' : 'pesan';
+                
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: `Pesan "${itemName}" akan dihapus secara permanen.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#043680',
+                    cancelButtonColor: '#dc3545',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        }
+    });
+
+    // Show success message if exists
+    @if(session('success'))
+        // Check if SweetAlert2 is loaded before using it
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ e(session('success')) }}',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#043680'
+            });
+        } else {
+            console.error('SweetAlert2 is not loaded');
+        }
+    @endif
+
+    @if(session('error'))
+        // Check if SweetAlert2 is loaded before using it
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Kesalahan!',
+                text: '{{ e(session('error')) }}',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545'
+            });
+        } else {
+            console.error('SweetAlert2 is not loaded');
+        }
+    @endif
+});
+</script>
+@endpush

@@ -88,7 +88,7 @@
                         data-motor-price-value="Rp. {{ number_format($motor->price, 0, ',', '.') }},-"
                         data-motor-image="{{ asset('storage/' . $motor->image_path) }}"
                         data-motor-details-html="{{ $motor->details }}"
-                        data-motor-specifications-html="{{ $motor->specifications ? (is_array($motor->specifications) ? '<ul><li>' . implode('</li><li>', $motor->specifications) . '</li></ul>' : '<p>' . $motor->specifications . '</p>') : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
+                        data-motor-specifications-html="{{ $motor->specifications->count() ? '<div class=\'specs-container\'>' . implode('', $motor->specifications->map(function($spec) { return '<div class=\'spec-row\'><span class=\'fw-bold spec-key\'>' . e($spec->spec_key) . ':</span> <span class=\'spec-value\'>' . e($spec->spec_value) . '</span></div>'; })->toArray()) . '</div>' : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
                     >
                         Lihat Detail
                     </a>
@@ -160,7 +160,7 @@
                         data-motor-price-value="Rp. {{ number_format($motor->price, 0, ',', '.') }},-"
                         data-motor-image="{{ asset('storage/' . $motor->image_path) }}"
                         data-motor-details-html="{{ $motor->details }}"
-                        data-motor-specifications-html="{{ $motor->specifications ? (is_array($motor->specifications) ? '<ul><li>' . implode('</li><li>', $motor->specifications) . '</li></ul>' : '<p>' . $motor->specifications . '</p>') : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
+                        data-motor-specifications-html="{{ $motor->specifications->count() ? '<div class=\'specs-container\'>' . implode('', $motor->specifications->map(function($spec) { return '<div class=\'spec-row\'><span class=\'fw-bold spec-key\'>' . e($spec->spec_key) . ':</span> <span class=\'spec-value\'>' . e($spec->spec_value) . '</span></div>'; })->toArray()) . '</div>' : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
                         >Lihat Detail</a
                     >
                 </div>
@@ -192,7 +192,7 @@
                         data-motor-price-value="Rp. {{ number_format($motor->price, 0, ',', '.') }},-"
                         data-motor-image="{{ asset('storage/' . $motor->image_path) }}"
                         data-motor-details-html="{{ $motor->details }}"
-                        data-motor-specifications-html="{{ $motor->specifications ? (is_array($motor->specifications) ? '<ul><li>' . implode('</li><li>', $motor->specifications) . '</li></ul>' : '<p>' . $motor->specifications . '</p>') : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
+                        data-motor-specifications-html="{{ $motor->specifications->count() ? '<div class=\'specs-container\'>' . implode('', $motor->specifications->map(function($spec) { return '<div class=\'spec-row\'><span class=\'fw-bold spec-key\'>' . e($spec->spec_key) . ':</span> <span class=\'spec-value\'>' . e($spec->spec_value) . '</span></div>'; })->toArray()) . '</div>' : '<p>Spesifikasi lengkap tidak tersedia.</p>' }}"
                         >Lihat Detail</a
                     >
                 </div>
@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var modalMotorImageEl = motorDetailModal.querySelector("#modalMotorImage");
             var modalMotorNameEl = motorDetailModal.querySelector("#modalMotorName");
             var modalMotorPriceSpan = motorDetailModal.querySelector("#modalMotorPrice span");
-            var modalMotorDetailsP = motorDetailModal.querySelector("#modalMotorDetails");
+            var modalMotorDetailsContainer = motorDetailModal.querySelector("#modalMotorDetails");
             var modalMotorDetailsFullDiv = motorDetailModal.querySelector("#modalMotorDetailsFull");
 
             if (modalTitle) modalTitle.textContent = motorName || "Detail Motor";
@@ -406,12 +406,56 @@ document.addEventListener('DOMContentLoaded', function () {
             if (modalMotorNameEl) modalMotorNameEl.textContent = motorName || "Nama Tidak Tersedia";
             if (modalMotorPriceSpan) modalMotorPriceSpan.textContent = motorPriceValue || "N/A";
 
-            if (modalMotorDetailsP && modalMotorDetailsFullDiv) {
+            if (modalMotorDetailsContainer && modalMotorDetailsFullDiv) {
                 if (motorSpecificationsHtml && motorSpecificationsHtml.trim() !== "") {
-                    modalMotorDetailsP.innerHTML = motorSpecificationsHtml;
+                    // Check if the string looks like our custom format (using '||' as separator)
+                    if (motorSpecificationsHtml.includes('||')) {
+                        // Parse our custom format: "key:value||key:value||key:value"
+                        var specsHtml = '<div class="specs-container">';
+                        var specPairs = motorSpecificationsHtml.split('||');
+                        specPairs.forEach(function(pair) {
+                            var colonIndex = pair.indexOf(':');
+                            if (colonIndex !== -1) {
+                                var key = pair.substring(0, colonIndex).trim();
+                                var value = pair.substring(colonIndex + 1).trim();
+                                specsHtml += '<div class="spec-row"><span class="fw-bold spec-key">' + key + ':</span> <span class="spec-value">' + value + '</span></div>';
+                            } else {
+                                specsHtml += '<div class="spec-row">' + pair.trim() + '</div>';
+                            }
+                        });
+                        specsHtml += '</div>';
+                        modalMotorDetailsContainer.innerHTML = specsHtml;
+                    } 
+                    // Check if the string looks like JSON (starts with { or [ and ends with } or ])
+                    else if (motorSpecificationsHtml.startsWith('{') || motorSpecificationsHtml.startsWith('[')) {
+                        try {
+                            var specs = JSON.parse(motorSpecificationsHtml);
+                            if (typeof specs === 'object' && specs !== null) {
+                                // Format the specifications as a structured list
+                                var specsHtml = '<div class="specs-container">';
+                                for (var key in specs) {
+                                    if (specs.hasOwnProperty(key)) {
+                                        specsHtml += '<div class="spec-row"><span class="fw-bold spec-key">' + key + ':</span> <span class="spec-value">' + specs[key] + '</span></div>';
+                                    }
+                                }
+                                specsHtml += '</div>';
+                                modalMotorDetailsContainer.innerHTML = specsHtml;
+                            } else {
+                                // If not an object, display as is
+                                modalMotorDetailsContainer.innerHTML = motorSpecificationsHtml;
+                            }
+                        } catch (e) {
+                            // If JSON parsing fails, treat as regular string
+                            // Check if it's already HTML or plain text
+                            modalMotorDetailsContainer.innerHTML = motorSpecificationsHtml;
+                        }
+                    } else {
+                        // It's not our custom format or JSON, display as is
+                        modalMotorDetailsContainer.innerHTML = motorSpecificationsHtml;
+                    }
                     modalMotorDetailsFullDiv.style.display = "block";
                 } else {
-                    modalMotorDetailsP.innerHTML = "Spesifikasi lengkap tidak tersedia.";
+                    modalMotorDetailsContainer.innerHTML = "<p class='text-center'>Spesifikasi lengkap tidak tersedia.</p>";
                     modalMotorDetailsFullDiv.style.display = "block";
                 }
             }

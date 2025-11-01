@@ -180,3 +180,40 @@ use Illuminate\Support\Str;
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show success message if exists
+    @if(session('success'))
+        // Check if SweetAlert2 is loaded before using it
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ e(session('success')) }}',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#043680'
+            });
+        } else {
+            console.error('SweetAlert2 is not loaded');
+        }
+    @endif
+
+    @if(session('error'))
+        // Check if SweetAlert2 is loaded before using it
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Kesalahan!',
+                text: '{{ e(session('error')) }}',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545'
+            });
+        } else {
+            console.error('SweetAlert2 is not loaded');
+        }
+    @endif
+});
+</script>
+@endpush

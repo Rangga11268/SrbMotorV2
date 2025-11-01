@@ -96,14 +96,14 @@
                         <div class="row mb-3">
                             <div class="col-12 col-md-6">
                                 <label for="engine_type" class="form-label">Tipe Mesin</label>
-                                <input type="text" class="form-control @error('engine_type') is-invalid @enderror" id="engine_type" name="specifications[engine_type]" value="{{ old('specifications.engine_type', is_array($motor->specifications) ? $motor->specifications['engine_type'] : '') }}">
+                                <input type="text" class="form-control @error('engine_type') is-invalid @enderror" id="engine_type" name="specifications[engine_type]" value="{{ old('specifications.engine_type', $motor->getSpecificationsArrayAttribute()['engine_type'] ?? '') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="engine_size" class="form-label">Ukuran Mesin</label>
-                                <input type="text" class="form-control @error('engine_size') is-invalid @enderror" id="engine_size" name="specifications[engine_size]" value="{{ old('specifications.engine_size', is_array($motor->specifications) ? $motor->specifications['engine_size'] : '') }}">
+                                <input type="text" class="form-control @error('engine_size') is-invalid @enderror" id="engine_size" name="specifications[engine_size]" value="{{ old('specifications.engine_size', $motor->getSpecificationsArrayAttribute()['engine_size'] ?? '') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -113,14 +113,14 @@
                         <div class="row mb-3">
                             <div class="col-12 col-md-6">
                                 <label for="fuel_system" class="form-label">Sistem Bahan Bakar</label>
-                                <input type="text" class="form-control @error('fuel_system') is-invalid @enderror" id="fuel_system" name="specifications[fuel_system]" value="{{ old('specifications.fuel_system', is_array($motor->specifications) ? $motor->specifications['fuel_system'] : '') }}">
+                                <input type="text" class="form-control @error('fuel_system') is-invalid @enderror" id="fuel_system" name="specifications[fuel_system]" value="{{ old('specifications.fuel_system', $motor->getSpecificationsArrayAttribute()['fuel_system'] ?? '') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="transmission" class="form-label">Transmisi</label>
-                                <input type="text" class="form-control @error('transmission') is-invalid @enderror" id="transmission" name="specifications[transmission]" value="{{ old('specifications.transmission', is_array($motor->specifications) ? $motor->specifications['transmission'] : '') }}">
+                                <input type="text" class="form-control @error('transmission') is-invalid @enderror" id="transmission" name="specifications[transmission]" value="{{ old('specifications.transmission', $motor->getSpecificationsArrayAttribute()['transmission'] ?? '') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -130,14 +130,14 @@
                         <div class="row mb-3">
                             <div class="col-12 col-md-6">
                                 <label for="max_power" class="form-label">Daya Maksimal</label>
-                                <input type="text" class="form-control @error('max_power') is-invalid @enderror" id="max_power" name="specifications[max_power]" value="{{ old('specifications.max_power', is_array($motor->specifications) ? $motor->specifications['max_power'] : '') }}">
+                                <input type="text" class="form-control @error('max_power') is-invalid @enderror" id="max_power" name="specifications[max_power]" value="{{ old('specifications.max_power', $motor->getSpecificationsArrayAttribute()['max_power'] ?? '') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="max_torque" class="form-label">Torsi Maksimal</label>
-                                <input type="text" class="form-control @error('max_torque') is-invalid @enderror" id="max_torque" name="specifications[max_torque]" value="{{ old('specifications.max_torque', is_array($motor->specifications) ? $motor->specifications['max_torque'] : '') }}">
+                                <input type="text" class="form-control @error('max_torque') is-invalid @enderror" id="max_torque" name="specifications[max_torque]" value="{{ old('specifications.max_torque', $motor->getSpecificationsArrayAttribute()['max_torque'] ?? '') }}">
                                 @error('specifications')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -146,7 +146,7 @@
                         
                         <div class="mb-3">
                             <label for="additional_specs" class="form-label">Spesifikasi Tambahan</label>
-                            <textarea class="form-control @error('additional_specs') is-invalid @enderror" id="additional_specs" name="specifications[additional_specs]" rows="2">{{ old('specifications.additional_specs', is_array($motor->specifications) ? $motor->specifications['additional_specs'] : '') }}</textarea>
+                            <textarea class="form-control @error('additional_specs') is-invalid @enderror" id="additional_specs" name="specifications[additional_specs]" rows="2">{{ old('specifications.additional_specs', $motor->getSpecificationsArrayAttribute()['additional_specs'] ?? '') }}</textarea>
                             <div class="form-text">Spesifikasi lain yang tidak tercantum di atas</div>
                             @error('specifications')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -197,3 +197,25 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show error message if exists
+    @if(session('error'))
+        // Check if SweetAlert2 is loaded before using it
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Kesalahan!',
+                text: '{{ e(session('error')) }}',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545'
+            });
+        } else {
+            console.error('SweetAlert2 is not loaded');
+        }
+    @endif
+});
+</script>
+@endpush

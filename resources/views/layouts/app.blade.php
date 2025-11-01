@@ -46,7 +46,3 @@
     @yield('scripts')
 </body>
 </html>
-    
-    @yield('scripts')
-</body>
-</html>

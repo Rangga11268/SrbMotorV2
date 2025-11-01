@@ -70,10 +70,10 @@
                                 <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                             </td>
                             <td>
-                                <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline">
+                                <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline role-form">
                                     @csrf
                                     @method('PUT')
-                                    <select name="role" class="form-select form-select-sm bg-white" onchange="if(confirm('Apakah Anda yakin ingin mengubah peran?')) this.form.submit(); else return false;">
+                                    <select name="role" class="form-select form-select-sm bg-white role-select">
                                         <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>Pengguna</option>
                                         <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                     </select>
@@ -128,3 +128,95 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete confirmations with SweetAlert2
+    document.querySelectorAll('form[method="POST"][class*="d-inline"]').forEach(form => {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn && submitBtn.getAttribute('onclick')) {
+            submitBtn.removeAttribute('onclick');
+            
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get the item name for the confirmation message
+                const row = form.closest('tr');
+                const itemName = row ? row.querySelector('td:nth-child(2) .fw-medium').textContent.trim() || 'pengguna' : 'pengguna';
+                
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: `Pengguna "${itemName}" akan dihapus secara permanen.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#043680',
+                    cancelButtonColor: '#dc3545',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        }
+    });
+
+    // Handle role change confirmations with SweetAlert2
+    document.querySelectorAll('.role-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const form = this.closest('form');
+            const userName = form.closest('tr').querySelector('td:nth-child(2) .fw-medium').textContent.trim() || 'pengguna';
+            const newRole = this.options[this.selectedIndex].text;
+            
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: `Apakah Anda yakin ingin mengubah peran pengguna "${userName}" menjadi ${newRole}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#043680',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ya, ubah!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // Show success message if exists
+    @if(session('success'))
+        // Check if SweetAlert2 is loaded before using it
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ e(session('success')) }}',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#043680'
+            });
+        } else {
+            console.error('SweetAlert2 is not loaded');
+        }
+    @endif
+
+    @if(session('error'))
+        // Check if SweetAlert2 is loaded before using it
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Kesalahan!',
+                text: '{{ e(session('error')) }}',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545'
+            });
+        } else {
+            console.error('SweetAlert2 is not loaded');
+        }
+    @endif
+});
+</script>
+@endpush

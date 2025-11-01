@@ -21,7 +21,6 @@ class Motor extends Model
         'price',
         'year',
         'type',
-        'specifications',
         'image_path',
         'details',
     ];
@@ -33,6 +32,28 @@ class Motor extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
-        'specifications' => 'array', // Cast specifications to array for JSON handling
     ];
+    
+    /**
+     * Get the specifications for the motor.
+     */
+    public function specifications()
+    {
+        return $this->hasMany(MotorSpecification::class, 'motor_id');
+    }
+    
+    /**
+     * Get the specifications as an associative array.
+     */
+    public function getSpecificationsArrayAttribute()
+    {
+        $specs = $this->specifications;
+        $result = [];
+        
+        foreach ($specs as $spec) {
+            $result[$spec->spec_key] = $spec->spec_value;
+        }
+        
+        return $result;
+    }
 }

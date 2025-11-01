@@ -1008,6 +1008,35 @@ a {
   font-weight: 600;
 }
 
+.specs-container {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.spec-row {
+  display: block;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+
+.spec-key {
+  display: block;
+  font-weight: bold;
+  color: var(--dark-blue);
+  margin-bottom: 0.2rem;
+}
+
+.spec-value {
+  display: block;
+  color: var(--light-color);
+}
+
+.spec-row:last-child {
+  border-bottom: none;
+}
+
 .modal-footer {
   border-top: var(--border);
 }
