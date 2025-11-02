@@ -1,5 +1,12 @@
 <section class="footer" id="footer">
     <div class="box-container">
+        <div class="box logo-box">
+            <div class="logo-footer">
+                <img src="{{ asset('assets/icon/logo trans.png') }}" alt="SRB Motors Logo" class="footer-logo-img">
+                <h3>SRB MOTORS</h3>
+            </div>
+        </div>
+
         <div class="box">
             <h3>Our Branches</h3>
             <a href="#"> <i class="fas fa-map-marker-alt"></i> Bekasi </a>
