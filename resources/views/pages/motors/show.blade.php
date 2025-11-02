@@ -26,7 +26,14 @@
                         <div class="card-body p-4">
                             <div class="motor-header">
                                 <h1 class="fw-bold text-dark">{{ $motor->name }}</h1>
-                                <div class="badge bg-primary mb-3">{{ $motor->brand }}</div>
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <div class="badge bg-primary">{{ $motor->brand }}</div>
+                                    @if($motor->tersedia)
+                                        <div class="badge bg-success">Tersedia</div>
+                                    @else
+                                        <div class="badge bg-danger">Tidak Tersedia</div>
+                                    @endif
+                                </div>
                             </div>
                             
                             <div class="motor-info mb-4">
@@ -176,7 +183,7 @@
                     <div class="row g-4">
                         @foreach($relatedMotors as $relatedMotor)
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                            <div class="card motor-card h-100 shadow-sm border-0">
+                            <div class="card motor-card h-100 shadow-sm border-0 {{ !$relatedMotor->tersedia ? 'unavailable-card' : '' }}">
                                 <div class="image-container position-relative">
                                     <img 
                                         src="{{ asset('storage/' . $relatedMotor->image_path) }}" 
@@ -187,6 +194,11 @@
                                     <div class="badge brand-badge position-absolute top-0 start-0 m-2">
                                         <span class="badge bg-primary">{{ $relatedMotor->brand }}</span>
                                     </div>
+                                    @unless($relatedMotor->tersedia)
+                                        <div class="badge availability-badge position-absolute top-0 end-0 m-2 bg-danger">
+                                            Tidak Tersedia
+                                        </div>
+                                    @endunless
                                 </div>
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title fw-bold text-dark fs-4">{{ $relatedMotor->name }}</h5>
@@ -203,7 +215,7 @@
                                         {{ Str::limit($relatedMotor->details, 60) }}
                                     </p>
                                     <div class="mt-auto pt-2">
-                                        <a href="{{ route('motors.show', $relatedMotor->id) }}" class="btn btn-primary w-100 fs-4 py-2">
+                                        <a href="{{ route('motors.show', $relatedMotor->id) }}" class="btn btn-primary w-100 fs-4 py-2 {{ !$relatedMotor->tersedia ? 'disabled' : '' }}">
                                             <i class="fas fa-info-circle me-1"></i> Lihat Detail
                                         </a>
                                     </div>

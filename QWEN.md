@@ -21,6 +21,9 @@ Fitur Perbandingan Motor:
 Memungkinkan pengguna membandingkan spesifikasi dua atau lebih motor secara berdampingan, sangat berguna dalam proses pengambilan 
 keputusan pembelian.
 Perkecil Footer
+Custom Loading
+Manajemen Pemesanan (Bisa dari luar web di catat di web nya)
+Efisiensi Table
 
 
 

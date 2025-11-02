@@ -1,7 +1,7 @@
-# Update SRB Motors - Rancangan Pemisahan Halaman V0.04
+# Update SRB Motors - Rancangan Pemisahan Halaman V0.05
 
 ## Overview
-Versi 0.04 dari SRB Motors akan fokus pada perancangan ulang arsitektur halaman dengan memisahkan fungsi-fungsi utama ke dalam halaman-halaman yang lebih spesifik dan terorganisir. Tujuan utama adalah meningkatkan pengalaman pengguna dan memudahkan navigasi antar halaman.
+Versi 0.05 dari SRB Motors menambahkan fitur Manajemen Pemesanan (Order Management) yang memungkinkan pencatatan pesanan dari pelanggan baik yang datang langsung ke dealer maupun dari pengunjung website. Fitur ini dirancang tetap simple namun efektif untuk membantu proses penjualan.
 
 ## Daftar Halaman Baru
 
@@ -85,7 +85,57 @@ Versi 0.04 dari SRB Motors akan fokus pada perancangan ulang arsitektur halaman 
 - Aktivitas lainnya
 - Pengaturan akun
 
+## 7. Manajemen Pemesanan (Order Management) - V0.05
 
+### Deskripsi:
+Fitur untuk mencatat dan mengelola pesanan dari calon pembeli, baik dari pengunjung website maupun dari pelanggan yang datang langsung ke dealer. Sistem ini memungkinkan admin untuk melacak proses penjualan dari awal hingga selesai.
+
+### Lokasi:
+- Bagian Admin Panel di `/admin/orders`
+
+### Fitur Utama:
+- Tabel `orders` untuk menyimpan informasi pesanan pelanggan
+- Tabel `order_items` untuk menghubungkan pesanan dengan motor tertentu
+- Status pesanan terintegrasi (pending, confirmed, completed, canceled)
+- Formulir penambahan pesanan manual untuk pelanggan yang datang ke dealer
+- Filter dan pencarian pesanan
+- Cetak laporan pesanan sederhana
+
+### Struktur Database:
+1. `orders`
+   - id (primary key)
+   - customer_name (string)
+   - customer_phone (string)
+   - customer_email (string)
+   - order_source (enum: 'website', 'direct') - untuk membedakan sumber pesanan
+   - status (string: pending, confirmed, completed, canceled)
+   - notes (text)
+   - created_at
+   - updated_at
+
+2. `order_items`
+   - id (primary key)
+   - order_id (foreign key)
+   - motor_id (foreign key)
+   - quantity (integer, default 1)
+   - price (decimal)
+   - created_at
+   - updated_at
+
+### Fungsi Admin:
+- Melihat semua pesanan
+- Menambahkan pesanan baru (untuk pelanggan yang datang langsung ke dealer)
+- Mengupdate status pesanan
+- Melihat detail pesanan
+- Menghapus pesanan jika diperlukan
+
+### Alur Proses:
+1. Pelanggan (dari website atau datang langsung) menunjukkan minat pembelian
+2. Jika dari website, pesanan bisa tercatat otomatis atau admin bisa membuatkan
+3. Jika datang langsung ke dealer, admin membuat pesanan secara manual
+4. Pesanan masuk ke antrean (status: pending)
+5. Admin menindaklanjuti pesanan dan memperbarui statusnya (confirmed, completed, atau canceled)
+6. Proses penjualan dilanjutkan di luar website (offline)
 
 ## Struktur Navigasi
 ```
@@ -95,6 +145,12 @@ Home (/)
 │   └── Credit Calculator (/motors/{id}/credit-calculation)
 ├── News (/news)
 ├── Contact (/contact)
+├── Admin Panel (/admin)
+│   ├── Dashboard
+│   ├── Motors
+│   ├── Contact Messages
+│   ├── Users
+│   └── Orders (/admin/orders)
 └── Profile (/profile) [for logged-in users]
 ```
 
@@ -110,16 +166,20 @@ Home (/)
 - Pagination system
 - Component reusability untuk daftar motor dan card design
 - Routing system untuk halaman-halaman baru
+- CRUD system untuk manajemen pesanan
 
 ## Prioritas Implementasi
 1. **Tertinggi:** Pembuatan halaman `/motors` dengan fitur filter dan search
 2. **Tinggi:** Halaman detail motor `/motors/{id}`
 3. **Sedang:** Simulasi kredit dan halaman kontak
 4. **Rendah:** Tips & tricks, berita, FAQ, dan profil pengguna
+5. **V0.05:** Manajemen Pemesanan (Order Management)
 
-## Manfaat dari Pemisahan Halaman
+## Manfaat dari Pemisahan Halaman dan Fitur Order Management
 - Meningkatkan pengalaman pengguna dengan navigasi yang lebih jelas
 - Memungkinkan fitur-fitur seperti filter dan search bekerja lebih optimal
 - Memperbaiki struktur SEO dengan URL yang lebih spesifik
 - Memudahkan pengelolaan konten di masing-masing halaman
-- Memungkinkan scaling fitur-fitur di masa depan
+- Memungkinkan tracking penjualan dan calon pembeli yang efektif
+- Menyederhanakan proses manajemen pesanan dari berbagai sumber
+- Memudahkan pelacakan konversi penjualan dari kunjungan website maupun datang langsung ke dealer

@@ -161,6 +161,17 @@
                             @enderror
                         </div>
                         
+                        <div class="mb-3">
+                            <label for="tersedia" class="form-label">Status Ketersediaan</label>
+                            <select class="form-select @error('tersedia') is-invalid @enderror" id="tersedia" name="tersedia" required>
+                                <option value="1" {{ old('tersedia', $motor->tersedia) == 1 ? 'selected' : '' }}>Tersedia</option>
+                                <option value="0" {{ old('tersedia', $motor->tersedia) == 0 ? 'selected' : '' }}>Tidak Tersedia</option>
+                            </select>
+                            @error('tersedia')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        
                         <div class="mb-4">
                             <h5 class="card-title mt-4">Gambar Motor</h5>
                             <hr>

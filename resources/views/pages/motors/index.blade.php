@@ -87,13 +87,18 @@
             <div class="motors-grid row g-4">
                 @forelse($motors as $motor)
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                        <div class="card motor-card h-100 shadow-sm border-0">
+                        <div class="card motor-card h-100 shadow-sm border-0 {{ !$motor->tersedia ? 'unavailable-card' : '' }}">
                             <div class="image-container position-relative">
                                 <img src="{{ asset('storage/' . $motor->image_path) }}" class="card-img-top img-fluid"
                                     alt="{{ $motor->name }}" style="height: 200px; object-fit: cover;">
                                 <div class="badge brand-badge position-absolute top-0 start-0 m-2 bg-primary">
                                     {{ $motor->brand }}
                                 </div>
+                                @if(!$motor->tersedia)
+                                    <div class="badge availability-badge position-absolute top-0 end-0 m-2 bg-danger">
+                                        Tidak Tersedia
+                                    </div>
+                                @endif
                             </div>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title fw-bold text-dark fs-4">{{ $motor->name }}</h5>
@@ -111,7 +116,7 @@
                                     {{ Str::limit($motor->details, 80) }}
                                 </p>
                                 <div class="mt-auto pt-2">
-                                    <a href="{{ route('motors.show', $motor->id) }}" class="btn btn-primary w-100 fs-4 py-2">
+                                    <a href="{{ route('motors.show', $motor->id) }}" class="btn btn-primary w-100 fs-4 py-2 {{ !$motor->tersedia ? 'disabled' : '' }}">
                                         <i class="fas fa-info-circle me-1"></i> Lihat Detail
                                     </a>
                                 </div>

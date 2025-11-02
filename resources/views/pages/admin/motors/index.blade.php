@@ -17,10 +17,20 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form method="GET" class="row g-3">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-4">
                     <label for="search" class="form-label">Cari Motor</label>
                     <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nama, merek atau tipe..." value="{{ request('search') }}">
                 </div>
+                
+                <div class="col-6 col-md-2">
+                    <label for="tersedia" class="form-label">Ketersediaan</label>
+                    <select name="tersedia" class="form-select" onchange="this.form.submit()">
+                        <option value="">Semua</option>
+                        <option value="1" {{ request('tersedia') == '1' ? 'selected' : '' }}>Tersedia</option>
+                        <option value="0" {{ request('tersedia') == '0' ? 'selected' : '' }}>Tidak Tersedia</option>
+                    </select>
+                </div>
+                
                 <div class="col-6 col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-outline-primary w-100">
                         <i class="fas fa-search me-1"></i> Cari
@@ -46,8 +56,9 @@
                             <th class="border-top-0" style="width: 10%" class="d-none d-lg-table-cell">Merek</th>
                             <th class="border-top-0" style="width: 10%" class="d-none d-xl-table-cell">Harga</th>
                             <th class="border-top-0" style="width: 8%" class="d-none d-lg-table-cell">Tahun</th>
-                            <th class="border-top-0" style="width: 12%" class="d-none d-xl-table-cell">Tipe</th>
-                            <th class="border-top-0" style="width: 35%">Aksi</th>
+                            <th class="border-top-0" style="width: 8%" class="d-none d-xl-table-cell">Tipe</th>
+                            <th class="border-top-0" style="width: 8%" class="d-none d-xl-table-cell">Tersedia</th>
+                            <th class="border-top-0" style="width: 27%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,6 +85,13 @@
                             <td class="d-none d-lg-table-cell">{{ $motor->year }}</td>
                             <td class="d-none d-xl-table-cell">
                                 <span class="badge bg-success bg-opacity-10 text-success">{{ $motor->type }}</span>
+                            </td>
+                            <td class="d-none d-xl-table-cell">
+                                @if($motor->tersedia)
+                                    <span class="badge bg-success">Tersedia</span>
+                                @else
+                                    <span class="badge bg-danger">Tidak Tersedia</span>
+                                @endif
                             </td>
                             <td>
                                 <div class="d-flex flex-md-row flex-column gap-md-2 gap-2">

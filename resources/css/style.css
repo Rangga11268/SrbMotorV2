@@ -992,6 +992,54 @@ a {
   border-radius: 0.375rem;
 }
 
+/* Enhanced styling for unavailable motor cards */
+.motor-card.unavailable-card {
+  position: relative;
+  opacity: 0.85;
+}
+
+.motor-card.unavailable-card::before {
+  content: "TIDAK TERSEDIA";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: rgba(220, 53, 69, 0.15);
+  z-index: 5;
+  pointer-events: none;
+  text-align: center;
+  width: 100%;
+  padding: 1rem;
+}
+
+.motor-card.unavailable-card .image-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(220, 53, 69, 0.1) 0%, 
+    rgba(220, 53, 69, 0.05) 100%);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.motor-card.unavailable-card .btn {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  cursor: not-allowed;
+}
+
+.motor-card.unavailable-card .btn:hover {
+  transform: none !important;
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+}
+
 .motors-gallery .motors-gallery-slider .box .content p {
   color: var(--light-color);
   font-size: 1.4rem;
@@ -1507,6 +1555,89 @@ section .heading {
 /* Additional fix: Ensure first section is not covered by navbar when page loads */
 section:first-of-type {
   margin-top: 8rem;
+}
+
+/* Enhanced styling for availability indicators */
+.availability-badge {
+  opacity: 0.95;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10 !important;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.motor-card .image-container {
+  position: relative;
+}
+
+/* Style for unavailable motors */
+.motor-card .availability-badge.bg-danger {
+  background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+  color: white !important;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Style for available motors */
+.motor-card .availability-badge.bg-success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+  color: white !important;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Specific styling for home page unavailable indicator */
+.popular-motors .content .text-danger {
+  font-weight: bold;
+  font-size: 1.6rem;
+  margin-top: 1rem;
+  text-align: center;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.2));
+  border: 2px dashed rgba(220, 53, 69, 0.5);
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  animation: shake 0.5s ease-in-out 3;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* Enhanced styling for motor detail page availability badge */
+.motor-detail .motor-header .badge.bg-danger {
+  background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+  color: white !important;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.3rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.motor-detail .motor-header .badge.bg-success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+  color: white !important;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.3rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .modal-footer {

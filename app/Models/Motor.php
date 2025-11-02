@@ -23,6 +23,7 @@ class Motor extends Model
         'type',
         'image_path',
         'details',
+        'tersedia',
     ];
 
     /**
@@ -32,6 +33,7 @@ class Motor extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
+        'tersedia' => 'boolean',
     ];
     
     /**

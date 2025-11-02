@@ -31,6 +31,11 @@ class MotorController extends Controller
             });
         }
         
+        // Apply availability filter
+        if (request('tersedia') !== null) {
+            $query->where('tersedia', request('tersedia'));
+        }
+        
         $motors = $query->orderBy('created_at', 'desc')->paginate(10);
         
         return view('pages.admin.motors.index', compact('motors'));
@@ -56,6 +61,7 @@ class MotorController extends Controller
             'price' => 'required|numeric|min:0',
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
+            'tersedia' => 'required|boolean',
             'specifications' => 'nullable|array',
             'specifications.engine_type' => 'nullable|string|max:255',
             'specifications.engine_size' => 'nullable|string|max:255',
@@ -77,6 +83,7 @@ class MotorController extends Controller
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
+            'tersedia' => $request->tersedia,
             'image_path' => $imagePath,
             'details' => $request->details,
         ]);
@@ -127,6 +134,7 @@ class MotorController extends Controller
             'price' => 'required|numeric|min:0',
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
+            'tersedia' => 'required|boolean',
             'specifications' => 'nullable|array',
             'specifications.engine_type' => 'nullable|string|max:255',
             'specifications.engine_size' => 'nullable|string|max:255',
@@ -146,6 +154,7 @@ class MotorController extends Controller
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
+            'tersedia' => $request->tersedia,
             'details' => $request->details,
         ];
 
