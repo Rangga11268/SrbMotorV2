@@ -19,12 +19,16 @@ Route::get('/contact', function() {
 })->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
 
-// Authentication routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+// Authentication routes - protected by guest middleware so logged-in users can't access them
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+// Logout route requires authentication
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Admin routes
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
