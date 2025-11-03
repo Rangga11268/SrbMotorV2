@@ -101,7 +101,7 @@ class MotorController extends Controller
             }
         }
 
-        return redirect()->route('admin.motors.index')->with('success', 'Motor created successfully.');
+        return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil ditambahkan.');
     }
 
     /**
@@ -187,7 +187,7 @@ class MotorController extends Controller
             }
         }
 
-        return redirect()->route('admin.motors.index')->with('success', 'Motor updated successfully.');
+        return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil diperbarui.');
     }
 
     /**
@@ -202,6 +202,6 @@ class MotorController extends Controller
 
         $motor->delete();
 
-        return redirect()->route('admin.motors.index')->with('success', 'Motor deleted successfully.');
+        return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil dihapus.');
     }
 }

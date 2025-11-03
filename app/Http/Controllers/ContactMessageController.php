@@ -41,6 +41,6 @@ class ContactMessageController extends Controller
     {
         $contact->delete();
         
-        return redirect()->route('admin.contact.index')->with('success', 'Contact message deleted successfully.');
+        return redirect()->route('admin.contact.index')->with('success', 'Pesan kontak berhasil dihapus.');
     }
 }

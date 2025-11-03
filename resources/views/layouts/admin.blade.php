@@ -80,7 +80,62 @@
         @yield('content')
     </main>
 
+    <!-- Include jQuery and SweetAlert2 from local files -->
+    <script src="{{ asset('sweetalert/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('sweetalert/sweetalert2.all.min.js') }}"></script>
+    
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     
+    @vite(['resources/js/app.js'])
+    
     @yield('scripts')
+    
+    <!-- Show success/error messages as SweetAlert2 notifications -->
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Kesalahan!',
+                text: '{{ session('error') }}',
+                icon: 'error',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Tutup'
+            });
+        });
+    </script>
+    @endif
+    
+    <!-- Show validation errors as SweetAlert2 notifications -->
+    @if($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let errorMessages = '';
+            @foreach($errors->all() as $error)
+                errorMessages += '{{ $error }}<br>';
+            @endforeach
+            
+            Swal.fire({
+                title: 'Kesalahan Validasi!',
+                html: errorMessages,
+                icon: 'error',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Tutup'
+            });
+        });
+    </script>
+    @endif

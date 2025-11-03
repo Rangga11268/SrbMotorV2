@@ -101,10 +101,10 @@
                                     <a href="{{ route('admin.motors.edit', $motor) }}" class="btn btn-sm btn-outline-warning flex-fill" title="Edit">
                                         <i class="fas fa-edit d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Edit</span>
                                     </a>
-                                    <form action="{{ route('admin.motors.destroy', ['motor' => $motor->id]) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('admin.motors.destroy', ['motor' => $motor->id]) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus motor ini?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill delete-btn" title="Hapus">
                                             <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Hapus</span>
                                         </button>
                                     </form>
@@ -144,12 +144,28 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle delete confirmations with standard JavaScript confirm
-    document.querySelectorAll('form[method="POST"][class*="d-inline"]').forEach(form => {
-        const submitBtn = form.querySelector('button[type="submit"]');
+    // Handle delete confirmations with SweetAlert2
+    document.querySelectorAll('form.delete-form').forEach(form => {
+        const submitBtn = form.querySelector('button.delete-btn');
         if (submitBtn) {
-            // The confirm logic is already handled by the onclick attribute in the button
-            // Just make sure it works properly
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default form submission
+                
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Motor ini akan dihapus secara permanen!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form if confirmed
+                    }
+                });
+            });
         }
     });
 });

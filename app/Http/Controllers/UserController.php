@@ -37,7 +37,7 @@ class UserController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'User role updated successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'Peran pengguna berhasil diperbarui.');
     }
 
     /**
@@ -47,11 +47,11 @@ class UserController extends Controller
     {
         // Prevent deletion of the current user
         if ($user->id === auth()->id()) {
-            return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
+            return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus.');
     }
 }

@@ -73,7 +73,7 @@
                                 <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline role-form">
                                     @csrf
                                     @method('PUT')
-                                    <select name="role" class="form-select form-select-sm bg-white role-select">
+                                    <select name="role" class="form-select form-select-sm bg-white role-select" data-original-value="{{ $user->role }}">
                                         <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>Pengguna</option>
                                         <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                     </select>
@@ -83,10 +83,10 @@
                             <td>
                                 <div class="d-flex flex-md-row flex-column gap-md-2 gap-2">
                                     @if($user->id !== auth()->id())
-                                    <form action="{{ route('admin.users.destroy', ['user' => $user->id]) }}" method="POST" class="d-inline w-100">
+                                    <form action="{{ route('admin.users.destroy', ['user' => $user->id]) }}" method="POST" class="d-inline w-100 delete-user-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini? Semua data mereka akan dihapus.')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill delete-user-btn" title="Hapus">
                                             <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Hapus</span>
                                         </button>
                                     </form>
@@ -132,16 +132,55 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle role change confirmations
+    // Handle role change confirmations with SweetAlert2
     document.querySelectorAll('select[name="role"]').forEach(select => {
         select.addEventListener('change', function() {
-            if (confirm('Apakah Anda yakin ingin mengubah peran pengguna ini?')) {
-                this.form.submit();
-            } else {
-                // Reset to original value if user cancels
-                this.form.reset(); 
-            }
+            const originalValue = this.getAttribute('data-original-value') || this.value;
+            const newRole = this.options[this.selectedIndex].text;
+            
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: `Peran pengguna akan diubah menjadi ${newRole}`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, ubah!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.form.submit();
+                } else {
+                    // Reset to original value if user cancels
+                    this.value = originalValue;
+                }
+            });
         });
+    });
+    
+    // Handle user deletion with SweetAlert2
+    document.querySelectorAll('form.delete-user-form').forEach(form => {
+        const submitBtn = form.querySelector('button.delete-user-btn');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Pengguna ini akan dihapus secara permanen! Semua data mereka akan dihapus.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        }
     });
 });
 </script>

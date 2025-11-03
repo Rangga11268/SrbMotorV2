@@ -76,10 +76,10 @@
                                     <a href="{{ route('admin.contact.show', $message) }}" class="btn btn-sm btn-outline-info flex-fill" title="Lihat">
                                         <i class="fas fa-eye d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Lihat</span>
                                     </a>
-                                    <form action="{{ route('admin.contact.destroy', ['contact' => $message->id]) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('admin.contact.destroy', ['contact' => $message->id]) }}" method="POST" class="d-inline delete-contact-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus pesan ini?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger flex-fill delete-contact-btn" title="Hapus">
                                             <i class="fas fa-trash d-none d-md-inline me-1"></i><span class="d-md-none d-inline">Hapus</span>
                                         </button>
                                     </form>
@@ -119,12 +119,28 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle delete confirmations with standard JavaScript confirm
-    document.querySelectorAll('form[method="POST"][class*="d-inline"]').forEach(form => {
-        const submitBtn = form.querySelector('button[type="submit"]');
+    // Handle contact message deletion with SweetAlert2
+    document.querySelectorAll('form.delete-contact-form').forEach(form => {
+        const submitBtn = form.querySelector('button.delete-contact-btn');
         if (submitBtn) {
-            // The confirm logic is already handled by the onclick attribute in the button
-            // Just make sure it works properly
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Pesan ini akan dihapus secara permanen!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
         }
     });
 });
