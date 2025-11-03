@@ -19,7 +19,7 @@ class UserController extends Controller
                   ->orWhere('email', 'like', '%' . request('search') . '%');
         }
         
-        $users = $query->get();
+        $users = $query->paginate(10);
         
         return view('pages.admin.users.index', compact('users'));
     }

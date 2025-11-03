@@ -51,7 +51,7 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="border-top-0" style="width: 5%">ID</th>
+                            <th class="border-top-0" style="width: 5%">No.</th>
                             <th class="border-top-0" style="width: 20%">Nama</th>
                             <th class="border-top-0" style="width: 10%" class="d-none d-lg-table-cell">Merek</th>
                             <th class="border-top-0" style="width: 10%" class="d-none d-xl-table-cell">Harga</th>
@@ -62,9 +62,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($motors as $motor)
+                        @forelse($motors as $index => $motor)
                         <tr>
-                            <td>{{ $motor->id }}</td>
+                            <td>{{ $motors->firstItem() + $index }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <img src="{{ $motor->image_path ? asset('storage/' . $motor->image_path) : asset('assets/icon/logo trans.png') }}" 

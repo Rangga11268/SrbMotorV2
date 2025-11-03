@@ -38,7 +38,7 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="border-top-0" style="width: 5%">ID</th>
+                            <th class="border-top-0" style="width: 5%">No.</th>
                             <th class="border-top-0" style="width: 20%">Nama</th>
                             <th class="border-top-0" style="width: 25%" class="d-none d-lg-table-cell">Email</th>
                             <th class="border-top-0" style="width: 15%">Peran</th>
@@ -47,9 +47,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($users as $user)
+                        @forelse($users as $index => $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
+                            <td>{{ $users->firstItem() + $index }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="avatar bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center me-2 me-md-3" style="width: 35px; height: 35px;">

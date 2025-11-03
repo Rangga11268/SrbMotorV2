@@ -38,7 +38,7 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="border-top-0" style="width: 5%">ID</th>
+                            <th class="border-top-0" style="width: 5%">No.</th>
                             <th class="border-top-0" style="width: 15%">Nama</th>
                             <th class="border-top-0" style="width: 20%" class="d-none d-lg-table-cell">Email</th>
                             <th class="border-top-0" style="width: 25%">Subjek</th>
@@ -47,9 +47,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($contactMessages as $message)
+                        @forelse($contactMessages as $index => $message)
                         <tr>
-                            <td>{{ $message->id }}</td>
+                            <td>{{ $contactMessages->firstItem() + $index }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="avatar bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-2 me-md-3" style="width: 35px; height: 35px;">

@@ -21,7 +21,7 @@ class ContactMessageController extends Controller
                   ->orWhere('message', 'like', '%' . request('search') . '%');
         }
         
-        $contactMessages = $query->latest()->get();
+        $contactMessages = $query->latest()->paginate(10);
         
         return view('pages.admin.contact.index', compact('contactMessages'));
     }
