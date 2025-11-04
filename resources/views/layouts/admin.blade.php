@@ -42,6 +42,9 @@
                         <a class="nav-link" href="{{ route('admin.motors.index') }}">Motor</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.orders.index') }}">Pesanan</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('admin.contact.index') }}">Pesan Kontak</a>
                     </li>
                     <li class="nav-item">

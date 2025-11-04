@@ -362,7 +362,7 @@
                     <label for="name" class="form-label">Nama Lengkap</label>
                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" 
                            name="name" value="{{ old('name') }}" required autocomplete="name" autofocus
-                           autocapitalize="none" placeholder="Masukkan nama lengkap Anda">
+                           autocapitalize="none" placeholder="Masukkan nama lengkap Anda" style="text-transform: none;">
                     
                     @error('name')
                         <div class="error-message">
@@ -375,7 +375,7 @@
                     <label for="email" class="form-label">Alamat Email</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
                            name="email" value="{{ old('email') }}" required autocomplete="email"
-                           autocapitalize="none" placeholder="Masukkan alamat email Anda">
+                           autocapitalize="none" placeholder="Masukkan alamat email Anda" style="text-transform: none;">
                     
                     @error('email')
                         <div class="error-message">

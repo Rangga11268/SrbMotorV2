@@ -76,14 +76,34 @@ use Illuminate\Support\Str;
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-subtitle mb-1 opacity-75">Admin</h6>
-                            <h3 class="card-title mb-0">{{ \App\Models\User::where('role', 'admin')->count() }}</h3>
+                            <h6 class="card-subtitle mb-1 opacity-75">Pesanan</h6>
+                            <h3 class="card-title mb-0">{{ $ordersCount }}</h3>
                         </div>
                         <div class="bg-warning bg-opacity-20 p-3 rounded-circle">
-                            <i class="fas fa-user-shield fa-2x"></i>
+                            <i class="fas fa-shopping-cart fa-2x"></i>
                         </div>
                     </div>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-dark btn-sm mt-3">Kelola Admin</a>
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-dark btn-sm mt-3">Kelola Pesanan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Row 2 -->
+    <div class="row mb-4 g-3">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+            <div class="card bg-danger text-white h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-1 opacity-75">Pesanan Pending</h6>
+                            <h3 class="card-title mb-0">{{ $pendingOrdersCount }}</h3>
+                        </div>
+                        <div class="bg-danger bg-opacity-20 p-3 rounded-circle">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="btn btn-outline-light btn-sm mt-3">Lihat Detail</a>
                 </div>
             </div>
         </div>
@@ -102,13 +122,13 @@ use Illuminate\Support\Str;
                             @foreach($recentMotors as $motor)
                                 <a href="{{ route('admin.motors.show', $motor) }}" class="list-group-item list-group-item-action">
                                     <div class="d-flex align-items-center">
-                                        <div class="flex-shrink-0 me-3">
+                                        <div class="shrink-0 me-3">
                                             <img src="{{ $motor->image_path ? asset('storage/' . $motor->image_path) : asset('assets/icon/logo trans.png') }}" 
                                                  alt="{{ $motor->name }}" 
                                                  class="rounded" 
                                                  style="width: 50px; height: 50px; object-fit: cover;">
                                         </div>
-                                        <div class="flex-grow-1">
+                                        <div class="grow">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1">{{ Str::limit($motor->name, 20) }}</h6>
                                                 <small class="text-muted d-md-none d-block">{{ $motor->created_at->diffForHumans() }}</small>
@@ -130,23 +150,26 @@ use Illuminate\Support\Str;
         <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
-                    <h5 class="card-title mb-0"><i class="fas fa-envelope me-2 text-success"></i>Pesan Terbaru</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-shopping-cart me-2 text-warning"></i>Pesanan Terbaru</h5>
                 </div>
                 <div class="card-body p-0">
-                    @if($recentContactMessages->count() > 0)
+                    @if($recentOrders->count() > 0)
                         <div class="list-group list-group-flush">
-                            @foreach($recentContactMessages as $message)
-                                <a href="{{ route('admin.contact.show', $message) }}" class="list-group-item list-group-item-action">
+                            @foreach($recentOrders as $order)
+                                <a href="{{ route('admin.orders.edit', $order) }}" class="list-group-item list-group-item-action">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">{{ Str::limit($message->name, 15) }}</h6>
-                                        <small class="text-muted">{{ $message->created_at->diffForHumans() }}</small>
+                                        <h6 class="mb-1">{{ Str::limit($order->customer_name, 15) }}</h6>
+                                        <small class="text-muted">{{ $order->created_at->diffForHumans() }}</small>
                                     </div>
-                                    <p class="mb-1 text-muted">{{ Str::limit($message->subject, 25) }}</p>
+                                    <p class="mb-1 text-muted">{{ Str::limit($order->motor->name, 25) }}</p>
+                                    <span class="badge rounded-pill bg-{{ $order->order_status === 'pending' ? 'warning' : ($order->order_status === 'confirmed' ? 'primary' : ($order->order_status === 'delivered' ? 'success' : 'secondary')) }}">
+                                        {{ ucfirst($order->order_status) }}
+                                    </span>
                                 </a>
                             @endforeach
                         </div>
                     @else
-                        <div class="p-3 text-center text-muted">Tidak ada pesan ditemukan</div>
+                        <div class="p-3 text-center text-muted">Tidak ada pesanan ditemukan</div>
                     @endif
                 </div>
             </div>

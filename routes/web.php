@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MotorGalleryController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
 Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
@@ -30,6 +31,14 @@ Route::middleware('guest')->group(function () {
 // Logout route requires authentication
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+// User order routes
+Route::middleware('auth')->group(function () {
+    Route::get('/motors/{motor}/order', [OrderController::class, 'create'])->name('motors.order');
+    Route::post('/motors/{motor}/order', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index'); // User's order history
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show'); // User's order detail
+});
+
 // Admin routes
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
@@ -42,4 +51,10 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     
     // User management
     Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
+    
+    // Order management
+    Route::get('/orders', [OrderController::class, 'indexAdmin'])->name('orders.index');
+    Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });

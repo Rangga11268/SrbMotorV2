@@ -77,6 +77,9 @@
                                 <a href="{{ route('motors.credit-calculation', $motor->id) }}" class="btn btn-outline-primary flex-fill">
                                     <i class="fas fa-calculator me-2"></i>Simulasi Kredit
                                 </a>
+                                <a href="{{ route('motors.order', $motor->id) }}" class="btn btn-primary flex-fill">
+                                    <i class="fas fa-shopping-cart me-2"></i>Pesan Sekarang
+                                </a>
                             </div>
                             
                             <div class="mt-3">
@@ -211,7 +214,7 @@
                                             <i class="fas fa-motorcycle ms-2 me-1"></i> {{ $relatedMotor->type }}
                                         </small>
                                     </div>
-                                    <p class="card-text flex-grow-1 text-truncate fs-5">
+                                    <p class="card-text grow text-truncate fs-5">
                                         {{ Str::limit($relatedMotor->details, 60) }}
                                     </p>
                                     <div class="mt-auto pt-2">

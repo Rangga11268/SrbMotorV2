@@ -73,46 +73,30 @@ Versi 0.06 dari SRB Motors menambahkan fitur Perbandingan Motor dan halaman Abou
 - Lokasi dealer
 - Informasi kontak lainnya
 
-### 7. Halaman Perbandingan Motor (`/compare`)
-**Deskripsi:**
-- Memungkinkan pengguna membandingkan spesifikasi dua atau lebih motor secara berdampingan, sangat berguna dalam proses pengambilan keputusan pembelian.
-- Pengguna dapat memilih motor dari daftar atau dari halaman detail motor
-
-**Fitur:**
-- Menambahkan motor ke daftar perbandingan melalui tombol di halaman daftar motor atau halaman detail
-- Menampilkan tabel perbandingan spesifikasi
-- Menampilkan perbedaan harga secara visual
-- Tombol untuk menghapus motor dari daftar perbandingan
-- Tombol untuk mengosongkan seluruh daftar perbandingan
-- Jika tidak ada motor yang dipilih untuk dibandingkan, menampilkan pesan instruksi
-
-### 8. Halaman About Us (`/about`)
+### 7. Halaman About Us (`/about`)
 **Deskripsi:**
 - Menyediakan informasi yang lebih lengkap tentang perusahaan SRB Motors
 - Menampilkan sejarah, visi, misi, dan nilai-nilai perusahaan
-- Menampilkan informasi tim, lokasi dealer, dan sejarah perusahaan
+- Menampilkan, lokasi dealer, dan sejarah perusahaan
 
 **Fitur:**
 - Sejarah perusahaan
 - Visi dan misi
-- Tim kami
 - Lokasi dealer
 - Nilai-nilai perusahaan
 - Informasi kontak lengkap
 - Peta lokasi dealer
 
 ### belum prioritas
-### 9. Profil Pengguna (`/profile`)
+### 8. Profil Pengguna (`/profile`)
 **Deskripsi:**
 - Tersedia hanya untuk pengguna yang sudah login
 
 **Fitur:**
 - Informasi pribadi
-- Riwayat wishlist
-- Aktivitas lainnya
 - Pengaturan akun
 
-## 7. Manajemen Pemesanan (Order Management) - V0.05
+### 9. Manajemen Pemesanan (Order Management) - V0.05
 
 ### Deskripsi:
 Fitur untuk mencatat dan mengelola pesanan dari calon pembeli, baik dari pengunjung website maupun dari pelanggan yang datang langsung ke dealer. Sistem ini memungkinkan admin untuk melacak proses penjualan dari awal hingga selesai.
@@ -171,7 +155,6 @@ Home (/)
 │   ├── Motor Detail (/motors/{id})
 │   └── Credit Calculator (/motors/{id}/credit-calculation)
 ├── News (/news)
-├── Compare (/compare)
 ├── About (/about)
 ├── Contact (/contact)
 ├── Admin Panel (/admin)
@@ -196,17 +179,14 @@ Home (/)
 - Component reusability untuk daftar motor dan card design
 - Routing system untuk halaman-halaman baru
 - CRUD system untuk manajemen pesanan
-- Sistem perbandingan motor menggunakan session atau localStorage
-- Tabel dinamis untuk menampilkan perbandingan spesifikasi
 
 ## Prioritas Implementasi
 1. **Tertinggi:** Pembuatan halaman `/motors` dengan fitur filter dan search
 2. **Tinggi:** Halaman detail motor `/motors/{id}`
 3. **Sedang:** Simulasi kredit dan halaman kontak
-4. **Sedang:** Halaman perbandingan motor (`/compare`)
-5. **Sedang:** Halaman About Us yang ditingkatkan (`/about`)
-6. **Rendah:** Tips & tricks, berita, FAQ, dan profil pengguna
-7. **V0.05:** Manajemen Pemesanan (Order Management)
+4. **Sedang:** Halaman About Us yang ditingkatkan (`/about`)
+5. **Rendah:** Tips & tricks, berita, FAQ, dan profil pengguna
+6. **V0.05:** Manajemen Pemesanan (Order Management)
 
 ## Manfaat dari Pemisahan Halaman dan Fitur Order Management
 - Meningkatkan pengalaman pengguna dengan navigasi yang lebih jelas
@@ -216,5 +196,4 @@ Home (/)
 - Memungkinkan tracking penjualan dan calon pembeli yang efektif
 - Menyederhanakan proses manajemen pesanan dari berbagai sumber
 - Memudahkan pelacakan konversi penjualan dari kunjungan website maupun datang langsung ke dealer
-- Membantu pengambilan keputusan pembelian melalui fitur perbandingan
 - Memberikan informasi perusahaan yang lebih lengkap dan profesional

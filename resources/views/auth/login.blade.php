@@ -371,7 +371,7 @@
                     <label for="email" class="form-label">Alamat Email</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
                            name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
-                           autocapitalize="none" placeholder="Masukkan email Anda">
+                           autocapitalize="none" placeholder="Masukkan email Anda" style="text-transform: none;">
                     
                     @error('email')
                         <div class="error-message">
