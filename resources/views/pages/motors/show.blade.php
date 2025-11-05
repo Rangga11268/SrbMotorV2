@@ -77,9 +77,6 @@
                                 <a href="{{ route('motors.credit-calculation', $motor->id) }}" class="btn btn-outline-primary flex-fill">
                                     <i class="fas fa-calculator me-2"></i>Simulasi Kredit
                                 </a>
-                                <a href="{{ route('motors.order', $motor->id) }}" class="btn btn-primary flex-fill">
-                                    <i class="fas fa-shopping-cart me-2"></i>Pesan Sekarang
-                                </a>
                             </div>
                             
                             <div class="mt-3">

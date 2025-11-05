@@ -71,42 +71,7 @@ use Illuminate\Support\Str;
             </div>
         </div>
         
-        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-            <div class="card bg-warning text-dark h-100 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-1 opacity-75">Pesanan</h6>
-                            <h3 class="card-title mb-0">{{ $ordersCount }}</h3>
-                        </div>
-                        <div class="bg-warning bg-opacity-20 p-3 rounded-circle">
-                            <i class="fas fa-shopping-cart fa-2x"></i>
-                        </div>
-                    </div>
-                    <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-dark btn-sm mt-3">Kelola Pesanan</a>
-                </div>
-            </div>
-        </div>
     </div>
-    
-    <!-- Stats Row 2 -->
-    <div class="row mb-4 g-3">
-        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-            <div class="card bg-danger text-white h-100 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-1 opacity-75">Pesanan Pending</h6>
-                            <h3 class="card-title mb-0">{{ $pendingOrdersCount }}</h3>
-                        </div>
-                        <div class="bg-danger bg-opacity-20 p-3 rounded-circle">
-                            <i class="fas fa-clock fa-2x"></i>
-                        </div>
-                    </div>
-                    <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="btn btn-outline-light btn-sm mt-3">Lihat Detail</a>
-                </div>
-            </div>
-        </div>
     </div>
     
     <!-- Recent Items -->
@@ -150,26 +115,24 @@ use Illuminate\Support\Str;
         <div class="col-12 col-lg-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom">
-                    <h5 class="card-title mb-0"><i class="fas fa-shopping-cart me-2 text-warning"></i>Pesanan Terbaru</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-file-alt me-2 text-info"></i>Kontak Terbaru</h5>
                 </div>
                 <div class="card-body p-0">
-                    @if($recentOrders->count() > 0)
+                    @if($recentContactMessages->count() > 0)
                         <div class="list-group list-group-flush">
-                            @foreach($recentOrders as $order)
-                                <a href="{{ route('admin.orders.edit', $order) }}" class="list-group-item list-group-item-action">
+                            @foreach($recentContactMessages as $message)
+                                <a href="{{ route('admin.contact.show', $message) }}" class="list-group-item list-group-item-action">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">{{ Str::limit($order->customer_name, 15) }}</h6>
-                                        <small class="text-muted">{{ $order->created_at->diffForHumans() }}</small>
+                                        <h6 class="mb-1">{{ Str::limit($message->name, 15) }}</h6>
+                                        <small class="text-muted">{{ $message->created_at->diffForHumans() }}</small>
                                     </div>
-                                    <p class="mb-1 text-muted">{{ Str::limit($order->motor->name, 25) }}</p>
-                                    <span class="badge rounded-pill bg-{{ $order->order_status === 'pending' ? 'warning' : ($order->order_status === 'confirmed' ? 'primary' : ($order->order_status === 'delivered' ? 'success' : 'secondary')) }}">
-                                        {{ ucfirst($order->order_status) }}
-                                    </span>
+                                    <p class="mb-1 text-muted">{{ Str::limit($message->subject, 25) }}</p>
+                                    <small class="text-muted">{{ Str::limit($message->message, 30) }}</small>
                                 </a>
                             @endforeach
                         </div>
                     @else
-                        <div class="p-3 text-center text-muted">Tidak ada pesanan ditemukan</div>
+                        <div class="p-3 text-center text-muted">Tidak ada pesan ditemukan</div>
                     @endif
                 </div>
             </div>
