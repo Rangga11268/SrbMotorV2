@@ -9,11 +9,22 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MotorGalleryController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
 Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
+Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
 Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
 Route::get('/motors/{motor}/credit-calculation', [MotorGalleryController::class, 'showCreditCalculation'])->name('motors.credit-calculation');
+Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
+Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
+Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
+Route::post('/motors/{motor}/process-credit-order', [MotorGalleryController::class, 'processCreditOrder'])->name('motors.process-credit-order');
+Route::get('/motors/order-confirmation/{transaction}', [MotorGalleryController::class, 'showOrderConfirmation'])->name('motors.order.confirmation')->middleware('auth');
+Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'showUploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware('auth');
+Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware('auth');
+Route::get('/motors/{transaction}/manage-documents', [MotorGalleryController::class, 'showDocumentManagement'])->name('motors.manage-documents')->middleware('auth');
+Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::class, 'updateDocuments'])->name('motors.update-documents')->middleware('auth');
 Route::get('/contact', function() {
     return redirect('/#contact');
 })->name('contact');
@@ -42,4 +53,8 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     
     // User management
     Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
+    
+    // Transaction management
+    Route::resource('transactions', TransactionController::class);
+    Route::post('/transactions/{transaction}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
 });

@@ -18,6 +18,11 @@
                     <i class="fas fa-user me-2"></i>{{ Auth::user()->name }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('motors.user-transactions') }}">
+                            <i class="fas fa-list"></i> Riwayat Pemesanan
+                        </a>
+                    </li>
                     @if(Auth::user()->isAdmin())
                         <li>
                             <a class="dropdown-item" href="{{ route('admin.dashboard') }}">

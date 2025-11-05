@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class CreditDetail extends Model
+{
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'transaction_id',
+        'down_payment',
+        'tenor',
+        'monthly_installment',
+        'credit_status',
+        'approved_amount',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'down_payment' => 'decimal:2',
+        'monthly_installment' => 'decimal:2',
+        'approved_amount' => 'decimal:2',
+    ];
+
+    /**
+     * Get the transaction that owns the credit detail.
+     */
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+
+    /**
+     * Get the documents associated with the credit detail.
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
+    
+    /**
+     * Check if all required documents are uploaded
+     */
+    public function hasRequiredDocuments(): bool
+    {
+        $requiredTypes = ['KTP', 'KK', 'SLIP_GAJI'];
+        $uploadedTypes = $this->documents->pluck('document_type')->toArray();
+        
+        foreach ($requiredTypes as $type) {
+            if (!in_array($type, $uploadedTypes)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}

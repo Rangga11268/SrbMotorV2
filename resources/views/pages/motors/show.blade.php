@@ -71,11 +71,23 @@
                             </div>
                             
                             <div class="actions d-grid gap-2 d-md-flex">
-                                <a href="#" class="btn btn-success flex-fill" onclick="openWhatsApp()">
+                                @auth
+                                    <a href="{{ route('motors.cash-order', $motor->id) }}" class="btn btn-success flex-fill">
+                                        <i class="fas fa-shopping-cart me-2"></i>Beli Tunai
+                                    </a>
+                                    <a href="{{ route('motors.credit-order', $motor->id) }}" class="btn btn-primary flex-fill">
+                                        <i class="fas fa-file-invoice-dollar me-2"></i>Ajukan Kredit
+                                    </a>
+                                @else
+                                    <a href="{{ route('login') }}" class="btn btn-success flex-fill">
+                                        <i class="fas fa-shopping-cart me-2"></i>Beli Tunai (Login Dulu)
+                                    </a>
+                                    <a href="{{ route('login') }}" class="btn btn-primary flex-fill">
+                                        <i class="fas fa-file-invoice-dollar me-2"></i>Ajukan Kredit (Login Dulu)
+                                    </a>
+                                @endauth
+                                <a href="#" class="btn btn-outline-success flex-fill" onclick="openWhatsApp()">
                                     <i class="fab fa-whatsapp me-2"></i>Kontak Kami
-                                </a>
-                                <a href="{{ route('motors.credit-calculation', $motor->id) }}" class="btn btn-outline-primary flex-fill">
-                                    <i class="fas fa-calculator me-2"></i>Simulasi Kredit
                                 </a>
                             </div>
                             
