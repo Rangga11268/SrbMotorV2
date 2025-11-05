@@ -462,14 +462,51 @@
                                                     <li>
                                                         <strong>Status:</strong>
                                                         <span
-                                                            class="badge bg-{{ in_array($transaction->creditDetail->credit_status, ['APPROVED', 'READY_FOR_DELIVERY'])
-                                                                ? 'success'
-                                                                : (in_array($transaction->creditDetail->credit_status, ['PENDING_REVIEW', 'SUBMITTED_TO_SURVEYOR'])
-                                                                    ? 'warning'
-                                                                    : ($transaction->creditDetail->credit_status === 'REJECTED'
-                                                                        ? 'danger'
-                                                                        : 'info')) }} badge-document">
-                                                            {{ $transaction->creditDetail->credit_status }}
+                                                            class="badge bg-{{ 
+                                                                ($transaction->creditDetail->credit_status == 'disetujui' || $transaction->creditDetail->credit_status == 'ready_for_delivery') ? 'success' : 
+                                                                (($transaction->creditDetail->credit_status == 'menunggu_persetujuan' || $transaction->creditDetail->credit_status == 'dikirim_ke_surveyor' || $transaction->creditDetail->credit_status == 'PENDING_REVIEW' || $transaction->creditDetail->credit_status == 'SUBMITTED_TO_SURVEYOR' || $transaction->creditDetail->credit_status == 'SURVEY_SCHEDULED') ? 'warning' : 
+                                                                ($transaction->creditDetail->credit_status == 'ditolak' || $transaction->creditDetail->credit_status == 'REJECTED' ? 'danger' : 'info')) 
+                                                            }} badge-document">
+                                                            @switch($transaction->creditDetail->credit_status)
+                                                                @case('menunggu_persetujuan')
+                                                                    Menunggu Persetujuan
+                                                                    @break
+                                                                @case('data_tidak_valid')
+                                                                    Data Tidak Valid
+                                                                    @break
+                                                                @case('dikirim_ke_surveyor')
+                                                                    Dikirim ke Surveyor
+                                                                    @break
+                                                                @case('jadwal_survey')
+                                                                    Jadwal Survey
+                                                                    @break
+                                                                @case('disetujui')
+                                                                    Disetujui
+                                                                    @break
+                                                                @case('ditolak')
+                                                                    Ditolak
+                                                                    @break
+                                                                @case('PENDING_REVIEW')
+                                                                    Menunggu Persetujuan
+                                                                    @break
+                                                                @case('DATA_INVALID')
+                                                                    Data Tidak Valid
+                                                                    @break
+                                                                @case('SUBMITTED_TO_SURVEYOR')
+                                                                    Dikirim ke Surveyor
+                                                                    @break
+                                                                @case('SURVEY_SCHEDULED')
+                                                                    Jadwal Survey
+                                                                    @break
+                                                                @case('APPROVED')
+                                                                    Disetujui
+                                                                    @break
+                                                                @case('REJECTED')
+                                                                    Ditolak
+                                                                    @break
+                                                                @default
+                                                                    {{ $transaction->creditDetail->credit_status }}
+                                                            @endswitch
                                                         </span>
                                                     </li>
                                                 </ul>

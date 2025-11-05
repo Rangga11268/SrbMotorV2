@@ -80,9 +80,9 @@
                             </td>
                             <td>
                                 <span class="badge bg-{{ 
-                                    (in_array($transaction->status, ['COMPLETED', 'APPROVED', 'READY_FOR_DELIVERY']) ? 'success' : 
-                                    (in_array($transaction->status, ['PENDING_REVIEW', 'NEW_ORDER', 'WAITING_PAYMENT']) ? 'warning' : 
-                                    (in_array($transaction->status, ['REJECTED', 'DATA_INVALID']) ? 'danger' : 'info'))) 
+                                    (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' : 
+                                    (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
+                                    (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
                                 }}">
                                     {{ $transaction->status }}
                                 </span>

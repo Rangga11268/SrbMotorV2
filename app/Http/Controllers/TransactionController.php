@@ -120,7 +120,7 @@ class TransactionController extends Controller
                 'credit_detail.down_payment' => 'required|numeric|min:0',
                 'credit_detail.tenor' => 'required|integer|min:1',
                 'credit_detail.monthly_installment' => 'required|numeric|min:0',
-                'credit_detail.credit_status' => 'required|in:PENDING_REVIEW,DATA_INVALID,SUBMITTED_TO_SURVEYOR,SURVEY_SCHEDULED,APPROVED,REJECTED',
+                'credit_detail.credit_status' => 'required|in:menunggu_persetujuan,data_tidak_valid,dikirim_ke_surveyor,jadwal_survey,disetujui,ditolak',
                 'credit_detail.approved_amount' => 'nullable|numeric|min:0',
             ]);
 

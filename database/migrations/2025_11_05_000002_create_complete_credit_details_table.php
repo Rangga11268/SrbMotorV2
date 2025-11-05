@@ -18,13 +18,13 @@ return new class extends Migration
             $table->integer('tenor'); // in months
             $table->decimal('monthly_installment', 10, 2);
             $table->enum('credit_status', [
-                'PENDING_REVIEW',
-                'DATA_INVALID',
-                'SUBMITTED_TO_SURVEYOR',
-                'SURVEY_SCHEDULED',
-                'APPROVED',
-                'REJECTED'
-            ])->default('PENDING_REVIEW');
+                'menunggu_persetujuan',
+                'data_tidak_valid',
+                'dikirim_ke_surveyor',
+                'jadwal_survey',
+                'disetujui',
+                'ditolak'
+            ])->default('menunggu_persetujuan');
             $table->decimal('approved_amount', 10, 2)->nullable();
             $table->timestamps();
             

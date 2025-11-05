@@ -17,19 +17,19 @@ return new class extends Migration
             $table->foreignId('motor_id')->constrained()->onDelete('cascade');
             $table->enum('transaction_type', ['CASH', 'CREDIT']);
             $table->enum('status', [
-                'NEW_ORDER', 
-                'WAITING_PAYMENT', 
-                'PAYMENT_CONFIRMED', 
-                'UNIT_PREPARATION', 
-                'READY_FOR_DELIVERY', 
-                'COMPLETED',
-                'PENDING_REVIEW',
-                'DATA_INVALID',
-                'SUBMITTED_TO_SURVEYOR',
-                'SURVEY_SCHEDULED',
-                'APPROVED',
-                'REJECTED'
-            ])->default('NEW_ORDER');
+                'new_order', 
+                'waiting_payment', 
+                'payment_confirmed', 
+                'unit_preparation', 
+                'ready_for_delivery', 
+                'completed',
+                'menunggu_persetujuan',
+                'data_tidak_valid',
+                'dikirim_ke_surveyor',
+                'jadwal_survey',
+                'disetujui',
+                'ditolak'
+            ])->default('new_order');
             $table->text('notes')->nullable();
             $table->decimal('booking_fee', 10, 2)->nullable(); // For cash transactions
             $table->decimal('total_amount', 10, 2);

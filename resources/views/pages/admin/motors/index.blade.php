@@ -53,11 +53,11 @@
                         <tr>
                             <th class="border-top-0" style="width: 5%">No.</th>
                             <th class="border-top-0" style="width: 20%">Nama</th>
-                            <th class="border-top-0" style="width: 10%" class="d-none d-lg-table-cell">Merek</th>
-                            <th class="border-top-0" style="width: 10%" class="d-none d-xl-table-cell">Harga</th>
-                            <th class="border-top-0" style="width: 8%" class="d-none d-lg-table-cell">Tahun</th>
-                            <th class="border-top-0" style="width: 8%" class="d-none d-xl-table-cell">Tipe</th>
-                            <th class="border-top-0" style="width: 8%" class="d-none d-xl-table-cell">Tersedia</th>
+                            <th class="border-top-0 d-none d-lg-table-cell" style="width: 10%">Merek</th>
+                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 10%">Harga</th>
+                            <th class="border-top-0 d-none d-lg-table-cell" style="width: 8%">Tahun</th>
+                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 8%">Tipe</th>
+                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 8%">Tersedia</th>
                             <th class="border-top-0" style="width: 27%">Aksi</th>
                         </tr>
                     </thead>
@@ -113,7 +113,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center py-4">
+                            <td colspan="8" class="text-center py-4">
                                 <div class="empty-state">
                                     <i class="fas fa-motorcycle fa-3x text-muted mb-3"></i>
                                     <h5 class="text-muted">Tidak ada motor ditemukan</h5>

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('year')->nullable();
             $table->string('type')->nullable(); // Metic, Automatic, Sport, etc.
-            $table->text('specifications')->nullable(); // JSON or serialized data
             $table->string('image_path');
             $table->text('details')->nullable(); // brief details about the motor
+            $table->boolean('tersedia')->default(true); // Default to true (available)
             $table->timestamps();
         });
     }

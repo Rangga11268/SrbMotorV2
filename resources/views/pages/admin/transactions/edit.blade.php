@@ -62,19 +62,19 @@
                                     <label for="status" class="form-label">Status</label>
                                     <select name="status" id="status" class="form-control" required>
                                         @if($transaction->transaction_type === 'CASH')
-                                            <option value="NEW_ORDER" {{ $transaction->status === 'NEW_ORDER' ? 'selected' : '' }}>NEW_ORDER</option>
-                                            <option value="WAITING_PAYMENT" {{ $transaction->status === 'WAITING_PAYMENT' ? 'selected' : '' }}>WAITING_PAYMENT</option>
-                                            <option value="PAYMENT_CONFIRMED" {{ $transaction->status === 'PAYMENT_CONFIRMED' ? 'selected' : '' }}>PAYMENT_CONFIRMED</option>
-                                            <option value="UNIT_PREPARATION" {{ $transaction->status === 'UNIT_PREPARATION' ? 'selected' : '' }}>UNIT_PREPARATION</option>
-                                            <option value="READY_FOR_DELIVERY" {{ $transaction->status === 'READY_FOR_DELIVERY' ? 'selected' : '' }}>READY_FOR_DELIVERY</option>
-                                            <option value="COMPLETED" {{ $transaction->status === 'COMPLETED' ? 'selected' : '' }}>COMPLETED</option>
+                                            <option value="new_order" {{ $transaction->status === 'new_order' ? 'selected' : '' }}>Pesanan Baru</option>
+                                            <option value="waiting_payment" {{ $transaction->status === 'waiting_payment' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                                            <option value="payment_confirmed" {{ $transaction->status === 'payment_confirmed' ? 'selected' : '' }}>Pembayaran Dikonfirmasi</option>
+                                            <option value="unit_preparation" {{ $transaction->status === 'unit_preparation' ? 'selected' : '' }}>Persiapan Unit</option>
+                                            <option value="ready_for_delivery" {{ $transaction->status === 'ready_for_delivery' ? 'selected' : '' }}>Siap Dikirim</option>
+                                            <option value="completed" {{ $transaction->status === 'completed' ? 'selected' : '' }}>Selesai</option>
                                         @else
-                                            <option value="PENDING_REVIEW" {{ $transaction->status === 'PENDING_REVIEW' ? 'selected' : '' }}>PENDING_REVIEW</option>
-                                            <option value="DATA_INVALID" {{ $transaction->status === 'DATA_INVALID' ? 'selected' : '' }}>DATA_INVALID</option>
-                                            <option value="SUBMITTED_TO_SURVEYOR" {{ $transaction->status === 'SUBMITTED_TO_SURVEYOR' ? 'selected' : '' }}>SUBMITTED_TO_SURVEYOR</option>
-                                            <option value="SURVEY_SCHEDULED" {{ $transaction->status === 'SURVEY_SCHEDULED' ? 'selected' : '' }}>SURVEY_SCHEDULED</option>
-                                            <option value="APPROVED" {{ $transaction->status === 'APPROVED' ? 'selected' : '' }}>APPROVED</option>
-                                            <option value="REJECTED" {{ $transaction->status === 'REJECTED' ? 'selected' : '' }}>REJECTED</option>
+                                            <option value="menunggu_persetujuan" {{ $transaction->status === 'menunggu_persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                            <option value="data_tidak_valid" {{ $transaction->status === 'data_tidak_valid' ? 'selected' : '' }}>Data Tidak Valid</option>
+                                            <option value="dikirim_ke_surveyor" {{ $transaction->status === 'dikirim_ke_surveyor' ? 'selected' : '' }}>Dikirim ke Surveyor</option>
+                                            <option value="jadwal_survey" {{ $transaction->status === 'jadwal_survey' ? 'selected' : '' }}>Jadwal Survey</option>
+                                            <option value="disetujui" {{ $transaction->status === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                            <option value="ditolak" {{ $transaction->status === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
                                         @endif
                                     </select>
                                 </div>
@@ -163,12 +163,12 @@
                                     <div class="mb-3">
                                         <label for="credit_detail[credit_status]" class="form-label">Status Kredit</label>
                                         <select name="credit_detail[credit_status]" id="credit_detail_credit_status" class="form-control">
-                                            <option value="PENDING_REVIEW" {{ ($transaction->creditDetail->credit_status ?? 'PENDING_REVIEW') === 'PENDING_REVIEW' ? 'selected' : '' }}>PENDING_REVIEW</option>
-                                            <option value="DATA_INVALID" {{ ($transaction->creditDetail->credit_status ?? 'PENDING_REVIEW') === 'DATA_INVALID' ? 'selected' : '' }}>DATA_INVALID</option>
-                                            <option value="SUBMITTED_TO_SURVEYOR" {{ ($transaction->creditDetail->credit_status ?? 'PENDING_REVIEW') === 'SUBMITTED_TO_SURVEYOR' ? 'selected' : '' }}>SUBMITTED_TO_SURVEYOR</option>
-                                            <option value="SURVEY_SCHEDULED" {{ ($transaction->creditDetail->credit_status ?? 'PENDING_REVIEW') === 'SURVEY_SCHEDULED' ? 'selected' : '' }}>SURVEY_SCHEDULED</option>
-                                            <option value="APPROVED" {{ ($transaction->creditDetail->credit_status ?? 'PENDING_REVIEW') === 'APPROVED' ? 'selected' : '' }}>APPROVED</option>
-                                            <option value="REJECTED" {{ ($transaction->creditDetail->credit_status ?? 'PENDING_REVIEW') === 'REJECTED' ? 'selected' : '' }}>REJECTED</option>
+                                            <option value="menunggu_persetujuan" {{ ($transaction->creditDetail->credit_status ?? 'menunggu_persetujuan') === 'menunggu_persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                            <option value="data_tidak_valid" {{ ($transaction->creditDetail->credit_status ?? 'menunggu_persetujuan') === 'data_tidak_valid' ? 'selected' : '' }}>Data Tidak Valid</option>
+                                            <option value="dikirim_ke_surveyor" {{ ($transaction->creditDetail->credit_status ?? 'menunggu_persetujuan') === 'dikirim_ke_surveyor' ? 'selected' : '' }}>Dikirim ke Surveyor</option>
+                                            <option value="jadwal_survey" {{ ($transaction->creditDetail->credit_status ?? 'menunggu_persetujuan') === 'jadwal_survey' ? 'selected' : '' }}>Jadwal Survey</option>
+                                            <option value="disetujui" {{ ($transaction->creditDetail->credit_status ?? 'menunggu_persetujuan') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                            <option value="ditolak" {{ ($transaction->creditDetail->credit_status ?? 'menunggu_persetujuan') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
                                         </select>
                                     </div>
                                 </div>
@@ -204,9 +204,9 @@
                         <strong>Total:</strong> Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}<br>
                         <strong>Status:</strong> 
                         <span class="badge bg-{{ 
-                            (in_array($transaction->status, ['COMPLETED', 'APPROVED', 'READY_FOR_DELIVERY']) ? 'success' : 
-                            (in_array($transaction->status, ['PENDING_REVIEW', 'NEW_ORDER', 'WAITING_PAYMENT']) ? 'warning' : 
-                            (in_array($transaction->status, ['REJECTED', 'DATA_INVALID']) ? 'danger' : 'info'))) 
+                            (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' : 
+                            (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
+                            (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
                         }}">
                             {{ $transaction->status }}
                         </span>

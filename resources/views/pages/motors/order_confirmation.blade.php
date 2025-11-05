@@ -341,11 +341,68 @@
                                                 <td>Status:</td>
                                                 <td>
                                                     <span class="badge bg-{{ 
-                                                        (in_array($transaction->status, ['COMPLETED', 'APPROVED', 'READY_FOR_DELIVERY']) ? 'success' : 
-                                                        (in_array($transaction->status, ['PENDING_REVIEW', 'NEW_ORDER', 'WAITING_PAYMENT']) ? 'warning' : 
-                                                        (in_array($transaction->status, ['REJECTED', 'DATA_INVALID']) ? 'danger' : 'info'))) 
+                                                        (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' : 
+                                                        (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
+                                                        (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
                                                     }} badge-transaction">
-                                                        {{ $transaction->status }}
+                                                        @switch($transaction->status)
+                                                            @case('new_order')
+                                                                Pesanan Baru
+                                                                @break
+                                                            @case('waiting_payment')
+                                                                Menunggu Pembayaran
+                                                                @break
+                                                            @case('payment_confirmed')
+                                                                Pembayaran Dikonfirmasi
+                                                                @break
+                                                            @case('unit_preparation')
+                                                                Persiapan Unit
+                                                                @break
+                                                            @case('ready_for_delivery')
+                                                                Siap Dikirim
+                                                                @break
+                                                            @case('completed')
+                                                                Selesai
+                                                                @break
+                                                            @case('menunggu_persetujuan')
+                                                                Menunggu Persetujuan
+                                                                @break
+                                                            @case('data_tidak_valid')
+                                                                Data Tidak Valid
+                                                                @break
+                                                            @case('dikirim_ke_surveyor')
+                                                                Dikirim ke Surveyor
+                                                                @break
+                                                            @case('jadwal_survey')
+                                                                Jadwal Survey
+                                                                @break
+                                                            @case('disetujui')
+                                                                Disetujui
+                                                                @break
+                                                            @case('ditolak')
+                                                                Ditolak
+                                                                @break
+                                                            @case('PENDING_REVIEW')
+                                                                Menunggu Persetujuan
+                                                                @break
+                                                            @case('DATA_INVALID')
+                                                                Data Tidak Valid
+                                                                @break
+                                                            @case('SUBMITTED_TO_SURVEYOR')
+                                                                Dikirim ke Surveyor
+                                                                @break
+                                                            @case('SURVEY_SCHEDULED')
+                                                                Jadwal Survey
+                                                                @break
+                                                            @case('APPROVED')
+                                                                Disetujui
+                                                                @break
+                                                            @case('REJECTED')
+                                                                Ditolak
+                                                                @break
+                                                            @default
+                                                                {{ $transaction->status }}
+                                                        @endswitch
                                                     </span>
                                                 </td>
                                             </tr>
@@ -373,7 +430,48 @@
                         <div class="credit-alert">
                             @if($transaction->creditDetail && $transaction->creditDetail->hasRequiredDocuments())
                                 <p><strong>Status Pengajuan Kredit:</strong></p>
-                                <p class="status-text">{{ $transaction->creditDetail->credit_status }}</p>
+                                <p class="status-text">
+                                    @switch($transaction->creditDetail->credit_status)
+                                        @case('menunggu_persetujuan')
+                                            Menunggu Persetujuan
+                                            @break
+                                        @case('data_tidak_valid')
+                                            Data Tidak Valid
+                                            @break
+                                        @case('dikirim_ke_surveyor')
+                                            Dikirim ke Surveyor
+                                            @break
+                                        @case('jadwal_survey')
+                                            Jadwal Survey
+                                            @break
+                                        @case('disetujui')
+                                            Disetujui
+                                            @break
+                                        @case('ditolak')
+                                            Ditolak
+                                            @break
+                                        @case('PENDING_REVIEW')
+                                            Menunggu Persetujuan
+                                            @break
+                                        @case('DATA_INVALID')
+                                            Data Tidak Valid
+                                            @break
+                                        @case('SUBMITTED_TO_SURVEYOR')
+                                            Dikirim ke Surveyor
+                                            @break
+                                        @case('SURVEY_SCHEDULED')
+                                            Jadwal Survey
+                                            @break
+                                        @case('APPROVED')
+                                            Disetujui
+                                            @break
+                                        @case('REJECTED')
+                                            Ditolak
+                                            @break
+                                        @default
+                                            {{ $transaction->creditDetail->credit_status }}
+                                    @endswitch
+                                </p>
                                 <p class="text-muted">Dokumen telah lengkap dan sedang dalam proses review</p>
                                 <a href="{{ route('motors.manage-documents', $transaction->id) }}" class="btn btn-primary-confirmation mt-2">
                                     <i class="fas fa-file-alt me-1"></i>Lihat/Kelola Dokumen

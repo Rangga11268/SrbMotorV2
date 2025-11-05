@@ -64,16 +64,16 @@
                                     <label for="status" class="form-label">Status</label>
                                     <select name="status" id="status" class="form-control" required>
                                         <option value="">Pilih Status</option>
-                                        <option value="NEW_ORDER" {{ old('status') === 'NEW_ORDER' ? 'selected' : '' }}>NEW_ORDER</option>
-                                        <option value="WAITING_PAYMENT" {{ old('status') === 'WAITING_PAYMENT' ? 'selected' : '' }}>WAITING_PAYMENT</option>
-                                        <option value="PENDING_REVIEW" {{ old('status') === 'PENDING_REVIEW' ? 'selected' : '' }}>PENDING_REVIEW</option>
-                                        <option value="DATA_INVALID" {{ old('status') === 'DATA_INVALID' ? 'selected' : '' }}>DATA_INVALID</option>
-                                        <option value="SUBMITTED_TO_SURVEYOR" {{ old('status') === 'SUBMITTED_TO_SURVEYOR' ? 'selected' : '' }}>SUBMITTED_TO_SURVEYOR</option>
-                                        <option value="SURVEY_SCHEDULED" {{ old('status') === 'SURVEY_SCHEDULED' ? 'selected' : '' }}>SURVEY_SCHEDULED</option>
-                                        <option value="APPROVED" {{ old('status') === 'APPROVED' ? 'selected' : '' }}>APPROVED</option>
-                                        <option value="REJECTED" {{ old('status') === 'REJECTED' ? 'selected' : '' }}>REJECTED</option>
-                                        <option value="READY_FOR_DELIVERY" {{ old('status') === 'READY_FOR_DELIVERY' ? 'selected' : '' }}>READY_FOR_DELIVERY</option>
-                                        <option value="COMPLETED" {{ old('status') === 'COMPLETED' ? 'selected' : '' }}>COMPLETED</option>
+                                        <option value="new_order" {{ old('status') === 'new_order' ? 'selected' : '' }}>Pesanan Baru</option>
+                                        <option value="waiting_payment" {{ old('status') === 'waiting_payment' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                                        <option value="menunggu_persetujuan" {{ old('status') === 'menunggu_persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                        <option value="data_tidak_valid" {{ old('status') === 'data_tidak_valid' ? 'selected' : '' }}>Data Tidak Valid</option>
+                                        <option value="dikirim_ke_surveyor" {{ old('status') === 'dikirim_ke_surveyor' ? 'selected' : '' }}>Dikirim ke Surveyor</option>
+                                        <option value="jadwal_survey" {{ old('status') === 'jadwal_survey' ? 'selected' : '' }}>Jadwal Survey</option>
+                                        <option value="disetujui" {{ old('status') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                        <option value="ditolak" {{ old('status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                                        <option value="ready_for_delivery" {{ old('status') === 'ready_for_delivery' ? 'selected' : '' }}>Siap Dikirim</option>
+                                        <option value="completed" {{ old('status') === 'completed' ? 'selected' : '' }}>Selesai</option>
                                     </select>
                                 </div>
                             </div>
@@ -161,12 +161,12 @@
                                     <div class="mb-3">
                                         <label for="credit_detail_credit_status" class="form-label">Status Kredit</label>
                                         <select name="credit_detail[credit_status]" id="credit_detail_credit_status" class="form-control">
-                                            <option value="PENDING_REVIEW" {{ old('credit_detail.credit_status', 'PENDING_REVIEW') === 'PENDING_REVIEW' ? 'selected' : '' }}>PENDING_REVIEW</option>
-                                            <option value="DATA_INVALID" {{ old('credit_detail.credit_status') === 'DATA_INVALID' ? 'selected' : '' }}>DATA_INVALID</option>
-                                            <option value="SUBMITTED_TO_SURVEYOR" {{ old('credit_detail.credit_status') === 'SUBMITTED_TO_SURVEYOR' ? 'selected' : '' }}>SUBMITTED_TO_SURVEYOR</option>
-                                            <option value="SURVEY_SCHEDULED" {{ old('credit_detail.credit_status') === 'SURVEY_SCHEDULED' ? 'selected' : '' }}>SURVEY_SCHEDULED</option>
-                                            <option value="APPROVED" {{ old('credit_detail.credit_status') === 'APPROVED' ? 'selected' : '' }}>APPROVED</option>
-                                            <option value="REJECTED" {{ old('credit_detail.credit_status') === 'REJECTED' ? 'selected' : '' }}>REJECTED</option>
+                                            <option value="menunggu_persetujuan" {{ old('credit_detail.credit_status', 'menunggu_persetujuan') === 'menunggu_persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                            <option value="data_tidak_valid" {{ old('credit_detail.credit_status') === 'data_tidak_valid' ? 'selected' : '' }}>Data Tidak Valid</option>
+                                            <option value="dikirim_ke_surveyor" {{ old('credit_detail.credit_status') === 'dikirim_ke_surveyor' ? 'selected' : '' }}>Dikirim ke Surveyor</option>
+                                            <option value="jadwal_survey" {{ old('credit_detail.credit_status') === 'jadwal_survey' ? 'selected' : '' }}>Jadwal Survey</option>
+                                            <option value="disetujui" {{ old('credit_detail.credit_status') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                            <option value="ditolak" {{ old('credit_detail.credit_status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
                                         </select>
                                     </div>
                                 </div>

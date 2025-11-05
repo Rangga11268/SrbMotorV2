@@ -121,7 +121,7 @@ class MotorGalleryController extends Controller
             'user_id' => Auth::id(),
             'motor_id' => $motor->id,
             'transaction_type' => 'CASH',
-            'status' => 'NEW_ORDER',
+            'status' => 'new_order',
             'notes' => $request->notes ?? '',
             'booking_fee' => $request->booking_fee ?? 0,
             'total_amount' => $motor->price,
@@ -159,7 +159,7 @@ class MotorGalleryController extends Controller
             'user_id' => Auth::id(),
             'motor_id' => $motor->id,
             'transaction_type' => 'CREDIT',
-            'status' => 'PENDING_REVIEW',
+            'status' => 'menunggu_persetujuan',
             'notes' => $request->notes ?? '',
             'total_amount' => $motor->price,
             'payment_method' => $request->payment_method,
@@ -172,7 +172,7 @@ class MotorGalleryController extends Controller
             'down_payment' => $request->down_payment,
             'tenor' => $request->tenor,
             'monthly_installment' => $request->monthly_installment,
-            'credit_status' => 'PENDING_REVIEW', // Initially pending but waiting for documents
+            'credit_status' => 'menunggu_persetujuan', // Initially pending but waiting for documents
         ]);
         
         return redirect()->route('motors.upload-credit-documents', ['transaction' => $transaction->id])
@@ -253,9 +253,9 @@ class MotorGalleryController extends Controller
         }
         
         // Update transaction status to indicate documents have been submitted and are pending admin review
-        $transaction->update(['status' => 'PENDING_REVIEW']);
+        $transaction->update(['status' => 'menunggu_persetujuan']);
         if ($transaction->creditDetail) {
-            $transaction->creditDetail->update(['credit_status' => 'PENDING_REVIEW']);
+            $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
         }
         
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
@@ -289,6 +289,11 @@ class MotorGalleryController extends Controller
             abort(403, 'Unauthorized access to this transaction');
         }
         
+        // Verify that the transaction has a credit detail
+        if (!$transaction->creditDetail) {
+            return redirect()->back()->withErrors(['error' => 'Transaksi tidak memiliki detail kredit yang valid.']);
+        }
+        
         $request->validate([
             'documents.KTP' => 'nullable|array',
             'documents.KTP.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -301,29 +306,32 @@ class MotorGalleryController extends Controller
         ]);
         
         // Process and save new documents
-        foreach ($request->file('documents', []) as $docType => $files) {
-            if (is_array($files) && !empty($files)) {
-                foreach ($files as $file) {
-                    if ($file) {
-                        // Store file in storage
-                        $path = $file->store('credit-documents/' . $transaction->id, 'public');
-                        
-                        // Create document record
-                        Document::create([
-                            'credit_detail_id' => $transaction->creditDetail->id,
-                            'document_type' => $docType,
-                            'file_path' => $path,
-                            'original_name' => $file->getClientOriginalName(),
-                        ]);
+        $documents = $request->file('documents');
+        if ($documents) {
+            foreach ($documents as $docType => $files) {
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        if ($file) {
+                            // Store file in storage
+                            $path = $file->store('credit-documents/' . $transaction->id, 'public');
+                            
+                            // Create document record
+                            Document::create([
+                                'credit_detail_id' => $transaction->creditDetail->id,
+                                'document_type' => $docType,
+                                'file_path' => $path,
+                                'original_name' => $file->getClientOriginalName(),
+                            ]);
+                        }
                     }
                 }
             }
         }
         
         // Update transaction status to indicate documents have been updated
-        $transaction->update(['status' => 'PENDING_REVIEW']);
+        $transaction->update(['status' => 'menunggu_persetujuan']);
         if ($transaction->creditDetail) {
-            $transaction->creditDetail->update(['credit_status' => 'PENDING_REVIEW']);
+            $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
         }
         
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
