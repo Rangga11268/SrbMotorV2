@@ -8,6 +8,7 @@
 
     <nav class="navbar">
         <a href="{{ url('/') }}#home">home</a>
+        <a href="{{ route('about') }}">tentang kami</a>
         <a href="{{ route('motors.index') }}">motor</a>
     </nav>
 

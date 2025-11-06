@@ -10,8 +10,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MotorGalleryController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\PageController;
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
 Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
 Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');

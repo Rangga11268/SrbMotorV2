@@ -88,29 +88,23 @@
         </div>
     </section>
 
-    <!-- About Us Section -->
-    <section class="about-us" id="about-us">
+    <!-- About Us Preview Section -->
+    <section class="about-us-preview" id="about-us">
         <h1 class="heading"><span>Tentang</span> Kami</h1>
 
         <div class="box-container">
             <div class="box">
-                <img src="{{ asset('OldWeb/assets/img/about us.jpeg') }}" alt="Interior Showroom SRB Motors"
-                    class="about-us-image" />
-                <h3>SRB Motors: Your Ride, Our Passion</h3>
-                <p>
-                    Selamat datang di SRB Motors! Kami bukan sekadar dealer, tetapi
-                    mitra Anda dalam menemukan motor impian. Misi kami adalah
-                    menyediakan pilihan motor berkualitas tinggi, harga yang transparan,
-                    serta pelayanan ramah dan profesional. Kepuasan dan kepercayaan
-                    pelanggan adalah prioritas utama kami.
-                </p>
-                <p>
-                    Berdiri dari kecintaan terhadap dunia otomotif roda dua, SRB Motors
-                    berkomitmen menjadi mitra terpercaya bagi para pecinta motor. Kami
-                    percaya bahwa kepercayaan dan hubungan jangka panjang dengan
-                    pelanggan adalah kunci utama. Temukan berbagai pilihan motor terbaik
-                    bersama kami dan wujudkan perjalanan impian Anda.
-                </p>
+                <div class="image">
+                    <img src="{{ asset('OldWeb/assets/img/about us.jpeg') }}" alt="Interior Showroom SRB Motors" />
+                </div>
+                <div class="content">
+                    <h3>SRB Motors: Your Ride, Our Passion</h3>
+                    <p>
+                        Selamat datang di SRB Motors! Kami bukan sekadar dealer, tetapi
+                        mitra Anda dalam menemukan motor impian.
+                    </p>
+                    <a href="{{ route('about') }}" class="btn">Pelajari Lebih Lanjut</a>
+                </div>
             </div>
         </div>
     </section>
@@ -420,4 +414,60 @@
             });
         });
     </script>
+@endsection
+
+@section('styles')
+<style>
+    .about-us-preview .box {
+        display: flex;
+        flex-wrap: wrap;
+        background: var(--light-bg);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+    }
+
+    .about-us-preview .box .image {
+        flex: 1 1 30rem;
+        height: 30rem;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+    }
+
+    .about-us-preview .box .image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .about-us-preview .box .content {
+        flex: 1 1 30rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 2rem;
+    }
+
+    .about-us-preview .box .content h3 {
+        font-size: var(--heading-font-size);
+        color: var(--black);
+    }
+
+    .about-us-preview .box .content p {
+        font-size: 1.5rem;
+        color: var(--light-color);
+        padding: 1rem 0;
+        line-height: 2;
+    }
+
+    @media (max-width: 768px) {
+        .about-us-preview .box {
+            flex-direction: column;
+        }
+
+        .about-us-preview .box .image {
+            width: 100%;
+            height: 25rem;
+        }
+    }
+</style>
 @endsection
