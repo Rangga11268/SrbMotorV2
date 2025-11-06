@@ -330,7 +330,7 @@
                             
                             <div class="mb-4">
                                 <label for="down_payment" class="form-label">Uang Muka (DP)</label>
-                                <input type="number" name="down_payment" id="down_payment" class="form-control" value="{{ old('down_payment') }}" min="0" step="1000" required>
+                                <input type="number" name="down_payment" id="down_payment" class="form-control" value="{{ old('down_payment') }}" min="0" step="any" required>
                                 <div class="form-text">Jumlah uang muka yang ingin Anda bayarkan</div>
                             </div>
                             
@@ -348,7 +348,7 @@
                             
                             <div class="mb-4">
                                 <label for="monthly_installment" class="form-label">Cicilan Per Bulan (Estimasi)</label>
-                                <input type="number" name="monthly_installment" id="monthly_installment" class="form-control" value="{{ old('monthly_installment') }}" min="0" step="1000" readonly>
+                                <input type="number" name="monthly_installment" id="monthly_installment" class="form-control" value="{{ old('monthly_installment') }}" min="0" step="any" readonly>
                                 <div class="form-text">Nilai ini akan dihitung berdasarkan DP dan tenor yang Anda pilih</div>
                             </div>
                             

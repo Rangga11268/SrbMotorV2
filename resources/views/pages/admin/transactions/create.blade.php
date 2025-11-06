@@ -89,14 +89,14 @@
                                 <div class="mb-3">
                                     <label for="booking_fee" class="form-label">Booking Fee (Rp)</label>
                                     <input type="number" name="booking_fee" id="booking_fee" class="form-control" 
-                                           value="{{ old('booking_fee', 0) }}" min="0" step="1000">
+                                           value="{{ old('booking_fee', 0) }}" min="0" step="any">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="total_amount" class="form-label">Total Jumlah (Rp)</label>
                                     <input type="number" name="total_amount" id="total_amount" class="form-control" 
-                                           value="{{ old('total_amount') }}" min="0" step="1000" required>
+                                           value="{{ old('total_amount') }}" min="0" step="any" required>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                                     <div class="mb-3">
                                         <label for="credit_detail_down_payment" class="form-label">Uang Muka (DP) (Rp)</label>
                                         <input type="number" name="credit_detail[down_payment]" id="credit_detail_down_payment" class="form-control" 
-                                               value="{{ old('credit_detail.down_payment', 0) }}" min="0" step="1000">
+                                               value="{{ old('credit_detail.down_payment', 0) }}" min="0" step="any">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -154,7 +154,7 @@
                                     <div class="mb-3">
                                         <label for="credit_detail_monthly_installment" class="form-label">Cicilan/Bulan (Rp)</label>
                                         <input type="number" name="credit_detail[monthly_installment]" id="credit_detail_monthly_installment" class="form-control" 
-                                               value="{{ old('credit_detail.monthly_installment', 0) }}" min="0" step="1000">
+                                               value="{{ old('credit_detail.monthly_installment', 0) }}" min="0" step="any">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -175,7 +175,7 @@
                             <div class="mb-3">
                                 <label for="credit_detail_approved_amount" class="form-label">Jumlah Disetujui (Rp)</label>
                                 <input type="number" name="credit_detail[approved_amount]" id="credit_detail_approved_amount" class="form-control" 
-                                       value="{{ old('credit_detail.approved_amount', 0) }}" min="0" step="1000">
+                                       value="{{ old('credit_detail.approved_amount', 0) }}" min="0" step="any">
                             </div>
                         </div>
                         
