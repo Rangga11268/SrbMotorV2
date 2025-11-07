@@ -192,11 +192,13 @@
                     <h6 class="m-0 font-weight-bold text-primary">Informasi Pelanggan</h6>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ $transaction->user->name }}</h5>
+                    <h5 class="card-title">{{ $transaction->customer_name ?: $transaction->user->name }}</h5>
                     <p class="card-text">
+                        <i class="fas fa-user"></i> {{ $transaction->customer_name ?: $transaction->user->name }}<br>
+                        <i class="fas fa-phone"></i> {{ $transaction->customer_phone ?: $transaction->user->phone_number ?: 'N/A' }}<br>
+                        <i class="fas fa-briefcase"></i> {{ $transaction->customer_occupation ?: 'N/A' }}<br>
                         <i class="fas fa-envelope"></i> {{ $transaction->user->email }}<br>
-                        <i class="fas fa-phone"></i> {{ $transaction->user->phone_number ?? 'N/A' }}<br>
-                        <i class="fas fa-user"></i> ID: {{ $transaction->user->id }}
+                        <i class="fas fa-user"></i> ID User: {{ $transaction->user->id }}
                     </p>
                 </div>
             </div>

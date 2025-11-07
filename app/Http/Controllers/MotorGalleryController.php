@@ -100,6 +100,9 @@ class MotorGalleryController extends Controller
     public function processCashOrder(Request $request, Motor $motor): RedirectResponse
     {
         $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_phone' => 'required|string|max:20',
+            'customer_occupation' => 'required|string|max:255',
             'notes' => 'nullable|string',
             'booking_fee' => 'nullable|numeric|min:0',
             'payment_method' => 'required|string',
@@ -116,6 +119,9 @@ class MotorGalleryController extends Controller
             'total_amount' => $motor->price,
             'payment_method' => $request->payment_method,
             'payment_status' => 'pending',
+            'customer_name' => $request->customer_name,
+            'customer_phone' => $request->customer_phone,
+            'customer_occupation' => $request->customer_occupation,
         ]);
         
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
@@ -136,6 +142,9 @@ class MotorGalleryController extends Controller
     public function processCreditOrder(Request $request, Motor $motor): RedirectResponse
     {
         $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_phone' => 'required|string|max:20',
+            'customer_occupation' => 'required|string|max:255',
             'down_payment' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1',
             'monthly_installment' => 'required|numeric|min:0',
@@ -153,6 +162,9 @@ class MotorGalleryController extends Controller
             'total_amount' => $motor->price,
             'payment_method' => $request->payment_method,
             'payment_status' => 'pending',
+            'customer_name' => $request->customer_name,
+            'customer_phone' => $request->customer_phone,
+            'customer_occupation' => $request->customer_occupation,
         ]);
         
         // Create credit details

@@ -26,6 +26,9 @@ class Transaction extends Model
         'total_amount',
         'payment_method',
         'payment_status',
+        'customer_name',
+        'customer_phone',
+        'customer_occupation',
     ];
 
     /**

@@ -299,6 +299,15 @@
                                         <span class="fw-bold text-primary fs-4">Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }},-</span>
                                     </div>
                                     
+                                    <div class="customer-info mb-2">
+                                        <small class="text-muted d-block">
+                                            <i class="fas fa-user me-1"></i> {{ $transaction->customer_name ?: 'N/A' }}
+                                        </small>
+                                        <small class="text-muted d-block">
+                                            <i class="fas fa-phone me-1"></i> {{ $transaction->customer_phone ?: 'N/A' }}
+                                        </small>
+                                    </div>
+                                    
                                     @if($transaction->transaction_type === 'CREDIT')
                                         <div class="mt-auto">
                                             @if($transaction->creditDetail && !$transaction->creditDetail->hasRequiredDocuments())

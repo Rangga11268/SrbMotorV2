@@ -329,6 +329,24 @@
                             @csrf
                             
                             <div class="mb-4">
+                                <label for="customer_name" class="form-label">Nama Lengkap</label>
+                                <input type="text" name="customer_name" id="customer_name" class="form-control" value="{{ old('customer_name') }}" required>
+                                <div class="form-text">Masukkan nama lengkap Anda</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="customer_phone" class="form-label">Nomor Telepon</label>
+                                <input type="tel" name="customer_phone" id="customer_phone" class="form-control" value="{{ old('customer_phone') }}" required>
+                                <div class="form-text">Masukkan nomor telepon aktif Anda</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="customer_occupation" class="form-label">Pekerjaan</label>
+                                <input type="text" name="customer_occupation" id="customer_occupation" class="form-control" value="{{ old('customer_occupation') }}" required>
+                                <div class="form-text">Masukkan pekerjaan/pekerjaan saat ini</div>
+                            </div>
+                            
+                            <div class="mb-4">
                                 <label for="down_payment" class="form-label">Uang Muka (DP)</label>
                                 <input type="number" name="down_payment" id="down_payment" class="form-control" value="{{ old('down_payment') }}" min="0" step="any" required>
                                 <div class="form-text">Jumlah uang muka yang ingin Anda bayarkan</div>

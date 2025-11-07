@@ -65,9 +65,18 @@ class TransactionController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'payment_method' => 'nullable|string',
             'payment_status' => 'nullable|in:pending,confirmed,failed',
+            'customer_name' => 'nullable|string|max:255',
+            'customer_phone' => 'nullable|string|max:20',
+            'customer_occupation' => 'nullable|string|max:255',
         ]);
 
-        $transaction = Transaction::create($request->all());
+        $transactionData = $request->only([
+            'user_id', 'motor_id', 'transaction_type', 'status', 'notes', 
+            'booking_fee', 'total_amount', 'payment_method', 'payment_status',
+            'customer_name', 'customer_phone', 'customer_occupation'
+        ]);
+
+        $transaction = Transaction::create($transactionData);
 
         return redirect()->route('admin.transactions.index')
             ->with('success', 'Transaction created successfully.');
@@ -110,9 +119,18 @@ class TransactionController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'payment_method' => 'nullable|string',
             'payment_status' => 'nullable|in:pending,confirmed,failed',
+            'customer_name' => 'nullable|string|max:255',
+            'customer_phone' => 'nullable|string|max:20',
+            'customer_occupation' => 'nullable|string|max:255',
         ]);
 
-        $transaction->update($request->all());
+        $transactionData = $request->only([
+            'user_id', 'motor_id', 'transaction_type', 'status', 'notes', 
+            'booking_fee', 'total_amount', 'payment_method', 'payment_status',
+            'customer_name', 'customer_phone', 'customer_occupation'
+        ]);
+        
+        $transaction->update($transactionData);
 
         // Handle credit detail if this is a credit transaction
         if ($request->transaction_type === 'CREDIT') {

@@ -306,6 +306,24 @@
                             @csrf
                             
                             <div class="mb-4">
+                                <label for="customer_name" class="form-label">Nama Lengkap</label>
+                                <input type="text" name="customer_name" id="customer_name" class="form-control" value="{{ old('customer_name') }}" required>
+                                <div class="form-text">Masukkan nama lengkap Anda</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="customer_phone" class="form-label">Nomor Telepon</label>
+                                <input type="tel" name="customer_phone" id="customer_phone" class="form-control" value="{{ old('customer_phone') }}" required>
+                                <div class="form-text">Masukkan nomor telepon aktif Anda</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="customer_occupation" class="form-label">Pekerjaan</label>
+                                <input type="text" name="customer_occupation" id="customer_occupation" class="form-control" value="{{ old('customer_occupation') }}" required>
+                                <div class="form-text">Masukkan pekerjaan/pekerjaan saat ini</div>
+                            </div>
+                            
+                            <div class="mb-4">
                                 <label for="notes" class="form-label">Catatan Tambahan</label>
                                 <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="Catatan tambahan untuk pesanan Anda">{{ old('notes') }}</textarea>
                             </div>

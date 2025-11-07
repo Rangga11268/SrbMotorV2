@@ -48,6 +48,31 @@
                             </div>
                         </div>
                         
+                        <!-- Customer Information Section -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="customer_name" class="form-label">Nama Pelanggan</label>
+                                    <input type="text" name="customer_name" id="customer_name" class="form-control" 
+                                           value="{{ old('customer_name') }}" placeholder="Masukkan nama pelanggan">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="customer_phone" class="form-label">Nomor Telepon</label>
+                                    <input type="text" name="customer_phone" id="customer_phone" class="form-control" 
+                                           value="{{ old('customer_phone') }}" placeholder="Masukkan nomor telepon">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="customer_occupation" class="form-label">Pekerjaan</label>
+                                    <input type="text" name="customer_occupation" id="customer_occupation" class="form-control" 
+                                           value="{{ old('customer_occupation') }}" placeholder="Masukkan pekerjaan">
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">

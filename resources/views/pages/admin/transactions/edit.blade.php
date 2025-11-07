@@ -47,6 +47,31 @@
                             </div>
                         </div>
                         
+                        <!-- Customer Information Section -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="customer_name" class="form-label">Nama Pelanggan</label>
+                                    <input type="text" name="customer_name" id="customer_name" class="form-control" 
+                                           value="{{ old('customer_name', $transaction->customer_name) }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="customer_phone" class="form-label">Nomor Telepon</label>
+                                    <input type="text" name="customer_phone" id="customer_phone" class="form-control" 
+                                           value="{{ old('customer_phone', $transaction->customer_phone) }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="customer_occupation" class="form-label">Pekerjaan</label>
+                                    <input type="text" name="customer_occupation" id="customer_occupation" class="form-control" 
+                                           value="{{ old('customer_occupation', $transaction->customer_occupation) }}">
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">

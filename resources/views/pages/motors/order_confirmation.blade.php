@@ -330,6 +330,18 @@
                                         
                                         <table class="detail-table">
                                             <tr>
+                                                <td>Nama:</td>
+                                                <td>{{ $transaction->customer_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. Telepon:</td>
+                                                <td>{{ $transaction->customer_phone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Pekerjaan:</td>
+                                                <td>{{ $transaction->customer_occupation }}</td>
+                                            </tr>
+                                            <tr>
                                                 <td>Jenis Transaksi:</td>
                                                 <td>
                                                     <span class="badge bg-{{ $transaction->transaction_type === 'CASH' ? 'success' : 'info' }} badge-transaction">
@@ -364,7 +376,7 @@
                                                             @case('completed')
                                                                 Selesai
                                                                 @break
-                                                            @case('menunggu_persetujuan')
+                                                            @case('menunggu_persetujui')
                                                                 Menunggu Persetujuan
                                                                 @break
                                                             @case('data_tidak_valid')

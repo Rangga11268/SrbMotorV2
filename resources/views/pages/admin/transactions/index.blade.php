@@ -6,6 +6,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 text-gray-800">Manajemen Transaksi</h1>
+        <a href="{{ route('admin.transactions.create') }}" class="btn btn-primary">Buat Transaksi Baru</a>
     </div>
 
     <!-- Filter Form -->
@@ -58,7 +59,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Pelanggan</th>
+                            <th>Nama Pelanggan</th>
+                            <th>No. Telepon</th>
                             <th>Motor</th>
                             <th>Tipe</th>
                             <th>Status</th>
@@ -71,7 +73,8 @@
                         @forelse($transactions as $transaction)
                         <tr>
                             <td>{{ $transaction->id }}</td>
-                            <td>{{ $transaction->user->name }}</td>
+                            <td>{{ $transaction->customer_name ?: $transaction->user->name }}</td>
+                            <td>{{ $transaction->customer_phone }}</td>
                             <td>{{ $transaction->motor->name }}</td>
                             <td>
                                 <span class="badge bg-{{ $transaction->transaction_type === 'CASH' ? 'success' : 'info' }}">
