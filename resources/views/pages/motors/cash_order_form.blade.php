@@ -340,8 +340,6 @@
                                     <option value="" disabled selected>Pilih metode pembayaran</option>
                                     <option value="cash" {{ old('payment_method') === 'cash' ? 'selected' : '' }}>Cash Langsung ke Dealer</option>
                                     <option value="transfer" {{ old('payment_method') === 'transfer' ? 'selected' : '' }}>Transfer Bank</option>
-                                    <option value="credit_card" {{ old('payment_method') === 'credit_card' ? 'selected' : '' }}>Kartu Kredit</option>
-                                    <option value="installment" {{ old('payment_method') === 'installment' ? 'selected' : '' }}>Cicilan</option>
                                 </select>
                             </div>
                             

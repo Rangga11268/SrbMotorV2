@@ -134,10 +134,8 @@
                                     <label for="payment_method" class="form-label">Metode Pembayaran</label>
                                     <select name="payment_method" id="payment_method" class="form-control">
                                         <option value="">Pilih Metode</option>
-                                        <option value="cash" {{ $transaction->payment_method === 'cash' ? 'selected' : '' }}>Cash</option>
-                                        <option value="transfer" {{ $transaction->payment_method === 'transfer' ? 'selected' : '' }}>Transfer</option>
-                                        <option value="credit_card" {{ $transaction->payment_method === 'credit_card' ? 'selected' : '' }}>Kartu Kredit</option>
-                                        <option value="installment" {{ $transaction->payment_method === 'installment' ? 'selected' : '' }}>Cicilan</option>
+                                        <option value="cash" {{ $transaction->payment_method === 'cash' ? 'selected' : '' }}>Cash Langsung ke Dealer</option>
+                                        <option value="transfer" {{ $transaction->payment_method === 'transfer' ? 'selected' : '' }}>Transfer Bank</option>
                                         <option value="leasing" {{ $transaction->payment_method === 'leasing' ? 'selected' : '' }}>Leasing</option>
                                         <option value="bank" {{ $transaction->payment_method === 'bank' ? 'selected' : '' }}>Bank</option>
                                     </select>
