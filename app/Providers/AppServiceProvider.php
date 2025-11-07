@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\MotorRepositoryInterface;
+use App\Repositories\MotorRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Bind repository interfaces to their implementations
+        $this->app->bind(
+            MotorRepositoryInterface::class,
+            MotorRepository::class
+        );
     }
 
     /**

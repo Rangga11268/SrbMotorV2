@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Motor;
 use App\Models\MotorSpecification;
+use App\Repositories\MotorRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -11,32 +12,31 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class MotorController extends Controller
 {
+    private MotorRepositoryInterface $motorRepository;
+
+    public function __construct(MotorRepositoryInterface $motorRepository)
+    {
+        $this->motorRepository = $motorRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
-        $query = Motor::with('specifications'); // Eager load specifications
-        
+        $filters = [];
         if (request('search')) {
-            $search = request('search');
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('model', 'like', '%' . $search . '%')
-                  ->orWhere('brand', 'like', '%' . $search . '%')
-                  ->orWhere('type', 'like', '%' . $search . '%');
-            });
+            $filters['search'] = request('search');
         }
-        
-        // Apply availability filter
         if (request('tersedia') !== null) {
-            $query->where('tersedia', request('tersedia'));
+            $filters['tersedia'] = request('tersedia');
         }
         
-        $motors = $query->orderBy('created_at', 'desc')->paginate(10);
+        $motors = $this->motorRepository->getWithFilters($filters, true, 10);
         
         return view('pages.admin.motors.index', compact('motors'));
     }
@@ -101,6 +101,9 @@ class MotorController extends Controller
             }
         }
 
+        // Clear motor cache after creating a new motor
+        $this->motorRepository->clearCache();
+
         return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil ditambahkan.');
     }
 
@@ -109,7 +112,7 @@ class MotorController extends Controller
      */
     public function show(Motor $motor): View
     {
-        $motor->load('specifications'); // Load specifications
+        $motor = $this->motorRepository->findById($motor->id, true);
         return view('pages.admin.motors.show', compact('motor'));
     }
 
@@ -187,6 +190,9 @@ class MotorController extends Controller
             }
         }
 
+        // Clear motor cache after updating a motor
+        $this->motorRepository->clearCache();
+
         return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil diperbarui.');
     }
 
@@ -201,6 +207,9 @@ class MotorController extends Controller
         }
 
         $motor->delete();
+
+        // Clear motor cache after deleting a motor
+        $this->motorRepository->clearCache();
 
         return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil dihapus.');
     }

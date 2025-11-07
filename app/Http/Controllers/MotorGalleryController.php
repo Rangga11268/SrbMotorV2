@@ -6,6 +6,7 @@ use App\Models\Motor;
 use App\Models\Transaction;
 use App\Models\CreditDetail;
 use App\Models\Document;
+use App\Repositories\MotorRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -13,61 +14,47 @@ use Illuminate\Support\Facades\Auth;
 
 class MotorGalleryController extends Controller
 {
+    private MotorRepositoryInterface $motorRepository;
+
+    public function __construct(MotorRepositoryInterface $motorRepository)
+    {
+        $this->motorRepository = $motorRepository;
+    }
+
     /**
      * Display a listing of the motors with filtering and search capabilities.
      */
     public function index(Request $request): View
     {
-        // Build the query
-        $query = Motor::with('specifications')->orderBy('created_at', 'desc');
-        
-        // Apply search filter
+        // Prepare filters array
+        $filters = [];
         if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('model', 'like', '%' . $search . '%')
-                  ->orWhere('brand', 'like', '%' . $search . '%')
-                  ->orWhere('type', 'like', '%' . $search . '%')
-                  ->orWhere('details', 'like', '%' . $search . '%');
-            });
+            $filters['search'] = $request->search;
         }
-        
-        // Apply brand filter
         if ($request->has('brand') && !empty($request->brand)) {
-            $query->where('brand', $request->brand);
+            $filters['brand'] = $request->brand;
         }
-        
-        // Apply type filter
         if ($request->has('type') && !empty($request->type)) {
-            $query->where('type', $request->type);
+            $filters['type'] = $request->type;
         }
-        
-        // Apply year filter
         if ($request->has('year') && !empty($request->year)) {
-            $query->where('year', $request->year);
+            $filters['year'] = $request->year;
         }
-        
-        // Apply price range filter
         if ($request->has('min_price') && !empty($request->min_price)) {
-            $query->where('price', '>=', $request->min_price);
+            $filters['min_price'] = $request->min_price;
         }
-        
         if ($request->has('max_price') && !empty($request->max_price)) {
-            $query->where('price', '<=', $request->max_price);
+            $filters['max_price'] = $request->max_price;
         }
         
-        // Get all unique brands for the filter dropdown
-        $brands = Motor::select('brand')->distinct()->pluck('brand');
+        // Get motors with filters using caching
+        $motors = $this->motorRepository->getWithFilters($filters, true, 12);
         
-        // Get all unique types for the filter dropdown
-        $types = Motor::select('type')->distinct()->whereNotNull('type')->pluck('type');
-        
-        // Get all unique years for the filter dropdown (in descending order)
-        $years = Motor::select('year')->distinct()->whereNotNull('year')->orderBy('year', 'desc')->pluck('year');
-        
-        // Paginate the results
-        $motors = $query->paginate(12)->appends($request->query());
+        // Get filter options using caching
+        $filterOptions = $this->motorRepository->getFilterOptions($request->get('search'));
+        $brands = $filterOptions['brands'];
+        $types = $filterOptions['types'];
+        $years = $filterOptions['years'];
         
         return view('pages.motors.index', compact('motors', 'brands', 'types', 'years'));
     }
@@ -77,9 +64,11 @@ class MotorGalleryController extends Controller
      */
     public function show(Motor $motor): View
     {
-        $motor->load('specifications');
+        // Get motor using repository (with caching)
+        $motor = $this->motorRepository->findById($motor->id, true);
         
-        // Get related motors (same brand, different model, limit 4)
+        // Get related motors (same brand, different model, limit 4) - this one we'll keep as a direct query
+        // since related motors might change frequently and caching could lead to stale data
         $relatedMotors = Motor::where('brand', $motor->brand)
             ->where('id', '!=', $motor->id)
             ->with('specifications')

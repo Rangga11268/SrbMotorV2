@@ -343,7 +343,7 @@
                                                     <span class="badge bg-{{ 
                                                         (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' : 
                                                         (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
-                                                        (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
+                                                        (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info')))
                                                     }} badge-transaction">
                                                         @switch($transaction->status)
                                                             @case('new_order')
