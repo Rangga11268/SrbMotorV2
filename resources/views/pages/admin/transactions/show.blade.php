@@ -40,7 +40,7 @@
                                             (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
                                             (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
                                         }}">
-                                            {{ $transaction->status }}
+                                            {{ $transaction->status_text }}
                                         </span>
                                     </td>
                                 </tr>
@@ -125,7 +125,7 @@
                                             (in_array($transaction->creditDetail->credit_status, ['menunggu_persetujuan', 'dikirim_ke_surveyor']) ? 'warning' : 
                                             ($transaction->creditDetail->credit_status === 'ditolak' ? 'danger' : 'info'))) 
                                         }}">
-                                            {{ $transaction->creditDetail->credit_status }}
+                                            {{ $transaction->credit_status_text }}
                                         </span>
                                     </td>
                                 </tr>

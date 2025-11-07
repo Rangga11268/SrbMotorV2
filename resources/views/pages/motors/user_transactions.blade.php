@@ -252,46 +252,7 @@
                                             {{ $transaction->transaction_type === 'CASH' ? 'Tunai' : 'Kredit' }}
                                         </span>
                                         <span class="badge bg-{{ $statusClass }} fs-6">
-                                            @switch($transaction->status)
-                                                @case('new_order')
-                                                    Pesanan Baru
-                                                    @break
-                                                @case('waiting_payment')
-                                                    Menunggu Pembayaran
-                                                    @break
-                                                @case('payment_confirmed')
-                                                    Pembayaran Dikonfirmasi
-                                                    @break
-                                                @case('unit_preparation')
-                                                    Persiapan Unit
-                                                    @break
-                                                @case('ready_for_delivery')
-                                                    Siap Dikirim
-                                                    @break
-                                                @case('completed')
-                                                    Selesai
-                                                    @break
-                                                @case('menunggu_persetujuan')
-                                                    Menunggu Persetujuan
-                                                    @break
-                                                @case('data_tidak_valid')
-                                                    Data Tidak Valid
-                                                    @break
-                                                @case('dikirim_ke_surveyor')
-                                                    Dikirim ke Surveyor
-                                                    @break
-                                                @case('jadwal_survey')
-                                                    Jadwal Survey
-                                                    @break
-                                                @case('disetujui')
-                                                    Disetujui
-                                                    @break
-                                                @case('ditolak')
-                                                    Ditolak
-                                                    @break
-                                                @default
-                                                    {{ $transaction->status }}
-                                            @endswitch
+                                            {{ getTransactionStatusText($transaction->status) }}
                                         </span>
                                     </div>
                                     

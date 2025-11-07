@@ -290,3 +290,277 @@ Berikut adalah ringkasan dari implementasi sistem pesanan terpadu dan perbaikan 
    - Menjaga konsistensi desain dan pengalaman pengguna
    - Menambahkan menu transaksi ke panel admin
    - Mengintegrasikan dengan sistem otentikasi dan middleware yang ada
+
+---
+
+### **Alternatif untuk @switch Statement**
+
+Dalam banyak file Blade di aplikasi ini, terutama dalam menampilkan status transaksi dan spesifikasi motor, saat ini digunakan pernyataan `@switch` yang bisa membuat kode menjadi panjang dan kurang fleksibel. Berikut adalah beberapa pendekatan alternatif yang lebih baik:
+
+#### **1. Menggunakan Helper Function (Direkomendasikan)**
+
+Pendekatan terbaik adalah dengan membuat fungsi helper untuk mengonversi status menjadi teks yang dapat dibaca:
+
+**Langkah-langkah:**
+1. Buat file helper di `app/Helpers/StatusHelper.php`:
+```php
+<?php
+
+if (!function_exists('getTransactionStatusText')) {
+    function getTransactionStatusText($status) {
+        $statusMap = [
+            'new_order' => 'Pesanan Baru',
+            'waiting_payment' => 'Menunggu Pembayaran',
+            'payment_confirmed' => 'Pembayaran Dikonfirmasi',
+            'unit_preparation' => 'Persiapan Unit',
+            'ready_for_delivery' => 'Siap Dikirim',
+            'completed' => 'Selesai',
+            'menunggu_persetujuan' => 'Menunggu Persetujuan',
+            'data_tidak_valid' => 'Data Tidak Valid',
+            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+            'jadwal_survey' => 'Jadwal Survey',
+            'disetujui' => 'Disetujui',
+            'ditolak' => 'Ditolak',
+            'PENDING_REVIEW' => 'Menunggu Persetujuan',
+            'DATA_INVALID' => 'Data Tidak Valid',
+            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
+            'SURVEY_SCHEDULED' => 'Jadwal Survey',
+            'APPROVED' => 'Disetujui',
+            'REJECTED' => 'Ditolak'
+        ];
+        
+        return $statusMap[$status] ?? $status;
+    }
+}
+
+if (!function_exists('getCreditStatusText')) {
+    function getCreditStatusText($status) {
+        $statusMap = [
+            'menunggu_persetujuan' => 'Menunggu Persetujuan',
+            'data_tidak_valid' => 'Data Tidak Valid',
+            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+            'jadwal_survey' => 'Jadwal Survey',
+            'disetujui' => 'Disetujui',
+            'ditolak' => 'Ditolak',
+            'PENDING_REVIEW' => 'Menunggu Persetujuan',
+            'DATA_INVALID' => 'Data Tidak Valid',
+            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
+            'SURVEY_SCHEDULED' => 'Jadwal Survey',
+            'APPROVED' => 'Disetujui',
+            'REJECTED' => 'Ditolak'
+        ];
+        
+        return $statusMap[$status] ?? $status;
+    }
+}
+```
+
+2. Tambahkan path helper ke `composer.json`:
+```json
+{
+    "autoload": {
+        "files": [
+            "app/Helpers/StatusHelper.php"
+        ]
+    }
+}
+```
+
+3. Jalankan `composer dump-autoload` untuk memuat helper.
+
+4. Ganti pernyataan `@switch` di Blade dengan kode lebih sederhana:
+```blade
+<span class="badge bg-{{ 
+    (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' : 
+    (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
+    (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info')))
+}}">
+    {{ getTransactionStatusText($transaction->status) }}
+</span>
+```
+
+**Keunggulan pendekatan helper:**
+- Kode Blade menjadi lebih bersih dan mudah dibaca
+- Kemudahan pemeliharaan karena status hanya didefinisikan di satu tempat
+- Performa lebih baik karena tidak perlu melewati banyak pernyataan case
+- Memungkinkan untuk mudah menambahkan fitur seperti terjemahan
+
+#### **2. Menggunakan Accessor di Model (Pendekatan OOP)**
+
+Tambahkan accessor ke model Transaction untuk menghasilkan status yang dapat dibaca:
+
+```php
+// Dalam model Transaction.php
+public function getStatusTextAttribute()
+{
+    $statusMap = [
+        'new_order' => 'Pesanan Baru',
+        'waiting_payment' => 'Menunggu Pembayaran',
+        'payment_confirmed' => 'Pembayaran Dikonfirmasi',
+        'unit_preparation' => 'Persiapan Unit',
+        'ready_for_delivery' => 'Siap Dikirim',
+        'completed' => 'Selesai',
+        'menunggu_persetujuan' => 'Menunggu Persetujuan',
+        'data_tidak_valid' => 'Data Tidak Valid',
+        'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+        'jadwal_survey' => 'Jadwal Survey',
+        'disetujui' => 'Disetujui',
+        'ditolak' => 'Ditolak',
+        'PENDING_REVIEW' => 'Menunggu Persetujuan',
+        'DATA_INVALID' => 'Data Tidak Valid',
+        'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
+        'SURVEY_SCHEDULED' => 'Jadwal Survey',
+        'APPROVED' => 'Disetujui',
+        'REJECTED' => 'Ditolak'
+    ];
+    
+    return $statusMap[$this->status] ?? $this->status;
+}
+
+public function getCreditStatusTextAttribute()
+{
+    if (!$this->creditDetail) {
+        return '';
+    }
+    
+    $statusMap = [
+        'menunggu_persetujuan' => 'Menunggu Persetujuan',
+        'data_tidak_valid' => 'Data Tidak Valid',
+        'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+        'jadwal_survey' => 'Jadwal Survey',
+        'disetujui' => 'Disetujui',
+        'ditolak' => 'Ditolak',
+        'PENDING_REVIEW' => 'Menunggu Persetujuan',
+        'DATA_INVALID' => 'Data Tidak Valid',
+        'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
+        'SURVEY_SCHEDULED' => 'Jadwal Survey',
+        'APPROVED' => 'Disetujui',
+        'REJECTED' => 'Ditolak'
+    ];
+    
+    return $statusMap[$this->creditDetail->credit_status] ?? $this->creditDetail->credit_status;
+}
+```
+
+Kemudian gunakan di Blade:
+```blade
+<span class="badge bg-{{ 
+    (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' : 
+    (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
+    (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info')))
+}}">
+    {{ $transaction->status_text }}
+</span>
+```
+
+**Keunggulan pendekatan accessor:**
+- Lebih OOP dan mengikuti prinsip Laravel
+- Status diproses di tingkat model sehingga bisa digunakan di mana saja
+- Kode Blade menjadi sangat bersih
+- Lebih mudah untuk menambahkan logika tambahan di masa depan
+
+#### **3. Menggunakan View Composer (Untuk Tampilan Kompleks)**
+
+Jika status perlu ditransformasi dengan logika kompleks atau mengakses data tambahan dari database, View Composer bisa menjadi pilihan:
+
+```php
+// Buat file: app/Http/View/Composers/TransactionStatusComposer.php
+<?php
+
+namespace App\Http\View\Composers;
+
+use Illuminate\View\View;
+use App\Models\Transaction;
+
+class TransactionStatusComposer
+{
+    public function compose(View $view)
+    {
+        $transaction = $view->transaction;
+        
+        $statusText = $this->getStatusText($transaction->status);
+        $creditStatusText = $transaction->creditDetail ? $this->getCreditStatusText($transaction->creditDetail->credit_status) : '';
+        
+        $view->with('statusText', $statusText)
+             ->with('creditStatusText', $creditStatusText);
+    }
+    
+    private function getStatusText($status)
+    {
+        $statusMap = [
+            'new_order' => 'Pesanan Baru',
+            'waiting_payment' => 'Menunggu Pembayaran',
+            'payment_confirmed' => 'Pembayaran Dikonfirmasi',
+            'unit_preparation' => 'Persiapan Unit',
+            'ready_for_delivery' => 'Siap Dikirim',
+            'completed' => 'Selesai',
+            'menunggu_persetujuan' => 'Menunggu Persetujuan',
+            'data_tidak_valid' => 'Data Tidak Valid',
+            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+            'jadwal_survey' => 'Jadwal Survey',
+            'disetujui' => 'Disetujui',
+            'ditolak' => 'Ditolak',
+            'PENDING_REVIEW' => 'Menunggu Persetujuan',
+            'DATA_INVALID' => 'Data Tidak Valid',
+            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
+            'SURVEY_SCHEDULED' => 'Jadwal Survey',
+            'APPROVED' => 'Disetujui',
+            'REJECTED' => 'Ditolak'
+        ];
+        
+        return $statusMap[$status] ?? $status;
+    }
+    
+    private function getCreditStatusText($status)
+    {
+        $statusMap = [
+            'menunggu_persetujuan' => 'Menunggu Persetujuan',
+            'data_tidak_valid' => 'Data Tidak Valid',
+            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+            'jadwal_survey' => 'Jadwal Survey',
+            'disetujui' => 'Disetujui',
+            'ditolak' => 'Ditolak',
+            'PENDING_REVIEW' => 'Menunggu Persetujuan',
+            'DATA_INVALID' => 'Data Tidak Valid',
+            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
+            'SURVEY_SCHEDULED' => 'Jadwal Survey',
+            'APPROVED' => 'Disetujui',
+            'REJECTED' => 'Ditolak'
+        ];
+        
+        return $statusMap[$status] ?? $status;
+    }
+}
+```
+
+Kemudian daftarkan di AppServiceProvider:
+```php
+use Illuminate\Support\Facades\View;
+use App\Http\View\Composers\TransactionStatusComposer;
+
+public function boot()
+{
+    View::composer(
+        'pages.motors.order_confirmation', TransactionStatusComposer::class
+    );
+}
+```
+
+**Keunggulan View Composer:**
+- Memisahkan logika tampilan dari template
+- Cocok untuk logika yang kompleks dan membutuhkan data tambahan
+- Menghindari duplikasi logika di banyak tampilan
+
+#### **Rekomendasi Terbaik**
+
+Untuk aplikasi SRB Motors, saya merekomendasikan menggunakan kombinasi antara **helper function** dan **model accessor**:
+
+1. Gunakan **helper function** untuk status yang digunakan di banyak tempat dan memerlukan logika sederhana
+2. Gunakan **model accessor** untuk status yang secara alami bagian dari model dan mungkin memerlukan logika tambahan di masa depan
+3. Gunakan **View Composer** hanya jika ada kebutuhan logika kompleks yang perlu digunakan secara menyeluruh dalam beberapa tampilan
+
+Pendekatan ini akan:
+- Mengurangi jumlah baris kode di file Blade secara signifikan
+- Meningkatkan keterbacaan dan pemeliharaan kode
+- Menyediakan fleksibilitas untuk menambahkan fitur di masa depan
+- Meningkatkan performa karena mengurangi jumlah pernyataan kondisional di sisi tampilan

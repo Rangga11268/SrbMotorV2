@@ -233,7 +233,7 @@
                             (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
                             (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
                         }}">
-                            {{ $transaction->status }}
+                            {{ $transaction->status_text }}
                         </span>
                     </p>
                 </div>

@@ -498,3 +498,14 @@ Implementasi konsolidasi migrasi ini akan memudahkan pengembangan fitur-fitur ba
 - Jika proyek sudah memiliki data produksi penting, konsultasikan dengan tim sebelum melanjutkan
 - Simpan backup database sebelum dan sesudah implementasi
 - Uji secara menyeluruh sebelum menerapkan ke lingkungan produksi
+
+## Qwen Added Memories
+- Successfully implemented customer information fields (name, phone number, and occupation) to both cash and credit transaction forms. Added database migration, updated models, controllers, views, and added manual transaction creation capability in the admin panel.
+- Added customer_name, customer_phone, and customer_occupation fields to the transactions table via migration
+- Updated Transaction model to include new fields in fillable array
+- Modified cash_order_form.blade.php and credit_order_form.blade.php to include required customer information fields
+- Updated MotorGalleryController to process the new customer information fields during transaction creation
+- Enhanced admin panel views (index, show, create, edit) to display, create and edit customer information
+- Added "Buat Transaksi Baru" button in admin transactions index page for manual transaction creation
+- Updated order confirmation and user transactions pages to display customer information
+- These changes ensure complete customer information is available for both cash and credit transactions in the admin panel

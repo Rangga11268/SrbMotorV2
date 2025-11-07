@@ -100,31 +100,7 @@
                             @foreach($motor->specifications as $spec)
                                 <div class="col-12 col-md-6 mb-2">
                                     <span class="text-muted">
-                                        @switch($spec->spec_key)
-                                            @case('engine_type')
-                                                {{ __('Tipe Mesin:') }}
-                                                @break
-                                            @case('engine_size')
-                                                {{ __('Ukuran Mesin:') }}
-                                                @break
-                                            @case('fuel_system')
-                                                {{ __('Sistem Bahan Bakar:') }}
-                                                @break
-                                            @case('transmission')
-                                                {{ __('Transmisi:') }}
-                                                @break
-                                            @case('max_power')
-                                                {{ __('Daya Maksimal:') }}
-                                                @break
-                                            @case('max_torque')
-                                                {{ __('Torsi Maksimal:') }}
-                                                @break
-                                            @case('additional_specs')
-                                                {{ __('Spesifikasi Tambahan:') }}
-                                                @break
-                                            @default
-                                                {{ __($spec->spec_key . ':') }}
-                                        @endswitch
+                                        {{ formatSpecKey($spec->spec_key) }}
                                     </span> 
                                     <span class="fw-medium">{{ $spec->spec_value }}</span>
                                 </div>

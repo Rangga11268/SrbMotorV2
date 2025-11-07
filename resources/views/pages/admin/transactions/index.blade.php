@@ -87,7 +87,7 @@
                                     (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
                                     (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
                                 }}">
-                                    {{ $transaction->status }}
+                                    {{ $transaction->status_text }}
                                 </span>
                                 @if($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail && !$transaction->creditDetail->hasRequiredDocuments())
                                     <br>
