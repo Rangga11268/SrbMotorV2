@@ -564,3 +564,457 @@ Pendekatan ini akan:
 - Meningkatkan keterbacaan dan pemeliharaan kode
 - Menyediakan fleksibilitas untuk menambahkan fitur di masa depan
 - Meningkatkan performa karena mengurangi jumlah pernyataan kondisional di sisi tampilan
+
+---
+
+## **Rancangan Sistem Cetak Invoice untuk Website Dealer Motor SRB Motors**
+
+### **Bagian 1: Gambaran Umum**
+
+#### **1.1 Latar Belakang**
+Fitur cetak invoice sangat penting dalam sistem penjualan motor karena merupakan dokumen resmi yang mencatat transaksi pembelian antara dealer dan pelanggan. Invoice ini menjadi bukti pembelian, syarat administrasi kendaraan, dan dasar dalam proses administrasi purna jual.
+
+#### **1.2 Tujuan**
+* **Menghasilkan Invoice Digital:** Membuat invoice dalam format PDF yang profesional dan resmi untuk setiap transaksi berhasil
+* **Otomatisasi Proses:** Menghasilkan invoice secara otomatis saat transaksi mencapai status tertentu
+* **Kemudahan Akses:** Memudahkan admin dan pelanggan untuk mencetak/menyimpan invoice
+* **Memenuhi Kebutuhan Administrasi:** Menyediakan dokumen yang memenuhi kebutuhan administrasi dan legalitas bisnis
+
+---
+
+### **Bagian 2: Spesifikasi Fitur**
+
+#### **2.1 Akses dan Trigger**
+* **Kapan Invoice Tersedia:** Invoice hanya tersedia untuk transaksi dengan status `payment_confirmed`, `unit_preparation`, `ready_for_delivery`, atau `completed`
+* **Akses Admin:** Tombol "Cetak Invoice" muncul di halaman detail transaksi untuk admin
+* **Akses Pelanggan:** Pelanggan bisa mengakses invoice di halaman konfirmasi pesanan dan riwayat transaksi setelah pembayaran dikonfirmasi
+
+#### **2.2 Struktur Data Invoice**
+Invoice akan mencakup informasi berikut:
+* **Header Invoice:**
+  * Logo dealer (SRB Motors)
+  * Nama dan alamat dealer
+  * Nomor invoice (format: INV-YYYYMM-DD-XXXX)
+  * Tanggal pembuatan
+  * Nama dan alamat pelanggan
+  * Informasi kontak pelanggan
+
+* **Detail Transaksi:**
+  * Nama motor
+  * Spesifikasi utama (tahun, tipe, warna)
+  * Harga motor
+  * Booking fee (jika ada)
+  * Total pembayaran
+  * Metode pembayaran
+  * Catatan tambahan (jika ada)
+
+* **Footer Invoice:**
+  * Tanda tangan digital dealer
+  * Kode unik invoice
+  * Keterangan legalitas
+  * Barcode untuk verifikasi
+
+---
+
+### **Bagian 3: Arsitektur Teknis**
+
+#### **3.1 Dependencies yang Dibutuhkan**
+* Package `barryvdh/laravel-dompdf` untuk generasi PDF
+
+#### **3.2 Model dan Relasi**
+* Tidak diperlukan model baru, invoice akan di-generate dari data transaksi yang sudah ada
+* Relasi: `Transaction` → `User`, `Transaction` → `Motor`, `Transaction` → `CreditDetail` (jika kredit)
+
+#### **3.3 Controller Baru**
+* Tambahkan method `generateInvoice` di `TransactionController`
+* Method akan menerima ID transaksi dan mengembalikan file PDF
+
+#### **3.4 Route Baru**
+* Tambahkan route: `GET /admin/transactions/{id}/invoice` untuk menghasilkan invoice
+
+#### **3.5 View untuk Invoice**
+* Buat view Blade khusus yang dioptimalkan untuk cetak (invoice.blade.php)
+* Gunakan layout simple tanpa header/footer website
+
+---
+
+### **Bagian 4: Implementasi**
+
+#### **4.1 Instalasi Dependencies**
+* Instal dan konfigurasi `barryvdh/laravel-dompdf` untuk pembuatan PDF
+
+#### **4.2 Method di Controller**
+* Method `generateInvoice` akan:
+  * Mengambil data transaksi beserta relasi yang diperlukan
+  * Memvalidasi bahwa transaksi memiliki status yang benar untuk menghasilkan invoice
+  * Membangun tampilan invoice menggunakan template Blade
+  * Menghasilkan PDF dari template tersebut
+  * Mengembalikan file PDF untuk didownload
+
+#### **4.3 Template Invoice**
+* Desain template responsif dengan layout khusus untuk cetak
+* Termasuk header dealer, informasi pelanggan, detail transaksi, dan footer khusus
+* Menggunakan CSS untuk layout cetak (menggunakan ukuran A4)
+
+#### **4.4 Integrasi dengan Admin Panel**
+* Tambahkan tombol "Cetak Invoice" di halaman detail transaksi untuk transaksi dengan status yang sesuai
+* Tambahkan link download pada halaman konfirmasi pesanan untuk pelanggan (setelah pembayaran dikonfirmasi)
+
+---
+
+### **Bagian 5: Desain UI/UX**
+
+#### **5.1 Desain Tombol**
+* Tombol "Cetak Invoice" dengan ikon printer
+* Hanya muncul untuk transaksi dengan status yang sesuai
+* Warna tombol: biru (primary) untuk konsistensi UI
+
+#### **5.2 Desain Invoice**
+* Format A4 (210mm × 297mm)
+* Margin konsisten (20mm)
+* Penggunaan font profesional dan mudah dibaca
+* Logo dan warna konsisten dengan brand SRB Motors
+* Tabel untuk detail transaksi yang rapi dan terstruktur
+* Footer dengan informasi legalitas
+
+---
+
+### **Bagian 6: Fungsi dan Akses**
+
+#### **6.1 Hak Akses**
+* Admin: Penuh - bisa mengakses invoice untuk semua transaksi yang sesuai
+* Pelanggan: Terbatas - hanya bisa mengakses invoice untuk transaksi milik mereka sendiri
+
+#### **6.2 Keamanan**
+* Validasi bahwa pengguna memiliki hak akses ke transaksi tertentu
+* Proteksi dari akses tidak sah ke invoice lain
+* File PDF tidak disimpan di direktori publik, diakses melalui route terproteksi
+
+---
+
+### **Bagian 7: Validasi dan Error Handling**
+
+#### **7.1 Validasi Status**
+* Hanya transaksi dengan status `payment_confirmed`, `unit_preparation`, `ready_for_delivery`, atau `completed` yang bisa di-generate invoice-nya
+
+#### **7.2 Error Handling**
+* Jika transaksi tidak ditemukan, tampilkan error 404
+* Jika pengguna tidak punya akses, tampilkan error 403
+* Jika transaksi tidak memenuhi syarat untuk invoice, tampilkan pesan penjelasan
+
+---
+
+### **Bagian 8: Deployment dan Testing**
+
+#### **8.1 Testing**
+* Uji coba proses generate invoice untuk berbagai skenario dan status transaksi
+* Uji coba dengan berbagai browser
+* Uji coba tampilan cetak
+
+#### **8.2 Deployment**
+* Pastikan server punya dependencies yang cukup untuk proses generate PDF
+* Pengujian pada lingkungan produksi sebelum rilis
+
+---
+
+### **Bagian 9: Jadwal Implementasi**
+
+#### **Fase 1 (Hari 1-2):** Setup Dependencies dan Struktur Dasar
+* Instalasi dompdf
+* Pembuatan route, controller method
+* Setup template dasar
+
+#### **Fase 2 (Hari 3-4):** Implementasi Fitur Lengkap
+* Implementasi method generateInvoice
+* Desain template invoice
+* Integrasi dengan admin panel
+
+#### **Fase 3 (Hari 5):** Testing dan Deployment
+* Testing fitur
+* Validasi tampilan dan fungsionalitas
+* Deployment ke production
+
+---
+
+### **Bagian 10: Manfaat dan Dampak**
+
+#### **10.1 Manfaat Bisnis**
+* Mempercepat proses administrasi penjualan
+* Memberikan profesionalisme dalam pelayanan
+* Memudahkan pelanggan dalam administrasi purna jual
+* Mengurangi kesalahan pencatatan manual
+
+#### **10.2 Manfaat Teknis**
+* Mengotomatisasi proses pembuatan dokumen resmi
+* Menyediakan arsip digital untuk setiap transaksi
+* Meningkatkan keamanan dan integritas data transaksi
+
+
+---
+
+## **Rancangan Sistem Laporan (Reporting) untuk Panel Admin Website Dealer Motor SRB Motors**
+
+### **Bagian 1: Gambaran Umum**
+
+#### **1.1 Latar Belakang**
+Sistem laporan merupakan komponen penting dalam operasional sebuah dealer motor. Admin perlu memiliki akses ke informasi yang terstruktur dan terperinci tentang penjualan, tren pasar, kinerja produk, dan kinerja proses transaksi. Saat ini, informasi transaksi hanya tersedia dalam bentuk daftar transaksi, tetapi belum ada representasi laporan yang komprehensif yang membantu pengambilan keputusan strategis.
+
+#### **1.2 Tujuan**
+* **Menghasilkan Laporan Terstruktur:** Menyediakan berbagai jenis laporan yang dapat membantu admin dalam menganalisis kinerja bisnis
+* **Mendukung Pengambilan Keputusan:** Memberikan informasi kuantitatif dan kualitatif yang mendukung pengambilan keputusan strategis
+* **Memantau Kinerja:** Memonitor kinerja penjualan, tren permintaan, dan efisiensi proses transaksi
+* **Meningkatkan Transparansi:** Memberikan gambaran yang jelas tentang aktivitas penjualan dan proses bisnis
+
+---
+
+### **Bagian 2: Spesifikasi Fitur Laporan**
+
+#### **2.1 Jenis Laporan yang Tersedia**
+
+1. **Laporan Penjualan Harian/Mingguan/Bulanan**
+   * Total transaksi dalam periode tertentu
+   * Jumlah transaksi tunai vs kredit
+   * Pendapatan bruto berdasarkan periode
+   * Distribusi transaksi berdasarkan jenis motor
+
+2. **Laporan Motor Terlaris**
+   * 10 motor terlaris dalam periode tertentu
+   * Persentase kontribusi terhadap total penjualan
+   * Tren penjualan per merek (Honda vs Yamaha)
+
+3. **Laporan Status Transaksi**
+   * Distribusi status transaksi (baru, menunggu pembayaran, dikonfirmasi, selesai, ditolak)
+   * Waktu rata-rata pemrosesan transaksi
+   * Tingkat keberhasilan pengajuan kredit vs penolakan
+
+4. **Laporan Customer Demografi**
+   * Distribusi pelanggan berdasarkan profesi
+   * Analisis demografi pelanggan (dari informasi yang tersedia)
+
+5. **Laporan Performa Kredit**
+   * Rasio keberhasilan pengajuan kredit
+   * Persentase penolakan berdasarkan alasan
+   * Waktu rata-rata proses kredit
+
+#### **2.2 Akses dan Tampilan**
+* **Akses Admin:** Hanya admin yang memiliki akses ke sistem laporan
+* **Menu Laporan:** Tambahkan submenu "Laporan" di sidebar admin panel
+* **Tampilan Dashboard Laporan:** Halaman utama yang menampilkan ringkasan kunci dan grafik penting
+* **Detail Laporan:** Setiap jenis laporan memiliki halaman detail dengan filter dan opsi eksport
+
+#### **2.3 Filter dan Parameter**
+* **Filter Tanggal:** Rentang tanggal untuk membatasi periode laporan
+* **Filter Tipe Transaksi:** Tunai vs Kredit
+* **Filter Status Transaksi:** Untuk laporan berdasarkan status
+* **Filter Motor/Merek:** Untuk laporan berdasarkan produk
+
+---
+
+### **Bagian 3: Arsitektur Teknis**
+
+#### **3.1 Dependencies dan Tools yang Dibutuhkan**
+* Package `consoletvs/charts` atau `unisharp/laravel-chartjs` untuk visualisasi grafik
+* PHPExcel/PhpSpreadsheet untuk eksport ke Excel
+* Laravel Eloquent untuk query data
+
+#### **3.2 Model dan Relasi**
+* Menggunakan model yang sudah ada: `Transaction`, `Motor`, `User`, `CreditDetail`
+* Mungkin memerlukan repository baru untuk query kompleks laporan
+
+#### **3.3 Controller Baru**
+* Buat `ReportController` untuk menangani semua fungsi laporan
+* Method untuk setiap jenis laporan: `dailySalesReport`, `topSellingMotors`, `transactionStatusReport`, dll.
+
+#### **3.4 Route Baru**
+* Tambahkan grup route untuk laporan di dalam grup admin:
+  * `GET /admin/reports` - Dashboard laporan
+  * `GET /admin/reports/sales` - Laporan penjualan
+  * `GET /admin/reports/motors` - Laporan motor terlaris
+  * `GET /admin/reports/status` - Laporan status transaksi
+  * `GET /admin/reports/credit` - Laporan performa kredit
+  * `GET /admin/reports/export/{type}` - Eksport laporan ke Excel/PDF
+
+#### **3.5 View untuk Laporan**
+* Halaman `reports/index.blade.php` sebagai dasbor laporan
+* View terpisah untuk setiap jenis laporan
+* Template untuk ekspor laporan ke Excel/PDF
+
+---
+
+### **Bagian 4: Implementasi**
+
+#### **4.1 Instalasi Dependencies**
+* Instal dan konfigurasi package chart
+* Instal dan konfigurasi package untuk ekspor file
+
+#### **4.2 Pembuatan Repository**
+* Buat `ReportRepository` untuk menangani query laporan yang kompleks
+* Method di repository: `getDailySales`, `getTopSellingMotors`, `getTransactionStatusStats`, dll.
+
+#### **4.3 Method di Controller**
+* Method untuk masing-masing jenis laporan
+* Method untuk menangani filter dan parameter pencarian
+* Method untuk ekspor laporan ke Excel/PDF
+
+#### **4.4 Desain UI/UX**
+* Dashboard laporan dengan ringkasan visual
+* Grafik interaktif menggunakan chart library
+* Filter dan parameter yang mudah digunakan
+* Tampilan responsif untuk berbagai ukuran layar
+
+#### **4.5 Integrasi dengan Admin Panel**
+* Tambahkan menu "Laporan" di sidebar admin
+* Integrasi dengan sistem navigasi yang sudah ada
+* Konsistensi desain dengan tampilan admin lainnya
+
+---
+
+### **Bagian 5: Desain Laporan dan Visualisasi**
+
+#### **5.1 Dasbor Laporan (Dashboard)**
+* Ringkasan kunci:
+  * Total transaksi hari ini/minggu ini/bulan ini
+  * Pendapatan bruto periode terpilih
+  * Rasio transaksi tunai vs kredit
+  * Motor terlaris bulan ini
+* Grafik:
+  * Grafik garis tren penjualan harian
+  * Grafik batang distribusi transaksi berdasarkan jenis
+
+#### **5.2 Laporan Penjualan**
+* Tabel data:
+  * No. Transaksi
+  * Tanggal
+  * Nama Motor
+  * Tipe Transaksi (Tunai/Kredit)
+  * Status
+  * Total Pembayaran
+* Grafik:
+  * Grafik garis pendapatan harian/mingguan/bulanan
+  * Pie chart distribusi tipe transaksi
+
+#### **5.3 Laporan Motor Terlaris**
+* Tabel data:
+  * Peringkat
+  * Nama Motor
+  * Jumlah Terjual
+  * Pendapatan
+  * Persentase dari Total
+* Grafik:
+  * Grafik batang motor terlaris
+  * Pie chart distribusi berdasarkan merek
+
+#### **5.4 Laporan Status Transaksi**
+* Tabel data:
+  * Status
+  * Jumlah Transaksi
+  * Persentase
+* Grafik:
+  * Pie chart distribusi status
+  * Grafik garis perubahan status sepanjang waktu
+
+#### **5.5 Laporan Performa Kredit**
+* Tabel data:
+  * Status Kredit
+  * Jumlah Transaksi
+  * Persentase
+  * Rata-rata Waktu Pemrosesan
+* Grafik:
+  * Grafik batang perbandingan disetujui vs ditolak
+  * Grafik lingkaran distribusi alasan penolakan (jika ada)
+
+---
+
+### **Bagian 6: Fungsi dan Akses**
+
+#### **6.1 Hak Akses**
+* Admin: Penuh - bisa mengakses semua jenis laporan dan fitur eksport
+* Super Admin: Akses tambahan untuk konfigurasi laporan (jika diperlukan)
+
+#### **6.2 Keamanan**
+* Validasi bahwa pengguna memiliki hak akses admin
+* Proteksi dari akses tidak sah ke data laporan
+* Filter input yang aman untuk mencegah SQL injection
+
+---
+
+### **Bagian 7: Validasi dan Error Handling**
+
+#### **7.1 Validasi Parameter**
+* Validasi rentang tanggal yang masuk akal
+* Validasi format ekspor yang didukung
+* Validasi filter yang dipilih
+
+#### **7.2 Error Handling**
+* Jika tidak ada data untuk periode yang dipilih, tampilkan pesan yang tepat
+* Jika parameter tidak valid, kembali ke halaman dengan error
+* Jika proses ekspor gagal, tampilkan pesan kesalahan
+
+---
+
+### **Bagian 8: Fungsi Eksport**
+
+#### **8.1 Format Eksport**
+* Excel (XLSX) - untuk analisis lanjutan
+* PDF - untuk laporan resmi
+* CSV - untuk impor ke sistem lain
+
+#### **8.2 Implementasi Eksport**
+* Method untuk menghasilkan data dalam format yang diminta
+* Penamaan file yang dinamis berdasarkan jenis laporan dan periode
+* Download langsung ke browser pengguna
+
+---
+
+### **Bagian 9: Deployment dan Testing**
+
+#### **9.1 Testing**
+* Uji coba fungsi laporan dengan berbagai kombinasi filter
+* Uji coba fungsi ekspor ke berbagai format
+* Uji kinerja dengan jumlah data besar
+* Uji keamanan akses dan filter input
+
+#### **9.2 Deployment**
+* Pastikan server memiliki resource cukup untuk memproses laporan besar
+* Konfigurasi cache untuk meningkatkan kinerja laporan
+* Backup strategi untuk data laporan
+
+---
+
+### **Bagian 10: Jadwal Implementasi**
+
+#### **Fase 1 (Hari 1-2):** Setup Dependencies dan Struktur Dasar
+* Instalasi dan konfigurasi package chart
+* Pembuatan route, controller, dan repository
+* Setup template dasar untuk laporan
+
+#### **Fase 2 (Hari 3-5):** Implementasi Dasar Laporan
+* Implementasi query dasar untuk masing-masing jenis laporan
+* Implementasi UI dasar untuk dasbor laporan
+* Implementasi filter tanggal dan parameter
+
+#### **Fase 3 (Hari 6-8):** Implementasi Visualisasi
+* Implementasi grafik menggunakan chart library
+* Peningkatan UI/UX untuk tampilan laporan
+* Implementasi responsivitas
+
+#### **Fase 4 (Hari 9-10):** Implementasi Eksport dan Finalisasi
+* Implementasi fungsi eksport ke Excel/PDF/CSV
+* Testing menyeluruh untuk semua jenis laporan
+* Deployment ke lingkungan produksi
+
+---
+
+### **Bagian 11: Manfaat dan Dampak**
+
+#### **11.1 Manfaat Bisnis**
+* Meningkatkan efisiensi operasional dengan informasi yang terstruktur
+* Mendukung pengambilan keputusan berbasis data
+* Memudahkan perencanaan stok dan strategi pemasaran
+* Memberikan gambaran kinerja kredit yang lebih jelas
+
+#### **11.2 Manfaat Teknis**
+* Mengorganisir data mentah menjadi informasi yang bermanfaat
+* Menyediakan antarmuka yang mudah digunakan untuk analisis data
+* Meningkatkan kemampuan pelaporan dan dokumentasi bisnis
+* Mendukung audit dan pelaporan keuangan

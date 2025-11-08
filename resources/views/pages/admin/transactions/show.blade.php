@@ -275,9 +275,9 @@
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </a>
                     @if($transaction->transaction_type === 'CASH')
-                        <button class="btn btn-secondary w-100 mb-2">
+                        <a href="{{ route('admin.transactions.invoice.download', $transaction->id) }}" class="btn btn-secondary w-100 mb-2">
                             <i class="fas fa-file-invoice"></i> Cetak Invoice
-                        </button>
+                        </a>
                     @else
                         <a href="{{ route('admin.transactions.edit', $transaction->id) }}" class="btn btn-warning w-100 mb-2">
                             <i class="fas fa-edit"></i> Edit Detail Kredit

@@ -509,3 +509,133 @@ Implementasi konsolidasi migrasi ini akan memudahkan pengembangan fitur-fitur ba
 - Added "Buat Transaksi Baru" button in admin transactions index page for manual transaction creation
 - Updated order confirmation and user transactions pages to display customer information
 - These changes ensure complete customer information is available for both cash and credit transactions in the admin panel
+
+## ERD (Entity Relationship Diagram) Summary
+
+### Database Tables and Attributes
+
+#### 1. users table
+- **Primary Key**: id (integer, auto-increment)
+- **Attributes**:
+  - name (string)
+  - email (string, unique)
+  - email_verified_at (timestamp, nullable)
+  - password (string)
+  - remember_token (string, nullable)
+  - role (string, default: 'user') - values: 'user', 'admin'
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+#### 2. motors table
+- **Primary Key**: id (integer, auto-increment)
+- **Attributes**:
+  - name (string)
+  - brand (string) - values: 'Honda', 'Yamaha'
+  - model (string, nullable)
+  - price (decimal, 10,2)
+  - year (integer, nullable)
+  - type (string, nullable) - values: 'Metic', 'Automatic', 'Sport', etc.
+  - image_path (string)
+  - details (text, nullable)
+  - tersedia (boolean, default: true)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+#### 3. motor_specifications table
+- **Primary Key**: id (integer, auto-increment)
+- **Foreign Key**: motor_id (references motors.id with cascade delete)
+- **Attributes**:
+  - spec_key (string)
+  - spec_value (text, nullable)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+#### 4. contact_messages table
+- **Primary Key**: id (integer, auto-increment)
+- **Attributes**:
+  - name (string)
+  - email (string)
+  - subject (string)
+  - message (text)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+#### 5. transactions table
+- **Primary Key**: id (integer, auto-increment)
+- **Foreign Keys**:
+  - user_id (references users.id with cascade delete)
+  - motor_id (references motors.id with cascade delete)
+- **Attributes**:
+  - transaction_type (enum) - values: 'CASH', 'CREDIT'
+  - status (enum) - values: 'new_order', 'waiting_payment', 'payment_confirmed', 'unit_preparation', 'ready_for_delivery', 'completed', 'menunggu_persetujuan', 'data_tidak_valid', 'dikirim_ke_surveyor', 'jadwal_survey', 'disetujui', 'ditolak'
+  - notes (text, nullable)
+  - booking_fee (decimal, 10,2, nullable) - for cash transactions
+  - total_amount (decimal, 10,2)
+  - payment_method (string, nullable)
+  - payment_status (enum) - values: 'pending', 'confirmed', 'failed' (default: 'pending')
+  - customer_name (string, nullable)
+  - customer_phone (string, nullable)
+  - customer_occupation (string, nullable)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+#### 6. credit_details table
+- **Primary Key**: id (integer, auto-increment)
+- **Foreign Key**: transaction_id (references transactions.id with cascade delete, unique)
+- **Attributes**:
+  - down_payment (decimal, 10,2)
+  - tenor (integer) - in months
+  - monthly_installment (decimal, 10,2)
+  - credit_status (enum) - values: 'menunggu_persetujuan', 'data_tidak_valid', 'dikirim_ke_surveyor', 'jadwal_survey', 'disetujui', 'ditolak' (default: 'menunggu_persetujuan')
+  - approved_amount (decimal, 10,2, nullable)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+#### 7. documents table
+- **Primary Key**: id (integer, auto-increment)
+- **Foreign Key**: credit_detail_id (references credit_details.id with cascade delete)
+- **Attributes**:
+  - document_type (enum) - values: 'KTP', 'KK', 'SLIP_GAJI', 'BPKB', 'STNK', 'FAKTUR', 'LAINNYA'
+  - file_path (string)
+  - original_name (string)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+#### 8. notifications table
+- **Primary Key**: id (uuid)
+- **Attributes**:
+  - type (string)
+  - notifiable_type (morphs - polymorphic relation)
+  - notifiable_id (morphs - polymorphic relation)
+  - data (text)
+  - read_at (timestamp, nullable)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+
+### Relationships
+
+#### 1. One-to-Many Relationships
+- **User has many Transactions**: users.id → transactions.user_id
+- **Motor has many Transactions**: motors.id → transactions.motor_id
+- **Motor has many Motor Specifications**: motors.id → motor_specifications.motor_id
+- **Credit Detail has many Documents**: credit_details.id → documents.credit_detail_id
+
+#### 2. One-to-One Relationship
+- **Transaction has one Credit Detail**: transactions.id → credit_details.transaction_id (with unique constraint)
+
+#### 3. Polymorphic Relationship
+- **Notifications**: The notifications table has a polymorphic relationship with multiple models using notifiable_type and notifiable_id columns
+
+### ERD Diagram Description
+
+```
+[users] 1------N [transactions] 1------1 [credit_details] 1------N [documents]
+  |                                        |
+  |                                        |
+  1------N [motor_specifications]    1------N [motors] 1------N [transactions]
+  
+[contact_messages] (independent table)
+[notifications] (polymorphic relationship)
+```
+
+The database structure supports a complete motorcycle sales system with both cash and credit (installment) transactions, with proper user authentication and motor management capabilities.

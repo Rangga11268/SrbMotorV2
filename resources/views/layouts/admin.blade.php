@@ -45,6 +45,9 @@
                         <a class="nav-link" href="{{ route('admin.transactions.index') }}">Transaksi</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.reports.index') }}">Laporan</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('admin.contact.index') }}">Pesan Kontak</a>
                     </li>
                     <li class="nav-item">

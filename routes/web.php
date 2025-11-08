@@ -11,6 +11,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MotorGalleryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
@@ -59,4 +61,16 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     // Transaction management
     Route::resource('transactions', TransactionController::class);
     Route::post('/transactions/{transaction}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+    
+    // Invoice management
+    Route::get('/transactions/{transaction}/invoice', [InvoiceController::class, 'preview'])->name('transactions.invoice.preview');
+    Route::get('/transactions/{transaction}/invoice/download', [InvoiceController::class, 'generate'])->name('transactions.invoice.download');
+    
+    // Report management
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
+    Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
+    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+    
+
 });
