@@ -509,6 +509,7 @@ Implementasi konsolidasi migrasi ini akan memudahkan pengembangan fitur-fitur ba
 - Added "Buat Transaksi Baru" button in admin transactions index page for manual transaction creation
 - Updated order confirmation and user transactions pages to display customer information
 - These changes ensure complete customer information is available for both cash and credit transactions in the admin panel
+- Soon there will be updates to the PDF reports as well, in addition to the invoice improvements
 
 ## ERD (Entity Relationship Diagram) Summary
 
