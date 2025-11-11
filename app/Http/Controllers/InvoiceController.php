@@ -19,7 +19,10 @@ class InvoiceController extends Controller
         $transaction->load(['user', 'motor', 'motor.specifications', 'creditDetail', 'creditDetail.documents']);
 
         // Generate the PDF
-        $pdf = Pdf::loadView('pages.admin.invoices.invoice', compact('transaction'));
+        $pdf = Pdf::loadView('pages.admin.invoices.invoice', [
+            'transaction' => $transaction,
+            'logo_path' => public_path('images/icon/logo trans.png')
+        ]);
 
         // Set the filename with a prefix and the transaction ID
         $filename = 'invoice-' . $transaction->id . '.pdf';
@@ -35,6 +38,9 @@ class InvoiceController extends Controller
     {
         $transaction->load(['user', 'motor', 'motor.specifications', 'creditDetail', 'creditDetail.documents']);
 
-        return view('pages.admin.invoices.invoice', compact('transaction'));
+        return view('pages.admin.invoices.invoice', [
+            'transaction' => $transaction,
+            'logo_path' => asset('images/icon/logo trans.png')
+        ]);
     }
 }
