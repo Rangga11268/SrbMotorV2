@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\Motor;
 use App\Models\User;
+use App\Exports\ReportExport;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -265,5 +267,29 @@ class ReportController extends Controller
 
         // Return the PDF download response
         return $pdf->download($filename);
+    }
+
+    /**
+     * Export the specified report as Excel.
+     */
+    public function exportExcel(Request $request)
+    {
+        $request->validate([
+            'type' => 'required|in:sales,income,customer,status',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+        // Create the export instance
+        $export = new ReportExport($request->type, $startDate, $endDate);
+
+        // Set the filename with a prefix and the report type
+        $filename = 'report-' . $request->type . '-' . $startDate->format('Y-m-d') . '.xlsx';
+
+        // Return the Excel download response
+        return Excel::download($export, $filename);
     }
 }

@@ -15,6 +15,11 @@
                             'start_date' => request('start_date'),
                             'end_date' => request('end_date')
                         ]) }}" class="btn btn-success">Ekspor PDF</a>
+                        <a href="{{ route('admin.reports.export-excel', [
+                            'type' => $type,
+                            'start_date' => request('start_date'),
+                            'end_date' => request('end_date')
+                        ]) }}" class="btn btn-primary">Ekspor Excel</a>
                         <a href="{{ route('admin.reports.create') }}?type={{ $type }}" class="btn btn-warning">Buat Laporan Baru</a>
                         <a href="{{ route('admin.reports.index') }}" class="btn btn-secondary">Kembali</a>
                     </div>
