@@ -26,6 +26,10 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
@@ -39,9 +43,19 @@ class AuthController extends Controller
             return redirect()->intended('/');
         }
 
+        // Check if user exists with email
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email tidak ditemukan. Silakan periksa kembali email Anda atau buat akun baru.',
+            ])->withInput();
+        }
+
+        // If email exists but password is incorrect
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+            'password' => 'Kata sandi yang Anda masukkan salah. Silakan coba lagi.',
+        ])->withInput();
     }
 
     /**
@@ -74,6 +88,19 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'name.string' => 'Nama harus berupa teks.',
+            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+            'email.required' => 'Email wajib diisi.',
+            'email.string' => 'Email harus berupa teks yang valid.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
+            'email.unique' => 'Email sudah terdaftar. Gunakan email lain.',
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.string' => 'Kata sandi harus berupa teks.',
+            'password.min' => 'Kata sandi minimal harus 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
         $user = User::create([

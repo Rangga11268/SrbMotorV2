@@ -68,4 +68,15 @@ class CreditDetail extends Model
         
         return true;
     }
+    
+    /**
+     * Cascade delete to documents when credit detail is deleted
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($creditDetail) {
+            // Delete all associated documents, which will trigger file deletion
+            $creditDetail->documents()->delete();
+        });
+    }
 }

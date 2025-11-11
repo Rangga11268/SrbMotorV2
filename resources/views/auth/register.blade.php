@@ -407,7 +407,7 @@
                     <div class="input-group">
                         <input id="password-confirm" type="password" class="form-control" 
                                name="password_confirmation" required autocomplete="new-password"
-                               autocapitalize="none" placeholder="Konfirmasi kata sandi Anda">
+                               value="{{ old('password_confirmation') }}" autocapitalize="none" placeholder="Konfirmasi kata sandi Anda">
                         <span class="password-toggle" onclick="togglePassword('password-confirm', 'toggleConfirmPasswordIcon')">
                             <i id="toggleConfirmPasswordIcon" class="fas fa-eye"></i>
                         </span>

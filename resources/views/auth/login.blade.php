@@ -385,7 +385,7 @@
                     <div class="input-group">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
                                name="password" required autocomplete="current-password"
-                               autocapitalize="none" placeholder="Masukkan kata sandi Anda">
+                               value="{{ old('password') }}" autocapitalize="none" placeholder="Masukkan kata sandi Anda">
                         <span class="password-toggle" onclick="togglePassword('password', 'togglePasswordIcon')">
                             <i id="togglePasswordIcon" class="fas fa-eye"></i>
                         </span>

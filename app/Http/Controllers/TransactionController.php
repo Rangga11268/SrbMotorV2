@@ -172,8 +172,8 @@ class TransactionController extends Controller
             if ($transaction->creditDetail->documents) {
                 foreach ($transaction->creditDetail->documents as $document) {
                     // Delete the physical file
-                    if (Storage::exists($document->file_path)) {
-                        Storage::delete($document->file_path);
+                    if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
+                        Storage::disk('public')->delete($document->file_path);
                     }
                     $document->delete();
                 }

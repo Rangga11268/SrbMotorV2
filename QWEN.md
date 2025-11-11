@@ -510,6 +510,7 @@ Implementasi konsolidasi migrasi ini akan memudahkan pengembangan fitur-fitur ba
 - Updated order confirmation and user transactions pages to display customer information
 - These changes ensure complete customer information is available for both cash and credit transactions in the admin panel
 - Soon there will be updates to the PDF reports as well, in addition to the invoice improvements
+- Implemented file cleanup functionality to automatically delete associated files when records are deleted. This includes: 1) Document model now deletes files from storage when documents are removed, 2) CreditDetail model cascades deletion to associated documents, 3) Motor model deletes image files when motors are removed, 4) TransactionController properly handles file deletion during transaction removal. This ensures no orphaned files remain in storage when records are deleted.
 
 ## ERD (Entity Relationship Diagram) Summary
 
