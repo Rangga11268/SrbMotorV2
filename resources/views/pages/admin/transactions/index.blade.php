@@ -65,15 +65,15 @@
                 <table class="table admin-table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="border-top-0" style="width: 5%">ID</th>
-                            <th class="border-top-0" style="width: 15%">Nama Pelanggan</th>
-                            <th class="border-top-0 d-none d-lg-table-cell" style="width: 10%">No. Telepon</th>
-                            <th class="border-top-0" style="width: 20%">Motor</th>
-                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 8%">Tipe</th>
-                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 12%">Status</th>
-                            <th class="border-top-0 d-none d-lg-table-cell" style="width: 10%">Total</th>
-                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 10%">Dibuat</th>
-                            <th class="border-top-0" style="width: 15%">Aksi</th>
+                            <th class="border-top-0" style="width: 5%;">ID</th>
+                            <th class="border-top-0">Nama Pelanggan</th>
+                            <th class="border-top-0 d-none d-lg-table-cell">No. Telepon</th>
+                            <th class="border-top-0">Motor</th>
+                            <th class="border-top-0 d-none d-xl-table-cell">Tipe</th>
+                            <th class="border-top-0">Status</th>
+                            <th class="border-top-0 d-none d-lg-table-cell">Total</th>
+                            <th class="border-top-0 d-none d-xl-table-cell">Dibuat</th>
+                            <th class="border-top-0" style="width: 15%;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,18 +81,18 @@
                         <tr>
                             <td>{{ $transaction->id }}</td>
                             <td>{{ $transaction->customer_name ?: $transaction->user->name }}</td>
-                            <td>{{ $transaction->customer_phone }}</td>
+                            <td class="d-none d-lg-table-cell">{{ $transaction->customer_phone }}</td>
                             <td>{{ $transaction->motor->name }}</td>
-                            <td>
+                            <td class="d-none d-xl-table-cell">
                                 <span class="badge bg-{{ $transaction->transaction_type === 'CASH' ? 'success' : 'info' }}">
                                     {{ $transaction->transaction_type === 'CASH' ? 'Tunai' : 'Kredit' }}
                                 </span>
                             </td>
                             <td>
-                                <span class="badge bg-{{ 
-                                    (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' : 
-                                    (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' : 
-                                    (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info'))) 
+                                <span class="badge bg-{{
+                                    (in_array($transaction->status, ['completed', 'disetujui', 'ready_for_delivery']) ? 'success' :
+                                    (in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'waiting_payment']) ? 'warning' :
+                                    (in_array($transaction->status, ['ditolak', 'data_tidak_valid']) ? 'danger' : 'info')))
                                 }}">
                                     {{ $transaction->status_text }}
                                 </span>
@@ -101,8 +101,8 @@
                                     <span class="badge bg-warning">Dokumen Belum Lengkap</span>
                                 @endif
                             </td>
-                            <td>Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
-                            <td>{{ $transaction->created_at->format('d-m-Y H:i') }}</td>
+                            <td class="d-none d-lg-table-cell">Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
+                            <td class="d-none d-xl-table-cell">{{ $transaction->created_at->format('d-m-Y H:i') }}</td>
                             <td>
                                 <a href="{{ route('admin.transactions.show', $transaction->id) }}" class="btn btn-sm btn-info">Lihat</a>
                                 <a href="{{ route('admin.transactions.edit', $transaction->id) }}" class="btn btn-sm btn-warning">Edit</a>
@@ -121,22 +121,22 @@
                         @endforelse
                     </tbody>
                 </table>
-                
-                <!-- Pagination -->
-                @if(method_exists($transactions, 'hasPages') && $transactions->hasPages())
-                <div class="card-footer bg-white">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
-                        <div class="mb-2 mb-md-0">
-                            Menampilkan {{ $transactions->firstItem() ? $transactions->firstItem() : 0 }} hingga {{ $transactions->lastItem() }} dari {{ $transactions->total() }} hasil
-                        </div>
-                        <div class="admin-pagination">
-                            {{ $transactions->appends(request()->query())->links() }}
-                        </div>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
     </div>
+
+    <!-- Pagination -->
+    @if(method_exists($transactions, 'hasPages') && $transactions->hasPages())
+    <div class="card-footer bg-white">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div class="mb-2 mb-md-0">
+                Menampilkan {{ $transactions->firstItem() ? $transactions->firstItem() : 0 }} hingga {{ $transactions->lastItem() }} dari {{ $transactions->total() }} hasil
+            </div>
+            <div class="admin-pagination">
+                {{ $transactions->appends(request()->query())->links() }}
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 @endsection

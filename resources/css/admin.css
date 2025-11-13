@@ -425,6 +425,49 @@
   border-radius: 6px;
 }
 
+/* Responsive table columns for transaction table */
+.admin-table .col-id {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.admin-table .col-customer {
+  min-width: 120px;
+}
+
+.admin-table .col-phone {
+  min-width: 100px;
+  white-space: nowrap;
+}
+
+.admin-table .col-motor {
+  min-width: 150px;
+}
+
+.admin-table .col-type {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.admin-table .col-status {
+  min-width: 120px;
+}
+
+.admin-table .col-amount {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.admin-table .col-date {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.admin-table .col-actions {
+  width: 1%;
+  white-space: nowrap;
+}
+
 /* Button styling */
 .admin-btn {
   border-radius: 8px !important;
@@ -608,6 +651,62 @@
 
 .empty-state p {
   color: var(--admin-text-light) !important;
+}
+
+/* Transaction card layout for mobile */
+@media (max-width: 991.98px) {
+  .transaction-table-container {
+    display: none;
+  }
+  
+  .transaction-card-container {
+    display: block;
+  }
+  
+  .admin-transaction-card {
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--admin-card-bg);
+  }
+  
+  .admin-transaction-card .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--admin-border);
+  }
+  
+  .admin-transaction-card .card-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .admin-transaction-card .info-item {
+    flex: 1 1 45%;
+  }
+  
+  .admin-transaction-card .info-label {
+    font-weight: 500;
+    color: var(--admin-text-light);
+    font-size: 0.85rem;
+  }
+  
+  .admin-transaction-card .info-value {
+    margin-bottom: 0.5rem;
+  }
+  
+  .admin-transaction-card .action-buttons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .admin-transaction-card .action-buttons .btn {
+    flex: 1;
+  }
 }
 
 /* Pagination styling */
