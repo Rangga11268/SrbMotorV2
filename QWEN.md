@@ -1,7 +1,6 @@
 # SRB Motors Laravel Implementation
 
 
-
 ## NEXT
 
 Role owner / admin / user biasa  

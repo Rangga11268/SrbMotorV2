@@ -20,6 +20,19 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/icon/logo trans.png') }}" type="image/x-icon">
     
+    <!-- Set theme immediately to prevent flash -->
+    <script>
+        // Apply theme immediately to prevent flash of unstyled content
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+            }
+        })();
+    </script>
+
     @yield('styles')
 </head>
 <body>
@@ -150,18 +163,10 @@
         function setTheme(themeName) {
             localStorage.setItem('theme', themeName);
             document.documentElement.setAttribute('data-bs-theme', themeName);
+            
+            // Update the theme immediately for this page
+            document.documentElement.setAttribute('data-bs-theme', themeName);
         }
-        
-        // On load, check for saved theme
-        (function() {
-            if (localStorage.getItem('theme')) {
-                setTheme(localStorage.getItem('theme'));
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                setTheme('dark');
-            } else {
-                setTheme('light');
-            }
-        })();
         
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('adminSidebar');
