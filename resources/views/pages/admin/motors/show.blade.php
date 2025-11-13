@@ -2,6 +2,11 @@
 
 @section('title', 'Detail Motor')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('admin.motors.index') }}">Motor</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Detail</li>
+@endsection
+
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">

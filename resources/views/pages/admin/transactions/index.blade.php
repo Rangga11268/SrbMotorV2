@@ -2,71 +2,78 @@
 
 @section('title', 'Manajemen Transaksi')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item active" aria-current="page">Transaksi</li>
+@endsection
+
 @section('content')
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 text-gray-800">Manajemen Transaksi</h1>
-        <a href="{{ route('admin.transactions.create') }}" class="btn btn-primary">Buat Transaksi Baru</a>
+<div class="container-fluid py-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <div>
+            <h1 class="h3 admin-page-title">Manajemen Transaksi</h1>
+            <p class="text-muted admin-page-subtitle d-md-none d-block">Kelola semua transaksi di sistem</p>
+        </div>
+        <a href="{{ route('admin.transactions.create') }}" class="btn btn-primary admin-btn admin-btn-primary w-100 w-md-auto">
+            <i class="fas fa-plus me-2"></i>Buat Transaksi Baru
+        </a>
     </div>
 
     <!-- Filter Form -->
-    <div class="card shadow mb-4">
+    <div class="card admin-card mb-4">
         <div class="card-body">
-            <form method="GET" action="{{ route('admin.transactions.index') }}">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="type" class="form-label">Tipe Transaksi</label>
-                        <select name="type" id="type" class="form-control">
-                            <option value="">Semua Tipe</option>
-                            @foreach($transactionTypes as $type)
-                                <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
-                                    {{ $type === 'CASH' ? 'Tunai' : 'Kredit' }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select name="status" id="status" class="form-control">
-                            <option value="">Semua Status</option>
-                            @foreach($statuses as $status)
-                                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
-                                    {{ $status }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">&nbsp;</label>
-                        <div>
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                            <a href="{{ route('admin.transactions.index') }}" class="btn btn-secondary">Reset</a>
-                        </div>
-                    </div>
+            <form method="GET" class="row g-3">
+                <div class="col-12 col-md-4">
+                    <label for="type" class="form-label">Tipe Transaksi</label>
+                    <select name="type" id="type" class="admin-select form-select">
+                        <option value="">Semua Tipe</option>
+                        @foreach($transactionTypes as $type)
+                            <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
+                                {{ $type === 'CASH' ? 'Tunai' : 'Kredit' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="admin-select form-select">
+                        <option value="">Semua Status</option>
+                        @foreach($statuses as $status)
+                            <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
+                                {{ $status }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-6 col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary w-100 admin-btn">
+                        <i class="fas fa-search me-1"></i> Filter
+                    </button>
+                </div>
+                <div class="col-6 col-md-2 d-flex align-items-end">
+                    <a href="{{ route('admin.transactions.index') }}" class="btn btn-outline-secondary w-100 admin-btn">
+                        <i class="fas fa-sync-alt me-1"></i> Reset
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Transactions Table -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Transaksi</h6>
-        </div>
-        <div class="card-body">
+    <div class="card admin-card">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
+                <table class="table admin-table table-hover mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th>Nama Pelanggan</th>
-                            <th>No. Telepon</th>
-                            <th>Motor</th>
-                            <th>Tipe</th>
-                            <th>Status</th>
-                            <th>Total</th>
-                            <th>Dibuat</th>
-                            <th>Aksi</th>
+                            <th class="border-top-0" style="width: 5%">ID</th>
+                            <th class="border-top-0" style="width: 15%">Nama Pelanggan</th>
+                            <th class="border-top-0 d-none d-lg-table-cell" style="width: 10%">No. Telepon</th>
+                            <th class="border-top-0" style="width: 20%">Motor</th>
+                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 8%">Tipe</th>
+                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 12%">Status</th>
+                            <th class="border-top-0 d-none d-lg-table-cell" style="width: 10%">Total</th>
+                            <th class="border-top-0 d-none d-xl-table-cell" style="width: 10%">Dibuat</th>
+                            <th class="border-top-0" style="width: 15%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,16 +110,31 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center">Tidak ada data transaksi</td>
+                            <td colspan="9" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-file-invoice fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Tidak ada transaksi ditemukan</h5>
+                                    <p class="text-muted mb-0">Coba ubah pencarian atau buat transaksi baru</p>
+                                </div>
+                            </td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
                 
                 <!-- Pagination -->
-                <div class="d-flex justify-content-center">
-                    {{ $transactions->appends(request()->query())->links() }}
+                @if(method_exists($transactions, 'hasPages') && $transactions->hasPages())
+                <div class="card-footer bg-white">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                        <div class="mb-2 mb-md-0">
+                            Menampilkan {{ $transactions->firstItem() ? $transactions->firstItem() : 0 }} hingga {{ $transactions->lastItem() }} dari {{ $transactions->total() }} hasil
+                        </div>
+                        <div class="admin-pagination">
+                            {{ $transactions->appends(request()->query())->links() }}
+                        </div>
+                    </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
