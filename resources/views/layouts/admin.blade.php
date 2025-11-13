@@ -94,9 +94,9 @@
                 <button class="btn btn-outline-secondary me-3 d-lg-none" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                
+
                 <div class="navbar-nav ms-auto d-flex align-items-center">
-                    <div class="nav-item dropdown me-3">
+                    <div class="nav-item dropdown me-3 d-lg-block"> <!-- Show only on large screens and above -->
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-moon me-2"></i>
                         </a>
@@ -111,6 +111,15 @@
                             <i class="fas fa-user me-2"></i>{{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="d-lg-none"> <!-- Show only on small screens -->
+                                <a class="dropdown-item" href="#" onclick="setTheme('light')"><i class="fas fa-sun me-2"></i>Light Mode</a>
+                            </li>
+                            <li class="d-lg-none"> <!-- Show only on small screens -->
+                                <a class="dropdown-item" href="#" onclick="setTheme('dark')"><i class="fas fa-moon me-2"></i>Dark Mode</a>
+                            </li>
+                            <li class="d-lg-none"> <!-- Show only on small screens -->
+                                <a class="dropdown-item" href="#" onclick="setTheme('auto')"><i class="fas fa-adjust me-2"></i>Auto Mode</a>
+                            </li>
                             <li>
                                 <a class="dropdown-item" href="{{ url('/') }}">
                                     <i class="fas fa-globe me-2"></i>Lihat Website
