@@ -394,6 +394,16 @@
                                 enctype="multipart/form-data">
                                 @csrf
 
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul class="mb-0">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
                                 <div class="mb-4">
                                     <h5 class="mb-4">Unggah Dokumen</h5>
 
@@ -401,32 +411,44 @@
                                         <div class="col-md-6 mb-4">
                                             <label for="document_ktp" class="form-label">KTP (Kartu Tanda Penduduk)</label>
                                             <input type="file" name="documents[KTP][]" id="document_ktp"
-                                                class="form-control" accept="image/*,application/pdf" multiple required>
+                                                class="form-control @error('documents.KTP') is-invalid @enderror" accept="image/*,application/pdf" multiple required>
                                             <div class="form-text">Unggah foto KTP (depan & belakang) atau file PDF</div>
+                                            @error('documents.KTP')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-4">
                                             <label for="document_kk" class="form-label">Kartu Keluarga (KK)</label>
                                             <input type="file" name="documents[KK][]" id="document_kk"
-                                                class="form-control" accept="image/*,application/pdf" multiple required>
+                                                class="form-control @error('documents.KK') is-invalid @enderror" accept="image/*,application/pdf" multiple required>
                                             <div class="form-text">Unggah foto Kartu Keluarga</div>
+                                            @error('documents.KK')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-4">
                                             <label for="document_slip_gaji" class="form-label">Slip Gaji / Rekening
                                                 Koran</label>
                                             <input type="file" name="documents[SLIP_GAJI][]" id="document_slip_gaji"
-                                                class="form-control" accept="image/*,application/pdf" multiple required>
+                                                class="form-control @error('documents.SLIP_GAJI') is-invalid @enderror" accept="image/*,application/pdf" multiple required>
                                             <div class="form-text">Unggah slip gaji 3 bulan terakhir atau rekening koran
                                             </div>
+                                            @error('documents.SLIP_GAJI')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-4">
                                             <label for="document_lainnya" class="form-label">Dokumen Tambahan
                                                 (Opsional)</label>
                                             <input type="file" name="documents[LAINNYA][]" id="document_lainnya"
-                                                class="form-control" accept="image/*,application/pdf" multiple>
+                                                class="form-control @error('documents.LAINNYA') is-invalid @enderror" accept="image/*,application/pdf" multiple>
                                             <div class="form-text">Dokumen tambahan jika diperlukan</div>
+                                            @error('documents.LAINNYA')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>

@@ -231,6 +231,25 @@ class MotorGalleryController extends Controller
             'documents.SLIP_GAJI.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'documents.LAINNYA' => 'nullable|array',
             'documents.LAINNYA.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ], [
+            'documents.KTP.required' => 'File KTP wajib diunggah',
+            'documents.KTP.min' => 'Minimal 1 file KTP harus diunggah',
+            'documents.KTP.*.file' => 'File KTP harus berupa file yang valid',
+            'documents.KTP.*.mimes' => 'File KTP harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.KTP.*.max' => 'Ukuran file KTP tidak boleh lebih dari 2MB',
+            'documents.KK.required' => 'File KK wajib diunggah',
+            'documents.KK.min' => 'Minimal 1 file KK harus diunggah',
+            'documents.KK.*.file' => 'File KK harus berupa file yang valid',
+            'documents.KK.*.mimes' => 'File KK harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.KK.*.max' => 'Ukuran file KK tidak boleh lebih dari 2MB',
+            'documents.SLIP_GAJI.required' => 'File slip gaji wajib diunggah',
+            'documents.SLIP_GAJI.min' => 'Minimal 1 file slip gaji harus diunggah',
+            'documents.SLIP_GAJI.*.file' => 'File slip gaji harus berupa file yang valid',
+            'documents.SLIP_GAJI.*.mimes' => 'File slip gaji harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.SLIP_GAJI.*.max' => 'Ukuran file slip gaji tidak boleh lebih dari 2MB',
+            'documents.LAINNYA.*.file' => 'File tambahan harus berupa file yang valid',
+            'documents.LAINNYA.*.mimes' => 'File tambahan harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.LAINNYA.*.max' => 'Ukuran file tambahan tidak boleh lebih dari 2MB',
         ]);
         
         // Process and save documents
@@ -284,17 +303,17 @@ class MotorGalleryController extends Controller
     public function updateDocuments(Request $request, $transactionId)
     {
         $transaction = Transaction::with(['creditDetail'])->findOrFail($transactionId);
-        
+
         // Ensure the transaction belongs to the current user and is a credit transaction
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
-        
+
         // Verify that the transaction has a credit detail
         if (!$transaction->creditDetail) {
             return redirect()->back()->withErrors(['error' => 'Transaksi tidak memiliki detail kredit yang valid.']);
         }
-        
+
         $request->validate([
             'documents.KTP' => 'nullable|array',
             'documents.KTP.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -304,8 +323,23 @@ class MotorGalleryController extends Controller
             'documents.SLIP_GAJI.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'documents.LAINNYA' => 'nullable|array',
             'documents.LAINNYA.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ], [
+            'documents.KTP.*.file' => 'File KTP harus berupa file yang valid',
+            'documents.KTP.*.mimes' => 'File KTP harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.KTP.*.max' => 'Ukuran file KTP tidak boleh lebih dari 2MB',
+            'documents.KK.*.file' => 'File KK harus berupa file yang valid',
+            'documents.KK.*.mimes' => 'File KK harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.KK.*.max' => 'Ukuran file KK tidak boleh lebih dari 2MB',
+            'documents.SLIP_GAJI.*.file' => 'File slip gaji harus berupa file yang valid',
+            'documents.SLIP_GAJI.*.mimes' => 'File slip gaji harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.SLIP_GAJI.*.max' => 'Ukuran file slip gaji tidak boleh lebih dari 2MB',
+            'documents.LAINNYA.*.file' => 'File tambahan harus berupa file yang valid',
+            'documents.LAINNYA.*.mimes' => 'File tambahan harus berupa file gambar (jpg, jpeg, png) atau PDF',
+            'documents.LAINNYA.*.max' => 'Ukuran file tambahan tidak boleh lebih dari 2MB',
         ]);
-        
+
+        $documentsProcessed = false;
+
         // Process and save new documents
         $documents = $request->file('documents');
         if ($documents) {
@@ -315,7 +349,7 @@ class MotorGalleryController extends Controller
                         if ($file) {
                             // Store file in storage
                             $path = $file->store('credit-documents/' . $transaction->id, 'public');
-                            
+
                             // Create document record
                             Document::create([
                                 'credit_detail_id' => $transaction->creditDetail->id,
@@ -323,20 +357,28 @@ class MotorGalleryController extends Controller
                                 'file_path' => $path,
                                 'original_name' => $file->getClientOriginalName(),
                             ]);
+
+                            $documentsProcessed = true;
                         }
                     }
                 }
             }
         }
-        
-        // Update transaction status to indicate documents have been updated
-        $transaction->update(['status' => 'menunggu_persetujuan']);
-        if ($transaction->creditDetail) {
-            $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
+
+        // Only update status if new documents were actually uploaded
+        if ($documentsProcessed) {
+            // Update transaction status to indicate documents have been updated
+            $transaction->update(['status' => 'menunggu_persetujuan']);
+            if ($transaction->creditDetail) {
+                $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
+            }
+
+            return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
+                ->with('success', 'Dokumen berhasil diperbarui. Pengajuan kredit Anda sedang dalam proses review.');
+        } else {
+            return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
+                ->with('info', 'Tidak ada dokumen baru yang diunggah.');
         }
-        
-        return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
-            ->with('success', 'Dokumen berhasil diperbarui. Pengajuan kredit Anda sedang dalam proses review.');
     }
     
     /**
