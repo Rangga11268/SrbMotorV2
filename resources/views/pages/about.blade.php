@@ -10,7 +10,7 @@
     <div class="box-container">
         <div class="box">
             <div class="image">
-                <img src="{{ asset('OldWeb/assets/img/about us.jpeg') }}" alt="Interior Showroom SRB Motors" />
+                <img src="{{ asset('assets/img/about us.jpeg') }}" alt="Interior Showroom SRB Motors" />
             </div>
             <div class="content">
                 <h3>SRB Motors: Your Ride, Our Passion</h3>

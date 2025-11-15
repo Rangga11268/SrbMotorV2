@@ -463,12 +463,36 @@ The application follows Laravel best practices with:
   |                                        |
   |                                        |
   1------N [motor_specifications]    1------N [motors] 1------N [transactions]
-  
+
 [contact_messages] (independent table)
 [notifications] (polymorphic relationship)
 ```
 
 The database structure supports a complete motorcycle sales system with both cash and credit (installment) transactions, with proper user authentication and motor management capabilities.
+
+### Penjelasan Relasi Notifikasi dalam Sistem SRB Motors (dalam Bahasa Indonesia)
+
+Tabel `notifications` dalam sistem SRB Motors menggunakan **relasi polimorfik**, yang memungkinkan satu tabel untuk menyimpan notifikasi dari berbagai model tanpa membuat tabel notifikasi terpisah.
+
+#### Struktur Tabel
+- `notifiable_type`: Menyimpan nama model (misalnya 'App\Models\User')
+- `notifiable_id`: Menyimpan ID dari entitas model yang bersangkutan
+
+#### Fungsi dalam Sistem
+- Notifikasi digunakan untuk memberitahu pelanggan dan admin tentang perubahan status transaksi
+- Dua jenis notifikasi utama: `TransactionCreated` dan `TransactionStatusChanged`
+- Ditangani melalui observer `TransactionObserver` yang secara otomatis memicu notifikasi saat ada perubahan
+
+#### Hubungan ERD
+- Tabel `notifications` memiliki hubungan one-to-many ke tabel `users` melalui mekanisme relasi polimorfik
+- Kolom `notifiable_type` dan `notifiable_id` bekerja bersama untuk menghubungkan ke berbagai model
+
+#### Manfaat
+- Efisiensi database karena semua notifikasi disimpan di satu tempat
+- Fleksibilitas untuk menambah model baru yang bisa menerima notifikasi
+- Pengelolaan terpusat yang memudahkan monitoring
+
+Dengan relasi polimorfik ini, sistem mampu memberikan informasi terkini kepada pengguna tentang status transaksi mereka dan memberikan admin informasi penting terkait pesanan yang masuk dan berjalan.
 
 ## Qwen Added Memories
 - Successfully implemented customer information fields (name, phone number, and occupation) to both cash and credit transaction forms. Added database migration, updated models, controllers, views, and added manual transaction creation capability in the admin panel.
@@ -482,3 +506,4 @@ The database structure supports a complete motorcycle sales system with both cas
 - These changes ensure complete customer information is available for both cash and credit transactions in the admin panel
 - Soon there will be updates to the PDF reports as well, in addition to the invoice improvements
 - Implemented file cleanup functionality to automatically delete associated files when records are deleted. This includes: 1) Document model now deletes files from storage when documents are removed, 2) CreditDetail model cascades deletion to associated documents, 3) Motor model deletes image files when motors are removed, 4) TransactionController properly handles file deletion during transaction removal. This ensures no orphaned files remain in storage when records are deleted.
+- Successfully implemented a fix for the responsive transaction table issue where thead wasn't extending to match tbody on mobile/tablet devices. The solution involved applying responsive classes (d-none d-lg-table-cell, d-none d-xl-table-cell) to both table headers and their corresponding table cells to ensure they hide consistently across different screen sizes, maintaining proper alignment while preserving the desktop experience.

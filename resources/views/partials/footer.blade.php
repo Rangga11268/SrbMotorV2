@@ -93,7 +93,7 @@
                 <div class="row">
                     <div class="col-md-5 text-center">
                         <img
-                            src="{{ asset('OldWeb/assets/icon/logo trans.png') }}"
+                            src="{{ asset('assets/icon/logo trans.png') }}"
                             id="modalMotorImage"
                             class="img-fluid mb-3"
                             alt="Gambar Motor"

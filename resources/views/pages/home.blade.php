@@ -95,7 +95,7 @@
         <div class="box-container">
             <div class="box">
                 <div class="image">
-                    <img src="{{ asset('OldWeb/assets/img/about us.jpeg') }}" alt="Interior Showroom SRB Motors" />
+                    <img src="{{ asset('assets/img/about us.jpeg') }}" alt="Interior Showroom SRB Motors" />
                 </div>
                 <div class="content">
                     <h3>SRB Motors: Your Ride, Our Passion</h3>
@@ -315,7 +315,7 @@
 
                     if (modalTitle) modalTitle.textContent = motorName || "Detail Motor";
                     if (modalMotorImageEl) modalMotorImageEl.src = motorImage ||
-                        "{{ asset('OldWeb/assets/icon/logo trans.png') }}";
+                        "{{ asset('assets/icon/logo trans.png') }}";
                     if (modalMotorNameEl) modalMotorNameEl.textContent = motorName || "Nama Tidak Tersedia";
                     if (modalMotorPriceSpan) modalMotorPriceSpan.textContent = motorPriceValue || "N/A";
 
