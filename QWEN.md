@@ -508,3 +508,42 @@ Dengan relasi polimorfik ini, sistem mampu memberikan informasi terkini kepada p
 - Implemented file cleanup functionality to automatically delete associated files when records are deleted. This includes: 1) Document model now deletes files from storage when documents are removed, 2) CreditDetail model cascades deletion to associated documents, 3) Motor model deletes image files when motors are removed, 4) TransactionController properly handles file deletion during transaction removal. This ensures no orphaned files remain in storage when records are deleted.
 - Successfully implemented a fix for the responsive transaction table issue where thead wasn't extending to match tbody on mobile/tablet devices. The solution involved applying responsive classes (d-none d-lg-table-cell, d-none d-xl-table-cell) to both table headers and their corresponding table cells to ensure they hide consistently across different screen sizes, maintaining proper alignment while preserving the desktop experience.
 - Fitur simulasi kredit di SRB Motors kini hanya menampilkan tombol "Simulasi Kredit" di halaman index motor (daftar semua motor). Tombol ini telah dihapus dari halaman detail motor, halaman home/slider motor populer, dan bagian motor terkait. Akses ke halaman simulasi kredit tetap terbuka untuk pengguna tanpa login, dan fitur ini tetap berfungsi secara penuh dengan perhitungan DP, tenor, dan bunga.
+- Rancangan fitur simulasi kredit telah dihapus dari sistem untuk sementara, tetapi desain dan implementasi kodenya telah disimpan untuk referensi pengembangan di masa mendatang
+
+## Rancangan Fitur Simulasi Kredit (Dihapus Sementara)
+
+### Deskripsi Fitur
+Fitur simulasi kredit memungkinkan pengguna menghitung estimasi cicilan bulanan motor berdasarkan harga motor, jumlah uang muka (DP), dan tenor cicilan. Fitur ini menyediakan perhitungan sederhana untuk membantu pengguna memperkirakan biaya kredit motor.
+
+### Struktur Route
+- `/motors/{motor}/credit-calculation` (method: GET) - Menampilkan halaman simulasi kredit untuk motor tertentu
+
+### Controller Method
+- `MotorGalleryController@showCreditCalculation()` - Menampilkan view simulasi kredit dengan data motor
+
+### View: `credit_calculation.blade.php`
+- Memiliki form untuk input DP, tenor cicilan (12, 24, 36, 48 bulan), dan suku bunga
+- Menampilkan informasi motor (nama dan harga)
+- Melakukan perhitungan cicilan bulanan secara client-side menggunakan JavaScript
+- Menampilkan hasil simulasi dengan rincian pembiayaan dan cicilan
+
+### Fungsi Perhitungan
+- Menggunakan rumus perhitungan kredit standar:
+  `M = P [ r(1+r)^n ] / [ (1+r)^n - 1 ]`
+  - M = Cicilan bulanan
+  - P = Pokok pinjaman (harga motor - DP)
+  - r = suku bunga bulanan
+  - n = jumlah bulan (tenor)
+
+### Validasi Input
+- Validasi bahwa DP tidak melebihi harga motor
+- Validasi bahwa nilai DP, tenor, dan bunga valid
+- Validasi bahwa DP minimal disarankan 20% dari harga motor
+
+### Tampilan Hasil
+- Rincian pembiayaan (harga motor, DP, biaya pokok, bunga, total pembiayaan)
+- Rincian cicilan (tenor dan cicilan per bulan)
+- Peringatan bahwa simulasi hanya perkiraan
+- Tombol kembali ke detail motor
+
+Fitur ini dapat diimplementasikan kembali di masa mendatang dengan menggunakan kode yang telah disimpan sebagai referensi.

@@ -19,7 +19,6 @@ Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
 Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
 Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
-Route::get('/motors/{motor}/credit-calculation', [MotorGalleryController::class, 'showCreditCalculation'])->name('motors.credit-calculation');
 Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
 Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
 Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
