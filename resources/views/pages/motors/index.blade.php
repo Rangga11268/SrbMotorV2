@@ -116,8 +116,11 @@
                                     {{ Str::limit($motor->details, 80) }}
                                 </p>
                                 <div class="mt-auto pt-2">
-                                    <a href="{{ route('motors.show', $motor->id) }}" class="btn btn-primary w-100 fs-4 py-2 {{ !$motor->tersedia ? 'disabled' : '' }}">
+                                    <a href="{{ route('motors.show', $motor->id) }}" class="btn btn-primary w-100 fs-4 py-2 mb-2 {{ !$motor->tersedia ? 'disabled' : '' }}">
                                         <i class="fas fa-info-circle me-1"></i> Lihat Detail
+                                    </a>
+                                    <a href="{{ route('motors.credit-calculation', $motor->id) }}" class="btn btn-outline-primary w-100 fs-4 py-2 {{ !$motor->tersedia ? 'disabled' : '' }}">
+                                        <i class="fas fa-calculator me-1"></i> Simulasi Kredit
                                     </a>
                                 </div>
                             </div>

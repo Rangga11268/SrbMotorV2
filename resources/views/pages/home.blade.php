@@ -76,7 +76,7 @@
                             @unless($motor->tersedia)
                                 <p class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i>Tidak Tersedia</p>
                             @endunless
-                            <a href="{{ route('motors.show', $motor->id) }}" class="btn detail-btn">
+                            <a href="{{ route('motors.show', $motor->id) }}" class="btn btn-primary detail-btn">
                                 Lihat Detail
                             </a>
                         </div>
