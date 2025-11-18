@@ -66,7 +66,7 @@ class TransactionController extends Controller
             'payment_method' => 'nullable|string',
             'payment_status' => 'nullable|in:pending,confirmed,failed',
             'customer_name' => 'nullable|string|max:255',
-            'customer_phone' => 'nullable|string|max:20',
+            'customer_phone' => 'nullable|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'nullable|string|max:255',
         ]);
 
@@ -120,7 +120,7 @@ class TransactionController extends Controller
             'payment_method' => 'nullable|string',
             'payment_status' => 'nullable|in:pending,confirmed,failed',
             'customer_name' => 'nullable|string|max:255',
-            'customer_phone' => 'nullable|string|max:20',
+            'customer_phone' => 'nullable|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'nullable|string|max:255',
         ]);
 

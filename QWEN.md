@@ -1,5 +1,7 @@
 # SRB Motors Laravel Implementation
 
+### ada bug dimana ketika create data transaksi harga motor nya tidak sesuai dengan yang ada coba fix 
+
 
 ## NEXT
 
@@ -547,3 +549,38 @@ Fitur simulasi kredit memungkinkan pengguna menghitung estimasi cicilan bulanan 
 - Tombol kembali ke detail motor
 
 Fitur ini dapat diimplementasikan kembali di masa mendatang dengan menggunakan kode yang telah disimpan sebagai referensi.
+
+## Catatan Tambahan Implementasi Form Validasi
+
+Pada tanggal 18 November 2025, dilakukan peninjauan menyeluruh terhadap blackbox testing untuk memastikan semua skenario pengujian sesuai dengan form aktual yang ada dalam sistem SRB Motors. Berikut adalah ringkasan perubahan dan penyesuaian yang telah dilakukan:
+
+1. **Contact Form** (`home.blade.php`)
+   - Dikonfirmasi bahwa form ini tidak memiliki field upload file
+   - Test case "Mengirim form tanpa file lampiran" diganti menjadi "Mengisi form dengan subjek kosong"
+   - Field yang tersedia: name (wajib), email (wajib), subject (opsional), message (wajib)
+
+2. **Login dan Registration Forms** (`auth/login.blade.php`, `auth/register.blade.php`)
+   - Sudah sesuai dengan form aktual
+   - Implementasi validasi sudah benar
+
+3. **Motor Create/Edit Forms** (`pages/admin/motors/{create|edit}.blade.php`)
+   - Sudah sesuai dengan form aktual
+   - Validasi untuk semua field utama (name, brand, price, image, dll) sudah benar
+
+4. **Cash dan Credit Order Forms** (`pages/motors/{cash_order_form|credit_order_form}.blade.php`)
+   - Validasi nomor telepon telah diimplementasikan di controller dan ditampilkan di form
+   - Field customer_phone sekarang telah melalui validasi format yang sesuai
+
+5. **Document Upload Form** (`pages/motors/upload_credit_documents.blade.php`)
+   - Sudah sesuai dengan form aktual
+   - Validasi untuk dokumen wajib (KTP, KK, SLIP_GAJI) telah diimplementasikan
+
+6. **Transaction Create/Edit Forms** (`pages/admin/transactions/{create|edit}.blade.php`)
+   - Field customer_phone telah diberi validasi format nomor telepon
+   - Validasi untuk semua field penting sudah diterapkan
+
+7. **User Management** (`pages/admin/users/index.blade.php`)
+   - Sudah sesuai dengan fungsionalitas aktual
+   - Validasi hak akses dan keamanan sudah benar
+
+Semua test case dalam blackbox testing sekarang mencerminkan form dan validasi yang sebenarnya ada dalam sistem SRB Motors, dengan fokus pada validasi form bukan pada akses URL.

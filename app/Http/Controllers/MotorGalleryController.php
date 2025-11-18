@@ -101,7 +101,7 @@ class MotorGalleryController extends Controller
     {
         $request->validate([
             'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:20',
+            'customer_phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'required|string|max:255',
             'notes' => 'nullable|string',
             'booking_fee' => 'nullable|numeric|min:0',
@@ -143,7 +143,7 @@ class MotorGalleryController extends Controller
     {
         $request->validate([
             'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:20',
+            'customer_phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'required|string|max:255',
             'down_payment' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1',

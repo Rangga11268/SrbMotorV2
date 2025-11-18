@@ -336,8 +336,13 @@
                             
                             <div class="mb-4">
                                 <label for="customer_phone" class="form-label">Nomor Telepon</label>
-                                <input type="tel" name="customer_phone" id="customer_phone" class="form-control" value="{{ old('customer_phone') }}" required>
+                                <input type="tel" name="customer_phone" id="customer_phone" class="form-control @error('customer_phone') is-invalid @enderror" value="{{ old('customer_phone') }}" required>
                                 <div class="form-text">Masukkan nomor telepon aktif Anda</div>
+                                @error('customer_phone')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             
                             <div class="mb-4">

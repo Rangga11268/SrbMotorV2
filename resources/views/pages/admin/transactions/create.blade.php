@@ -60,8 +60,13 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="customer_phone" class="form-label">Nomor Telepon</label>
-                                    <input type="text" name="customer_phone" id="customer_phone" class="form-control" 
+                                    <input type="text" name="customer_phone" id="customer_phone" class="form-control @error('customer_phone') is-invalid @enderror"
                                            value="{{ old('customer_phone') }}" placeholder="Masukkan nomor telepon">
+                                    @error('customer_phone')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-4">
