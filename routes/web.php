@@ -60,6 +60,8 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     // Transaction management
     Route::resource('transactions', TransactionController::class);
     Route::post('/transactions/{transaction}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+    Route::post('/transactions/{transaction}/upload-document', [TransactionController::class, 'uploadDocument'])->name('transactions.upload-document');
+    Route::delete('/documents/{document}', [TransactionController::class, 'deleteDocument'])->name('transactions.delete-document');
     
     // Invoice management
     Route::get('/transactions/{transaction}/invoice', [InvoiceController::class, 'preview'])->name('transactions.invoice.preview');

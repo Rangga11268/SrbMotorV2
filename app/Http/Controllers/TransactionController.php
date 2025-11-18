@@ -201,4 +201,67 @@ class TransactionController extends Controller
         return redirect()->back()
             ->with('success', 'Transaction status updated successfully.');
     }
+
+    /**
+     * Upload a document for the specified transaction.
+     */
+    public function uploadDocument(Request $request, Transaction $transaction): RedirectResponse
+    {
+        $request->validate([
+            'document_type' => 'required|string|in:KTP,KK,SLIP_GAJI,LAINNYA',
+            'document_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // Max 5MB
+        ]);
+
+        // Create credit detail if it doesn't exist
+        if (!$transaction->creditDetail) {
+            $creditDetail = CreditDetail::create([
+                'transaction_id' => $transaction->id,
+                'down_payment' => 0,
+                'tenor' => 12,
+                'monthly_installment' => 0,
+                'credit_status' => 'menunggu_persetujuan',
+            ]);
+        } else {
+            $creditDetail = $transaction->creditDetail;
+        }
+
+        // Handle file upload
+        $file = $request->file('document_file');
+        $originalName = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+
+        // Create a unique filename
+        $filename = time() . '_' . uniqid() . '.' . $extension;
+
+        // Store the file in the public storage
+        $path = $file->storeAs('documents', $filename, 'public');
+
+        // Create the document record
+        Document::create([
+            'credit_detail_id' => $creditDetail->id,
+            'document_type' => $request->document_type,
+            'file_path' => $path,
+            'original_name' => $originalName,
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Dokumen berhasil diunggah.');
+    }
+
+    /**
+     * Delete a document.
+     */
+    public function deleteDocument(Document $document): RedirectResponse
+    {
+        // Delete the physical file
+        if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
+            Storage::disk('public')->delete($document->file_path);
+        }
+
+        // Delete the document record
+        $document->delete();
+
+        return redirect()->back()
+            ->with('success', 'Dokumen berhasil dihapus.');
+    }
 }

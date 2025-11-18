@@ -257,6 +257,66 @@ document.addEventListener('DOMContentLoaded', function() {
             creditDetailSection.style.display = 'none';
         }
     });
+
+    // Add installment calculation functionality for edit form
+    const dpInput = document.getElementById('credit_detail_down_payment');
+    const tenorInput = document.getElementById('credit_detail_tenor');
+    const monthlyInstallmentInput = document.getElementById('credit_detail_monthly_installment');
+    const totalAmountInput = document.getElementById('total_amount');
+    const motorSelect = document.getElementById('motor_id');
+
+    function calculateInstallment() {
+        // Only calculate if transaction type is CREDIT
+        if (transactionTypeSelect.value !== 'CREDIT') {
+            return;
+        }
+
+        const totalAmount = parseFloat(totalAmountInput.value) || 0;
+        const downPayment = parseFloat(dpInput.value) || 0;
+        const tenor = parseInt(tenorInput.value) || 12;
+
+        // Validate inputs
+        if (downPayment >= totalAmount) {
+            alert('Uang muka tidak boleh lebih besar atau sama dengan total jumlah');
+            dpInput.value = totalAmount - 1000000; // Set to a reasonable amount below price
+            return;
+        }
+
+        if (tenor <= 0) {
+            alert('Tenor harus lebih besar dari 0');
+            tenorInput.value = 12;
+            return;
+        }
+
+        // Calculate loan amount and monthly installment (same as frontend)
+        const loanAmount = totalAmount - downPayment;
+        const monthlyInstallment = loanAmount / tenor;
+
+        monthlyInstallmentInput.value = Math.round(monthlyInstallment);
+    }
+
+    // Add event listeners for DP and Tenor
+    dpInput.addEventListener('input', calculateInstallment);
+    tenorInput.addEventListener('input', calculateInstallment);
+    totalAmountInput.addEventListener('input', calculateInstallment);
+
+    // Recalculate when motor changes
+    motorSelect.addEventListener('change', function() {
+        // Update total amount when motor is selected (similar to create form)
+        const selectedOption = motorSelect.options[motorSelect.selectedIndex];
+        const price = selectedOption.text.match(/Rp ([\d.]+)/);
+        if (price) {
+            const number = parseInt(price[1].replace(/\./g, ''));
+            totalAmountInput.value = number;
+        }
+        // Recalculate installment when motor changes
+        calculateInstallment();
+    });
+
+    // Calculate initial installment if transaction type is credit
+    if (transactionTypeSelect.value === 'CREDIT') {
+        calculateInstallment();
+    }
 });
 </script>
 @endsection

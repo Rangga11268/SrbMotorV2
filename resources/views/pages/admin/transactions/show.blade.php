@@ -141,13 +141,13 @@
             @endif
 
             <!-- Documents (only for credit transactions) -->
-            @if($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail)
+            @if($transaction->transaction_type === 'CREDIT')
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Dokumen Pendukung</h6>
                 </div>
                 <div class="card-body">
-                    @if($transaction->creditDetail->hasRequiredDocuments())
+                    @if($transaction->creditDetail && $transaction->creditDetail->hasRequiredDocuments())
                         <div class="alert alert-success">
                             <i class="fas fa-check-circle"></i> Semua dokumen yang diperlukan telah diunggah
                         </div>
@@ -156,21 +156,28 @@
                             <i class="fas fa-exclamation-triangle"></i> Dokumen yang diperlukan belum lengkap
                         </div>
                     @endif
-                    
-                    @if($transaction->creditDetail->documents->count() > 0)
+
+                    @if($transaction->creditDetail && $transaction->creditDetail->documents->count() > 0)
                         <div class="row">
                             @foreach($transaction->creditDetail->documents as $document)
                             <div class="col-md-4 mb-3">
                                 <div class="card h-100">
-                                    <div class="card-body text-center">
+                                    <div class="card-body d-flex flex-column text-center">
                                         @if(pathinfo($document->file_path, PATHINFO_EXTENSION) === 'pdf')
                                             <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
                                         @else
                                             <i class="fas fa-file-image fa-3x text-primary mb-3"></i>
                                         @endif
                                         <h6 class="card-title">{{ $document->document_type }}</h6>
-                                        <p class="card-text small text-muted">{{ $document->original_name }}</p>
-                                        <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-primary btn-sm">Lihat</a>
+                                        <p class="card-text small text-muted flex-grow-1">{{ $document->original_name }}</p>
+                                        <div class="mt-auto">
+                                            <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">Lihat</a>
+                                            <form action="{{ route('admin.transactions.delete-document', $document->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">Hapus</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -179,6 +186,31 @@
                     @else
                         <p class="text-muted text-center">Belum ada dokumen yang diunggah</p>
                     @endif
+
+                    <!-- Document Upload Form (always visible for credit transactions) -->
+                    <div class="mt-4">
+                        <h6 class="mb-3">Upload Dokumen Baru</h6>
+                        <form action="{{ route('admin.transactions.upload-document', $transaction->id) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select name="document_type" class="form-control" required>
+                                        <option value="">Pilih Jenis Dokumen</option>
+                                        <option value="KTP">KTP</option>
+                                        <option value="KK">Kartu Keluarga (KK)</option>
+                                        <option value="SLIP_GAJI">Slip Gaji</option>
+                                        <option value="LAINNYA">Dokumen Tambahan</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="file" name="document_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary w-100">Upload</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             @endif
@@ -226,7 +258,7 @@
                 </div>
                 <div class="card-body">
                     @if($transaction->transaction_type === 'CREDIT')
-                        @if(!$transaction->creditDetail->hasRequiredDocuments())
+                        @if(!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments())
                             <div class="alert alert-warning">
                                 <i class="fas fa-exclamation-triangle"></i> Dokumen pelanggan belum lengkap.
                                 Tidak dapat melanjutkan ke proses surveyor sebelum dokumen lengkap.
@@ -250,7 +282,7 @@
                                 @else
                                     <option value="menunggu_persetujuan" {{ $transaction->status === 'menunggu_persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
                                     <option value="data_tidak_valid" {{ $transaction->status === 'data_tidak_valid' ? 'selected' : '' }}>Data Tidak Valid</option>
-                                    <option value="dikirim_ke_surveyor" {{ $transaction->status === 'dikirim_ke_surveyor' ? 'selected' : '' }} @if(!$transaction->creditDetail->hasRequiredDocuments()) disabled @endif>Dikirim ke Surveyor</option>
+                                    <option value="dikirim_ke_surveyor" {{ $transaction->status === 'dikirim_ke_surveyor' ? 'selected' : '' }} @if(!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments()) disabled @endif>Dikirim ke Surveyor</option>
                                     <option value="jadwal_survey" {{ $transaction->status === 'jadwal_survey' ? 'selected' : '' }}>Jadwal Survey</option>
                                     <option value="disetujui" {{ $transaction->status === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
                                     <option value="ditolak" {{ $transaction->status === 'ditolak' ? 'selected' : '' }}>Ditolak</option>

@@ -249,12 +249,55 @@ document.addEventListener('DOMContentLoaded', function() {
     
     motorSelect.addEventListener('change', function() {
         const selectedOption = motorSelect.options[motorSelect.selectedIndex];
-        const price = selectedOption.text.match(/Rp ([\d,]+)/);
+        const price = selectedOption.text.match(/Rp ([\d.]+)/);
         if (price) {
-            const number = parseInt(price[1].replace(/,/g, ''));
+            const number = parseInt(price[1].replace(/\./g, ''));
             totalAmountInput.value = number;
         }
+        // Recalculate installment when motor changes
+        calculateInstallment();
     });
+
+    // Add installment calculation functionality
+    const dpInput = document.getElementById('credit_detail_down_payment');
+    const tenorInput = document.getElementById('credit_detail_tenor');
+    const monthlyInstallmentInput = document.getElementById('credit_detail_monthly_installment');
+    const totalAmountForInstallment = document.getElementById('total_amount');
+
+    function calculateInstallment() {
+        // Only calculate if transaction type is CREDIT
+        if (transactionTypeSelect.value !== 'CREDIT') {
+            return;
+        }
+
+        const totalAmount = parseFloat(totalAmountForInstallment.value) || 0;
+        const downPayment = parseFloat(dpInput.value) || 0;
+        const tenor = parseInt(tenorInput.value) || 12;
+
+        // Validate inputs
+        if (downPayment >= totalAmount) {
+            alert('Uang muka tidak boleh lebih besar atau sama dengan total jumlah');
+            dpInput.value = totalAmount - 1000000; // Set to a reasonable amount below price
+            return;
+        }
+
+        if (tenor <= 0) {
+            alert('Tenor harus lebih besar dari 0');
+            tenorInput.value = 12;
+            return;
+        }
+
+        // Calculate loan amount and monthly installment (same as frontend)
+        const loanAmount = totalAmount - downPayment;
+        const monthlyInstallment = loanAmount / tenor;
+
+        monthlyInstallmentInput.value = Math.round(monthlyInstallment);
+    }
+
+    // Add event listeners for DP and Tenor
+    dpInput.addEventListener('input', calculateInstallment);
+    tenorInput.addEventListener('input', calculateInstallment);
+    totalAmountForInstallment.addEventListener('input', calculateInstallment);
 });
 </script>
 @endsection
