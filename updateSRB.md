@@ -999,33 +999,97 @@ dihapus dari
 sistem
 Sesuai
 harapan Valid
-4. Membatalkan
-perubahan peran
-pengguna
-Ubah peran
-pengguna, lalu
-klik batal
-Peran tidak
-berubah
-kembali ke
-nilai
-sebelumnya
+
+### 9. Admin Document Upload Form
+
+No. Skenario
+pengujian Test case Hasil yang
+diharapkan
+Hasil
+pengujian Kesimpulan
+1. Mengunggah
+dokumen valid dari
+admin panel
+Upload file KTP,
+KK, slip gaji sesuai
+ketentuan dari form
+admin
+Dokumen berhasil
+diunggah dan terkait
+dengan transaksi
+kredit
 Sesuai
 harapan Valid
-5. Mengganti peran
-tanpa memilih
-peran baru
-Submit form
-tanpa memilih
-peran
+2. Mengunggah
+dokumen dengan
+format file tidak
+valid
+Upload file dengan
+format selain
+gambar/PDF dari
+admin panel
+Sistem menolak
+upload dan
+menampilkan
+pesan kesalahan
+Sesuai
+harapan Valid
+3. Submit tanpa
+memilih jenis
+dokumen
+Submit form tanpa
+memilih jenis
+dokumen terlebih
+dahulu
 Sistem menolak
 submit dan
 menampilkan
 pesan kesalahan
 Sesuai
 harapan Valid
+4. Mengunggah
+dokumen melebihi
+ukuran maksimal
+Upload file lebih
+dari 5MB
+Sistem menolak
+upload dan
+menampilkan
+pesan kesalahan
+Sesuai
+harapan Valid
+5. Mengupload
+dokumen untuk
+transaksi tunai
+Mencoba upload
+dokumen untuk
+transaksi tunai dari
+form admin
+Sistem tetap
+menerima upload
+dan mengaitkan
+dokumen ke
+credit detail
+Sesuai
+harapan Valid
+6. Upload dokumen
+untuk transaksi
+kredit tanpa credit
+detail
+Upload dokumen
+untuk transaksi
+kredit yang belum
+memiliki credit
+detail
+Sistem otomatis
+membuatkan
+credit detail dan
+mengaitkan
+dokumen
+Sesuai
+harapan Valid
 
-### 9. Transaction Create Form
+### 10. Transaction Create Form
 
 No. Skenario
 pengujian Test case Hasil yang
