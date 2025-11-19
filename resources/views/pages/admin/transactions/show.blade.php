@@ -140,23 +140,24 @@
             </div>
             @endif
 
-            <!-- Documents (only for credit transactions) -->
-            @if($transaction->transaction_type === 'CREDIT')
+            <!-- Documents (for both cash and credit transactions) -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Dokumen Pendukung</h6>
                 </div>
                 <div class="card-body">
-                    @if($transaction->creditDetail && $transaction->creditDetail->hasRequiredDocuments())
+                    <!-- Show document status only for credit transactions -->
+                    @if($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail && $transaction->creditDetail->hasRequiredDocuments())
                         <div class="alert alert-success">
                             <i class="fas fa-check-circle"></i> Semua dokumen yang diperlukan telah diunggah
                         </div>
-                    @else
+                    @elseif($transaction->transaction_type === 'CREDIT' && (!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments()))
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle"></i> Dokumen yang diperlukan belum lengkap
                         </div>
                     @endif
 
+                    <!-- Display existing documents -->
                     @if($transaction->creditDetail && $transaction->creditDetail->documents->count() > 0)
                         <div class="row">
                             @foreach($transaction->creditDetail->documents as $document)
@@ -170,12 +171,12 @@
                                         @endif
                                         <h6 class="card-title">{{ $document->document_type }}</h6>
                                         <p class="card-text small text-muted flex-grow-1">{{ $document->original_name }}</p>
-                                        <div class="mt-auto">
-                                            <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">Lihat</a>
+                                        <div class="mt-auto d-grid gap-2">
+                                            <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-primary btn-sm">Lihat</a>
                                             <form action="{{ route('admin.transactions.delete-document', $document->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">Hapus</button>
+                                                <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">Hapus</button>
                                             </form>
                                         </div>
                                     </div>
@@ -187,7 +188,7 @@
                         <p class="text-muted text-center">Belum ada dokumen yang diunggah</p>
                     @endif
 
-                    <!-- Document Upload Form (always visible for credit transactions) -->
+                    <!-- Document Upload Form (available for both cash and credit transactions) -->
                     <div class="mt-4">
                         <h6 class="mb-3">Upload Dokumen Baru</h6>
                         <form action="{{ route('admin.transactions.upload-document', $transaction->id) }}" method="POST" enctype="multipart/form-data">
@@ -199,6 +200,9 @@
                                         <option value="KTP">KTP</option>
                                         <option value="KK">Kartu Keluarga (KK)</option>
                                         <option value="SLIP_GAJI">Slip Gaji</option>
+                                        <option value="FAKTUR">Faktur Pembelian</option>
+                                        <option value="BPKB">BPKB</option>
+                                        <option value="STNK">STNK</option>
                                         <option value="LAINNYA">Dokumen Tambahan</option>
                                     </select>
                                 </div>
@@ -213,7 +217,6 @@
                     </div>
                 </div>
             </div>
-            @endif
         </div>
 
         <!-- Sidebar with Actions and Customer Info -->
