@@ -961,20 +961,54 @@ diharapkan
 Hasil
 pengujian Kesimpulan
 1. Mengganti peran
-pengguna dari
-user ke admin
-Pilih pengguna
-user, ubah peran
-menjadi admin
-Peran
+pengguna melalui
+tombol "Ubah" di
+kolom aksi
+Klik tombol "Ubah"
+di kolom aksi
+pada baris
 pengguna
-berhasil
-diubah
-menjadi
-admin
+Modal "Ubah
+Peran Pengguna"
+muncul dengan
+nama pengguna
+dan role saat ini
 Sesuai
 harapan Valid
-2. Mencoba
+2. Memilih role
+baru dan
+mengkonfirmasi
+perubahan
+Pada modal yang
+muncul, pilih role
+baru (admin atau
+user) dan klik
+"Simpan Perubahan",
+lalu konfirmasi
+dengan SweetAlert
+Peran pengguna
+berhasil diubah
+sesuai pilihan,
+dan SweetAlert
+konfirmasi muncul
+Sesuai
+harapan Valid
+3. Membatalkan
+perubahan role
+Pada modal yang
+muncul, klik
+"Simpan Perubahan"
+lalu batal pada
+SweetAlert
+konfirmasi
+Perubahan role
+dibatalkan,
+tidak ada
+perubahan role
+yang terjadi
+Sesuai
+harapan Valid
+4. Mencoba
 menghapus akun
 sendiri
 Klik hapus pada
@@ -987,7 +1021,7 @@ menghapus
 diri sendiri
 Sesuai
 harapan Valid
-3. Menghapus akun
+5. Menghapus akun
 pengguna lain
 Pilih pengguna
 lain dan klik

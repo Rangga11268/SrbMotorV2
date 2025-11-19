@@ -82,16 +82,16 @@
                                     @endif">
                                     {{ $user->role === 'admin' ? 'Admin' : 'Pengguna' }}
                                 </span>
-                                <button type="button" class="btn btn-sm btn-outline-primary ms-2 edit-role-btn"
-                                    data-user-id="{{ $user->id }}"
-                                    data-user-name="{{ $user->name }}"
-                                    data-user-role="{{ $user->role }}">
-                                    <i class="fas fa-edit"></i> Ubah
-                                </button>
                             </td>
                             <td class="d-none d-xl-table-cell">{{ $user->created_at ? $user->created_at->format('d M Y') : 'Tidak Tersedia' }}</td>
                             <td>
                                 <div class="d-flex flex-md-row flex-column gap-md-2 gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary flex-fill edit-role-btn"
+                                        data-user-id="{{ $user->id }}"
+                                        data-user-name="{{ $user->name }}"
+                                        data-user-role="{{ $user->role }}">
+                                        <i class="fas fa-edit d-none d-md-inline me-1"></i>Ubah
+                                    </button>
                                     @if($user->id !== auth()->id())
                                     <form action="{{ route('admin.users.destroy', ['user' => $user->id]) }}" method="POST" class="d-inline w-100 delete-user-form">
                                         @csrf
