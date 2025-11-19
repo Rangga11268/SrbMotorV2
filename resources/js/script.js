@@ -1,10 +1,12 @@
 let menu = document.querySelector("#menu-btn");
 let navbar = document.querySelector(".navbar");
 
-menu.onclick = () => {
-  menu.classList.toggle("fa-times");
-  navbar.classList.toggle("active");
-};
+if (menu && navbar) {
+  menu.onclick = () => {
+    menu.classList.toggle("fa-times");
+    navbar.classList.toggle("active");
+  };
+}
 
 const loginBtn = document.querySelector("#login-btn");
 if (loginBtn) {
@@ -25,44 +27,55 @@ if (loginIconBtn) {
 // For authenticated users, we may need to handle the user dropdown differently on mobile
 // The dropdown functionality is handled by Bootstrap, so we don't need additional JS for that
 
-document.querySelector("#close-login-form").onclick = () => {
-  document.querySelector(".login-form-container").classList.remove("active");
-};
+const closeLoginFormBtn = document.querySelector("#close-login-form");
+if (closeLoginFormBtn) {
+  closeLoginFormBtn.onclick = () => {
+    document.querySelector(".login-form-container").classList.remove("active");
+  };
+}
 
 window.onscroll = () => {
-  menu.classList.remove("fa-times");
-  navbar.classList.remove("active");
-
-  if (window.scrollY > 0) {
-    document.querySelector(".header").classList.add("active");
-  } else {
-    document.querySelector(".header").classList.remove("active");
+  if (menu && navbar) {
+    menu.classList.remove("fa-times");
+    navbar.classList.remove("active");
   }
-  
-  // Additional functionality for navbar shrinking
-  if (window.scrollY > 50) {
-    document.querySelector(".header").classList.add("scrolled");
-  } else {
-    document.querySelector(".header").classList.remove("scrolled");
+
+  const header = document.querySelector(".header");
+  if (header) {
+    if (window.scrollY > 0) {
+      header.classList.add("active");
+    } else {
+      header.classList.remove("active");
+    }
+
+    // Additional functionality for navbar shrinking
+    if (window.scrollY > 50) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
   }
 };
 
-document.querySelector(".home").onmousemove = (e) => {
-  document.querySelectorAll(".home-parallax").forEach((elm) => {
-    let speed = elm.getAttribute("data-speed");
+const homeElement = document.querySelector(".home");
+if (homeElement) {
+  homeElement.onmousemove = (e) => {
+    document.querySelectorAll(".home-parallax").forEach((elm) => {
+      let speed = elm.getAttribute("data-speed");
 
-    let x = (window.innerWidth - e.pageX * speed) / 90;
-    let y = (window.innerHeight - e.pageY * speed) / 90;
+      let x = (window.innerWidth - e.pageX * speed) / 90;
+      let y = (window.innerHeight - e.pageY * speed) / 90;
 
-    elm.style.transform = `translateX(${y}px) translateY(${x}px)`;
-  });
-};
+      elm.style.transform = `translateX(${y}px) translateY(${x}px)`;
+    });
+  };
 
-document.querySelector(".home").onmouseleave = (e) => {
-  document.querySelectorAll(".home-parallax").forEach((elm) => {
-    elm.style.transform = `translateX(0px) translateY(0px)`;
-  });
-};
+  homeElement.onmouseleave = (e) => {
+    document.querySelectorAll(".home-parallax").forEach((elm) => {
+      elm.style.transform = `translateX(0px) translateY(0px)`;
+    });
+  };
+}
 
 
 
@@ -121,36 +134,46 @@ document.addEventListener("DOMContentLoaded", function () {
 // FORMSPREE
 var form = document.getElementById("contactForm");
 
-async function handleSubmit(event) {
-  event.preventDefault();
-  var status = document.getElementById("contactFormStatus");
-  var data = new FormData(event.target);
-  fetch(event.target.action, {
-    method: form.method,
-    body: data,
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        status.innerHTML = "Terima kasih! Pesan Anda telah terkirim.";
-        form.reset();
-      } else {
-        response.json().then((data) => {
-          if (Object.hasOwn(data, "errors")) {
-            status.innerHTML = data["errors"]
-              .map((error) => error["message"])
-              .join(", ");
-          } else {
-            status.innerHTML =
-              "Oops! Terjadi masalah saat mengirim formulir Anda.";
-          }
-        });
-      }
+if (form) {
+  async function handleSubmit(event) {
+    event.preventDefault();
+    var status = document.getElementById("contactFormStatus");
+    var data = new FormData(event.target);
+    fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+        Accept: "application/json",
+      },
     })
-    .catch((error) => {
-      status.innerHTML = "Oops! Terjadi masalah saat mengirim formulir Anda.";
-    });
+      .then((response) => {
+        if (response.ok) {
+          if (status) {
+            status.innerHTML = "Terima kasih! Pesan Anda telah terkirim.";
+          }
+          form.reset();
+        } else {
+          response.json().then((data) => {
+            if (Object.hasOwn(data, "errors")) {
+              if (status) {
+                status.innerHTML = data["errors"]
+                  .map((error) => error["message"])
+                  .join(", ");
+              }
+            } else {
+              if (status) {
+                status.innerHTML =
+                  "Oops! Terjadi masalah saat mengirim formulir Anda.";
+              }
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        if (status) {
+          status.innerHTML = "Oops! Terjadi masalah saat mengirim formulir Anda.";
+        }
+      });
+  }
+  form.addEventListener("submit", handleSubmit);
 }
-form.addEventListener("submit", handleSubmit);

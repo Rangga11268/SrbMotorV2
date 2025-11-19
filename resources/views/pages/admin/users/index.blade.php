@@ -74,14 +74,20 @@
                                 <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                             </td>
                             <td>
-                                <form action="{{ route('admin.users.update', $user) }}" method="POST" class="d-inline role-form">
-                                    @csrf
-                                    @method('PUT')
-                                    <select name="role" class="form-select form-select-sm bg-white role-select" data-original-value="{{ $user->role }}">
-                                        <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>Pengguna</option>
-                                        <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                                    </select>
-                                </form>
+                                <span class="badge
+                                    @if($user->role === 'admin')
+                                        bg-warning text-dark
+                                    @else
+                                        bg-secondary
+                                    @endif">
+                                    {{ $user->role === 'admin' ? 'Admin' : 'Pengguna' }}
+                                </span>
+                                <button type="button" class="btn btn-sm btn-outline-primary ms-2 edit-role-btn"
+                                    data-user-id="{{ $user->id }}"
+                                    data-user-name="{{ $user->name }}"
+                                    data-user-role="{{ $user->role }}">
+                                    <i class="fas fa-edit"></i> Ubah
+                                </button>
                             </td>
                             <td class="d-none d-xl-table-cell">{{ $user->created_at ? $user->created_at->format('d M Y') : 'Tidak Tersedia' }}</td>
                             <td>
@@ -117,7 +123,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             @if(method_exists($users, 'hasPages') && $users->hasPages())
             <div class="card-footer bg-white">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
@@ -131,61 +137,133 @@
         </div>
     </div>
 </div>
-@endsection
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle role change confirmations with SweetAlert2
-    document.querySelectorAll('select[name="role"]').forEach(select => {
-        select.addEventListener('change', function() {
-            const originalValue = this.getAttribute('data-original-value') || this.value;
-            const newRole = this.options[this.selectedIndex].text;
-            
+<!-- Modal for editing user role -->
+<div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRoleModalLabel">Ubah Peran Pengguna</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin mengubah peran pengguna <strong id="userNameDisplay"></strong>?</p>
+                <form id="editRoleForm" method="POST" action="">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-3">
+                        <label for="roleSelect" class="form-label">Pilih Peran Baru</label>
+                        <select class="form-select" id="roleSelect" name="role">
+                            <option value="user">Pengguna</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="saveRoleBtn">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inline script to ensure functionality works -->
+<script type="text/javascript">
+    // Additional script to ensure edit role functionality works
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOMContentLoaded event fired for inline script");
+
+        // Function to handle role updates
+        function updateRole(userId, newRole) {
+            // Create a temporary form and submit it
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("admin.users.update", ":id") }}'.replace(':id', userId);
+
+            // Add CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (csrfToken) {
+                const hiddenToken = document.createElement('input');
+                hiddenToken.type = 'hidden';
+                hiddenToken.name = '_token';
+                hiddenToken.value = csrfToken.getAttribute('content');
+                form.appendChild(hiddenToken);
+            }
+
+            // Add method spoofing for PUT request
+            const hiddenMethod = document.createElement('input');
+            hiddenMethod.type = 'hidden';
+            hiddenMethod.name = '_method';
+            hiddenMethod.value = 'PUT';
+            form.appendChild(hiddenMethod);
+
+            // Add role field
+            const roleField = document.createElement('input');
+            roleField.type = 'hidden';
+            roleField.name = 'role';
+            roleField.value = newRole;
+            form.appendChild(roleField);
+
+            // Append to body and submit
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Add click event listeners to edit buttons
+        const editButtons = document.querySelectorAll('.edit-role-btn');
+        editButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                const userName = this.getAttribute('data-user-name');
+                const userRole = this.getAttribute('data-user-role');
+
+                console.log("Edit role button clicked for user ID:", userId);
+
+                // Set the values in the modal
+                document.getElementById('userNameDisplay').textContent = userName;
+                document.getElementById('roleSelect').value = userRole;
+
+                // Store the userId in the save button for later use
+                document.getElementById('saveRoleBtn').setAttribute('data-user-id', userId);
+
+                // Show the modal using Bootstrap's JS API
+                const modalElement = document.getElementById('editRoleModal');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            });
+        });
+
+        // Add click event listener to save button
+        document.getElementById('saveRoleBtn').addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            const newRole = document.getElementById('roleSelect').value;
+            const userName = document.getElementById('userNameDisplay').textContent;
+
+            // Show SweetAlert confirmation
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: `Peran pengguna akan diubah menjadi ${newRole}`,
+                text: 'Peran pengguna ' + userName + ' akan diubah menjadi ' + (newRole === 'admin' ? 'Admin' : 'Pengguna'),
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ya, ubah!',
                 cancelButtonText: 'Batal'
-            }).then((result) => {
+            }).then(function(result) {
                 if (result.isConfirmed) {
-                    this.form.submit();
-                } else {
-                    // Reset to original value if user cancels
-                    this.value = originalValue;
+                    updateRole(userId, newRole);
                 }
             });
         });
     });
-    
-    // Handle user deletion with SweetAlert2
-    document.querySelectorAll('form.delete-user-form').forEach(form => {
-        const submitBtn = form.querySelector('button.delete-user-btn');
-        if (submitBtn) {
-            submitBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Pengguna ini akan dihapus secara permanen! Semua data mereka akan dihapus.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        }
-    });
-});
+</script>
+@endsection
+
+@push('scripts')
+<script type="text/javascript">
+    // Scripts that need to go through the Vite pipeline can be placed here
+    // Currently using the inline script above for role update functionality
+    console.log("Additional scripts loaded via Vite");
 </script>
 @endpush
