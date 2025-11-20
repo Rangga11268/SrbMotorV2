@@ -1,8 +1,8 @@
-# SRB Motors - Motorcycle Sales Management Platform
+# SRB Motors - Platform Manajemen Penjualan Motor
 
 <div align="center">
-  <img src="public/images/icon/logo trans.png" alt="SRB Motors Logo" width="200" />
-  <p><b>Modern motorcycle sales management platform built with Laravel</b></p>
+  <img src="public/images/icon/logo trans.png" alt="Logo SRB Motors" width="200" />
+  <p><b>Platform manajemen penjualan motor modern berbasis Laravel</b></p>
   
   [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
   [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
@@ -11,317 +11,317 @@
 </div>
 
 <p align="center">
-  <a href="#overview">Overview</a> • 
-  <a href="#features">Features</a> • 
-  <a href="#screenshots">Screenshots</a> • 
-  <a href="#installation">Installation</a> • 
-  <a href="#usage">Usage</a> • 
-  <a href="#tech-stack">Tech Stack</a> • 
-  <a href="#contributing">Contributing</a>
+  <a href="#gambaran-umum">Gambaran Umum</a> • 
+  <a href="#fitur">Fitur</a> • 
+  <a href="#tangkapan-layar">Tangkapan Layar</a> • 
+  <a href="#instalasi">Instalasi</a> • 
+  <a href="#penggunaan">Penggunaan</a> • 
+  <a href="#teknologi-yang-digunakan">Teknologi</a> • 
+  <a href="#kontribusi">Kontribusi</a>
 </p>
 
 ---
 
-## Overview
+## Gambaran Umum
 
-SRB Motors is a comprehensive motorcycle sales management platform that enables dealerships to showcase their inventory, manage transactions, and provide customers with an intuitive online experience. Built with the Laravel framework, it offers a robust backend with a user-friendly interface for both customers and administrators.
+SRB Motors adalah platform manajemen penjualan motor yang komprehensif yang memungkinkan dealer untuk menampilkan inventaris mereka, mengelola transaksi, dan memberikan pelanggan pengalaman online yang intuitif. Dibangun dengan framework Laravel, platform ini menawarkan backend yang kuat dengan antarmuka pengguna yang ramah untuk pelanggan dan administrator.
 
-The platform supports both cash and credit transactions, comprehensive motor inventory management, and a detailed admin dashboard for efficient business operations.
-
----
-
-## Features
-
-### 🏍️ **Motorcycle Management**
-- **Inventory Display**: Showcases motorcycle inventory with detailed specifications
-- **Brand Categories**: Organized by brands (Honda, Yamaha, etc.)
-- **Detailed Specifications**: Comprehensive motor specifications view
-- **Image Gallery**: High-quality motorcycle images and visual presentation
-
-### 👥 **User Management**
-- **Role-based Access**: Admin and user roles with different permissions
-- **Authentication System**: Secure login and registration system
-- **User Profiles**: Customer profile management
-
-### 💼 **Transaction Management**
-- **Cash Transactions**: Simple cash purchase process
-- **Credit Transactions**: Installment purchase with document upload
-- **Booking System**: Reserve motorcycles with booking fees
-- **Status Tracking**: Real-time transaction status updates
-
-### 🎛️ **Admin Panel**
-- **Dashboard**: Comprehensive statistics and analytics
-- **Motor Management**: CRUD operations for motorcycle inventory
-- **Transaction Management**: Detailed transaction oversight
-- **User Management**: Administer user accounts and roles
-- **Document Management**: Handle credit transaction documents
-
-### 📧 **Contact & Communication**
-- **Contact Form**: Direct communication with dealership
-- **Notification System**: Real-time transaction updates
-- **Document Upload**: Credit application document management
-
-### 📊 **Reporting & Analytics**
-- **Transaction Reports**: Detailed financial reporting
-- **Inventory Management**: Real-time stock tracking
-- **Customer Information**: Comprehensive customer data management
+Platform ini mendukung transaksi tunai dan kredit, manajemen inventaris motor yang komprehensif, serta dashboard admin terperinci untuk operasional bisnis yang efisien.
 
 ---
 
-## Screenshots
+## Fitur
+
+### 🏍️ **Manajemen Motor**
+- **Tampilan Inventaris**: Menampilkan inventaris motor dengan spesifikasi terperinci
+- **Kategori Merek**: Dikelompokkan berdasarkan merek (Honda, Yamaha, dll.)
+- **Spesifikasi Terperinci**: Tampilan spesifikasi motor yang komprehensif
+- **Galeri Gambar**: Gambar motor berkualitas tinggi dan presentasi visual
+
+### 👥 **Manajemen Pengguna**
+- **Akses Berbasis Peran**: Peran admin dan pengguna dengan izin berbeda
+- **Sistem Autentikasi**: Sistem login dan registrasi yang aman
+- **Profil Pengguna**: Manajemen profil pelanggan
+
+### 💼 **Manajemen Transaksi**
+- **Transaksi Tunai**: Proses pembelian tunai yang sederhana
+- **Transaksi Kredit**: Pembelian cicilan dengan unggah dokumen
+- **Sistem Pemesanan**: Reservasi motor dengan biaya pemesanan
+- **Pelacakan Status**: Pembaruan status transaksi secara real-time
+
+### 🎛️ **Panel Admin**
+- **Dashboard**: Statistik dan analitik komprehensif
+- **Manajemen Motor**: Operasi CRUD untuk inventaris motor
+- **Manajemen Transaksi**: Pengawasan transaksi terperinci
+- **Manajemen Pengguna**: Mengelola akun dan peran pengguna
+- **Manajemen Dokumen**: Menangani dokumen transaksi kredit
+
+### 📧 **Kontak & Komunikasi**
+- **Formulir Kontak**: Komunikasi langsung dengan dealer
+- **Sistem Notifikasi**: Pembaruan transaksi real-time
+- **Unggah Dokumen**: Manajemen dokumen aplikasi kredit
+
+### 📊 **Laporan & Analitik**
+- **Laporan Transaksi**: Pelaporan keuangan terperinci
+- **Manajemen Inventaris**: Pelacakan stok real-time
+- **Informasi Pelanggan**: Manajemen data pelanggan komprehensif
+
+---
+
+## Tangkapan Layar
 
 <div align="center">
 
-### Homepage
-<img src="public/images/github/HomePage.png" alt="Homepage" width="600" />
+### Halaman Utama
+<img src="public/images/github/HomePage.png" alt="Halaman Utama" width="600" />
 
-### Motor Gallery
-<img src="public/images/github/Motor.png" alt="Motor Gallery" width="600" />
+### Galeri Motor
+<img src="public/images/github/Motor.png" alt="Galeri Motor" width="600" />
 
-### Admin Panel Dashboard
-<img src="public/images/github/Admin1.png" alt="Admin Dashboard" width="600" />
+### Dashboard Admin
+<img src="public/images/github/Admin1.png" alt="Dashboard Admin" width="600" />
 
-### Motor Detail View
-<img src="public/images/github/DetailMotor.png" alt="Motor Detail" width="600" />
+### Detail Motor
+<img src="public/images/github/DetailMotor.png" alt="Detail Motor" width="600" />
 
-### About Us
-<img src="public/images/github/Tentang Kami.png" alt="About Us" width="600" />
+### Tentang Kami
+<img src="public/images/github/Tentang Kami.png" alt="Tentang Kami" width="600" />
 
 </div>
 
 ---
 
-## Installation
+## Instalasi
 
-### Prerequisites
-- PHP 8.2 or higher
+### Prasyarat
+- PHP 8.2 atau lebih tinggi
 - Composer
 - MySQL/MariaDB
-- Node.js and npm
-- Apache/Nginx (e.g., XAMPP, Laragon)
+- Node.js dan npm
+- Apache/Nginx (misalnya XAMPP, Laragon)
 
-### Setup Instructions
+### Instruksi Instalasi
 
-1. **Clone the repository (if applicable)**
+1. **Clone repositori (jika berlaku)**
 ```bash
-git clone https://github.com/yourusername/srbmotors.git
+git clone https://github.com/namapenggunaanda/srbmotors.git
 cd srbmotors
 ```
 
-2. **Install PHP dependencies**
+2. **Instal dependensi PHP**
 ```bash
 composer install
 ```
 
-3. **Set up environment variables**
+3. **Atur variabel lingkungan**
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-4. **Configure your database settings in `.env`**
+4. **Konfigurasi pengaturan database di `.env`**
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=srbmotors
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
+DB_USERNAME=nama_pengguna
+DB_PASSWORD=kata_sandi
 ```
 
-5. **Run database migrations and seeders**
+5. **Jalankan migrasi database dan seeder**
 ```bash
 php artisan migrate --seed
 ```
 
-6. **Install Node.js dependencies**
+6. **Instal dependensi Node.js**
 ```bash
 npm install
 ```
 
-7. **Build frontend assets**
+7. **Bangun aset frontend**
 ```bash
 npm run build
 ```
 
-8. **Start the development server**
+8. **Jalankan server pengembangan**
 ```bash
 php artisan serve
 ```
 
-9. **Access the application**
-Open your browser and navigate to `http://localhost:8000`
+9. **Akses aplikasi**
+Buka browser dan navigasikan ke `http://localhost:8000`
 
-### Default Admin Credentials
-After seeding, you can log in with:
+### Kredensial Admin Default
+Setelah seeding, Anda dapat login dengan:
 - **Email**: `admin@srbmotors.com`
-- **Password**: `password`
+- **Kata Sandi**: `password`
 
 ---
 
-## Usage
+## Penggunaan
 
-### Customer Features
-1. **Browse Motors**: Explore the motorcycle inventory by brand, type, or price
-2. **View Details**: See detailed specifications and images for each motorcycle
-3. **Contact Dealership**: Use the contact form to get more information
-4. **Place Orders**: Choose between cash or credit transactions
-5. **Track Orders**: Monitor the status of your transactions
+### Fitur Pelanggan
+1. **Jelajahi Motor**: Telusuri inventaris motor berdasarkan merek, tipe, atau harga
+2. **Lihat Detail**: Lihat spesifikasi dan gambar terperinci untuk setiap motor
+3. **Kontak Dealer**: Gunakan formulir kontak untuk mendapatkan informasi lebih lanjut
+4. **Tempatkan Pesanan**: Pilih antara transaksi tunai atau kredit
+5. **Lacak Pesanan**: Pantau status transaksi Anda
 
-### Admin Features
-1. **Dashboard Overview**: Monitor sales, inventory, and user activity
-2. **Motor Management**: Add, edit, or remove motorcycles from inventory
-3. **Transaction Management**: Process and track all customer transactions
-4. **User Administration**: Manage user accounts and roles
-5. **Document Processing**: Handle credit transaction documents
+### Fitur Admin
+1. **Ringkasan Dashboard**: Pantau penjualan, inventaris, dan aktivitas pengguna
+2. **Manajemen Motor**: Tambah, edit, atau hapus motor dari inventaris
+3. **Manajemen Transaksi**: Proses dan lacak semua transaksi pelanggan
+4. **Administrasi Pengguna**: Kelola akun dan peran pengguna
+5. **Pemrosesan Dokumen**: Tangani dokumen transaksi kredit
 
-### Credit Transaction Process
-1. **Apply for Credit**: Customer fills out credit application
-2. **Upload Documents**: Submit required documents (KTP, KK, Pay Slip, etc.)
-3. **Verification**: Admin reviews and processes documents
-4. **Approval**: Credit application decision
-5. **Completion**: Finalize transaction
+### Proses Transaksi Kredit
+1. **Ajukan Kredit**: Pelanggan mengisi formulir aplikasi kredit
+2. **Unggah Dokumen**: Kirim dokumen yang diperlukan (KTP, KK, Slip Gaji, dll.)
+3. **Verifikasi**: Admin meninjau dan memproses dokumen
+4. **Persetujuan**: Keputusan aplikasi kredit
+5. **Penyelesaian**: Finalisasi transaksi
 
 ---
 
-## Tech Stack
+## Teknologi Yang Digunakan
 
 <div align="center">
 
-| Technology | Purpose |
-|------------|---------|
-| [Laravel 12.x](https://laravel.com) | Web Application Framework |
-| [PHP 8.2+](https://php.net) | Server-side Scripting Language |
-| [MySQL](https://mysql.com) | Database Management |
-| [Bootstrap 5](https://getbootstrap.com) | Frontend Framework |
-| [Tailwind CSS](https://tailwindcss.com) | Utility-First CSS Framework |
-| [JavaScript](https://javascript.info) | Frontend Interactivity |
-| [Swiper.js](https://swiperjs.com) | Image Sliders & Carousels |
-| [Vite](https://vitejs.dev) | Build Tool & Development Server |
-| [Maatwebsite Excel](https://laravel-excel.com) | Excel Export/Import |
-| [Laravel DOMPDF](https://github.com/barryvdh/laravel-dompdf) | PDF Generation |
+| Teknologi | Tujuan |
+|------------|--------|
+| [Laravel 12.x](https://laravel.com) | Framework Aplikasi Web |
+| [PHP 8.2+](https://php.net) | Bahasa Skrip Server-side |
+| [MySQL](https://mysql.com) | Manajemen Database |
+| [Bootstrap 5](https://getbootstrap.com) | Framework Frontend |
+| [Tailwind CSS](https://tailwindcss.com) | Framework CSS Utility-First |
+| [JavaScript](https://javascript.info) | Interaktivitas Frontend |
+| [Swiper.js](https://swiperjs.com) | Slider & Carousel Gambar |
+| [Vite](https://vitejs.dev) | Alat Build & Server Pengembangan |
+| [Maatwebsite Excel](https://laravel-excel.com) | Ekspor/Impor Excel |
+| [Laravel DOMPDF](https://github.com/barryvdh/laravel-dompdf) | Pembuatan PDF |
 
 </div>
 
 ---
 
-## API Endpoints
+## Endpoint API
 
-The application provides the following main API endpoints:
+Aplikasi menyediakan endpoint API berikut:
 
-### Public Endpoints
-- `GET /` - Homepage with motorcycle listings
-- `GET /motors` - View all motorcycles
-- `GET /motors/{id}` - View specific motorcycle details
-- `POST /contact` - Submit contact form
+### Endpoint Publik
+- `GET /` - Halaman utama dengan daftar motor
+- `GET /motors` - Lihat semua motor
+- `GET /motors/{id}` - Lihat detail motor tertentu
+- `POST /contact` - Kirim formulir kontak
 
-### Authenticated Endpoints
-- `GET /profile` - User profile
-- `GET /transactions` - User transaction history
-- `POST /motors/{id}/cash-order` - Place cash order
-- `POST /motors/{id}/credit-order` - Place credit order
-- `POST /credit-documents/{transactionId}` - Upload credit documents
+### Endpoint Terotentikasi
+- `GET /profile` - Profil pengguna
+- `GET /transactions` - Riwayat transaksi pengguna
+- `POST /motors/{id}/cash-order` - Tempatkan pesanan tunai
+- `POST /motors/{id}/credit-order` - Tempatkan pesanan kredit
+- `POST /credit-documents/{transactionId}` - Unggah dokumen kredit
 
-### Admin Endpoints
-- `GET /admin` - Admin dashboard
-- `GET /admin/motors` - Manage motorcycles
-- `GET /admin/transactions` - Manage transactions
-- `GET /admin/users` - Manage users
-- `GET /admin/contact` - View contact messages
-
----
-
-## Database Schema
-
-The application uses the following main tables:
-
-### Core Tables
-- `users` - Store user information and roles
-- `motors` - Motorcycle inventory details
-- `motor_specifications` - Detailed specifications for each motor
-- `transactions` - Track all purchase transactions
-- `credit_details` - Installment transaction details
-- `documents` - Credit application documents
-- `contact_messages` - Customer contact messages
-- `notifications` - Real-time notifications
+### Endpoint Admin
+- `GET /admin` - Dashboard admin
+- `GET /admin/motors` - Kelola motor
+- `GET /admin/transactions` - Kelola transaksi
+- `GET /admin/users` - Kelola pengguna
+- `GET /admin/contact` - Lihat pesan kontak
 
 ---
 
-## Customization
+## Skema Database
 
-### Brand Support
-The system currently supports Honda and Yamaha brands but can be extended to support other brands:
-1. Update the `brand` field options in the Motor model
-2. Add appropriate brand images to the `public/assets/img/{brand}` directories
+Aplikasi menggunakan tabel utama berikut:
 
-### Motor Types
-The application supports various motor types including:
-- Metic (Manual transmission)
+### Tabel Inti
+- `users` - Menyimpan informasi dan peran pengguna
+- `motors` - Detail inventaris motor
+- `motor_specifications` - Spesifikasi terperinci untuk setiap motor
+- `transactions` - Melacak semua transaksi pembelian
+- `credit_details` - Detail transaksi cicilan
+- `documents` - Dokumen aplikasi kredit
+- `contact_messages` - Pesan kontak dari pelanggan
+- `notifications` - Notifikasi real-time
+
+---
+
+## Kustomisasi
+
+### Dukungan Merek
+Sistem saat ini mendukung merek Honda dan Yamaha tetapi dapat diperluas untuk mendukung merek lain:
+1. Perbarui opsi bidang `brand` di model Motor
+2. Tambahkan gambar merek yang sesuai ke direktori `public/assets/img/{brand}`
+
+### Jenis Motor
+Aplikasi mendukung berbagai jenis motor termasuk:
+- Metic (transmisi manual)
 - Automatic
 - Sport
 - Scooter
 - Touring
 
-These can be extended by modifying the motor creation form and validation rules.
+Ini dapat diperluas dengan memodifikasi formulir pembuatan motor dan aturan validasi.
 
 ---
 
-## Performance & Security
+## Kinerja & Keamanan
 
-### Security Features
-- CSRF protection for all forms
-- Input validation and sanitization
-- Secure password hashing (bcrypt)
-- Authentication with remember tokens
-- Role-based access control
+### Fitur Keamanan
+- Perlindungan CSRF untuk semua formulir
+- Validasi dan sanitasi input
+- Hashing kata sandi yang aman (bcrypt)
+- Otentikasi dengan token ingat
+- Kontrol akses berbasis peran
 
-### Performance Optimizations
-- Eloquent ORM for efficient database queries
-- Caching for frequently accessed data
-- Asset optimization through Vite
-- Efficient image storage and retrieval
-
----
-
-## Contributing
-
-We welcome contributions to the SRB Motors platform! Here's how you can help:
-
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
-4. **Push to the branch** (`git push origin feature/AmazingFeature`)
-5. **Open a Pull Request**
-
-### Development Guidelines
-- Follow Laravel best practices
-- Write clear commit messages
-- Include tests where applicable
-- Maintain consistent code style
-- Document any new features
+### Optimisasi Kinerja
+- ORM Eloquent untuk kueri database yang efisien
+- Caching untuk data yang sering diakses
+- Optimisasi aset melalui Vite
+- Penyimpanan dan pengambilan gambar yang efisien
 
 ---
 
-## License
+## Kontribusi
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Kami menyambut kontribusi terhadap platform SRB Motors! Berikut cara Anda dapat membantu:
+
+1. **Fork repositori**
+2. **Buat branch fitur** (`git checkout -b fitur/FiturHebat`)
+3. **Lakukan commit perubahan Anda** (`git commit -m 'Tambahkan beberapa FiturHebat'`)
+4. **Push ke branch** (`git push origin fitur/FiturHebat`)
+5. **Buka Pull Request**
+
+### Panduan Pengembangan
+- Ikuti praktik terbaik Laravel
+- Tulis pesan commit yang jelas
+- Sertakan pengujian jika berlaku
+- Jaga konsistensi gaya kode
+- Dokumentasikan fitur baru
 
 ---
 
-## Support & Contact
+## Lisensi
 
-If you have any questions, suggestions, or issues with the SRB Motors platform:
+Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LISENSI](LICENSE) untuk detail lengkap.
 
-- **Open an Issue**: Use the GitHub Issues tab to report bugs or suggest features
-- **Email**: Contact us at admin@srbmotors.com
-- **Documentation**: Check our Wiki for detailed setup and customization instructions
+---
+
+## Dukungan & Kontak
+
+Jika Anda memiliki pertanyaan, saran, atau masalah dengan platform SRB Motors:
+
+- **Buka Issue**: Gunakan tab GitHub Issues untuk melaporkan bug atau menyarankan fitur
+- **Email**: Hubungi kami di admin@srbmotors.com
+- **Dokumentasi**: Periksa Wiki kami untuk instruksi instalasi dan kustomisasi terperinci
 
 ---
 
 <div align="center">
 
-**SRB Motors** © 2025 | Built with ❤️ using Laravel
+**SRB Motors** © 2025 | Dibangun dengan ❤️ menggunakan Laravel
 
-[Back to top](#srb-motors---motorcycle-sales-management-platform)
+[Kembali ke atas](#srb-motors---platform-manajemen-penjualan-motor)
 
 </div>
