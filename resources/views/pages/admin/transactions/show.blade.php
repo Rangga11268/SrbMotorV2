@@ -176,7 +176,7 @@
                                             <form action="{{ route('admin.transactions.delete-document', $document->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">Hapus</button>
+                                                <button type="submit" class="btn btn-danger btn-sm w-100 delete-btn">Hapus</button>
                                             </form>
                                         </div>
                                     </div>
