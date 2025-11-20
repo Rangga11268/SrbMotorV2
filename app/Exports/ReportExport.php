@@ -11,11 +11,15 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class ReportExport implements FromCollection, WithHeadings, WithMapping, WithStyles
+class ReportExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithTitle, ShouldAutoSize
 {
     protected $reportData;
     protected $reportType;
@@ -591,26 +595,113 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
         }
     }
 
+    public function title(): string
+    {
+        return 'Laporan ' . $this->getReportTitle();
+    }
+
     public function styles(Worksheet $sheet)
     {
-        return [
-            // Style for the header rows
-            1 => [
-                'font' => [
-                    'bold' => true,
-                    'size' => 14,
-                ],
-                'alignment' => [
-                    'horizontal' => Alignment::HORIZONTAL_CENTER,
-                ]
+        $highestRow = $sheet->getHighestRow();
+        
+        // Style untuk header/title (baris 1)
+        $sheet->getStyle('A1:D1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 14,
+                'color' => ['rgb' => 'FFFFFF'],
             ],
-            // Style for summary titles
-            5 => [
-                'font' => [
-                    'bold' => true,
-                ]
-            ]
-        ];
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '043680'],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_LEFT,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+        
+        // Set row height untuk header
+        $sheet->getRowDimension(1)->setRowHeight(25);
+        
+        // Iterasi untuk styling rows
+        for ($row = 3; $row <= $highestRow; $row++) {
+            $cellA = $sheet->getCell('A' . $row)->getValue();
+            
+            // Section headers (Ringkasan, Berdasarkan, dll)
+            if (!empty($cellA) && (
+                strpos($cellA, 'Ringkasan') !== false ||
+                strpos($cellA, 'Berdasarkan') !== false
+            )) {
+                $sheet->getStyle('A' . $row . ':D' . $row)->applyFromArray([
+                    'font' => [
+                        'bold' => true,
+                        'size' => 12,
+                        'color' => ['rgb' => 'FFFFFF'],
+                    ],
+                    'fill' => [
+                        'fillType' => Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => '043680'],
+                    ],
+                    'alignment' => [
+                        'horizontal' => Alignment::HORIZONTAL_LEFT,
+                    ],
+                ]);
+                $sheet->mergeCells('A' . $row . ':D' . $row);
+                $sheet->getRowDimension($row)->setRowHeight(20);
+            }
+            // Column headers
+            elseif (!empty($cellA) && in_array($cellA, [
+                'Merek Motor', 'Bulan', 'Nama', 'Status', 'Jenis'
+            ])) {
+                $sheet->getStyle('A' . $row . ':D' . $row)->applyFromArray([
+                    'font' => [
+                        'bold' => true,
+                        'color' => ['rgb' => 'FFFFFF'],
+                    ],
+                    'fill' => [
+                        'fillType' => Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => '0652B8'],
+                    ],
+                    'alignment' => [
+                        'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    ],
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                            'color' => ['rgb' => '000000'],
+                        ],
+                    ],
+                ]);
+            }
+            // Data rows
+            elseif (!empty($cellA) && $cellA !== ' ') {
+                // Add border to all cells
+                $sheet->getStyle('A' . $row . ':D' . $row)->applyFromArray([
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                            'color' => ['rgb' => 'CCCCCC'],
+                        ],
+                    ],
+                ]);
+                
+                // Alternating row colors for better readability
+                if ($row % 2 == 0) {
+                    $sheet->getStyle('A' . $row . ':D' . $row)->applyFromArray([
+                        'fill' => [
+                            'fillType' => Fill::FILL_SOLID,
+                            'startColor' => ['rgb' => 'F8F9FA'],
+                        ],
+                    ]);
+                }
+            }
+        }
+        
+        // Set all cells to wrap text
+        $sheet->getStyle('A1:D' . $highestRow)->getAlignment()->setWrapText(true);
+        
+        return [];
     }
 
     private function getTransactionStatusText($status)

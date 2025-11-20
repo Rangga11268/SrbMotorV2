@@ -6,160 +6,252 @@
     <title>Laporan - {{ $report['title'] }}</title>
     
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DejaVu Sans', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.5;
+            color: #333;
             padding: 20px;
         }
         
-        .header {
-            text-align: center;
+        /* Header Company */
+        .company-header {
+            width: 100%;
             margin-bottom: 20px;
+            border-bottom: 3px solid #043680;
+            padding-bottom: 15px;
         }
         
-        .header h1 {
-            margin: 0;
+        .company-header h1 {
             color: #043680;
+            font-size: 24pt;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .company-header h2 {
+            color: #043680;
+            font-size: 16pt;
+            margin-bottom: 10px;
+            text-align: center;
         }
         
         .company-info {
             text-align: center;
+            font-size: 9pt;
+            color: #666;
+        }
+        
+        .company-info p {
+            margin: 2px 0;
+        }
+        
+        /* Report Meta */
+        .report-meta {
+            background-color: #f8f9fa;
+            border: 2px solid #043680;
+            padding: 15px;
             margin-bottom: 20px;
         }
         
-        .report-meta {
-            margin-bottom: 20px;
+        .report-meta h3 {
+            color: #043680;
+            font-size: 14pt;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ffc107;
+            padding-bottom: 5px;
         }
         
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        .info-table th, .info-table td {
-            padding: 8px 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
         }
         
         .info-table th {
-            background-color: #f5f5f5;
+            width: 30%;
+            padding: 8px 10px;
+            text-align: left;
             font-weight: bold;
-        }
-        
-        .summary-cards {
-            display: flex;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .summary-card {
-            flex: 1;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            text-align: center;
-        }
-        
-        .summary-card h5 {
-            margin: 0 0 10px 0;
-            color: #6c757d;
-        }
-        
-        .summary-card h3 {
-            margin: 0;
+            background-color: #e3f2fd;
             color: #043680;
+            border: 1px solid #90caf9;
         }
         
+        .info-table td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+        }
+        
+        /* Section Title */
         .section-title {
             background-color: #043680;
             color: white;
-            padding: 8px 12px;
-            margin: 15px 0 10px 0;
-            font-size: 16px;
+            padding: 10px 15px;
+            margin: 20px 0 10px 0;
+            font-size: 12pt;
+            font-weight: bold;
         }
         
+        /* Summary Cards Table */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .summary-table td {
+            width: 25%;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #043680;
+            background-color: #e3f2fd;
+        }
+        
+        .summary-table .card-title {
+            font-size: 9pt;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        
+        .summary-table .card-value {
+            font-size: 14pt;
+            color: #043680;
+            font-weight: bold;
+        }
+        
+        /* Data Table */
         .data-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
         
-        .data-table th, .data-table td {
-            padding: 8px 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        .data-table thead {
+            background-color: #043680;
+            color: white;
         }
         
         .data-table th {
-            background-color: #f5f5f5;
+            padding: 10px;
+            text-align: left;
             font-weight: bold;
+            border: 1px solid #043680;
         }
         
-        .footer {
-            margin-top: 40px;
+        .data-table td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .data-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tbody tr td:first-child {
+            font-weight: bold;
+            color: #043680;
+        }
+        
+        .text-center {
             text-align: center;
-            font-size: 12px;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        /* Footer */
+        .report-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #043680;
+            text-align: center;
+            font-size: 9pt;
             color: #666;
+        }
+        
+        /* Page breaks */
+        .page-break {
+            page-break-after: always;
+        }
+        
+        h3, .section-title {
+            page-break-after: avoid;
+        }
+        
+        .data-table {
+            page-break-inside: auto;
+        }
+        
+        .data-table tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>LAPORAN</h1>
+    <!-- Company Header -->
+    <div class="company-header">
+        <h1>LAPORAN {{ strtoupper($report['title']) }}</h1>
+        <h2>SRB Motors</h2>
         <div class="company-info">
-            <h2>SRB Motors</h2>
+            <p>Dealer Motor Terpercaya</p>
             <p>Jl. Contoh Alamat No. 123, Kota</p>
             <p>Telepon: (021) 123-4567 | Email: info@srbmotors.com</p>
         </div>
     </div>
 
+    <!-- Report Meta -->
     <div class="report-meta">
         <h3>{{ $report['title'] }}</h3>
         <table class="info-table">
             <tr>
-                <th>Jenis Laporan:</th>
+                <th>Jenis Laporan</th>
                 <td>{{ ucfirst($report['type']) }}</td>
             </tr>
             <tr>
-                <th>Deskripsi:</th>
+                <th>Periode</th>
+                <td>{{ $report['start_date'] }} sampai {{ $report['end_date'] }}</td>
+            </tr>
+            <tr>
+                <th>Dibuat Pada</th>
                 <td>{{ $report['description'] }}</td>
-            </tr>
-            <tr>
-                <th>Tanggal Mulai:</th>
-                <td>{{ $report['start_date'] }}</td>
-            </tr>
-            <tr>
-                <th>Tanggal Akhir:</th>
-                <td>{{ $report['end_date'] }}</td>
             </tr>
         </table>
     </div>
 
     @if($report['type'] === 'sales')
-        <div class="section-title">Ringkasan Penjualan</div>
-        <div class="summary-cards">
-            <div class="summary-card">
-                <h5>Total Transaksi</h5>
-                <h3>{{ $report['data']['total_transactions'] ?? 0 }}</h3>
-            </div>
-            <div class="summary-card">
-                <h5>Total Pendapatan</h5>
-                <h3>Rp {{ number_format($report['data']['total_revenue'] ?? 0, 0, ',', '.') }}</h3>
-            </div>
-            <div class="summary-card">
-                <h5>Transaksi Tunai</h5>
-                <h3>{{ $report['data']['cash_transactions'] ?? 0 }}</h3>
-            </div>
-            <div class="summary-card">
-                <h5>Transaksi Kredit</h5>
-                <h3>{{ $report['data']['credit_transactions'] ?? 0 }}</h3>
-            </div>
-        </div>
+        <div class="section-title">RINGKASAN PENJUALAN</div>
+        
+        <table class="summary-table">
+            <tr>
+                <td>
+                    <div class="card-title">Total Transaksi</div>
+                    <div class="card-value">{{ $report['data']['total_transactions'] ?? 0 }}</div>
+                </td>
+                <td>
+                    <div class="card-title">Total Pendapatan</div>
+                    <div class="card-value">Rp {{ number_format($report['data']['total_revenue'] ?? 0, 0, ',', '.') }}</div>
+                </td>
+                <td>
+                    <div class="card-title">Transaksi Tunai</div>
+                    <div class="card-value">{{ $report['data']['cash_transactions'] ?? 0 }}</div>
+                </td>
+                <td>
+                    <div class="card-title">Transaksi Kredit</div>
+                    <div class="card-value">{{ $report['data']['credit_transactions'] ?? 0 }}</div>
+                </td>
+            </tr>
+        </table>
 
-        <div class="section-title">Penjualan Berdasarkan Merek Motor</div>
+        <div class="section-title">PENJUALAN BERDASARKAN MEREK MOTOR</div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -184,23 +276,27 @@
         </table>
 
     @elseif($report['type'] === 'income')
-        <div class="section-title">Ringkasan Pendapatan</div>
-        <div class="summary-cards">
-            <div class="summary-card">
-                <h5>Total Pendapatan</h5>
-                <h3>Rp {{ number_format($report['data']['total_income'] ?? 0, 0, ',', '.') }}</h3>
-            </div>
-            <div class="summary-card">
-                <h5>Pendapatan Tunai</h5>
-                <h3>Rp {{ number_format($report['data']['cash_income'] ?? 0, 0, ',', '.') }}</h3>
-            </div>
-            <div class="summary-card">
-                <h5>Pendapatan Kredit</h5>
-                <h3>Rp {{ number_format($report['data']['credit_income'] ?? 0, 0, ',', '.') }}</h3>
-            </div>
-        </div>
+        <div class="section-title">RINGKASAN PENDAPATAN</div>
+        
+        <table class="summary-table">
+            <tr>
+                <td>
+                    <div class="card-title">Total Pendapatan</div>
+                    <div class="card-value">Rp {{ number_format($report['data']['total_income'] ?? 0, 0, ',', '.') }}</div>
+                </td>
+                <td>
+                    <div class="card-title">Pendapatan Tunai</div>
+                    <div class="card-value">Rp {{ number_format($report['data']['cash_income'] ?? 0, 0, ',', '.') }}</div>
+                </td>
+                <td>
+                    <div class="card-title">Pendapatan Kredit</div>
+                    <div class="card-value">Rp {{ number_format($report['data']['credit_income'] ?? 0, 0, ',', '.') }}</div>
+                </td>
+                <td></td>
+            </tr>
+        </table>
 
-        <div class="section-title">Pendapatan Berdasarkan Bulan</div>
+        <div class="section-title">PENDAPATAN BERDASARKAN BULAN</div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -227,19 +323,24 @@
         </table>
 
     @elseif($report['type'] === 'customer')
-        <div class="section-title">Ringkasan Pelanggan</div>
-        <div class="summary-cards">
-            <div class="summary-card">
-                <h5>Total Pelanggan</h5>
-                <h3>{{ $report['data']['total_customers'] ?? 0 }}</h3>
-            </div>
-            <div class="summary-card">
-                <h5>Pelanggan Baru</h5>
-                <h3>{{ $report['data']['new_customers'] ?? 0 }}</h3>
-            </div>
-        </div>
+        <div class="section-title">RINGKASAN PELANGGAN</div>
+        
+        <table class="summary-table">
+            <tr>
+                <td>
+                    <div class="card-title">Total Pelanggan</div>
+                    <div class="card-value">{{ $report['data']['total_customers'] ?? 0 }}</div>
+                </td>
+                <td>
+                    <div class="card-title">Pelanggan Baru</div>
+                    <div class="card-value">{{ $report['data']['new_customers'] ?? 0 }}</div>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
 
-        <div class="section-title">Pelanggan Teratas</div>
+        <div class="section-title">PELANGGAN TERATAS (TOP 10)</div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -266,15 +367,21 @@
         </table>
 
     @elseif($report['type'] === 'status')
-        <div class="section-title">Ringkasan Status Transaksi</div>
-        <div class="summary-cards">
-            <div class="summary-card">
-                <h5>Total Transaksi</h5>
-                <h3>{{ $report['data']['total_transactions'] ?? 0 }}</h3>
-            </div>
-        </div>
+        <div class="section-title">RINGKASAN STATUS TRANSAKSI</div>
+        
+        <table class="summary-table">
+            <tr>
+                <td>
+                    <div class="card-title">Total Transaksi</div>
+                    <div class="card-value">{{ $report['data']['total_transactions'] ?? 0 }}</div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
 
-        <div class="section-title">Transaksi Berdasarkan Status</div>
+        <div class="section-title">TRANSAKSI BERDASARKAN STATUS</div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -300,7 +407,7 @@
             </tbody>
         </table>
 
-        <div class="section-title">Transaksi Berdasarkan Jenis</div>
+        <div class="section-title">TRANSAKSI BERDASARKAN JENIS</div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -326,8 +433,9 @@
 
     @endif
 
-    <div class="footer">
-        <p>Laporan ini dicetak pada {{ now()->format('d M Y H:i') }}</p>
+    <div class="report-footer">
+        <p><strong>Laporan ini dicetak pada:</strong> {{ now()->format('d F Y, H:i') }} WIB</p>
+        <p>Dokumen ini dibuat secara otomatis oleh sistem SRB Motors</p>
     </div>
 </body>
 </html>
