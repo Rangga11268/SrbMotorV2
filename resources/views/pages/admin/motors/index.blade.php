@@ -144,34 +144,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle delete confirmations with SweetAlert2
-    document.querySelectorAll('form.delete-form').forEach(form => {
-        const submitBtn = form.querySelector('button.delete-btn');
-        if (submitBtn) {
-            submitBtn.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default form submission
-                
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Motor ini akan dihapus secara permanen!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit(); // Submit the form if confirmed
-                    }
-                });
-            });
-        }
-    });
-});
-</script>
-@endpush

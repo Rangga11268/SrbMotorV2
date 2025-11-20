@@ -64,7 +64,7 @@
                                         <form action="{{ route('admin.contact.destroy', ['contact' => $contact->id]) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pesan ini?')">
+                                            <button type="submit" class="btn btn-outline-danger delete-btn">
                                                 <i class="fas fa-trash me-2"></i>Hapus Pesan
                                             </button>
                                         </form>

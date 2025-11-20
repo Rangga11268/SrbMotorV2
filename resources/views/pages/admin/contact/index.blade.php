@@ -119,34 +119,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle contact message deletion with SweetAlert2
-    document.querySelectorAll('form.delete-contact-form').forEach(form => {
-        const submitBtn = form.querySelector('button.delete-contact-btn');
-        if (submitBtn) {
-            submitBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Pesan ini akan dihapus secara permanen!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        }
-    });
-});
-</script>
-@endpush

@@ -271,3 +271,38 @@
         });
     </script>
     @endif
+
+    <!-- Global SweetAlert2 Delete Confirmation -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle delete confirmations globally
+            document.body.addEventListener('click', function(e) {
+                // Check if the clicked element or its parent is a delete button
+                const deleteBtn = e.target.closest('.delete-btn') || e.target.closest('.delete-user-btn') || e.target.closest('.delete-contact-btn');
+                
+                if (deleteBtn) {
+                    e.preventDefault();
+                    
+                    // Find the form
+                    const form = deleteBtn.closest('form');
+                    
+                    if (form) {
+                        Swal.fire({
+                            title: 'Apakah Anda yakin?',
+                            text: "Data ini akan dihapus secara permanen!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, hapus!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    </script>

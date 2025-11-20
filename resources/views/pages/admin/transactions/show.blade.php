@@ -321,8 +321,7 @@
                     <form action="{{ route('admin.transactions.destroy', $transaction->id) }}" method="POST" class="mt-2">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger w-100" 
-                                onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?')">
+                        <button type="submit" class="btn btn-danger w-100 delete-btn">
                             <i class="fas fa-trash"></i> Hapus Transaksi
                         </button>
                     </form>
