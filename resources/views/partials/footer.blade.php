@@ -21,10 +21,10 @@
             <a href="{{ url('/') }}#popular-motors">
                 <i class="fas fa-arrow-right"></i> motor populer
             </a>
-            <a href="{{ url('/') }}#about-us">
+            <a href="{{ route('about') }}">
                 <i class="fas fa-arrow-right"></i> tentang kami
             </a>
-            <a href="{{ url('/') }}#motors-gallery">
+            <a href="{{ route('motors.index') }}">
                 <i class="fas fa-arrow-right"></i> galeri
             </a>
             <a href="{{ url('/') }}#tips-tricks">
