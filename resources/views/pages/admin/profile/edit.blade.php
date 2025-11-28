@@ -93,18 +93,18 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="password" class="form-label">Password Baru</label>
+                                    <label for="new_password" class="form-label">Password Baru</label>
                                     <div class="position-relative">
                                         <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                            id="password" name="password" required>
-                                        <span class="password-toggle" onclick="togglePassword('password', 'toggleNewIcon')">
+                                            id="new_password" name="password" required>
+                                        <span class="password-toggle" onclick="togglePassword('new_password', 'toggleNewIcon')">
                                             <i id="toggleNewIcon" class="fas fa-eye"></i>
                                         </span>
                                     </div>
                                     @error('password')
                                     <div class="text-danger mt-1"><small>{{ $message }}</small></div>
                                     @enderror
-                                    <small class="text-muted">Minimal 8 karakter</small>
+                                    <small class="text-muted d-block mt-1">Minimal 8 karakter</small>
                                 </div>
 
                                 <div class="mb-4">

@@ -1858,7 +1858,9 @@ section:first-of-type {
     cursor: pointer;
     color: var(--light-color);
     z-index: 10;
-    padding: 5px;
+    padding: 8px;
+    pointer-events: auto;
+    transition: all 0.3s ease;
 }
 
 .password-toggle:hover {
