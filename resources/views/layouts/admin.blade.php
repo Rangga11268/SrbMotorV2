@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id" data-bs-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,15 +12,15 @@
 
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    
+
     @vite(['resources/css/admin.css'])
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/icon/logo trans.png') }}" type="image/x-icon">
-    
+
     <!-- Set theme immediately to prevent flash -->
     <script>
         // Apply theme immediately to prevent flash of unstyled content
@@ -35,6 +36,7 @@
 
     @yield('styles')
 </head>
+
 <body>
     <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -45,7 +47,7 @@
             <img src="{{ asset('assets/icon/logo trans.png') }}" alt="Logo SRB Motors">
             <h4>SRB Admin</h4>
         </div>
-        
+
         <ul class="nav flex-column sidebar-nav">
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
@@ -94,7 +96,7 @@
                 <button class="btn btn-outline-secondary me-3 d-lg-none" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                
+
                 <div class="navbar-nav ms-auto d-flex align-items-center">
                     <div class="nav-item dropdown me-3">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -112,13 +114,18 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
+                                <a class="dropdown-item" href="{{ route('admin.profile.show') }}">
+                                    <i class="fas fa-user-circle me-2"></i>Profil Saya
+                                </a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item" href="{{ url('/') }}">
                                     <i class="fas fa-globe me-2"></i>Lihat Website
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                 </a>
                             </li>
@@ -151,10 +158,10 @@
     <!-- Include jQuery and SweetAlert2 from local files -->
     <script src="{{ asset('sweetalert/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('sweetalert/sweetalert2.all.min.js') }}"></script>
-    
+
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    
+
     @vite(['resources/js/app.js'])
 
     <!-- Admin JavaScript -->
@@ -163,33 +170,33 @@
         function setTheme(themeName) {
             localStorage.setItem('theme', themeName);
             document.documentElement.setAttribute('data-bs-theme', themeName);
-            
+
             // Update the theme immediately for this page
             document.documentElement.setAttribute('data-bs-theme', themeName);
         }
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('adminSidebar');
             const content = document.getElementById('adminContent');
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
-            
+
             // Toggle sidebar
             function toggleSidebar() {
                 sidebar.classList.toggle('collapsed');
                 content.classList.toggle('sidebar-collapsed');
             }
-            
+
             // Mobile sidebar toggle
             function toggleMobileSidebar() {
                 sidebar.classList.toggle('open');
                 sidebarOverlay.classList.toggle('open');
             }
-            
+
             // Event listeners for sidebar toggle
             sidebarToggle.addEventListener('click', function(e) {
                 e.preventDefault();
-                
+
                 // Check if we're on mobile view
                 if (window.innerWidth < 992) {
                     toggleMobileSidebar();
@@ -197,20 +204,20 @@
                     toggleSidebar();
                 }
             });
-            
+
             // Close sidebar when overlay is clicked on mobile
             sidebarOverlay.addEventListener('click', toggleMobileSidebar);
-            
+
             // Close sidebar when clicking outside on mobile
             document.addEventListener('click', function(event) {
-                if (window.innerWidth < 992 && 
-                    !sidebar.contains(event.target) && 
+                if (window.innerWidth < 992 &&
+                    !sidebar.contains(event.target) &&
                     !sidebarToggle.contains(event.target) &&
                     sidebar.classList.contains('open')) {
                     toggleMobileSidebar();
                 }
             });
-            
+
             // Handle window resize to adjust sidebar
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 992) {
@@ -222,14 +229,15 @@
     </script>
 
     @yield('scripts')
-    
+
     <!-- Show success/error messages as SweetAlert2 notifications -->
     @if(session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             Swal.fire({
                 title: 'Berhasil!',
-                text: '{{ session('success') }}',
+                text: '{{ session('
+                success ') }}',
                 icon: 'success',
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'OK'
@@ -243,7 +251,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             Swal.fire({
                 title: 'Kesalahan!',
-                text: '{{ session('error') }}',
+                text: '{{ session('
+                error ') }}',
                 icon: 'error',
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'Tutup'
@@ -251,16 +260,16 @@
         });
     </script>
     @endif
-    
+
     <!-- Show validation errors as SweetAlert2 notifications -->
     @if($errors->any())
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let errorMessages = '';
-            @foreach($errors->all() as $error)
-                errorMessages += '{{ $error }}<br>';
+            @foreach($errors -> all() as $error)
+            errorMessages += '{{ $error }}<br>';
             @endforeach
-            
+
             Swal.fire({
                 title: 'Kesalahan Validasi!',
                 html: errorMessages,
@@ -279,13 +288,13 @@
             document.body.addEventListener('click', function(e) {
                 // Check if the clicked element or its parent is a delete button
                 const deleteBtn = e.target.closest('.delete-btn') || e.target.closest('.delete-user-btn') || e.target.closest('.delete-contact-btn');
-                
+
                 if (deleteBtn) {
                     e.preventDefault();
-                    
+
                     // Find the form
                     const form = deleteBtn.closest('form');
-                    
+
                     if (form) {
                         Swal.fire({
                             title: 'Apakah Anda yakin?',
