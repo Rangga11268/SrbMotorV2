@@ -3,8 +3,8 @@
 @section('title', 'Detail Motor')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('admin.motors.index') }}">Motor</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Detail</li>
+<li class="breadcrumb-item"><a href="{{ route('admin.motors.index') }}">Motor</a></li>
+<li class="breadcrumb-item active" aria-current="page">Detail</li>
 @endsection
 
 @section('content')
@@ -18,7 +18,7 @@
             <i class="fas fa-arrow-left me-2"></i>Kembali ke Motor
         </a>
     </div>
-    
+
     <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
             <div class="card shadow-sm">
@@ -26,11 +26,11 @@
                     <div class="row">
                         <div class="col-12 col-md-5 mb-4 mb-md-0">
                             <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset('storage/' . $motor->image_path) }}" 
-                                     alt="{{ $motor->name }}" 
-                                     class="img-fluid rounded shadow-sm" 
-                                     style="max-height: 300px; object-fit: cover;">
-                                
+                                <img src="{{ $motor->image_url }}"
+                                    alt="{{ $motor->name }}"
+                                    class="img-fluid rounded shadow-sm"
+                                    style="max-height: 300px; object-fit: cover;">
+
                                 <div class="mt-3 text-center w-100">
                                     <h4 class="mb-1">{{ $motor->name }}</h4>
                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-12 col-md-7">
                             <h5 class="mb-3 pb-2 border-bottom d-md-none">Informasi Motor</h5>
                             <div class="row">
@@ -50,35 +50,35 @@
                                 <div class="col-6 mb-2">
                                     <p class="mb-0 fw-medium">{{ $motor->brand }}</p>
                                 </div>
-                                
+
                                 <div class="col-6 mb-2">
                                     <p class="text-muted mb-0">Model</p>
                                 </div>
                                 <div class="col-6 mb-2">
                                     <p class="mb-0 fw-medium">{{ $motor->model }}</p>
                                 </div>
-                                
+
                                 <div class="col-6 mb-2">
                                     <p class="text-muted mb-0">Tipe</p>
                                 </div>
                                 <div class="col-6 mb-2">
                                     <p class="mb-0 fw-medium">{{ $motor->type }}</p>
                                 </div>
-                                
+
                                 <div class="col-6 mb-2">
                                     <p class="text-muted mb-0">Tahun</p>
                                 </div>
                                 <div class="col-6 mb-2">
                                     <p class="mb-0 fw-medium">{{ $motor->year }}</p>
                                 </div>
-                                
+
                                 <div class="col-6 mb-2">
                                     <p class="text-muted mb-0">Harga</p>
                                 </div>
                                 <div class="col-6 mb-2">
                                     <p class="mb-0 fw-bold">Rp {{ number_format($motor->price, 0, ',', '.') }}</p>
                                 </div>
-                                
+
                                 @if($motor->details)
                                 <div class="col-6 mb-2">
                                     <p class="text-muted mb-0">Detail</p>
@@ -87,7 +87,7 @@
                                     <p class="mb-0 fw-medium">{{ Str::limit($motor->details, 50) }}</p>
                                 </div>
                                 @endif
-                                
+
                                 <div class="col-6 mb-2">
                                     <p class="text-muted mb-0">Dibuat Pada</p>
                                 </div>
@@ -97,23 +97,23 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     @if($motor->specifications && $motor->specifications->count() > 0)
                     <div class="mt-4 pt-4 border-top">
                         <h5 class="mb-3">Spesifikasi</h5>
                         <div class="row">
                             @foreach($motor->specifications as $spec)
-                                <div class="col-12 col-md-6 mb-2">
-                                    <span class="text-muted">
-                                        {{ formatSpecKey($spec->spec_key) }}
-                                    </span> 
-                                    <span class="fw-medium">{{ $spec->spec_value }}</span>
-                                </div>
+                            <div class="col-12 col-md-6 mb-2">
+                                <span class="text-muted">
+                                    {{ formatSpecKey($spec->spec_key) }}
+                                </span>
+                                <span class="fw-medium">{{ $spec->spec_value }}</span>
+                            </div>
                             @endforeach
                         </div>
                     </div>
                     @endif
-                    
+
                     <div class="d-flex flex-column flex-md-row justify-content-end gap-2 mt-5">
                         <a href="{{ route('admin.motors.index') }}" class="btn btn-outline-secondary w-100 w-md-auto">
                             <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar

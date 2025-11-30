@@ -30,15 +30,26 @@ class Document extends Model
     {
         return $this->belongsTo(CreditDetail::class);
     }
-    
+
+    /**
+     * Get the file URL.
+     */
+    public function getFileUrlAttribute()
+    {
+        if ($this->file_path) {
+            return Storage::disk('cloudinary')->url($this->file_path);
+        }
+        return '#';
+    }
+
     /**
      * Delete the file when the document is deleted
      */
     protected static function booted()
     {
         static::deleting(function ($document) {
-            if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
-                Storage::disk('public')->delete($document->file_path);
+            if ($document->file_path) {
+                Storage::disk('cloudinary')->delete($document->file_path);
             }
         });
     }

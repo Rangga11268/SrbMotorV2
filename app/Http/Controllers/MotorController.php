@@ -35,9 +35,9 @@ class MotorController extends Controller
         if (request('tersedia') !== null) {
             $filters['tersedia'] = request('tersedia');
         }
-        
+
         $motors = $this->motorRepository->getWithFilters($filters, true, 10);
-        
+
         return view('pages.admin.motors.index', compact('motors'));
     }
 
@@ -74,7 +74,7 @@ class MotorController extends Controller
             'details' => 'nullable|string',
         ]);
 
-        $imagePath = $request->file('image')->store('motors', 'public');
+        $imagePath = $request->file('image')->store('motors', 'cloudinary');
 
         $motor = Motor::create([
             'name' => $request->name,
@@ -165,19 +165,19 @@ class MotorController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image
             if ($motor->image_path) {
-                Storage::disk('public')->delete($motor->image_path);
+                Storage::disk('cloudinary')->delete($motor->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('motors', 'public');
+            $data['image_path'] = $request->file('image')->store('motors', 'cloudinary');
         }
 
         $motor->update($data);
 
         // Update specifications in the separate table
         $newSpecs = $request->input('specifications', []);
-        
+
         // Delete existing specifications
         $motor->specifications()->delete();
-        
+
         // Add new specifications
         if (!empty($newSpecs)) {
             foreach ($newSpecs as $key => $value) {
@@ -203,7 +203,7 @@ class MotorController extends Controller
     {
         // Delete the image file
         if ($motor->image_path) {
-            Storage::disk('public')->delete($motor->image_path);
+            Storage::disk('cloudinary')->delete($motor->image_path);
         }
 
         $motor->delete();

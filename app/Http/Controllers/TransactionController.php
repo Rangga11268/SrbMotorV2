@@ -26,7 +26,7 @@ class TransactionController extends Controller
         if ($request->has('type') && !empty($request->type)) {
             $query->where('transaction_type', $request->type);
         }
-        
+
         if ($request->has('status') && !empty($request->status)) {
             $query->where('status', $request->status);
         }
@@ -71,9 +71,18 @@ class TransactionController extends Controller
         ]);
 
         $transactionData = $request->only([
-            'user_id', 'motor_id', 'transaction_type', 'status', 'notes', 
-            'booking_fee', 'total_amount', 'payment_method', 'payment_status',
-            'customer_name', 'customer_phone', 'customer_occupation'
+            'user_id',
+            'motor_id',
+            'transaction_type',
+            'status',
+            'notes',
+            'booking_fee',
+            'total_amount',
+            'payment_method',
+            'payment_status',
+            'customer_name',
+            'customer_phone',
+            'customer_occupation'
         ]);
 
         $transaction = Transaction::create($transactionData);
@@ -100,7 +109,7 @@ class TransactionController extends Controller
         $users = User::all();
         $motors = Motor::all();
         $transaction->load('creditDetail');
-        
+
         return view('pages.admin.transactions.edit', compact('transaction', 'users', 'motors'));
     }
 
@@ -125,11 +134,20 @@ class TransactionController extends Controller
         ]);
 
         $transactionData = $request->only([
-            'user_id', 'motor_id', 'transaction_type', 'status', 'notes', 
-            'booking_fee', 'total_amount', 'payment_method', 'payment_status',
-            'customer_name', 'customer_phone', 'customer_occupation'
+            'user_id',
+            'motor_id',
+            'transaction_type',
+            'status',
+            'notes',
+            'booking_fee',
+            'total_amount',
+            'payment_method',
+            'payment_status',
+            'customer_name',
+            'customer_phone',
+            'customer_occupation'
         ]);
-        
+
         $transaction->update($transactionData);
 
         // Handle credit detail if this is a credit transaction
@@ -172,8 +190,8 @@ class TransactionController extends Controller
             if ($transaction->creditDetail->documents) {
                 foreach ($transaction->creditDetail->documents as $document) {
                     // Delete the physical file
-                    if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
-                        Storage::disk('public')->delete($document->file_path);
+                    if ($document->file_path) {
+                        Storage::disk('cloudinary')->delete($document->file_path);
                     }
                     $document->delete();
                 }
@@ -234,7 +252,10 @@ class TransactionController extends Controller
         $filename = time() . '_' . uniqid() . '.' . $extension;
 
         // Store the file in the public storage
-        $path = $file->storeAs('documents', $filename, 'public');
+        $path = $file->storeOnCloudinaryAs('documents', $filename)->getPublicId();
+        // Or just store('documents', 'cloudinary') if we want the path.
+        // Let's stick to store('documents', 'cloudinary') for consistency with MotorController.
+        $path = $file->store('documents', 'cloudinary');
 
         // Create the document record
         Document::create([
@@ -254,8 +275,9 @@ class TransactionController extends Controller
     public function deleteDocument(Document $document): RedirectResponse
     {
         // Delete the physical file
-        if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
-            Storage::disk('public')->delete($document->file_path);
+        // Delete the physical file
+        if ($document->file_path) {
+            Storage::disk('cloudinary')->delete($document->file_path);
         }
 
         // Delete the document record

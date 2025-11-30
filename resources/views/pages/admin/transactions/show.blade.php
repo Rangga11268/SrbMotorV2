@@ -148,44 +148,44 @@
                 <div class="card-body">
                     <!-- Show document status only for credit transactions -->
                     @if($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail && $transaction->creditDetail->hasRequiredDocuments())
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle"></i> Semua dokumen yang diperlukan telah diunggah
-                        </div>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> Semua dokumen yang diperlukan telah diunggah
+                    </div>
                     @elseif($transaction->transaction_type === 'CREDIT' && (!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments()))
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i> Dokumen yang diperlukan belum lengkap
-                        </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> Dokumen yang diperlukan belum lengkap
+                    </div>
                     @endif
 
                     <!-- Display existing documents -->
                     @if($transaction->creditDetail && $transaction->creditDetail->documents->count() > 0)
-                        <div class="row">
-                            @foreach($transaction->creditDetail->documents as $document)
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body d-flex flex-column text-center">
-                                        @if(pathinfo($document->file_path, PATHINFO_EXTENSION) === 'pdf')
-                                            <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
-                                        @else
-                                            <i class="fas fa-file-image fa-3x text-primary mb-3"></i>
-                                        @endif
-                                        <h6 class="card-title">{{ $document->document_type }}</h6>
-                                        <p class="card-text small text-muted flex-grow-1">{{ $document->original_name }}</p>
-                                        <div class="mt-auto d-grid gap-2">
-                                            <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-primary btn-sm">Lihat</a>
-                                            <form action="{{ route('admin.transactions.delete-document', $document->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm w-100 delete-btn">Hapus</button>
-                                            </form>
-                                        </div>
+                    <div class="row">
+                        @foreach($transaction->creditDetail->documents as $document)
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex flex-column text-center">
+                                    @if(pathinfo($document->file_path, PATHINFO_EXTENSION) === 'pdf')
+                                    <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                    @else
+                                    <i class="fas fa-file-image fa-3x text-primary mb-3"></i>
+                                    @endif
+                                    <h6 class="card-title">{{ $document->document_type }}</h6>
+                                    <p class="card-text small text-muted flex-grow-1">{{ $document->original_name }}</p>
+                                    <div class="mt-auto d-grid gap-2">
+                                        <a href="{{ $document->file_url }}" target="_blank" class="btn btn-primary btn-sm">Lihat</a>
+                                        <form action="{{ route('admin.transactions.delete-document', $document->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm w-100 delete-btn">Hapus</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                            @endforeach
                         </div>
+                        @endforeach
+                    </div>
                     @else
-                        <p class="text-muted text-center">Belum ada dokumen yang diunggah</p>
+                    <p class="text-muted text-center">Belum ada dokumen yang diunggah</p>
                     @endif
 
                     <!-- Document Upload Form (available for both cash and credit transactions) -->
@@ -244,10 +244,10 @@
                     <h6 class="m-0 font-weight-bold text-primary">Informasi Motor</h6>
                 </div>
                 <div class="card-body text-center">
-                    <img src="{{ asset('storage/' . $transaction->motor->image_path) }}" 
-                         alt="{{ $transaction->motor->name }}" 
-                         class="img-fluid rounded mb-3" 
-                         style="max-height: 200px;">
+                    <img src="{{ $transaction->motor->image_url }}"
+                        alt="{{ $transaction->motor->name }}"
+                        class="img-fluid rounded mb-3"
+                        style="max-height: 200px;">
                     <h5>{{ $transaction->motor->name }}</h5>
                     <p class="text-muted">{{ $transaction->motor->brand }} {{ $transaction->motor->model }}</p>
                     <p class="fw-bold text-primary">Rp {{ number_format($transaction->motor->price, 0, ',', '.') }}</p>
@@ -261,14 +261,14 @@
                 </div>
                 <div class="card-body">
                     @if($transaction->transaction_type === 'CREDIT')
-                        @if(!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments())
-                            <div class="alert alert-warning">
-                                <i class="fas fa-exclamation-triangle"></i> Dokumen pelanggan belum lengkap.
-                                Tidak dapat melanjutkan ke proses surveyor sebelum dokumen lengkap.
-                            </div>
-                        @endif
+                    @if(!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments())
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> Dokumen pelanggan belum lengkap.
+                        Tidak dapat melanjutkan ke proses surveyor sebelum dokumen lengkap.
+                    </div>
                     @endif
-                    
+                    @endif
+
                     <form action="{{ route('admin.transactions.updateStatus', $transaction->id) }}" method="POST">
                         @csrf
                         @method('POST')
@@ -276,19 +276,19 @@
                             <label for="status" class="form-label">Status Transaksi</label>
                             <select name="status" id="status" class="form-control" required>
                                 @if($transaction->transaction_type === 'CASH')
-                                    <option value="new_order" {{ $transaction->status === 'new_order' ? 'selected' : '' }}>Pesanan Baru</option>
-                                    <option value="waiting_payment" {{ $transaction->status === 'waiting_payment' ? 'selected' : '' }}>Menunggu Pembayaran</option>
-                                    <option value="payment_confirmed" {{ $transaction->status === 'payment_confirmed' ? 'selected' : '' }}>Pembayaran Dikonfirmasi</option>
-                                    <option value="unit_preparation" {{ $transaction->status === 'unit_preparation' ? 'selected' : '' }}>Persiapan Unit</option>
-                                    <option value="ready_for_delivery" {{ $transaction->status === 'ready_for_delivery' ? 'selected' : '' }}>Siap Dikirim</option>
-                                    <option value="completed" {{ $transaction->status === 'completed' ? 'selected' : '' }}>Selesai</option>
+                                <option value="new_order" {{ $transaction->status === 'new_order' ? 'selected' : '' }}>Pesanan Baru</option>
+                                <option value="waiting_payment" {{ $transaction->status === 'waiting_payment' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                                <option value="payment_confirmed" {{ $transaction->status === 'payment_confirmed' ? 'selected' : '' }}>Pembayaran Dikonfirmasi</option>
+                                <option value="unit_preparation" {{ $transaction->status === 'unit_preparation' ? 'selected' : '' }}>Persiapan Unit</option>
+                                <option value="ready_for_delivery" {{ $transaction->status === 'ready_for_delivery' ? 'selected' : '' }}>Siap Dikirim</option>
+                                <option value="completed" {{ $transaction->status === 'completed' ? 'selected' : '' }}>Selesai</option>
                                 @else
-                                    <option value="menunggu_persetujuan" {{ $transaction->status === 'menunggu_persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
-                                    <option value="data_tidak_valid" {{ $transaction->status === 'data_tidak_valid' ? 'selected' : '' }}>Data Tidak Valid</option>
-                                    <option value="dikirim_ke_surveyor" {{ $transaction->status === 'dikirim_ke_surveyor' ? 'selected' : '' }} @if(!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments()) disabled @endif>Dikirim ke Surveyor</option>
-                                    <option value="jadwal_survey" {{ $transaction->status === 'jadwal_survey' ? 'selected' : '' }}>Jadwal Survey</option>
-                                    <option value="disetujui" {{ $transaction->status === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
-                                    <option value="ditolak" {{ $transaction->status === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                                <option value="menunggu_persetujuan" {{ $transaction->status === 'menunggu_persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                <option value="data_tidak_valid" {{ $transaction->status === 'data_tidak_valid' ? 'selected' : '' }}>Data Tidak Valid</option>
+                                <option value="dikirim_ke_surveyor" {{ $transaction->status === 'dikirim_ke_surveyor' ? 'selected' : '' }} @if(!$transaction->creditDetail || !$transaction->creditDetail->hasRequiredDocuments()) disabled @endif>Dikirim ke Surveyor</option>
+                                <option value="jadwal_survey" {{ $transaction->status === 'jadwal_survey' ? 'selected' : '' }}>Jadwal Survey</option>
+                                <option value="disetujui" {{ $transaction->status === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                <option value="ditolak" {{ $transaction->status === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
                                 @endif
                             </select>
                         </div>
@@ -310,13 +310,13 @@
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </a>
                     @if($transaction->transaction_type === 'CASH')
-                        <a href="{{ route('admin.transactions.invoice.download', $transaction->id) }}" class="btn btn-secondary w-100 mb-2">
-                            <i class="fas fa-file-invoice"></i> Cetak Invoice
-                        </a>
+                    <a href="{{ route('admin.transactions.invoice.download', $transaction->id) }}" class="btn btn-secondary w-100 mb-2">
+                        <i class="fas fa-file-invoice"></i> Cetak Invoice
+                    </a>
                     @else
-                        <a href="{{ route('admin.transactions.edit', $transaction->id) }}" class="btn btn-warning w-100 mb-2">
-                            <i class="fas fa-edit"></i> Edit Detail Kredit
-                        </a>
+                    <a href="{{ route('admin.transactions.edit', $transaction->id) }}" class="btn btn-warning w-100 mb-2">
+                        <i class="fas fa-edit"></i> Edit Detail Kredit
+                    </a>
                     @endif
                     <form action="{{ route('admin.transactions.destroy', $transaction->id) }}" method="POST" class="mt-2">
                         @csrf

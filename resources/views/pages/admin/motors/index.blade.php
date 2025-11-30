@@ -3,7 +3,7 @@
 @section('title', 'Motor')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page">Motor</li>
+<li class="breadcrumb-item active" aria-current="page">Motor</li>
 @endsection
 
 @section('content')
@@ -17,7 +17,7 @@
             <i class="fas fa-plus me-2"></i>Tambah Motor Baru
         </a>
     </div>
-    
+
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form method="GET" class="row g-3">
@@ -25,7 +25,7 @@
                     <label for="search" class="form-label">Cari Motor</label>
                     <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nama, merek atau tipe..." value="{{ request('search') }}">
                 </div>
-                
+
                 <div class="col-6 col-md-2">
                     <label for="tersedia" class="form-label">Ketersediaan</label>
                     <select name="tersedia" class="form-select" onchange="this.form.submit()">
@@ -34,7 +34,7 @@
                         <option value="0" {{ request('tersedia') == '0' ? 'selected' : '' }}>Tidak Tersedia</option>
                     </select>
                 </div>
-                
+
                 <div class="col-6 col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-outline-primary w-100">
                         <i class="fas fa-search me-1"></i> Cari
@@ -48,7 +48,7 @@
             </form>
         </div>
     </div>
-    
+
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -71,10 +71,10 @@
                             <td>{{ $motors->firstItem() + $index }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $motor->image_path ? asset('storage/' . $motor->image_path) : asset('assets/icon/logo trans.png') }}" 
-                                         alt="{{ $motor->name }}" 
-                                         class="rounded me-2 me-md-3" 
-                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                    <img src="{{ $motor->image_url }}"
+                                        alt="{{ $motor->name }}"
+                                        class="rounded me-2 me-md-3"
+                                        style="width: 40px; height: 40px; object-fit: cover;">
                                     <div>
                                         <span class="fw-medium d-block d-md-inline">{{ $motor->name }}</span>
                                         <span class="d-md-none d-block text-muted small">Rp {{ number_format($motor->price, 0, ',', '.') }}</span>
@@ -92,9 +92,9 @@
                             </td>
                             <td class="d-none d-xl-table-cell">
                                 @if($motor->tersedia)
-                                    <span class="badge bg-success">Tersedia</span>
+                                <span class="badge bg-success">Tersedia</span>
                                 @else
-                                    <span class="badge bg-danger">Tidak Tersedia</span>
+                                <span class="badge bg-danger">Tidak Tersedia</span>
                                 @endif
                             </td>
                             <td>
@@ -129,7 +129,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             @if(method_exists($motors, 'hasPages') && $motors->hasPages())
             <div class="card-footer bg-white">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
