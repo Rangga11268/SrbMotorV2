@@ -15,7 +15,7 @@
     "outputDirectory": "public",
     "env": {
         "APP_ENV": "production",
-        "APP_DEBUG": "false",
+        "APP_DEBUG": "true",
         "APP_URL": "https://${VERCEL_URL}",
         "APP_KEY": "base64:efPDsFxlD5T4yJQzKosMnr84FTzGxjb3y1Lxu9rWRO0=",
         "APP_CONFIG_CACHE": "/tmp/config.php",
