@@ -15,8 +15,8 @@
     ],
     "public": true,
     "buildCommand": "vite build",
-    "outputDirectory": "public",
     "env": {
+        "ASSET_URL": "/",
         "APP_ENV": "production",
         "APP_DEBUG": "true",
         "APP_URL": "https://${VERCEL_URL}",
