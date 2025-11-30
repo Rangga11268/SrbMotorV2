@@ -1,7 +1,0 @@
-/vendor
-/node_modules
-/public/storage
-/storage/*.key
-/tests
-/phpunit.xml
-.git

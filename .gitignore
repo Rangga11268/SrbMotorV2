@@ -23,3 +23,7 @@ Thumbs.db
 
 .vercel
 
+
+.env
+.env.backup
+.env.production
