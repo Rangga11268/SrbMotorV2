@@ -62,7 +62,7 @@
         <div class="swiper-wrapper">
             @foreach ($popularMotors as $motor)
             <div class="swiper-slide box">
-                <img src="{{ $motor->image_url }}" alt="{{ $motor->name }}" />
+                <img src="{{ asset('storage/' . $motor->image_path) }}" alt="{{ $motor->name }}" />
                 <div class="content">
                     <h3>{{ $motor->name }}</h3>
                     <div class="price"><span>Harga : </span> Rp. {{ number_format($motor->price, 0, ',', '.') }},-

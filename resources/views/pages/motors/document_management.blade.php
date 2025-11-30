@@ -433,7 +433,7 @@
                             <div class="col-md-12">
                                 <div class="card motor-card h-100 shadow-sm">
                                     <div class="image-container">
-                                        <img src="{{ $transaction->motor->image_url }}"
+                                        <img src="{{ asset('storage/' . $transaction->motor->image_path) }}"
                                             class="card-img-top" alt="{{ $transaction->motor->name }}"
                                             style="height: 250px; object-fit: cover;">
                                     </div>
@@ -508,7 +508,7 @@
                                                         <i class="fas fa-file-pdf"></i>
                                                     </div>
                                                     <div class="doc-name">{{ $doc->original_name }}</div>
-                                                    <a href="{{ $doc->file_url }}"
+                                                    <a href="{{ asset('storage/' . $doc->file_path) }}"
                                                         target="_blank"
                                                         class="btn btn-outline-document btn-sm w-100">
                                                         <i class="fas fa-eye me-1"></i>Lihat

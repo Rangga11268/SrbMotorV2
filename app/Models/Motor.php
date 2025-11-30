@@ -61,17 +61,6 @@ class Motor extends Model
     }
 
     /**
-     * Get the image URL.
-     */
-    public function getImageUrlAttribute()
-    {
-        if ($this->image_path) {
-            return Storage::disk('cloudinary')->url($this->image_path);
-        }
-        return asset('assets/icon/logo trans.png');
-    }
-
-    /**
      * Delete the image file when the motor is deleted
      */
     protected static function booted()
@@ -79,7 +68,15 @@ class Motor extends Model
         static::deleting(function ($motor) {
             // Delete the motor's image if it exists using the storage system
             if ($motor->image_path) {
-                Storage::disk('cloudinary')->delete($motor->image_path);
+                if (str_starts_with($motor->image_path, 'storage/')) {
+                    // If the path starts with 'storage/', it's a public disk file
+                    Storage::disk('public')->delete(str_replace('storage/', '', $motor->image_path));
+                } else {
+                    // Otherwise check if it's a public path
+                    if (file_exists(public_path($motor->image_path))) {
+                        unlink(public_path($motor->image_path));
+                    }
+                }
             }
 
             // Delete all associated specifications

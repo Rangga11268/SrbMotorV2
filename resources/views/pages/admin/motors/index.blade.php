@@ -71,7 +71,7 @@
                             <td>{{ $motors->firstItem() + $index }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $motor->image_url }}"
+                                    <img src="{{ $motor->image_path ? asset('storage/' . $motor->image_path) : asset('assets/icon/logo trans.png') }}"
                                         alt="{{ $motor->name }}"
                                         class="rounded me-2 me-md-3"
                                         style="width: 40px; height: 40px; object-fit: cover;">

@@ -172,7 +172,7 @@
                                     <h6 class="card-title">{{ $document->document_type }}</h6>
                                     <p class="card-text small text-muted flex-grow-1">{{ $document->original_name }}</p>
                                     <div class="mt-auto d-grid gap-2">
-                                        <a href="{{ $document->file_url }}" target="_blank" class="btn btn-primary btn-sm">Lihat</a>
+                                        <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-primary btn-sm">Lihat</a>
                                         <form action="{{ route('admin.transactions.delete-document', $document->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -244,7 +244,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Informasi Motor</h6>
                 </div>
                 <div class="card-body text-center">
-                    <img src="{{ $transaction->motor->image_url }}"
+                    <img src="{{ asset('storage/' . $transaction->motor->image_path) }}"
                         alt="{{ $transaction->motor->name }}"
                         class="img-fluid rounded mb-3"
                         style="max-height: 200px;">

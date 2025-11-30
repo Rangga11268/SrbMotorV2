@@ -288,8 +288,7 @@
                             <div class="col-md-12">
                                 <div class="card motor-card h-100 shadow-sm">
                                     <div class="image-container">
-                                        <img src="{{ $motor->image_url }}"
-                                            class="card-img-top"
+                                        <img src="{{ asset('storage/' . $motor->image_path) }}" class="img-fluid rounded shadow-sm card-img-top"
                                             alt="{{ $motor->name }}"
                                             style="height: 250px; object-fit: cover;">
                                     </div>

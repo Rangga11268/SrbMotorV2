@@ -183,7 +183,7 @@ use Illuminate\Support\Str;
                         <a href="{{ route('admin.motors.show', $motor) }}" class="list-group-item list-group-item-action">
                             <div class="d-flex align-items-center">
                                 <div class="shrink-0 me-3">
-                                    <img src="{{ $motor->image_url }}"
+                                    <img src="{{ $motor->image_path ? asset('storage/' . $motor->image_path) : asset('assets/icon/logo trans.png') }}"
                                         alt="{{ $motor->name }}"
                                         class="rounded"
                                         style="width: 50px; height: 50px; object-fit: cover;">

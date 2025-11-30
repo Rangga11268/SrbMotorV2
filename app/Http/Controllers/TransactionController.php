@@ -190,8 +190,8 @@ class TransactionController extends Controller
             if ($transaction->creditDetail->documents) {
                 foreach ($transaction->creditDetail->documents as $document) {
                     // Delete the physical file
-                    if ($document->file_path) {
-                        Storage::disk('cloudinary')->delete($document->file_path);
+                    if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
+                        Storage::disk('public')->delete($document->file_path);
                     }
                     $document->delete();
                 }
@@ -252,10 +252,7 @@ class TransactionController extends Controller
         $filename = time() . '_' . uniqid() . '.' . $extension;
 
         // Store the file in the public storage
-        $path = $file->storeOnCloudinaryAs('documents', $filename)->getPublicId();
-        // Or just store('documents', 'cloudinary') if we want the path.
-        // Let's stick to store('documents', 'cloudinary') for consistency with MotorController.
-        $path = $file->store('documents', 'cloudinary');
+        $path = $file->storeAs('documents', $filename, 'public');
 
         // Create the document record
         Document::create([
@@ -276,8 +273,8 @@ class TransactionController extends Controller
     {
         // Delete the physical file
         // Delete the physical file
-        if ($document->file_path) {
-            Storage::disk('cloudinary')->delete($document->file_path);
+        if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
+            Storage::disk('public')->delete($document->file_path);
         }
 
         // Delete the document record

@@ -14,7 +14,7 @@
                 <div class="col-lg-6 col-md-12">
                     <div class="main-image-container p-4">
                         <img
-                            src="{{ $motor->image_url }}"
+                            src="{{ asset('storage/' . $motor->image_path) }}"
                             class="img-fluid main-motor-image w-100 rounded"
                             alt="{{ $motor->name }}"
                             style="object-fit: cover; max-height: 400px;">
@@ -197,7 +197,7 @@
                     <div class="card motor-card h-100 shadow-sm border-0 {{ !$relatedMotor->tersedia ? 'unavailable-card' : '' }}">
                         <div class="image-container position-relative">
                             <img
-                                src="{{ $relatedMotor->image_url }}"
+                                src="{{ asset('storage/' . $relatedMotor->image_path) }}"
                                 class="card-img-top img-fluid"
                                 alt="{{ $relatedMotor->name }}"
                                 style="height: 180px; object-fit: cover;">

@@ -11,13 +11,6 @@
       0 => 'Barryvdh\\DomPDF\\ServiceProvider',
     ),
   ),
-  'cloudinary-labs/cloudinary-laravel' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'CloudinaryLabs\\CloudinaryLaravel\\CloudinaryServiceProvider',
-    ),
-  ),
   'laravel/pail' => 
   array (
     'providers' => 

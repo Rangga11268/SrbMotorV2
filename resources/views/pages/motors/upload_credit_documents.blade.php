@@ -347,7 +347,7 @@
                             <div class="col-md-12">
                                 <div class="card motor-card h-100 shadow-sm">
                                     <div class="image-container">
-                                        <img src="{{ $transaction->motor->image_url }}"
+                                        <img src="{{ asset('storage/' . $transaction->motor->image_path) }}"
                                             class="card-img-top" alt="{{ $transaction->motor->name }}"
                                             style="height: 250px; object-fit: cover;">
                                     </div>

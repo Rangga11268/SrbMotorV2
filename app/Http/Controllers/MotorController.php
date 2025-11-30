@@ -74,7 +74,7 @@ class MotorController extends Controller
             'details' => 'nullable|string',
         ]);
 
-        $imagePath = $request->file('image')->store('motors', 'cloudinary');
+        $imagePath = $request->file('image')->store('motors', 'public');
 
         $motor = Motor::create([
             'name' => $request->name,
@@ -165,9 +165,9 @@ class MotorController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image
             if ($motor->image_path) {
-                Storage::disk('cloudinary')->delete($motor->image_path);
+                Storage::disk('public')->delete($motor->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('motors', 'cloudinary');
+            $data['image_path'] = $request->file('image')->store('motors', 'public');
         }
 
         $motor->update($data);
@@ -203,7 +203,7 @@ class MotorController extends Controller
     {
         // Delete the image file
         if ($motor->image_path) {
-            Storage::disk('cloudinary')->delete($motor->image_path);
+            Storage::disk('public')->delete($motor->image_path);
         }
 
         $motor->delete();

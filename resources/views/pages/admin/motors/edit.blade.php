@@ -195,7 +195,7 @@
                         <div class="mb-4">
                             <label class="form-label">Gambar Saat Ini</label>
                             <div class="border rounded p-2 bg-light">
-                                <img src="{{ $motor->image_url }}" alt="Current" class="img-fluid rounded" style="max-height: 200px;">
+                                <img src="{{ asset('storage/' . $motor->image_path) }}" alt="Current" class="img-fluid rounded" style="max-height: 200px;">
                             </div>
                         </div>
                         @endif

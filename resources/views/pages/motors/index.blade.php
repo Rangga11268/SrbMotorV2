@@ -89,7 +89,7 @@
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                 <div class="card motor-card h-100 shadow-sm border-0 {{ !$motor->tersedia ? 'unavailable-card' : '' }}">
                     <div class="image-container position-relative">
-                        <img src="{{ $motor->image_url }}" class="card-img-top img-fluid"
+                        <img src="{{ asset('storage/' . $motor->image_path) }}" class="card-img-top img-fluid"
                             alt="{{ $motor->name }}" style="height: 200px; object-fit: cover;">
                         <div class="badge brand-badge position-absolute top-0 start-0 m-2 bg-primary">
                             {{ $motor->brand }}

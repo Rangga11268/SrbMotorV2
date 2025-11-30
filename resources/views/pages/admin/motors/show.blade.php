@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-12 col-md-5 mb-4 mb-md-0">
                             <div class="d-flex flex-column align-items-center">
-                                <img src="{{ $motor->image_url }}"
+                                <img src="{{ asset('storage/' . $motor->image_path) }}"
                                     alt="{{ $motor->name }}"
                                     class="img-fluid rounded shadow-sm"
                                     style="max-height: 300px; object-fit: cover;">
