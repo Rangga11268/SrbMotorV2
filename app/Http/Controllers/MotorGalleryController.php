@@ -147,10 +147,15 @@ class MotorGalleryController extends Controller
             'customer_occupation' => 'required|string|max:255',
             'down_payment' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1',
-            'monthly_installment' => 'required|numeric|min:0',
+            // 'monthly_installment' is calculated server-side, so we don't need to validate the input value
             'notes' => 'nullable|string',
             'payment_method' => 'required|string',
         ]);
+
+        // Ensure down payment is less than motor price
+        if ($request->down_payment >= $motor->price) {
+            return back()->withErrors(['down_payment' => 'Uang muka tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
+        }
         
         // Create the transaction
         $transaction = Transaction::create([
@@ -167,12 +172,16 @@ class MotorGalleryController extends Controller
             'customer_occupation' => $request->customer_occupation,
         ]);
         
+        // Calculate monthly installment server-side to prevent manipulation
+        $loanAmount = $motor->price - $request->down_payment;
+        $monthlyInstallment = $loanAmount / $request->tenor;
+        
         // Create credit details
         CreditDetail::create([
             'transaction_id' => $transaction->id,
             'down_payment' => $request->down_payment,
             'tenor' => $request->tenor,
-            'monthly_installment' => $request->monthly_installment,
+            'monthly_installment' => $monthlyInstallment,
             'credit_status' => 'menunggu_persetujuan', // Initially pending but waiting for documents
         ]);
         
