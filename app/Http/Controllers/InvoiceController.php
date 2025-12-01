@@ -21,7 +21,8 @@ class InvoiceController extends Controller
         // Generate the PDF
         $pdf = Pdf::loadView('pages.admin.invoices.invoice', [
             'transaction' => $transaction,
-            'logo_path' => public_path('images/icon/logo trans.png')
+            'logo_path' => public_path('images/icon/logo trans.png'),
+            'isPdf' => true
         ]);
 
         // Set the filename with a prefix and the transaction ID
@@ -40,7 +41,8 @@ class InvoiceController extends Controller
 
         return view('pages.admin.invoices.invoice', [
             'transaction' => $transaction,
-            'logo_path' => asset('images/icon/logo trans.png')
+            'logo_path' => asset('images/icon/logo trans.png'),
+            'isPdf' => false
         ]);
     }
 }

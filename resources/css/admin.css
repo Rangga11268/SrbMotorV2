@@ -313,7 +313,7 @@
 .admin-card {
     border: none !important;
     border-radius: 12px !important;
-    overflow: hidden;
+    /* overflow: hidden; Removed to allow table scroll */
     transition: var(--admin-transition);
     box-shadow: var(--admin-shadow) !important;
     background: var(--admin-card-bg);
@@ -407,12 +407,14 @@
     border-top: 0 !important;
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
+    white-space: nowrap;
 }
 
 .admin-table td {
     vertical-align: middle !important;
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
+    white-space: nowrap;
 }
 
 .admin-table tr {
@@ -430,6 +432,39 @@
 .admin-table .table-action .btn {
     padding: 0.375rem 0.75rem;
     margin: 0 0.25rem;
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    padding-bottom: 5px; /* Space for scrollbar */
+}
+
+/* Custom scrollbar for table */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.admin-table {
+    min-width: 1000px; /* Force table to be wide enough to scroll */
 }
 
 .admin-table img {
@@ -939,5 +974,265 @@
     .nav-tabs .nav-link {
         padding: 0.75rem 1rem;
         font-size: 0.9rem;
+    }
+}
+
+/* Invoice Page Styles */
+
+.invoice-page-body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.invoice-box {
+    max-width: 650px;
+    margin: 2px auto;
+    padding: 8px;
+    border: 1px solid #eee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    background: #fff;
+    font-size: 11px;
+    line-height: 13px;
+    color: #555;
+}
+
+.invoice-box table {
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.invoice-box table td {
+    padding: 2px;
+    vertical-align: top;
+}
+
+.invoice-box table tr td:nth-child(2) {
+    text-align: right;
+}
+
+.invoice-box table tr.top table td {
+    padding-bottom: 5px;
+}
+
+.invoice-box table tr.top table td.title {
+    font-size: 28px;
+    line-height: 28px;
+    color: #333;
+}
+
+.invoice-box table tr.information table td {
+    padding: 2px;
+    border-bottom: 2px solid #043680;
+}
+
+.invoice-box table tr.heading td {
+    background: #043680;
+    color: #fff;
+    font-weight: bold;
+    padding: 2px;
+}
+
+.invoice-box table tr.details td {
+    padding: 2px;
+}
+
+.invoice-box table tr.item td {
+    border-bottom: 1px solid #eee;
+    padding: 2px;
+}
+
+.invoice-box table tr.item.last td {
+    border-bottom: none;
+}
+
+.invoice-box table tr.total td:nth-child(2) {
+    border-top: 2px solid #043680;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 3px 2px;
+}
+
+.invoice-title {
+    text-align: center;
+    margin: 0 0 3px 0;
+    color: #043680;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.invoice-subtitle {
+    text-align: center;
+    margin: 0 0 5px 0;
+    color: #666;
+    font-size: 13px;
+}
+
+.section-title {
+    background-color: #043680;
+    color: white;
+    padding: 2px 5px;
+    margin: 6px 0 4px 0;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.company-info {
+    margin-bottom: 6px;
+}
+
+.invoice-details {
+    margin-bottom: 10px;
+}
+
+.customer-info,
+.transaction-info {
+    padding: 3px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.customer-info h3,
+.transaction-info h3 {
+    margin: 0 0 2px 0;
+    color: #043680;
+    border-bottom: 1px solid #eee;
+    padding: 2px 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.info-table th,
+.info-table td {
+    padding: 2px 5px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.info-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    width: 40%;
+}
+
+.item {
+    padding: 2px;
+}
+
+.watermark {
+    position: relative;
+}
+
+.watermark::before {
+    content: "INVOICE";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    opacity: 0.05;
+    font-size: 80px;
+    font-weight: bold;
+    color: #043680;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+}
+
+.footer {
+    margin-top: 10px;
+    text-align: center;
+    padding-top: 6px;
+    border-top: 1px solid #eee;
+    color: #666;
+    font-size: 9px;
+}
+
+.signature-section {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.signature-box {
+    width: 45%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.signature-line {
+    border-top: 1px solid #000;
+    padding-top: 2px;
+    margin-top: 8px;
+    font-size: 9px;
+}
+
+@media print {
+    .invoice-page-body {
+        background-color: #fff;
+    }
+
+    .invoice-box {
+        box-shadow: none;
+        margin: 0;
+        padding: 8px;
+        max-width: 100%;
+    }
+
+    .watermark::before {
+        opacity: 0.03;
+    }
+
+    /* Ensure the invoice fits on one page when printing */
+    .invoice-details {
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .invoice-box table tr.top table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    .invoice-box table tr.information table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    .invoice-details {
+        flex-direction: column;
+    }
+
+    .customer-info,
+    .transaction-info {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .signature-section {
+        flex-direction: column;
+    }
+
+    .signature-box {
+        width: 100%;
+        margin-bottom: 15px;
     }
 }

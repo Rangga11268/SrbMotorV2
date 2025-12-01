@@ -61,8 +61,8 @@
     <!-- Transactions Table -->
     <div class="card admin-card">
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table admin-table table-hover mb-0">
+            <div class="table-responsive" style="width: 100%; display: block; overflow-x: auto !important; -webkit-overflow-scrolling: touch;">
+                <table class="table admin-table table-hover mb-0" style="min-width: 1000px;">
                     <thead class="table-light">
                         <tr>
                             <th class="border-top-0" style="width: 5%;">ID</th>
