@@ -306,7 +306,14 @@
                     <a href="mailto:{{ $transaction->user->email }}" class="btn btn-info w-100 mb-2">
                         <i class="fas fa-envelope"></i> Email Pelanggan
                     </a>
-                    <a href="https://wa.me/{{ preg_replace('/^0/', '62', $transaction->user->phone_number) }}" target="_blank" class="btn btn-success w-100 mb-2">
+                    @php
+                        $phoneNumber = $transaction->customer_phone ?: $transaction->user->phone_number;
+                        // Remove non-numeric characters
+                        $cleanNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+                        // Replace leading 0 with 62
+                        $waNumber = preg_replace('/^0/', '62', $cleanNumber);
+                    @endphp
+                    <a href="https://wa.me/{{ $waNumber }}" target="_blank" class="btn btn-success w-100 mb-2">
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </a>
                     @if($transaction->transaction_type === 'CASH')
