@@ -27,6 +27,12 @@ html {
     scroll-behavior: smooth;
 }
 
+@media (min-width: 1200px) {
+    html {
+        font-size: 65%; /* Meningkatkan ukuran dasar menjadi ~12px */
+    }
+}
+
 section {
     padding: 2rem 9%;
 }

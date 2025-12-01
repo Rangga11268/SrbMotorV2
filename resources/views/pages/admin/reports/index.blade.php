@@ -62,13 +62,13 @@
             <div class="card stats-card bg-warning text-white h-100">
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="stats-icon bg-warning bg-opacity-20 text-dark">
+                        <div class="stats-icon bg-warning bg-opacity-20 text-light">
                             <i class="fas fa-file-alt fa-2x"></i>
                         </div>
                     </div>
                     <h5 class="card-title text-white">Laporan Status</h5>
                     <p class="card-text flex-grow-1">Laporan status transaksi, jumlah penjualan dan pendapatan berdasarkan status.</p>
-                    <a href="{{ route('admin.reports.create') }}?type=status" class="btn btn-dark text-warning admin-btn mt-auto">Buat Laporan</a>
+                    <a href="{{ route('admin.reports.create') }}?type=status" class="btn btn-light text-warning admin-btn mt-auto">Buat Laporan</a>
                 </div>
             </div>
         </div>
