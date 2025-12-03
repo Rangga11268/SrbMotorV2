@@ -100,7 +100,7 @@
                 <div class="navbar-nav ms-auto d-flex align-items-center">
                     <div class="nav-item dropdown me-3">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-moon me-2"></i>
+                            <i class="fas fa-moon me-2" id="theme-icon"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#" onclick="setTheme('light')"><i class="fas fa-sun me-2"></i>Light Mode</a></li>
@@ -169,13 +169,40 @@
         // Theme management
         function setTheme(themeName) {
             localStorage.setItem('theme', themeName);
-            document.documentElement.setAttribute('data-bs-theme', themeName);
+            
+            if (themeName === 'auto') {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', 'light');
+                }
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', themeName);
+            }
 
-            // Update the theme immediately for this page
-            document.documentElement.setAttribute('data-bs-theme', themeName);
+            updateThemeIcon(themeName);
+        }
+
+        function updateThemeIcon(themeName) {
+            const icon = document.getElementById('theme-icon');
+            if (!icon) return;
+
+            icon.className = 'fas me-2'; // Reset classes
+            
+            if (themeName === 'light') {
+                icon.classList.add('fa-sun');
+            } else if (themeName === 'dark') {
+                icon.classList.add('fa-moon');
+            } else {
+                icon.classList.add('fa-adjust');
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize theme icon
+            const savedTheme = localStorage.getItem('theme') || 'auto';
+            updateThemeIcon(savedTheme);
+
             const sidebar = document.getElementById('adminSidebar');
             const content = document.getElementById('adminContent');
             const sidebarToggle = document.getElementById('sidebarToggle');

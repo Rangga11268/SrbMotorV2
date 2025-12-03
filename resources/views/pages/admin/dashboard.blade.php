@@ -76,7 +76,7 @@ use Illuminate\Support\Str;
         </div>
 
         <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-            <div class="card bg-warning text-dark h-100 shadow-sm">
+            <div class="card bg-warning text-white h-100 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -87,7 +87,7 @@ use Illuminate\Support\Str;
                             <i class="fas fa-file-invoice fa-2x"></i>
                         </div>
                     </div>
-                    <a href="{{ route('admin.transactions.index') }}" class="btn btn-outline-dark btn-sm mt-3">Lihat Transaksi</a>
+                    <a href="{{ route('admin.transactions.index') }}" class="btn btn-outline-light btn-sm mt-3">Lihat Transaksi</a>
                 </div>
             </div>
         </div>
