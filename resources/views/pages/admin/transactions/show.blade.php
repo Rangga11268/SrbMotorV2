@@ -316,11 +316,10 @@
                     <a href="https://wa.me/{{ $waNumber }}" target="_blank" class="btn btn-success w-100 mb-2">
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </a>
-                    @if($transaction->transaction_type === 'CASH')
                     <a href="{{ route('admin.transactions.invoice.download', $transaction->id) }}" class="btn btn-secondary w-100 mb-2">
                         <i class="fas fa-file-invoice"></i> Cetak Invoice
                     </a>
-                    @else
+                    @if($transaction->transaction_type === 'CREDIT')
                     <a href="{{ route('admin.transactions.edit', $transaction->id) }}" class="btn btn-warning w-100 mb-2">
                         <i class="fas fa-edit"></i> Edit Detail Kredit
                     </a>
