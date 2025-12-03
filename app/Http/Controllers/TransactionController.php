@@ -153,11 +153,14 @@ class TransactionController extends Controller
         // Handle credit detail if this is a credit transaction
         if ($request->transaction_type === 'CREDIT') {
             $request->validate([
-                'credit_detail.down_payment' => 'required|numeric|min:0',
+                'credit_detail.down_payment' => 'required|numeric|min:0|lt:total_amount',
                 'credit_detail.tenor' => 'required|integer|min:1',
                 'credit_detail.monthly_installment' => 'required|numeric|min:0',
                 'credit_detail.credit_status' => 'required|in:menunggu_persetujuan,data_tidak_valid,dikirim_ke_surveyor,jadwal_survey,disetujui,ditolak',
-                'credit_detail.approved_amount' => 'nullable|numeric|min:0',
+                'credit_detail.approved_amount' => 'nullable|numeric|min:0|lte:total_amount',
+            ], [
+                'credit_detail.down_payment.lt' => 'Uang muka harus lebih kecil dari total harga motor.',
+                'credit_detail.approved_amount.lte' => 'Jumlah disetujui tidak boleh lebih besar dari total harga motor.',
             ]);
 
             $creditDetailData = $request->input('credit_detail');
