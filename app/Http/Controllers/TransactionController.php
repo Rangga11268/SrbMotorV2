@@ -61,13 +61,15 @@ class TransactionController extends Controller
             'transaction_type' => 'required|in:CASH,CREDIT',
             'status' => 'required',
             'notes' => 'nullable|string',
-            'booking_fee' => 'nullable|numeric|min:0',
+            'booking_fee' => 'nullable|numeric|min:0|lt:total_amount',
             'total_amount' => 'required|numeric|min:0',
             'payment_method' => 'nullable|string',
             'payment_status' => 'nullable|in:pending,confirmed,failed',
             'customer_name' => 'nullable|string|max:255',
             'customer_phone' => 'nullable|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'nullable|string|max:255',
+        ], [
+            'booking_fee.lt' => 'Booking fee harus lebih kecil dari total harga.',
         ]);
 
         $transactionData = $request->only([
@@ -124,7 +126,7 @@ class TransactionController extends Controller
             'transaction_type' => 'required|in:CASH,CREDIT',
             'status' => 'required',
             'notes' => 'nullable|string',
-            'booking_fee' => 'nullable|numeric|min:0',
+            'booking_fee' => 'nullable|numeric|min:0|lt:total_amount',
             'total_amount' => 'required|numeric|min:0',
             'payment_method' => 'nullable|string',
             'payment_status' => 'nullable|in:pending,confirmed,failed',

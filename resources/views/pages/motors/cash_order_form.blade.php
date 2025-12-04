@@ -339,8 +339,13 @@
 
                             <div class="mb-4">
                                 <label for="booking_fee" class="form-label">Uang Muka (Booking Fee)</label>
-                                <input type="number" name="booking_fee" id="booking_fee" class="form-control" value="{{ old('booking_fee', 0) }}" min="0" step="1000">
+                                <input type="number" name="booking_fee" id="booking_fee" class="form-control @error('booking_fee') is-invalid @enderror" value="{{ old('booking_fee', 0) }}" min="0" step="1000">
                                 <div class="form-text">Jumlah booking fee yang ingin Anda bayarkan</div>
+                                @error('booking_fee')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
 
                             <div class="mb-4">
@@ -367,4 +372,22 @@
         </div>
     </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bookingFeeInput = document.getElementById('booking_fee');
+    const motorPrice = {{ $motor->price }};
+    
+    bookingFeeInput.addEventListener('change', function() {
+        const fee = parseFloat(this.value) || 0;
+        
+        if (fee >= motorPrice) {
+            alert('Booking fee tidak boleh lebih besar atau sama dengan harga motor');
+            this.value = 0;
+        }
+    });
+});
+</script>
 @endsection

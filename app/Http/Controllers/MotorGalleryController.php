@@ -107,6 +107,11 @@ class MotorGalleryController extends Controller
             'booking_fee' => 'nullable|numeric|min:0',
             'payment_method' => 'required|string',
         ]);
+
+        // Ensure booking fee is less than motor price
+        if ($request->booking_fee && $request->booking_fee >= $motor->price) {
+            return back()->withErrors(['booking_fee' => 'Booking fee tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
+        }
         
         // Create the transaction
         $transaction = Transaction::create([
