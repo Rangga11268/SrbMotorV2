@@ -231,7 +231,7 @@ class TransactionController extends Controller
     public function uploadDocument(Request $request, Transaction $transaction): RedirectResponse
     {
         $request->validate([
-            'document_type' => 'required|string|in:KTP,KK,SLIP_GAJI,LAINNYA',
+            'document_type' => 'required|string|in:KTP,KK,SLIP_GAJI,BPKB,STNK,FAKTUR,LAINNYA',
             'document_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // Max 5MB
         ]);
 
