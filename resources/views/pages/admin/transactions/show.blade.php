@@ -173,6 +173,7 @@
                                     <p class="card-text small text-muted flex-grow-1">{{ $document->original_name }}</p>
                                     <div class="mt-auto d-grid gap-2">
                                         <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-primary btn-sm">Lihat</a>
+                                        <a href="{{ asset('storage/' . $document->file_path) }}" download class="btn btn-success btn-sm"><i class="fas fa-download"></i></a>
                                         <form action="{{ route('admin.transactions.delete-document', $document->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
