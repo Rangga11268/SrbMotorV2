@@ -18,11 +18,18 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.jsx';
 
 @theme {
-    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+    --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
+
+    --color-primary: #4a90e2;
+    --color-primary-dark: #357abd; /* Slightly darker for hover states */
+    --color-light-blue: #d6eaf8;
+    --color-dark-blue: #043680;
+    --color-dark-blue-hover: #032a60;
 }
 
 /* Import the custom styles */

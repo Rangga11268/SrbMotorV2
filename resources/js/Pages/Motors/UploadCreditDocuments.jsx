@@ -54,8 +54,7 @@ export default function UploadCreditDocuments({ transaction }) {
                         className="text-center mb-10"
                     >
                         <h1 className="text-3xl font-bold text-gray-900">
-                            Unggah{" "}
-                            <span className="text-orange-500">Dokumen</span>
+                            Unggah <span className="text-primary">Dokumen</span>
                         </h1>
                         <p className="text-gray-500 mt-2">
                             Lengkapi persyaratan kredit untuk{" "}
@@ -127,12 +126,12 @@ export default function UploadCreditDocuments({ transaction }) {
                                     </div>
                                 </div>
 
-                                <div className="bg-orange-50 border border-orange-100 rounded-xl p-5 mb-8">
-                                    <h5 className="font-bold text-orange-800 flex items-center gap-2 mb-3">
+                                <div className="bg-primary/10 border border-primary/20 rounded-xl p-5 mb-8">
+                                    <h5 className="font-bold text-dark-blue flex items-center gap-2 mb-3">
                                         <AlertCircle size={20} /> Persyaratan
                                         Dokumen
                                     </h5>
-                                    <ul className="list-disc list-inside text-orange-700 text-sm space-y-1 pl-1">
+                                    <ul className="list-disc list-inside text-primary/80 text-sm space-y-1 pl-1">
                                         <li>
                                             Foto KTP (Kartu Tanda Penduduk) -
                                             Depan & Belakang
@@ -255,7 +254,7 @@ function FileUploadField({
         <div>
             <label
                 htmlFor={id}
-                className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500"
+                className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary"
             >
                 {label} {required && <span className="text-red-500">*</span>}
             </label>

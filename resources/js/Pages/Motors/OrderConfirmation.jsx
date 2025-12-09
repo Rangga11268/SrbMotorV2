@@ -137,7 +137,7 @@ export default function OrderConfirmation({ transaction }) {
                                                         {transaction.motor.type}
                                                     </span>
                                                 </div>
-                                                <div className="text-2xl font-bold text-orange-600 mb-1">
+                                                <div className="text-2xl font-bold text-primary mb-1">
                                                     {formatCurrency(
                                                         transaction.motor.price
                                                     )}
@@ -296,7 +296,7 @@ export default function OrderConfirmation({ transaction }) {
                                 </Link>
                                 <Link
                                     href={route("motors.index")}
-                                    className="px-8 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-lg hover:translate-y-[-2px] flex items-center gap-2"
+                                    className="px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue transition-colors shadow-lg hover:translate-y-[-2px] flex items-center gap-2"
                                 >
                                     <ArrowRight size={18} /> Lihat Motor Lain
                                 </Link>

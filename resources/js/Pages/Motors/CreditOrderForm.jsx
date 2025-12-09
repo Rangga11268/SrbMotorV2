@@ -84,7 +84,7 @@ export default function CreditOrderForm({ motor }) {
                     >
                         <h1 className="text-3xl font-bold text-gray-900">
                             Pengajuan{" "}
-                            <span className="text-orange-500">Kredit</span>
+                            <span className="text-primary">Kredit</span>
                         </h1>
                         <p className="text-gray-500 mt-2">
                             Dapatkan motor impian Anda dengan cicilan ringan
@@ -123,7 +123,7 @@ export default function CreditOrderForm({ motor }) {
                                                 • {motor.type}
                                             </span>
                                         </div>
-                                        <div className="text-2xl font-bold text-orange-600">
+                                        <div className="text-2xl font-bold text-primary">
                                             {formatCurrency(motor.price)}
                                         </div>
                                     </div>
@@ -136,7 +136,7 @@ export default function CreditOrderForm({ motor }) {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                                         {/* Name */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Nama Lengkap
                                             </label>
                                             <div className="relative">
@@ -167,7 +167,7 @@ export default function CreditOrderForm({ motor }) {
 
                                         {/* Phone */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Nomor Telepon
                                             </label>
                                             <div className="relative">
@@ -198,7 +198,7 @@ export default function CreditOrderForm({ motor }) {
 
                                         {/* Occupation */}
                                         <div className="md:col-span-2">
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Pekerjaan
                                             </label>
                                             <div className="relative">
@@ -236,7 +236,7 @@ export default function CreditOrderForm({ motor }) {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                         {/* Down Payment */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Uang Muka (DP)
                                             </label>
                                             <div className="relative">
@@ -268,7 +268,7 @@ export default function CreditOrderForm({ motor }) {
 
                                         {/* Tenor */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Tenor (Bulan)
                                             </label>
                                             <div className="relative">
@@ -387,11 +387,11 @@ export default function CreditOrderForm({ motor }) {
                                         )}
                                     </div>
 
-                                    <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 mb-8">
-                                        <h5 className="font-bold text-orange-800 flex items-center gap-2 mb-2">
+                                    <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 mb-8">
+                                        <h5 className="font-bold text-dark-blue flex items-center gap-2 mb-2">
                                             <Info size={18} /> Informasi Penting
                                         </h5>
-                                        <ul className="list-disc list-inside text-orange-700 text-sm space-y-1 pl-1">
+                                        <ul className="list-disc list-inside text-primary/80 text-sm space-y-1 pl-1">
                                             <li>
                                                 Setelah ini, Anda diminta
                                                 mengunggah dokumen (KTP, KK,

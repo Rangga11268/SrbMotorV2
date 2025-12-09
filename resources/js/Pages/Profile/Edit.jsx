@@ -24,82 +24,106 @@ export default function Edit({ user }) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="max-w-3xl mx-auto"
+                        className="max-w-4xl mx-auto"
                     >
                         <div className="mb-6">
                             <Link
                                 href={route("profile.show")}
-                                className="text-gray-500 hover:text-orange-500 font-medium flex items-center gap-2 transition-colors"
+                                className="text-gray-500 hover:text-primary font-bold flex items-center gap-2 transition-colors hover:-translate-x-1 transform duration-300"
                             >
-                                <ArrowLeft size={18} /> Kembali ke Profil
+                                <ArrowLeft size={20} /> Kembali ke Profil
                             </Link>
                         </div>
 
-                        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-                            <div className="p-8 pb-0 border-b border-gray-100">
-                                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                        <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100">
+                            <div className="bg-gradient-to-r from-dark-blue to-blue-900 p-8 pb-0 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+                                <div className="absolute bottom-0 left-0 p-24 bg-blue-400/20 rounded-full blur-3xl transform -translate-x-1/3 translate-y-1/3"></div>
+
+                                <h1 className="text-3xl font-extrabold text-white mb-2 relative z-10">
                                     Edit Profil
                                 </h1>
-                                <p className="text-gray-500 mb-6">
+                                <p className="text-blue-100 mb-8 relative z-10 font-medium">
                                     Kelola informasi profil dan keamanan akun
                                     Anda
                                 </p>
 
-                                <div className="flex gap-8">
+                                <div className="flex gap-8 relative z-10">
                                     <button
                                         onClick={() => setActiveTab("profile")}
-                                        className={`pb-4 px-2 font-bold text-sm transition-colors relative ${
+                                        className={`pb-4 px-4 font-bold text-sm transition-all relative ${
                                             activeTab === "profile"
-                                                ? "text-orange-500"
-                                                : "text-gray-500 hover:text-gray-700"
+                                                ? "text-white"
+                                                : "text-blue-200 hover:text-white"
                                         }`}
                                     >
                                         Informasi Profil
                                         {activeTab === "profile" && (
                                             <motion.div
                                                 layoutId="tab-underline"
-                                                className="absolute bottom-0 left-0 right-0 h-1 bg-orange-500 rounded-t-full"
+                                                className="absolute bottom-0 left-0 right-0 h-1 bg-white rounded-t-full shadow-lg"
                                             />
                                         )}
                                     </button>
                                     <button
                                         onClick={() => setActiveTab("password")}
-                                        className={`pb-4 px-2 font-bold text-sm transition-colors relative ${
+                                        className={`pb-4 px-4 font-bold text-sm transition-all relative ${
                                             activeTab === "password"
-                                                ? "text-orange-500"
-                                                : "text-gray-500 hover:text-gray-700"
+                                                ? "text-white"
+                                                : "text-blue-200 hover:text-white"
                                         }`}
                                     >
                                         Ubah Password
                                         {activeTab === "password" && (
                                             <motion.div
                                                 layoutId="tab-underline"
-                                                className="absolute bottom-0 left-0 right-0 h-1 bg-orange-500 rounded-t-full"
+                                                className="absolute bottom-0 left-0 right-0 h-1 bg-white rounded-t-full shadow-lg"
                                             />
                                         )}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="p-8">
+                            <div className="p-8 md:p-10">
                                 {flash.success && (
-                                    <div className="bg-green-50 text-green-700 p-4 rounded-xl mb-6 flex items-center gap-3 border border-green-100">
-                                        <CheckCircle size={20} />{" "}
-                                        {flash.success}
-                                    </div>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="bg-green-50 text-green-700 p-4 rounded-xl mb-8 flex items-center gap-3 border border-green-100 shadow-sm"
+                                    >
+                                        <CheckCircle
+                                            size={20}
+                                            className="shrink-0"
+                                        />
+                                        <span className="font-medium">
+                                            {flash.success}
+                                        </span>
+                                    </motion.div>
                                 )}
 
                                 {flash.error && (
-                                    <div className="bg-red-50 text-red-700 p-4 rounded-xl mb-6 flex items-center gap-3 border border-red-100">
-                                        <AlertCircle size={20} /> {flash.error}
-                                    </div>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="bg-red-50 text-red-700 p-4 rounded-xl mb-8 flex items-center gap-3 border border-red-100 shadow-sm"
+                                    >
+                                        <AlertCircle
+                                            size={20}
+                                            className="shrink-0"
+                                        />
+                                        <span className="font-medium">
+                                            {flash.error}
+                                        </span>
+                                    </motion.div>
                                 )}
 
-                                {activeTab === "profile" ? (
-                                    <UpdateProfileForm user={user} />
-                                ) : (
-                                    <UpdatePasswordForm />
-                                )}
+                                <div className="max-w-xl">
+                                    {activeTab === "profile" ? (
+                                        <UpdateProfileForm user={user} />
+                                    ) : (
+                                        <UpdatePasswordForm />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </motion.div>
@@ -123,55 +147,65 @@ function UpdateProfileForm({ user }) {
     return (
         <form onSubmit={submit}>
             <div className="mb-6">
-                <label className="block text-gray-700 font-bold mb-2 text-sm">
+                <label className="block text-gray-700 font-bold mb-2 text-sm pl-1">
                     Nama Lengkap
                 </label>
-                <div className="relative">
+                <div className="relative group">
                     <User
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        size={18}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                        size={20}
                     />
                     <input
                         type="text"
                         value={data.name}
                         onChange={(e) => setData("name", e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                        placeholder="Nama Lengkap"
+                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-gray-50 focus:bg-white transition-all"
+                        placeholder="Masukkan Nama Lengkap"
                     />
                 </div>
                 {errors.name && (
-                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1">
+                        <AlertCircle size={12} /> {errors.name}
+                    </div>
                 )}
             </div>
 
             <div className="mb-8">
-                <label className="block text-gray-700 font-bold mb-2 text-sm">
+                <label className="block text-gray-700 font-bold mb-2 text-sm pl-1">
                     Alamat Email
                 </label>
-                <div className="relative">
+                <div className="relative group">
                     <Mail
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        size={18}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                        size={20}
                     />
                     <input
                         type="email"
                         value={data.email}
                         onChange={(e) => setData("email", e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                        placeholder="Email"
+                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-gray-50 focus:bg-white transition-all"
+                        placeholder="Masukkan Email"
                     />
                 </div>
                 {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1">
+                        <AlertCircle size={12} /> {errors.email}
+                    </div>
                 )}
             </div>
 
             <button
                 type="submit"
                 disabled={processing}
-                className="bg-gray-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-black transition-colors flex items-center gap-2 shadow-lg disabled:opacity-70"
+                className="bg-primary text-white px-8 py-3.5 rounded-xl font-bold hover:bg-dark-blue transition-all flex items-center gap-2 shadow-lg hover:shadow-primary/30 transform hover:-translate-y-1 disabled:opacity-70 disabled:transform-none"
             >
-                <Save size={18} /> Simpan Perubahan
+                {processing ? (
+                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                    <>
+                        <Save size={20} /> Simpan Perubahan
+                    </>
+                )}
             </button>
         </form>
     );
@@ -194,13 +228,13 @@ function UpdatePasswordForm() {
     return (
         <form onSubmit={submit}>
             <div className="mb-6">
-                <label className="block text-gray-700 font-bold mb-2 text-sm">
+                <label className="block text-gray-700 font-bold mb-2 text-sm pl-1">
                     Password Saat Ini
                 </label>
-                <div className="relative">
+                <div className="relative group">
                     <Lock
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        size={18}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                        size={20}
                     />
                     <input
                         type="password"
@@ -208,49 +242,49 @@ function UpdatePasswordForm() {
                         onChange={(e) =>
                             setData("current_password", e.target.value)
                         }
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                        placeholder="Password Saat Ini"
+                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-gray-50 focus:bg-white transition-all"
+                        placeholder="Masukkan password saat ini"
                     />
                 </div>
                 {errors.current_password && (
-                    <p className="text-red-500 text-sm mt-1">
-                        {errors.current_password}
-                    </p>
+                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1">
+                        <AlertCircle size={12} /> {errors.current_password}
+                    </div>
                 )}
             </div>
 
             <div className="mb-6">
-                <label className="block text-gray-700 font-bold mb-2 text-sm">
+                <label className="block text-gray-700 font-bold mb-2 text-sm pl-1">
                     Password Baru
                 </label>
-                <div className="relative">
+                <div className="relative group">
                     <Lock
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        size={18}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                        size={20}
                     />
                     <input
                         type="password"
                         value={data.password}
                         onChange={(e) => setData("password", e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                        placeholder="Password Baru"
+                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-gray-50 focus:bg-white transition-all"
+                        placeholder="Masukkan password baru"
                     />
                 </div>
                 {errors.password && (
-                    <p className="text-red-500 text-sm mt-1">
-                        {errors.password}
-                    </p>
+                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1">
+                        <AlertCircle size={12} /> {errors.password}
+                    </div>
                 )}
             </div>
 
             <div className="mb-8">
-                <label className="block text-gray-700 font-bold mb-2 text-sm">
+                <label className="block text-gray-700 font-bold mb-2 text-sm pl-1">
                     Konfirmasi Password Baru
                 </label>
-                <div className="relative">
+                <div className="relative group">
                     <Lock
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        size={18}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                        size={20}
                     />
                     <input
                         type="password"
@@ -258,8 +292,8 @@ function UpdatePasswordForm() {
                         onChange={(e) =>
                             setData("password_confirmation", e.target.value)
                         }
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                        placeholder="Ulangi Password Baru"
+                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-gray-50 focus:bg-white transition-all"
+                        placeholder="Ketik ulang password baru"
                     />
                 </div>
             </div>
@@ -267,9 +301,15 @@ function UpdatePasswordForm() {
             <button
                 type="submit"
                 disabled={processing}
-                className="bg-gray-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-black transition-colors flex items-center gap-2 shadow-lg disabled:opacity-70"
+                className="bg-primary text-white px-8 py-3.5 rounded-xl font-bold hover:bg-dark-blue transition-all flex items-center gap-2 shadow-lg hover:shadow-primary/30 transform hover:-translate-y-1 disabled:opacity-70 disabled:transform-none"
             >
-                <Save size={18} /> Ubah Password
+                {processing ? (
+                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                    <>
+                        <Save size={20} /> Simpan Password
+                    </>
+                )}
             </button>
         </form>
     );

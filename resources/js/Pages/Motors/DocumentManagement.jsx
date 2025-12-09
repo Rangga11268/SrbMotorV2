@@ -119,7 +119,7 @@ export default function DocumentManagement({ transaction }) {
                     >
                         <h1 className="text-3xl font-bold text-gray-900">
                             Manajemen{" "}
-                            <span className="text-orange-500">Dokumen</span>
+                            <span className="text-primary">Dokumen</span>
                         </h1>
                         <p className="text-gray-500 mt-2">
                             Kelola dokumen pengajuan kredit untuk{" "}

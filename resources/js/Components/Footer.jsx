@@ -22,7 +22,7 @@ export default function Footer() {
                             className="h-12"
                         />
                         <h3 className="text-2xl font-bold text-white">
-                            SRB <span className="text-orange-500">MOTORS</span>
+                            SRB <span className="text-primary">MOTORS</span>
                         </h3>
                     </div>
                     <p className="text-gray-400 text-sm leading-relaxed">
@@ -38,9 +38,9 @@ export default function Footer() {
                     </h3>
                     <a
                         href="#"
-                        className="flex items-center gap-2 hover:text-orange-500 transition-colors mb-3"
+                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
                     >
-                        <MapPin size={18} className="text-orange-500" /> Bekasi
+                        <MapPin size={18} className="text-primary" /> Bekasi
                     </a>
                 </div>
 
@@ -60,11 +60,11 @@ export default function Footer() {
                         <Link
                             key={index}
                             href={link.href}
-                            className="flex items-center gap-2 hover:text-orange-500 transition-colors mb-3 group"
+                            className="flex items-center gap-2 hover:text-primary transition-colors mb-3 group"
                         >
                             <ArrowRight
                                 size={14}
-                                className="text-orange-500 transition-transform group-hover:translate-x-1"
+                                className="text-primary transition-transform group-hover:translate-x-1"
                             />
                             {link.label}
                         </Link>
@@ -78,33 +78,31 @@ export default function Footer() {
                     </h3>
                     <a
                         href="tel:08978638849"
-                        className="flex items-center gap-2 hover:text-orange-500 transition-colors mb-3"
+                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
                     >
-                        <Phone size={18} className="text-orange-500" />{" "}
-                        08978638849
+                        <Phone size={18} className="text-primary" /> 08978638849
                     </a>
                     <a
                         href="tel:08978638973"
-                        className="flex items-center gap-2 hover:text-orange-500 transition-colors mb-3"
+                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
                     >
-                        <Phone size={18} className="text-orange-500" />{" "}
-                        08978638973
+                        <Phone size={18} className="text-primary" /> 08978638973
                     </a>
                     <a
                         href="mailto:darrelrangga@gmail.com"
-                        className="flex items-center gap-2 hover:text-orange-500 transition-colors mb-3"
+                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
                     >
-                        <Mail size={18} className="text-orange-500" />{" "}
+                        <Mail size={18} className="text-primary" />{" "}
                         darrelrangga@gmail.com
                     </a>
                     <a
                         href="https://maps.google.com/?q=Jl%20lori%20sakti%20Rt%2001%20Rw%2001%20No%2022%20Kaliabang%20tengah%20Bekasi%20utara"
                         target="_blank"
-                        className="flex items-start gap-2 hover:text-orange-500 transition-colors mb-3"
+                        className="flex items-start gap-2 hover:text-primary transition-colors mb-3"
                     >
                         <MapPin
                             size={18}
-                            className="text-orange-500 mt-1 flex-shrink-0"
+                            className="text-primary mt-1 flex-shrink-0"
                         />
                         <span>
                             Jl lori sakti Rt 01 Rw 01 No 22 Kaliabang tengah
@@ -116,7 +114,7 @@ export default function Footer() {
 
             <div className="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500 text-sm">
                 &copy; 2024 Created by{" "}
-                <span className="text-orange-500">SRB Team</span> | All Rights
+                <span className="text-primary">SRB Team</span> | All Rights
                 Reserved
             </div>
         </section>

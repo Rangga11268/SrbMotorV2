@@ -80,7 +80,7 @@ export default function UserTransactions({ transactions }) {
                     >
                         <h1 className="text-3xl font-bold text-gray-900">
                             Riwayat{" "}
-                            <span className="text-orange-500">Pemesanan</span>
+                            <span className="text-primary">Pemesanan</span>
                         </h1>
                         <p className="text-gray-500 mt-2">
                             Pantau status pesanan kendaraan Anda
@@ -159,7 +159,7 @@ export default function UserTransactions({ transactions }) {
                                                     <div className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">
                                                         Total Harga
                                                     </div>
-                                                    <div className="text-xl font-bold text-orange-500">
+                                                    <div className="text-xl font-bold text-primary">
                                                         Rp{" "}
                                                         {new Intl.NumberFormat(
                                                             "id-ID"
@@ -232,7 +232,7 @@ export default function UserTransactions({ transactions }) {
                                                 href={link.url || "#"}
                                                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                                                     link.active
-                                                        ? "bg-orange-500 text-white"
+                                                        ? "bg-dark-blue text-white"
                                                         : link.url
                                                         ? "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
                                                         : "bg-gray-100 text-gray-400 cursor-not-allowed"
@@ -259,7 +259,7 @@ export default function UserTransactions({ transactions }) {
                             </p>
                             <Link
                                 href={route("motors.index")}
-                                className="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-lg"
+                                className="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-dark-blue transition-colors shadow-lg"
                             >
                                 Cari Motor Sekarang
                             </Link>

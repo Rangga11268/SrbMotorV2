@@ -55,8 +55,7 @@ export default function CashOrderForm({ motor }) {
                         className="text-center mb-10"
                     >
                         <h1 className="text-3xl font-bold text-gray-900">
-                            Pesanan{" "}
-                            <span className="text-orange-500">Tunai</span>
+                            Pesanan <span className="text-primary">Tunai</span>
                         </h1>
                         <p className="text-gray-500 mt-2">
                             Lengkapi data untuk memesan {motor.name}
@@ -95,7 +94,7 @@ export default function CashOrderForm({ motor }) {
                                                 • {motor.type}
                                             </span>
                                         </div>
-                                        <div className="text-2xl font-bold text-orange-600">
+                                        <div className="text-2xl font-bold text-primary">
                                             {formatCurrency(motor.price)}
                                         </div>
                                     </div>
@@ -105,7 +104,7 @@ export default function CashOrderForm({ motor }) {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                         {/* Name */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Nama Lengkap
                                             </label>
                                             <div className="relative">
@@ -136,7 +135,7 @@ export default function CashOrderForm({ motor }) {
 
                                         {/* Phone */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Nomor Telepon
                                             </label>
                                             <div className="relative">
@@ -167,7 +166,7 @@ export default function CashOrderForm({ motor }) {
 
                                         {/* Occupation */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Pekerjaan
                                             </label>
                                             <div className="relative">
@@ -200,7 +199,7 @@ export default function CashOrderForm({ motor }) {
 
                                         {/* Booking Fee */}
                                         <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
+                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
                                                 Uang Muka (Booking Fee)
                                             </label>
                                             <div className="relative">

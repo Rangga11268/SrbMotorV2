@@ -46,7 +46,7 @@ export default function MainLayout({ children, title }) {
             <div className="min-h-screen flex flex-col font-sans text-gray-900 bg-white">
                 <Navbar />
 
-                <main className="flex-grow pt-[80px]">{children}</main>
+                <main className="flex-grow">{children}</main>
 
                 <Footer />
 

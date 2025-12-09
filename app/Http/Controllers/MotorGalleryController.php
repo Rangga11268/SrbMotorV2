@@ -24,7 +24,7 @@ class MotorGalleryController extends Controller
     /**
      * Display a listing of the motors with filtering and search capabilities.
      */
-    public function index(Request $request): View
+    public function index(Request $request): \Inertia\Response
     {
         // Prepare filters array
         $filters = [];
@@ -68,7 +68,7 @@ class MotorGalleryController extends Controller
     /**
      * Display the specified motor.
      */
-    public function show(Motor $motor): View
+    public function show(Motor $motor): \Inertia\Response
     {
         // Get motor using repository (with caching)
         $motor = $this->motorRepository->findById($motor->id, true);
@@ -206,7 +206,7 @@ class MotorGalleryController extends Controller
     /**
      * Show order confirmation page.
      */
-    public function showOrderConfirmation($transactionId): View
+    public function showOrderConfirmation($transactionId): \Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail'])->findOrFail($transactionId);
         

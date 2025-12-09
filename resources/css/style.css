@@ -9,7 +9,7 @@
     --border: 0.1rem solid rgba(4, 54, 128, 0.1);
 }
 
-* {
+/* * {
     font-family: "Poppins", sans-serif;
     margin: 0;
     padding: 0;
@@ -18,9 +18,9 @@
     border: none;
     text-decoration: none;
     transition: 0.2s linear;
-}
+} */
 
-html {
+/* html {
     font-size: 62.5%;
     overflow-x: hidden;
     scroll-padding-top: 3rem;
@@ -29,13 +29,18 @@ html {
 
 @media (min-width: 1200px) {
     html {
-        font-size: 65%; /* Meningkatkan ukuran dasar menjadi ~12px */
+        font-size: 65%;
     }
-}
+} */
 
-section {
+/* html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+} */
+
+/* section {
     padding: 2rem 9%;
-}
+} */
 
 /* More aggressive fix for motor pages to prevent navbar overlap */
 .motors-gallery {
@@ -46,9 +51,9 @@ section {
     padding-top: 3rem !important; /* Reduced padding to prevent navbar overlap */
 }
 
-a {
+/* a {
     text-decoration: none;
-}
+} */
 
 .heading {
     padding-bottom: 2rem;
