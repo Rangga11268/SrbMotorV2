@@ -56,7 +56,13 @@ class MotorGalleryController extends Controller
         $types = $filterOptions['types'];
         $years = $filterOptions['years'];
         
-        return view('pages.motors.index', compact('motors', 'brands', 'types', 'years'));
+        return \Inertia\Inertia::render('Motors/Index', [
+            'motors' => $motors,
+            'filters' => $request->only(['search', 'brand', 'type', 'year', 'min_price', 'max_price']),
+            'brands' => $brands,
+            'types' => $types,
+            'years' => $years,
+        ]);
     }
 
     /**
@@ -75,7 +81,10 @@ class MotorGalleryController extends Controller
             ->limit(4)
             ->get();
 
-        return view('pages.motors.show', compact('motor', 'relatedMotors'));
+        return \Inertia\Inertia::render('Motors/Show', [
+            'motor' => $motor,
+            'relatedMotors' => $relatedMotors
+        ]);
     }
 
     /**
@@ -89,9 +98,9 @@ class MotorGalleryController extends Controller
     /**
      * Show the cash order form for a specific motor.
      */
-    public function showCashOrderForm(Motor $motor): View
+    public function showCashOrderForm(Motor $motor): View|\Inertia\Response
     {
-        return view('pages.motors.cash_order_form', compact('motor'));
+        return \Inertia\Inertia::render('Motors/CashOrderForm', compact('motor'));
     }
     
     /**
@@ -136,9 +145,9 @@ class MotorGalleryController extends Controller
     /**
      * Show the credit order form for a specific motor.
      */
-    public function showCreditOrderForm(Motor $motor): View
+    public function showCreditOrderForm(Motor $motor): View|\Inertia\Response
     {
-        return view('pages.motors.credit_order_form', compact('motor'));
+        return \Inertia\Inertia::render('Motors/CreditOrderForm', compact('motor'));
     }
     
     /**
@@ -206,13 +215,13 @@ class MotorGalleryController extends Controller
             abort(403, 'Unauthorized access to this transaction');
         }
         
-        return view('pages.motors.order_confirmation', compact('transaction'));
+        return \Inertia\Inertia::render('Motors/OrderConfirmation', compact('transaction'));
     }
     
     /**
      * Show the document upload form for credit transactions.
      */
-    public function showUploadCreditDocuments($transactionId)
+    public function showUploadCreditDocuments($transactionId): View|\Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail'])->findOrFail($transactionId);
         
@@ -221,7 +230,7 @@ class MotorGalleryController extends Controller
             abort(403, 'Unauthorized access to this transaction');
         }
         
-        return view('pages.motors.upload_credit_documents', compact('transaction'));
+        return \Inertia\Inertia::render('Motors/UploadCreditDocuments', compact('transaction'));
     }
     
     /**
@@ -299,7 +308,7 @@ class MotorGalleryController extends Controller
     /**
      * Show document management page for a credit transaction.
      */
-    public function showDocumentManagement($transactionId)
+    public function showDocumentManagement($transactionId): View|\Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail', 'creditDetail.documents'])->findOrFail($transactionId);
         
@@ -308,7 +317,7 @@ class MotorGalleryController extends Controller
             abort(403, 'Unauthorized access to this transaction');
         }
         
-        return view('pages.motors.document_management', compact('transaction'));
+        return \Inertia\Inertia::render('Motors/DocumentManagement', compact('transaction'));
     }
     
     /**
@@ -410,6 +419,6 @@ class MotorGalleryController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
-        return view('pages.motors.user_transactions', compact('transactions'));
+        return \Inertia\Inertia::render('Motors/UserTransactions', compact('transactions'));
     }
 }

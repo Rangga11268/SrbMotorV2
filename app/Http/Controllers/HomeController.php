@@ -22,6 +22,6 @@ class HomeController extends Controller
         // Get popular motors (limit to 5 or 10) with their specifications using caching
         $popularMotors = $this->motorRepository->getPopular(5, true);
 
-        return view('pages.home', compact('popularMotors'));
+        return \Inertia\Inertia::render('Home', compact('popularMotors'));
     }
 }

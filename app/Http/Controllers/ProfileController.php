@@ -12,10 +12,13 @@ class ProfileController extends Controller
     /**
      * Display the user's profile.
      */
+    /**
+     * Display the user's profile.
+     */
     public function show()
     {
         $user = Auth::user();
-        return view('profile.show', compact('user'));
+        return \Inertia\Inertia::render('Profile/Show', compact('user'));
     }
 
     /**
@@ -24,7 +27,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        return view('profile.edit', compact('user'));
+        return \Inertia\Inertia::render('Profile/Edit', compact('user'));
     }
 
     /**
