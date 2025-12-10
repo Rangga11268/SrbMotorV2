@@ -26,7 +26,7 @@ class MotorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(): \Inertia\Response
     {
         $filters = [];
         if (request('search')) {
@@ -38,15 +38,18 @@ class MotorController extends Controller
 
         $motors = $this->motorRepository->getWithFilters($filters, true, 10);
 
-        return view('pages.admin.motors.index', compact('motors'));
+        return \Inertia\Inertia::render('Admin/Motors/Index', [
+            'motors' => $motors,
+            'filters' => request()->all(['search', 'tersedia']),
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(): \Inertia\Response
     {
-        return view('pages.admin.motors.create');
+        return \Inertia\Inertia::render('Admin/Motors/Create');
     }
 
     /**
@@ -119,10 +122,10 @@ class MotorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Motor $motor): View
+    public function edit(Motor $motor): \Inertia\Response
     {
         $motor->load('specifications'); // Load specifications
-        return view('pages.admin.motors.edit', compact('motor'));
+        return \Inertia\Inertia::render('Admin/Motors/Edit', compact('motor'));
     }
 
     /**

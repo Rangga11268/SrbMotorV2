@@ -21,7 +21,13 @@ class UserController extends Controller
         
         $users = $query->paginate(10);
         
-        return view('pages.admin.users.index', compact('users'));
+        return \Inertia\Inertia::render('Admin/Users/Index', [
+            'users' => $users,
+            'filters' => [
+                'search' => request('search'),
+                'current_user_id' => auth()->id(),
+            ],
+        ]);
     }
 
     /**

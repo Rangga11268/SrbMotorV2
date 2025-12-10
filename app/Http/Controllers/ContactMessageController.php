@@ -21,9 +21,12 @@ class ContactMessageController extends Controller
                   ->orWhere('message', 'like', '%' . request('search') . '%');
         }
         
-        $contactMessages = $query->latest()->paginate(10);
+        $contactMessages = $query->latest()->paginate(10)->withQueryString();
         
-        return view('pages.admin.contact.index', compact('contactMessages'));
+        return \Inertia\Inertia::render('Admin/ContactMessages/Index', [
+            'contactMessages' => $contactMessages,
+            'filters' => request()->all('search')
+        ]);
     }
 
     /**
@@ -31,7 +34,8 @@ class ContactMessageController extends Controller
      */
     public function show(ContactMessage $contact)
     {
-        return view('pages.admin.contact.show', compact('contact'));
+         // Usually index is enough for messages, but if a detail view is needed:
+         return \Inertia\Inertia::render('Admin/ContactMessages/Show', compact('contact'));
     }
 
     /**

@@ -8,6 +8,7 @@ import {
     LayoutDashboard,
     List,
     UserCircle,
+    ChevronDown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -28,22 +29,26 @@ export default function Navbar() {
     const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
     const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
 
-    const navLinkClasses =
-        "text-gray-700 hover:text-primary font-medium text-lg transition-all duration-300 relative group";
+    const navLinkClasses = (isActive) =>
+        `relative px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
+            isActive || isScrolled
+                ? "text-gray-800 hover:bg-gray-100"
+                : "text-gray-800 hover:bg-white/20"
+        }`;
 
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
                 isScrolled
-                    ? "bg-white/90 backdrop-blur-md shadow-lg py-3"
-                    : "bg-transparent py-5"
+                    ? "bg-white/80 backdrop-blur-xl shadow-lg py-3 border-b border-gray-100/50"
+                    : "bg-transparent py-6"
             }`}
         >
-            <div className="container mx-auto px-6 flex justify-between items-center">
+            <div className="container mx-auto px-6 max-w-7xl flex justify-between items-center">
                 {/* Logo */}
                 <Link
                     href="/"
-                    className="flex items-center text-3xl font-extrabold text-dark-blue tracking-tight"
+                    className="flex items-center text-3xl font-extrabold text-dark-blue tracking-tight hover:scale-[1.02] transition-transform"
                 >
                     <img
                         src="/assets/icon/logo trans.png"
@@ -54,40 +59,51 @@ export default function Navbar() {
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden md:flex space-x-8 items-center">
-                    <Link href="/#home" className={navLinkClasses}>
+                <nav className="hidden md:flex items-center gap-1 bg-white/50 backdrop-blur-md p-1.5 rounded-full border border-white/20 shadow-sm">
+                    <Link href="/#home" className={navLinkClasses(false)}>
                         Home
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
                     </Link>
-                    <Link href="/about" className={navLinkClasses}>
+                    <Link href="/about" className={navLinkClasses(false)}>
                         Tentang Kami
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
                     </Link>
-                    <Link href="/motors" className={navLinkClasses}>
-                        Motor
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    <Link href="/motors" className={navLinkClasses(false)}>
+                        Katalog Motor
                     </Link>
                 </nav>
 
                 {/* Auth Buttons / User Menu */}
-                <div className="hidden md:flex items-center relative gap-4">
+                <div className="hidden md:flex items-center gap-4">
                     {auth.user ? (
                         <div className="relative">
                             <button
                                 onClick={toggleUserMenu}
-                                className="flex items-center space-x-2 text-gray-700 hover:text-primary font-bold bg-gray-50 hover:bg-white border border-transparent hover:border-gray-200 px-5 py-2.5 rounded-full transition-all shadow-sm hover:shadow-md"
+                                className={`flex items-center gap-2 px-1 pr-3 py-1 rounded-full transition-all border ${
+                                    isScrolled
+                                        ? "bg-gray-50 border-gray-200 hover:border-primary/50"
+                                        : "bg-white/80 border-white/50 hover:bg-white shadow-sm"
+                                }`}
                             >
-                                <User size={20} />
-                                <span>{auth.user.name}</span>
+                                <div className="w-9 h-9 bg-gradient-to-br from-primary to-dark-blue rounded-full text-white flex items-center justify-center shadow-md">
+                                    <span className="font-bold text-sm">
+                                        {auth.user.name.charAt(0)}
+                                    </span>
+                                </div>
+                                <span className="font-bold text-sm text-gray-700 max-w-[100px] truncate">
+                                    {auth.user.name.split(" ")[0]}
+                                </span>
+                                <ChevronDown
+                                    size={14}
+                                    className="text-gray-400"
+                                />
                             </button>
 
-                            {/* Dropdown */}
+                            {/* Desktop Dropdown */}
                             <AnimatePresence>
                                 {isUserMenuOpen && (
                                     <motion.div
                                         initial={{
                                             opacity: 0,
-                                            y: 10,
+                                            y: 15,
                                             scale: 0.95,
                                         }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -97,86 +113,106 @@ export default function Navbar() {
                                             scale: 0.95,
                                         }}
                                         transition={{ duration: 0.2 }}
-                                        className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl py-2 border border-gray-100 overflow-hidden"
+                                        className="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl py-2 border border-white/50 overflow-hidden ring-1 ring-black/5"
                                     >
-                                        <div className="px-4 py-2 border-b border-gray-50 mb-2">
-                                            <p className="text-sm text-gray-500">
-                                                Login sebagai
+                                        <div className="px-5 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                                            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">
+                                                Akun Saya
                                             </p>
-                                            <p className="font-bold text-dark-blue truncate">
+                                            <p className="font-bold text-gray-900 truncate text-base">
+                                                {auth.user.name}
+                                            </p>
+                                            <p className="text-xs text-primary truncate">
                                                 {auth.user.email}
                                             </p>
                                         </div>
 
-                                        <Link
-                                            href={route("profile.show")}
-                                            className="block px-4 py-2 text-gray-700 hover:bg-primary/5 hover:text-primary flex items-center transition-colors"
-                                        >
-                                            <UserCircle
-                                                size={18}
-                                                className="mr-3"
-                                            />
-                                            Profil Saya
-                                        </Link>
-                                        <Link
-                                            href={route(
-                                                "motors.user-transactions"
-                                            )}
-                                            className="block px-4 py-2 text-gray-700 hover:bg-primary/5 hover:text-primary flex items-center transition-colors"
-                                        >
-                                            <List size={18} className="mr-3" />
-                                            Riwayat Pemesanan
-                                        </Link>
-                                        {auth.user.is_admin && (
+                                        <div className="p-2">
                                             <Link
-                                                href={route("admin.dashboard")}
-                                                className="block px-4 py-2 text-gray-700 hover:bg-primary/5 hover:text-primary flex items-center transition-colors"
+                                                href={route("profile.show")}
+                                                className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-blue-50 hover:text-primary transition-all"
                                             >
-                                                <LayoutDashboard
-                                                    size={18}
-                                                    className="mr-3"
-                                                />
-                                                Admin Panel
+                                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-gray-500 group-hover:text-primary">
+                                                    <UserCircle size={18} />
+                                                </div>
+                                                Profil Saya
                                             </Link>
-                                        )}
-                                        <div className="border-t border-gray-100 my-1"></div>
-                                        <Link
-                                            href={route("logout")}
-                                            method="post"
-                                            as="button"
-                                            className="w-full text-left block px-4 py-2 text-red-600 hover:bg-red-50 flex items-center transition-colors"
-                                        >
-                                            <LogOut
-                                                size={18}
-                                                className="mr-3"
-                                            />
-                                            Logout
-                                        </Link>
+                                            <Link
+                                                href={route(
+                                                    "motors.user-transactions"
+                                                )}
+                                                className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-blue-50 hover:text-primary transition-all"
+                                            >
+                                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-gray-500 group-hover:text-primary">
+                                                    <List size={18} />
+                                                </div>
+                                                Riwayat Pesanan
+                                            </Link>
+
+                                            {auth.user.role === "admin" && (
+                                                <Link
+                                                    href={route(
+                                                        "admin.dashboard"
+                                                    )}
+                                                    className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all"
+                                                >
+                                                    <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-orange-500">
+                                                        <LayoutDashboard
+                                                            size={18}
+                                                        />
+                                                    </div>
+                                                    Admin Panel
+                                                </Link>
+                                            )}
+                                        </div>
+
+                                        <div className="border-t border-gray-100 mt-1 p-2">
+                                            <Link
+                                                href={route("logout")}
+                                                method="post"
+                                                as="button"
+                                                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 rounded-xl hover:bg-red-50 transition-all"
+                                            >
+                                                <LogOut size={18} />
+                                                Keluar
+                                            </Link>
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>
                     ) : (
-                        <Link
-                            href={route("login")}
-                            className="flex items-center space-x-2 bg-primary text-white px-7 py-2.5 rounded-full font-bold hover:bg-dark-blue transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5"
-                        >
-                            <span>Login</span>
-                            <User size={18} />
-                        </Link>
+                        <div className="flex items-center gap-3">
+                            <Link
+                                href={route("login")}
+                                className="px-6 py-2.5 rounded-full font-bold text-sm bg-white/80 backdrop-blur-sm border border-white/50 text-gray-800 hover:bg-white transition-all shadow-sm hover:shadow-md"
+                            >
+                                Masuk
+                            </Link>
+                            <Link
+                                href={route("register")}
+                                className="px-6 py-2.5 rounded-full font-bold text-sm bg-primary text-white hover:bg-dark-blue transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5"
+                            >
+                                Daftar
+                            </Link>
+                        </div>
                     )}
                 </div>
 
                 {/* Mobile Menu Button */}
-                <div className="md:hidden flex items-center">
+                <div className="md:hidden">
                     <button
                         onClick={toggleMobileMenu}
-                        className="text-gray-800 hover:text-primary p-2 focus:outline-none"
+                        className={`p-2 rounded-xl transition-all ${
+                            isScrolled
+                                ? "bg-gray-100 text-gray-800"
+                                : "bg-white/20 text-gray-800 backdrop-blur-sm"
+                        }`}
                     >
                         {isMobileMenuOpen ? (
-                            <X size={32} />
+                            <X size={24} />
                         ) : (
-                            <Menu size={32} />
+                            <Menu size={24} />
                         )}
                     </button>
                 </div>
@@ -189,40 +225,51 @@ export default function Navbar() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 overflow-hidden shadow-xl"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-xl overflow-hidden rounded-b-[2rem]"
                     >
-                        <nav className="flex flex-col p-6 space-y-4">
+                        <div className="p-6 space-y-2">
                             <Link
                                 href="/#home"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="text-gray-800 font-bold text-lg hover:text-primary block py-2 border-b border-gray-100"
+                                className="block px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-800 font-bold"
                             >
                                 Home
                             </Link>
                             <Link
                                 href="/about"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="text-gray-800 font-bold text-lg hover:text-primary block py-2 border-b border-gray-100"
+                                className="block px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-800 font-bold"
                             >
                                 Tentang Kami
                             </Link>
                             <Link
                                 href="/motors"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="text-gray-800 font-bold text-lg hover:text-primary block py-2 border-b border-gray-100"
+                                className="block px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-800 font-bold"
                             >
-                                Motor
+                                Katalog Motor
                             </Link>
 
-                            {auth.user ? (
-                                <div className="pt-2">
-                                    <div className="py-2 font-bold text-primary flex items-center gap-2 mb-2">
-                                        <User size={20} /> Hi, {auth.user.name}
-                                    </div>
-                                    <div className="grid grid-cols-1 gap-2 pl-4">
+                            <div className="border-t border-gray-100 my-2 pt-2">
+                                {auth.user ? (
+                                    <>
+                                        <div className="px-4 py-2 flex items-center gap-3 mb-2">
+                                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
+                                                {auth.user.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-gray-900">
+                                                    {auth.user.name}
+                                                </p>
+                                                <p className="text-xs text-gray-500">
+                                                    {auth.user.email}
+                                                </p>
+                                            </div>
+                                        </div>
                                         <Link
                                             href={route("profile.show")}
-                                            className="text-gray-600 hover:text-primary py-2 flex items-center gap-2"
+                                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-600 hover:text-primary font-medium"
                                             onClick={() =>
                                                 setIsMobileMenuOpen(false)
                                             }
@@ -233,17 +280,17 @@ export default function Navbar() {
                                             href={route(
                                                 "motors.user-transactions"
                                             )}
-                                            className="text-gray-600 hover:text-primary py-2 flex items-center gap-2"
+                                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-600 hover:text-primary font-medium"
                                             onClick={() =>
                                                 setIsMobileMenuOpen(false)
                                             }
                                         >
-                                            <List size={18} /> Riwayat Pemesanan
+                                            <List size={18} /> Riwayat Pesanan
                                         </Link>
-                                        {auth.user.is_admin && (
+                                        {auth.user.role === "admin" && (
                                             <Link
                                                 href={route("admin.dashboard")}
-                                                className="text-gray-600 hover:text-primary py-2 flex items-center gap-2"
+                                                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-orange-50 text-gray-600 hover:text-orange-500 font-medium"
                                                 onClick={() =>
                                                     setIsMobileMenuOpen(false)
                                                 }
@@ -256,22 +303,35 @@ export default function Navbar() {
                                             href={route("logout")}
                                             method="post"
                                             as="button"
-                                            className="text-red-500 hover:text-red-700 py-2 text-left w-full flex items-center gap-2"
+                                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 font-bold mt-2"
                                         >
-                                            <LogOut size={18} /> Logout
+                                            <LogOut size={18} /> Keluar
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                        <Link
+                                            href={route("login")}
+                                            onClick={() =>
+                                                setIsMobileMenuOpen(false)
+                                            }
+                                            className="py-3 text-center rounded-xl font-bold bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                        >
+                                            Masuk
+                                        </Link>
+                                        <Link
+                                            href={route("register")}
+                                            onClick={() =>
+                                                setIsMobileMenuOpen(false)
+                                            }
+                                            className="py-3 text-center rounded-xl font-bold bg-primary text-white hover:bg-dark-blue shadow-lg"
+                                        >
+                                            Daftar
                                         </Link>
                                     </div>
-                                </div>
-                            ) : (
-                                <Link
-                                    href={route("login")}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="block text-center bg-primary text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-dark-blue transition-colors mt-4"
-                                >
-                                    Login Sekarang
-                                </Link>
-                            )}
-                        </nav>
+                                )}
+                            </div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

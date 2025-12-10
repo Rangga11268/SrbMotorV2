@@ -12,10 +12,13 @@ class AdminProfileController extends Controller
     /**
      * Display the admin's profile.
      */
+    /**
+     * Display the admin's profile.
+     */
     public function show()
     {
-        $user = Auth::user();
-        return view('pages.admin.profile.show', compact('user'));
+        // Redirect to edit as main profile page
+        return redirect()->route('admin.profile.edit');
     }
 
     /**
@@ -23,8 +26,10 @@ class AdminProfileController extends Controller
      */
     public function edit()
     {
-        $user = Auth::user();
-        return view('pages.admin.profile.edit', compact('user'));
+        return \Inertia\Inertia::render('Admin/Profile/Edit', [
+            'user' => Auth::user(),
+            'status' => session('status'),
+        ]);
     }
 
     /**

@@ -19,9 +19,9 @@ class ReportController extends Controller
     /**
      * Display the reports dashboard.
      */
-    public function index(): View
+    public function index(): \Inertia\Response
     {
-        return view('pages.admin.reports.index');
+        return \Inertia\Inertia::render('Admin/Reports/Index');
     }
 
     /**
@@ -29,6 +29,7 @@ class ReportController extends Controller
      */
     public function create(): View
     {
+        // This method might be redundant with the new Index page handling generation
         return view('pages.admin.reports.create');
     }
 
@@ -67,7 +68,7 @@ class ReportController extends Controller
                 abort(404);
         }
 
-        return view('pages.admin.reports.show', [
+        return \Inertia\Inertia::render('Admin/Reports/Show', [
             'type' => $request->type,
             'title' => $reportTitle,
             'description' => 'Laporan dibuat pada ' . now()->format('d M Y H:i'),
