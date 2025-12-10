@@ -62,7 +62,7 @@ export default function Home({ popularMotors }) {
             {/* HERO SECTION */}
             <section
                 id="home"
-                className="relative min-h-screen flex flex-col md:flex-row items-center justify-start bg-gradient-to-br from-white via-indigo-50 to-blue-50 overflow-hidden px-6 pt-28 pb-20"
+                className="relative min-h-screen flex flex-col md:flex-row items-center md:items-start justify-start bg-gradient-to-br from-white via-indigo-50 to-blue-50 overflow-hidden px-6 pt-10 pb-20"
             >
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-100/30 to-transparent skew-x-12 transform translate-x-20 pointer-events-none"></div>

@@ -2088,8 +2088,7 @@ section:first-of-type {
 
 /* Add space for fixed navbar */
 body {
-    padding-top: 70px;
-    /* Adjusted to better match the homepage navbar height */
+    padding-top: 0;
 }
 
 .transactions-section {
@@ -2285,7 +2284,7 @@ body {
 
 @media (max-width: 768px) {
     body {
-        padding-top: 100px;
+        padding-top: 0;
     }
 
     .section-header h1 {

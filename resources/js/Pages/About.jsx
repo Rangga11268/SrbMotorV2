@@ -19,7 +19,7 @@ export default function About() {
     return (
         <MainLayout title="Tentang Kami">
             {/* ABOUT HERO */}
-            <section className="relative pt-32 pb-20 bg-gradient-to-br from-white via-indigo-50 to-blue-50 overflow-hidden">
+            <section className="relative pt-8 pb-20 bg-gradient-to-br from-white via-indigo-50 to-blue-50 overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-100/30 to-transparent skew-x-12 transform translate-x-20 pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
