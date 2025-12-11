@@ -224,6 +224,22 @@ class TransactionController extends Controller
             } else {
                 CreditDetail::create($creditDetailData);
             }
+
+            // Generate Installments if Approved
+            if ($creditDetailData['credit_status'] === 'disetujui' && $transaction->installments()->count() === 0) {
+                $amount = $creditDetailData['monthly_installment'];
+                $tenor = $creditDetailData['tenor'];
+                
+                for ($i = 1; $i <= $tenor; $i++) {
+                    \App\Models\Installment::create([
+                        'transaction_id' => $transaction->id,
+                        'installment_number' => $i,
+                        'amount' => $amount,
+                        'due_date' => now()->addMonths($i),
+                        'status' => 'pending',
+                    ]);
+                }
+            }
         } else {
             // Remove credit detail if transaction type changed from credit to cash
             if ($transaction->creditDetail) {

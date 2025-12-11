@@ -10,7 +10,7 @@ export default function Show({ user }) {
 
     return (
         <MainLayout title="Profil Saya">
-            <div className="bg-gray-50 min-h-screen py-12">
+            <div className="bg-gray-50 min-h-screen pt-28 pb-12">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

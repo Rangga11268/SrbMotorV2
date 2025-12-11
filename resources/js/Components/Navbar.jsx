@@ -9,6 +9,7 @@ import {
     List,
     UserCircle,
     ChevronDown,
+    CreditCard,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -148,6 +149,17 @@ export default function Navbar() {
                                                 </div>
                                                 Riwayat Pesanan
                                             </Link>
+                                            <Link
+                                                href={route(
+                                                    "installments.index"
+                                                )}
+                                                className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-blue-50 hover:text-primary transition-all"
+                                            >
+                                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-gray-500 group-hover:text-primary">
+                                                    <CreditCard size={18} />
+                                                </div>
+                                                Cicilan Saya
+                                            </Link>
 
                                             {auth.user.role === "admin" && (
                                                 <Link
@@ -286,6 +298,16 @@ export default function Navbar() {
                                             }
                                         >
                                             <List size={18} /> Riwayat Pesanan
+                                        </Link>
+                                        <Link
+                                            href={route("installments.index")}
+                                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-600 hover:text-primary font-medium"
+                                            onClick={() =>
+                                                setIsMobileMenuOpen(false)
+                                            }
+                                        >
+                                            <CreditCard size={18} /> Cicilan
+                                            Saya
                                         </Link>
                                         {auth.user.role === "admin" && (
                                             <Link

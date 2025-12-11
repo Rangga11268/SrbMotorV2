@@ -56,6 +56,12 @@ Route::middleware('auth')->group(function () {
 });
 
 
+// Installment routes
+Route::middleware('auth')->group(function () {
+    Route::get('/installments', [\App\Http\Controllers\InstallmentController::class, 'index'])->name('installments.index');
+    Route::post('/installments/{installment}/pay', [\App\Http\Controllers\InstallmentController::class, 'store'])->name('installments.pay');
+});
+
 // Admin routes
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
@@ -74,6 +80,9 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/transactions/{transaction}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
     Route::post('/transactions/{transaction}/upload-document', [TransactionController::class, 'uploadDocument'])->name('transactions.upload-document');
     Route::delete('/documents/{document}', [TransactionController::class, 'deleteDocument'])->name('transactions.delete-document');
+    
+    // Installment management
+    Route::post('/installments/{installment}/approve', [\App\Http\Controllers\InstallmentController::class, 'approve'])->name('installments.approve');
 
     // Invoice management
     Route::get('/transactions/{transaction}/invoice', [InvoiceController::class, 'preview'])->name('transactions.invoice.preview');
