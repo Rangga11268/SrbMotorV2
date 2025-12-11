@@ -12,9 +12,26 @@ use Midtrans\Config;
 use Midtrans\Snap;
 
 use Midtrans\Transaction as MidtransTransaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InstallmentController extends Controller
 {
+    /**
+     * Download Payment Receipt
+     */
+    public function downloadReceipt(Installment $installment)
+    {
+        if ($installment->transaction->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($installment->status !== 'paid') {
+            return redirect()->back()->with('error', 'Kuitansi hanya tersedia untuk cicilan yang sudah lunas.');
+        }
+
+        $pdf = Pdf::loadView('installments.receipt', compact('installment'));
+        return $pdf->download('kuitansi-pembayaran-cicilan-' . $installment->installment_number . '.pdf');
+    }
     public function checkPaymentStatus(Installment $installment)
     {
         if ($installment->transaction->user_id !== Auth::id()) {
@@ -44,7 +61,30 @@ class InstallmentController extends Controller
                     }
                 }
             } else if ($transactionStatus == 'settlement') {
-                $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => 'midtrans_' . $type]);
+                 // Determine specific payment method
+                 $methodStr = 'midtrans_' . $type;
+                
+                 // Check for VA (Bank Transfer)
+                 // Note: MidtransTransaction::status returns object, va_numbers is array of objects
+                 if ($type == 'bank_transfer' && isset($status->va_numbers)) {
+                     // Check if va_numbers is array and has items
+                     $vaNumbers = $status->va_numbers;
+                     if (is_array($vaNumbers) && count($vaNumbers) > 0) {
+                          $bank = $vaNumbers[0]->bank ?? 'other';
+                          $methodStr = 'midtrans_' . $bank . '_va';
+                     }
+                 }
+                 // Check for E-Wallet
+                 else if ($type == 'gopay' || $type == 'shopeepay') {
+                     $methodStr = 'midtrans_' . $type;
+                 }
+                 // Check for Cstore
+                 else if ($type == 'cstore') {
+                     $store = $status->store ?? 'store';
+                     $methodStr = 'midtrans_' . $store;
+                 }
+
+                $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => $methodStr]);
             } else if ($transactionStatus == 'pending') {
                 $installment->update(['status' => 'pending']);
             } else if ($transactionStatus == 'deny') {
@@ -176,5 +216,25 @@ class InstallmentController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Pembayaran cicilan berhasil diverifikasi.');
+    }
+
+    /**
+     * Reject the installment payment (Admin only).
+     */
+    public function reject(Installment $installment)
+    {
+        if ($installment->status !== 'waiting_approval') {
+            return redirect()->back()->with('error', 'Cicilan ini tidak dalam status menunggu persetujuan.');
+        }
+
+        $installment->update([
+            'status' => 'pending', // Revert to pending so user can upload again
+            'payment_proof' => null, // Optional: Clear the invalid proof or keep it for history? Let's keep it in storage but maybe clear the reference? 
+            // Actually, better to keep the file but allow re-upload. 
+            // If we set status to pending, user logic in Index.jsx allows re-upload if status is pending or overdue.
+            // Let's just update status.
+        ]);
+
+        return redirect()->back()->with('success', 'Pembayaran cicilan ditolak. User dapat mengupload ulang bukti.');
     }
 }

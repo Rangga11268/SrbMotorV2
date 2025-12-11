@@ -46,7 +46,7 @@ export default function UploadCreditDocuments({ transaction }) {
 
     return (
         <MainLayout title="Unggah Dokumen Kredit">
-            <div className="bg-gray-50 min-h-screen py-10">
+            <div className="bg-gray-50 min-h-screen pt-28 pb-10">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -269,39 +269,63 @@ function FileUploadField({
                     required={required}
                 />
                 <div
-                    className={`w-full p-4 rounded-xl border-2 border-dashed ${
+                    className={`w-full p-6 rounded-xl border-2 border-dashed ${
                         error
                             ? "border-red-300 bg-red-50"
                             : "border-gray-300 bg-gray-50 group-hover:border-blue-400 group-hover:bg-blue-50"
-                    } transition-all flex flex-col items-center justify-center text-center`}
+                    } transition-all flex flex-col items-center justify-center text-center min-h-[160px]`}
                 >
-                    <div className="bg-white p-2 rounded-full shadow-sm mb-2">
-                        <Upload size={20} className="text-gray-400" />
+                    <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+                        <Upload size={24} className="text-gray-400" />
                     </div>
                     {files && files.length > 0 ? (
                         <div className="text-sm font-medium text-gray-800">
                             {files.length} file dipilih
                         </div>
                     ) : (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 font-medium">
                             Klik untuk memilih file
                         </div>
                     )}
-                    <div className="text-xs text-gray-400 mt-1">
+                    <div className="text-xs text-gray-400 mt-1 max-w-xs">
                         {description}
                     </div>
                 </div>
             </div>
-            {/* Preview List (Simple) */}
+
+            {/* Preview List */}
             {files && files.length > 0 && (
-                <div className="mt-2 space-y-1">
+                <div className="mt-4 grid grid-cols-2 gap-3">
                     {Array.from(files).map((file, idx) => (
                         <div
                             key={idx}
-                            className="text-xs text-gray-600 flex items-center gap-1"
+                            className="relative group bg-white p-2 rounded-lg border border-gray-200 shadow-sm flex flex-col items-center"
                         >
-                            <CheckCircle size={10} className="text-green-500" />{" "}
-                            {file.name}
+                            <div className="w-full h-24 bg-gray-100 rounded-md overflow-hidden flex items-center justify-center mb-2">
+                                {file.type.startsWith("image/") ? (
+                                    <img
+                                        src={URL.createObjectURL(file)}
+                                        alt={file.name}
+                                        className="w-full h-full object-cover"
+                                        onLoad={(e) =>
+                                            URL.revokeObjectURL(e.target.src)
+                                        }
+                                    />
+                                ) : (
+                                    <FileText
+                                        size={40}
+                                        className="text-red-500"
+                                    />
+                                )}
+                            </div>
+                            <div className="w-full px-1">
+                                <p className="text-xs text-gray-700 font-medium truncate w-full text-center">
+                                    {file.name}
+                                </p>
+                                <p className="text-[10px] text-gray-400 text-center">
+                                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>

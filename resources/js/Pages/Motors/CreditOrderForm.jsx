@@ -75,7 +75,7 @@ export default function CreditOrderForm({ motor }) {
 
     return (
         <MainLayout title={`Pengajuan Kredit - ${motor.name}`}>
-            <div className="bg-gray-50 min-h-screen py-10">
+            <div className="bg-gray-50 min-h-screen pt-28 pb-10">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -352,13 +352,15 @@ export default function CreditOrderForm({ motor }) {
                                             required
                                         >
                                             <option value="" disabled>
-                                                Pilih metode pembayaran
+                                                Pilih metode pembayaran (DP &
+                                                Cicilan)
                                             </option>
-                                            <option value="leasing">
-                                                Melalui Leasing
+                                            <option value="transfer">
+                                                Transfer Bank / Virtual Account
+                                                (Online)
                                             </option>
-                                            <option value="bank">
-                                                Melalui Bank
+                                            <option value="cash">
+                                                Tunai di Dealer (Cash)
                                             </option>
                                         </select>
                                         {errors.payment_method && (

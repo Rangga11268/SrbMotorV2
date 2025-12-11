@@ -30,7 +30,7 @@ export default function Register() {
 
     return (
         <MainLayout title="Daftar">
-            <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-white via-indigo-50 to-blue-50 flex items-center justify-center p-4 relative overflow-hidden py-10">
+            <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-white via-indigo-50 to-blue-50 flex items-center justify-center p-4 relative overflow-hidden pt-28 pb-10">
                 {/* Background Decoration */}
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-gradient-to-b from-blue-100/40 to-transparent blur-3xl z-0 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-gradient-to-t from-indigo-100/40 to-transparent blur-3xl z-0 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>

@@ -143,7 +143,9 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction): \Inertia\Response
     {
-        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents']);
+        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'installments' => function($q) {
+            $q->orderBy('installment_number', 'asc');
+        }]);
         
         $transaction->documents_complete = $transaction->transaction_type === 'CREDIT' && $transaction->creditDetail
             ? $transaction->creditDetail->hasRequiredDocuments()
@@ -229,6 +231,16 @@ class TransactionController extends Controller
 
             // Generate Installments if Approved
             if ($creditDetailData['credit_status'] === 'disetujui' && $transaction->installments()->count() === 0) {
+                // 1. Create Down Payment Installment (Installment 0)
+                \App\Models\Installment::create([
+                    'transaction_id' => $transaction->id,
+                    'installment_number' => 0, // 0 indicates Down Payment
+                    'amount' => $creditDetailData['down_payment'],
+                    'due_date' => now(), // Due immediately
+                    'status' => 'pending',
+                ]);
+
+                // 2. Create Monthly Installments
                 $amount = $creditDetailData['monthly_installment'];
                 $tenor = $creditDetailData['tenor'];
                 

@@ -272,12 +272,16 @@ export default function InstallmentIndex({ transactions }) {
                                                                 key={inst.id}
                                                                 className="hover:bg-gray-50/50 transition-colors"
                                                             >
-                                                                <td className="py-4 pl-4 font-bold text-gray-900">
-                                                                    #
-                                                                    {
-                                                                        inst.installment_number
-                                                                    }
-                                                                </td>
+                                                                {inst.installment_number ===
+                                                                0 ? (
+                                                                    <span className="text-primary font-bold">
+                                                                        Uang
+                                                                        Muka
+                                                                        (DP)
+                                                                    </span>
+                                                                ) : (
+                                                                    `#${inst.installment_number}`
+                                                                )}
                                                                 <td className="py-4 text-gray-600 font-medium">
                                                                     {formatDate(
                                                                         inst.due_date
@@ -371,14 +375,31 @@ export default function InstallmentIndex({ transactions }) {
                                                                             Proses
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="text-xs font-medium text-green-600 flex items-center justify-center gap-1">
-                                                                            <CheckCircle
-                                                                                size={
-                                                                                    14
-                                                                                }
-                                                                            />{" "}
-                                                                            Selesai
-                                                                        </span>
+                                                                        <div className="flex gap-2 justify-center">
+                                                                            <span className="text-xs font-medium text-green-600 flex items-center justify-center gap-1 border border-green-200 bg-green-50 px-2 py-1 rounded-lg">
+                                                                                <CheckCircle
+                                                                                    size={
+                                                                                        14
+                                                                                    }
+                                                                                />{" "}
+                                                                                Selesai
+                                                                            </span>
+                                                                            <a
+                                                                                href={route(
+                                                                                    "installments.receipt",
+                                                                                    inst.id
+                                                                                )}
+                                                                                target="_blank"
+                                                                                className="text-gray-500 hover:text-primary transition-colors"
+                                                                                title="Download Kuitansi"
+                                                                            >
+                                                                                <Download
+                                                                                    size={
+                                                                                        18
+                                                                                    }
+                                                                                />
+                                                                            </a>
+                                                                        </div>
                                                                     )}
                                                                 </td>
                                                             </tr>
@@ -499,10 +520,25 @@ export default function InstallmentIndex({ transactions }) {
                                                 className="w-full rounded-xl border-gray-300 focus:border-primary focus:ring-primary"
                                             >
                                                 <option value="transfer">
-                                                    Transfer Bank (BCA)
+                                                    Transfer Bank (Manual)
                                                 </option>
                                                 <option value="cash">
                                                     Tunai di Dealer
+                                                </option>
+                                                <option
+                                                    value="midtrans_bca_va"
+                                                    disabled
+                                                    className="text-gray-400 bg-gray-100"
+                                                >
+                                                    BCA Virtual Account (Gunakan
+                                                    Bayar Online)
+                                                </option>
+                                                <option
+                                                    value="midtrans_gopay"
+                                                    disabled
+                                                    className="text-gray-400 bg-gray-100"
+                                                >
+                                                    GoPay (Gunakan Bayar Online)
                                                 </option>
                                             </select>
                                         </div>

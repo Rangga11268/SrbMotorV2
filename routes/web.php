@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/installments/{installment}/pay', [\App\Http\Controllers\InstallmentController::class, 'store'])->name('installments.pay');
     Route::post('/installments/{installment}/pay-online', [\App\Http\Controllers\InstallmentController::class, 'createPayment'])->name('installments.create-payment');
     Route::post('/installments/{installment}/check-status', [\App\Http\Controllers\InstallmentController::class, 'checkPaymentStatus'])->name('installments.check-status');
+    Route::get('/installments/{installment}/receipt', [\App\Http\Controllers\InstallmentController::class, 'downloadReceipt'])->name('installments.receipt');
 });
 
 // Admin routes
@@ -85,6 +86,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     
     // Installment management
     Route::post('/installments/{installment}/approve', [\App\Http\Controllers\InstallmentController::class, 'approve'])->name('installments.approve');
+    Route::post('/installments/{installment}/reject', [\App\Http\Controllers\InstallmentController::class, 'reject'])->name('installments.reject');
 
     // Invoice management
     Route::get('/transactions/{transaction}/invoice', [InvoiceController::class, 'preview'])->name('transactions.invoice.preview');

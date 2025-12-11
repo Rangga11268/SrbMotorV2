@@ -69,6 +69,24 @@ export default function Show({ transaction }) {
     const formatStatus = (status) =>
         status.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
+    const formatPaymentMethod = (method) => {
+        if (!method) return "-";
+        const map = {
+            midtrans_bca_va: "BCA Virtual Account",
+            midtrans_bri_va: "BRI Virtual Account",
+            midtrans_bni_va: "BNI Virtual Account",
+            midtrans_mandiri_bill: "Mandiri Bill",
+            midtrans_gopay: "GoPay",
+            midtrans_shopeepay: "ShopeePay",
+            midtrans_indomaret: "Indomaret",
+            midtrans_alfamart: "Alfamart",
+            transfer: "Transfer Manual",
+            cash: "Tunai",
+        };
+        if (map[method]) return map[method];
+        return method.replace("midtrans_", "").replace(/_/g, " ").toUpperCase();
+    };
+
     // WhatsApp Link Logic
     const getVALink = () => {
         const phone = transaction.customer_phone || user?.phone_number;
@@ -180,6 +198,33 @@ export default function Show({ transaction }) {
                 toast.error("Gagal menghapus transaksi");
             },
         });
+    };
+
+    // Installment Action Handlers
+    const approvePayment = (installmentId) => {
+        if (confirm("Apakah anda yakin ingin menyetujui pembayaran ini?")) {
+            router.post(
+                route("admin.installments.approve", installmentId),
+                {},
+                {
+                    onSuccess: () => toast.success("Pembayaran disetujui"),
+                    onError: () => toast.error("Gagal memproses"),
+                }
+            );
+        }
+    };
+
+    const rejectPayment = (installmentId) => {
+        if (confirm("Apakah anda yakin ingin menolak pembayaran ini?")) {
+            router.post(
+                route("admin.installments.reject", installmentId),
+                {},
+                {
+                    onSuccess: () => toast.success("Pembayaran ditolak"),
+                    onError: () => toast.error("Gagal memproses"),
+                }
+            );
+        }
     };
 
     // Document Upload Form
@@ -450,6 +495,190 @@ export default function Show({ transaction }) {
                                                 )}
                                             </span>
                                         </div>
+                                    </div>
+                                </div>
+                            )}
+
+                        {/* Installment History (For Credit) */}
+                        {transaction.transaction_type === "CREDIT" &&
+                            transaction.installments &&
+                            transaction.installments.length > 0 && (
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                        <Clock
+                                            className="text-primary"
+                                            size={20}
+                                        />{" "}
+                                        Riwayat Angsuran
+                                    </h3>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm text-left">
+                                            <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                                <tr>
+                                                    <th className="px-4 py-3">
+                                                        Ke
+                                                    </th>
+                                                    <th className="px-4 py-3">
+                                                        Jatuh Tempo
+                                                    </th>
+                                                    <th className="px-4 py-3">
+                                                        Nominal
+                                                    </th>
+                                                    <th className="px-4 py-3">
+                                                        Metode
+                                                    </th>
+                                                    <th className="px-4 py-3">
+                                                        Bukti
+                                                    </th>
+                                                    <th className="px-4 py-3">
+                                                        Status
+                                                    </th>
+                                                    <th className="px-4 py-3 text-right">
+                                                        Aksi
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-100">
+                                                {transaction.installments.map(
+                                                    (inst) => (
+                                                        <tr
+                                                            key={inst.id}
+                                                            className="hover:bg-gray-50"
+                                                        >
+                                                            <td className="px-4 py-3 font-medium text-gray-900">
+                                                                {inst.installment_number ===
+                                                                0 ? (
+                                                                    <span className="text-primary font-bold">
+                                                                        Uang
+                                                                        Muka
+                                                                        (DP)
+                                                                    </span>
+                                                                ) : (
+                                                                    `#${inst.installment_number}`
+                                                                )}
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                {new Date(
+                                                                    inst.due_date
+                                                                ).toLocaleDateString(
+                                                                    "id-ID",
+                                                                    {
+                                                                        day: "numeric",
+                                                                        month: "short",
+                                                                        year: "numeric",
+                                                                    }
+                                                                )}
+                                                            </td>
+                                                            <td className="px-4 py-3 font-medium">
+                                                                Rp{" "}
+                                                                {new Intl.NumberFormat(
+                                                                    "id-ID"
+                                                                ).format(
+                                                                    inst.amount
+                                                                )}
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                {inst.payment_method ? (
+                                                                    <span className="uppercase text-xs font-bold text-gray-600">
+                                                                        {formatPaymentMethod(
+                                                                            inst.payment_method
+                                                                        )}
+                                                                    </span>
+                                                                ) : (
+                                                                    "-"
+                                                                )}
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                {inst.payment_proof ? (
+                                                                    <a
+                                                                        href={`/storage/${inst.payment_proof}`}
+                                                                        target="_blank"
+                                                                        className="text-blue-600 hover:underline flex items-center gap-1 text-xs font-bold"
+                                                                    >
+                                                                        <Eye
+                                                                            size={
+                                                                                12
+                                                                            }
+                                                                        />{" "}
+                                                                        Lihat
+                                                                    </a>
+                                                                ) : (
+                                                                    "-"
+                                                                )}
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                <span
+                                                                    className={`px-2 py-1 rounded text-xs font-bold capitalize ${
+                                                                        inst.status ===
+                                                                        "paid"
+                                                                            ? "bg-green-100 text-green-700"
+                                                                            : inst.status ===
+                                                                              "waiting_approval"
+                                                                            ? "bg-orange-100 text-orange-700"
+                                                                            : inst.status ===
+                                                                              "overdue"
+                                                                            ? "bg-red-100 text-red-700"
+                                                                            : "bg-gray-100 text-gray-600"
+                                                                    }`}
+                                                                >
+                                                                    {formatStatus(
+                                                                        inst.status
+                                                                    )}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-4 py-3 text-right">
+                                                                {inst.status ===
+                                                                    "waiting_approval" && (
+                                                                    <div className="flex justify-end gap-1">
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                approvePayment(
+                                                                                    inst.id
+                                                                                )
+                                                                            }
+                                                                            className="bg-green-100 text-green-700 p-1.5 rounded hover:bg-green-200 transition-colors"
+                                                                            title="Setujui"
+                                                                        >
+                                                                            <CheckCircle
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                rejectPayment(
+                                                                                    inst.id
+                                                                                )
+                                                                            }
+                                                                            className="bg-red-100 text-red-700 p-1.5 rounded hover:bg-red-200 transition-colors"
+                                                                            title="Tolak"
+                                                                        >
+                                                                            <XCircle
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
+                                                                        </button>
+                                                                    </div>
+                                                                )}
+                                                                {inst.status ===
+                                                                    "paid" && (
+                                                                    <span className="text-green-600 text-xs font-bold flex items-center justify-end gap-1">
+                                                                        <CheckCircle
+                                                                            size={
+                                                                                14
+                                                                            }
+                                                                        />{" "}
+                                                                        Terverifikasi
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             )}
