@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import {
     LayoutDashboard,
@@ -12,13 +12,24 @@ import {
     ChevronDown,
     Bike,
     ShoppingCart,
+    CheckCircle,
+    AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminLayout({ children, title }) {
-    const { auth } = usePage().props;
+    const { auth, flash } = usePage().props;
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [showFlash, setShowFlash] = useState(false);
+
+    useEffect(() => {
+        if (flash.success || flash.error) {
+            setShowFlash(true);
+            const timer = setTimeout(() => setShowFlash(false), 3000); // Auto hide after 3s
+            return () => clearTimeout(timer);
+        }
+    }, [flash]);
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
     const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
@@ -64,6 +75,37 @@ export default function AdminLayout({ children, title }) {
 
     return (
         <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900">
+            {/* Flash Message Alert */}
+            <AnimatePresence>
+                {showFlash && (flash.success || flash.error) && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50, x: "-50%" }}
+                        animate={{ opacity: 1, y: 30, x: "-50%" }}
+                        exit={{ opacity: 0, y: -50, x: "-50%" }}
+                        className={`fixed top-0 left-1/2 z-50 px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 min-w-[300px] justify-center backdrop-blur-md ${
+                            flash.success
+                                ? "bg-green-500/90 text-white border border-green-400"
+                                : "bg-red-500/90 text-white border border-red-400"
+                        }`}
+                    >
+                        {flash.success ? (
+                            <CheckCircle size={20} className="text-white" />
+                        ) : (
+                            <AlertCircle size={20} className="text-white" />
+                        )}
+                        <span className="font-bold text-sm">
+                            {flash.success || flash.error}
+                        </span>
+                        <button 
+                            onClick={() => setShowFlash(false)}
+                            className="ml-auto hover:bg-white/20 rounded-full p-1 transition-colors"
+                        >
+                            <X size={16} />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Sidebar Overlay for Mobile */}
             <AnimatePresence>
                 {isSidebarOpen && (

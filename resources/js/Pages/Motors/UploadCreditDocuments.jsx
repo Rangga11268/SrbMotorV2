@@ -9,8 +9,10 @@ import {
     ArrowLeft,
     Image as ImageIcon,
     X,
+    Trash2,
+    File,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function UploadCreditDocuments({ transaction }) {
     const { data, setData, post, processing, errors, progress } = useForm({
@@ -25,15 +27,25 @@ export default function UploadCreditDocuments({ transaction }) {
     // Helper to handle file input changes
     const handleFileChange = (e, type) => {
         const files = Array.from(e.target.files);
+        // Replace existing files
         setData("documents", {
             ...data.documents,
             [type]: files,
         });
     };
 
+    const handleRemoveFile = (type, index) => {
+        const newFiles = [...data.documents[type]];
+        newFiles.splice(index, 1);
+        setData("documents", {
+            ...data.documents,
+            [type]: newFiles,
+        });
+    };
+
     const submit = (e) => {
         e.preventDefault();
-        post(route("motors.upload-credit-documents.post", transaction.id)); // Note: Check route name in web.php
+        post(route("motors.upload-credit-documents.post", transaction.id));
     };
 
     const formatCurrency = (amount) => {
@@ -153,10 +165,13 @@ export default function UploadCreditDocuments({ transaction }) {
                                             onChange={(e) =>
                                                 handleFileChange(e, "KTP")
                                             }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("KTP", idx)
+                                            }
                                             error={errors["documents.KTP"]}
                                             files={data.documents.KTP}
                                             required
-                                            description="Unggah foto KTP (depan & belakang) atau PDF"
+                                            description="Foto KTP depan & belakang"
                                         />
 
                                         <FileUploadField
@@ -166,10 +181,13 @@ export default function UploadCreditDocuments({ transaction }) {
                                             onChange={(e) =>
                                                 handleFileChange(e, "KK")
                                             }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("KK", idx)
+                                            }
                                             error={errors["documents.KK"]}
                                             files={data.documents.KK}
                                             required
-                                            description="Unggah foto Kartu Keluarga"
+                                            description="Scan atau Foto KK"
                                         />
 
                                         <FileUploadField
@@ -179,12 +197,18 @@ export default function UploadCreditDocuments({ transaction }) {
                                             onChange={(e) =>
                                                 handleFileChange(e, "SLIP_GAJI")
                                             }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile(
+                                                    "SLIP_GAJI",
+                                                    idx
+                                                )
+                                            }
                                             error={
                                                 errors["documents.SLIP_GAJI"]
                                             }
                                             files={data.documents.SLIP_GAJI}
                                             required
-                                            description="Unggah slip gaji 3 bulan terakhir"
+                                            description="Minimal 3 bulan terakhir"
                                         />
 
                                         <FileUploadField
@@ -194,9 +218,12 @@ export default function UploadCreditDocuments({ transaction }) {
                                             onChange={(e) =>
                                                 handleFileChange(e, "LAINNYA")
                                             }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("LAINNYA", idx)
+                                            }
                                             error={errors["documents.LAINNYA"]}
                                             files={data.documents.LAINNYA}
-                                            description="Dokumen pendukung lainnya jika ada"
+                                            description="Dokumen pendukung lainnya"
                                         />
                                     </div>
 
@@ -245,6 +272,7 @@ function FileUploadField({
     id,
     accept,
     onChange,
+    onRemove,
     error,
     files,
     required,
@@ -258,78 +286,99 @@ function FileUploadField({
             >
                 {label} {required && <span className="text-red-500">*</span>}
             </label>
-            <div className="relative group">
-                <input
-                    type="file"
-                    id={id}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                    accept={accept}
-                    multiple
-                    onChange={onChange}
-                    required={required}
-                />
-                <div
-                    className={`w-full p-6 rounded-xl border-2 border-dashed ${
-                        error
-                            ? "border-red-300 bg-red-50"
-                            : "border-gray-300 bg-gray-50 group-hover:border-blue-400 group-hover:bg-blue-50"
-                    } transition-all flex flex-col items-center justify-center text-center min-h-[160px]`}
-                >
-                    <div className="bg-white p-3 rounded-full shadow-sm mb-3">
-                        <Upload size={24} className="text-gray-400" />
-                    </div>
-                    {files && files.length > 0 ? (
-                        <div className="text-sm font-medium text-gray-800">
-                            {files.length} file dipilih
+            <div className="space-y-3">
+                {/* Dropzone Area */}
+                <div className="relative group">
+                    <input
+                        type="file"
+                        id={id}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        accept={accept}
+                        multiple
+                        onChange={onChange}
+                        required={files.length === 0 && required}
+                    />
+                    <div
+                        className={`w-full p-4 rounded-xl border-2 border-dashed ${
+                            error
+                                ? "border-red-300 bg-red-50"
+                                : "border-gray-300 bg-gray-50 group-hover:border-blue-400 group-hover:bg-blue-50"
+                        } transition-all flex flex-col items-center justify-center text-center`}
+                    >
+                        <div className="flex items-center gap-3 text-gray-500 group-hover:text-blue-500 transition-colors">
+                            <Upload size={20} />
+                            <span className="text-sm font-medium">
+                                Klik untuk pilih file / Drag & Drop
+                            </span>
                         </div>
-                    ) : (
-                        <div className="text-sm text-gray-500 font-medium">
-                            Klik untuk memilih file
+                        <div className="text-xs text-gray-400 mt-1">
+                            {description}
                         </div>
-                    )}
-                    <div className="text-xs text-gray-400 mt-1 max-w-xs">
-                        {description}
                     </div>
                 </div>
-            </div>
 
-            {/* Preview List */}
-            {files && files.length > 0 && (
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                    {Array.from(files).map((file, idx) => (
-                        <div
-                            key={idx}
-                            className="relative group bg-white p-2 rounded-lg border border-gray-200 shadow-sm flex flex-col items-center"
+                {/* File List Preview */}
+                <AnimatePresence>
+                    {files && files.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="space-y-2"
                         >
-                            <div className="w-full h-24 bg-gray-100 rounded-md overflow-hidden flex items-center justify-center mb-2">
-                                {file.type.startsWith("image/") ? (
-                                    <img
-                                        src={URL.createObjectURL(file)}
-                                        alt={file.name}
-                                        className="w-full h-full object-cover"
-                                        onLoad={(e) =>
-                                            URL.revokeObjectURL(e.target.src)
-                                        }
-                                    />
-                                ) : (
-                                    <FileText
-                                        size={40}
-                                        className="text-red-500"
-                                    />
-                                )}
-                            </div>
-                            <div className="w-full px-1">
-                                <p className="text-xs text-gray-700 font-medium truncate w-full text-center">
-                                    {file.name}
-                                </p>
-                                <p className="text-[10px] text-gray-400 text-center">
-                                    {(file.size / 1024 / 1024).toFixed(2)} MB
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                            {Array.from(files).map((file, idx) => (
+                                <motion.div
+                                    key={`${file.name}-${idx}`}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 10 }}
+                                    className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all group"
+                                >
+                                    <div className="flex items-center gap-3 overflow-hidden">
+                                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 border border-gray-200">
+                                            {file.type.startsWith("image/") ? (
+                                                <img
+                                                    src={URL.createObjectURL(
+                                                        file
+                                                    )}
+                                                    alt="preview"
+                                                    className="w-full h-full object-cover rounded-lg"
+                                                />
+                                            ) : (
+                                                <FileText
+                                                    size={20}
+                                                    className="text-blue-500"
+                                                />
+                                            )}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-semibold text-gray-700 truncate">
+                                                {file.name}
+                                            </p>
+                                            <p className="text-xs text-gray-400">
+                                                {(
+                                                    file.size /
+                                                    1024 /
+                                                    1024
+                                                ).toFixed(2)}{" "}
+                                                MB
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => onRemove(idx)}
+                                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                        title="Hapus file"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     );
