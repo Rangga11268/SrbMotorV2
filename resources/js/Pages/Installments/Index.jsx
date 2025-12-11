@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Head, useForm, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import {
@@ -13,12 +13,35 @@ import {
     Download,
     X,
     Shield,
+    Zap,
 } from "lucide-react";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 export default function InstallmentIndex({ transactions }) {
     const [selectedInstallment, setSelectedInstallment] = useState(null);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+    const [isLoadingPay, setIsLoadingPay] = useState(false);
+    const [isLoadingCheck, setIsLoadingCheck] = useState(false);
+
+    // Load Snap.js
+    useEffect(() => {
+        const snapUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+        // Using the Client Key provided by user
+        const clientKey = "MMid-client-aAUNIuf1fCSll2qz";
+
+        const script = document.createElement("script");
+        script.src = snapUrl;
+        script.setAttribute("data-client-key", clientKey);
+        script.async = true;
+
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         payment_method: "transfer",
@@ -34,6 +57,67 @@ export default function InstallmentIndex({ transactions }) {
         setIsUploadModalOpen(false);
         setSelectedInstallment(null);
         reset();
+    };
+
+    const handleOnlinePayment = async (installment) => {
+        setIsLoadingPay(true);
+        try {
+            const response = await axios.post(
+                route("installments.create-payment", installment.id)
+            );
+            const token = response.data.snap_token;
+
+            window.snap.pay(token, {
+                onSuccess: function (result) {
+                    // console.log(result);
+                    Swal.fire(
+                        "Berhasil!",
+                        "Pembayaran berhasil diproses.",
+                        "success"
+                    );
+                    router.reload();
+                },
+                onPending: function (result) {
+                    Swal.fire("Pending", "Menunggu pembayaran Anda.", "info");
+                    router.reload();
+                },
+                onError: function (result) {
+                    Swal.fire("Gagal", "Pembayaran gagal.", "error");
+                },
+                onClose: function () {
+                    // Customer closed the popup without finishing the payment
+                },
+            });
+        } catch (error) {
+            console.error(error);
+            Swal.fire("Error", "Gagal memproses pembayaran online.", "error");
+        } finally {
+            setIsLoadingPay(false);
+        }
+    };
+
+    const handleCheckStatus = async (installment) => {
+        setIsLoadingCheck(true);
+        try {
+            const response = await axios.post(
+                route("installments.check-status", installment.id)
+            );
+            Swal.fire({
+                title: "Status Update",
+                text: response.data.message,
+                icon: "info",
+            });
+            router.reload();
+        } catch (error) {
+            console.error(error);
+            Swal.fire(
+                "Info",
+                error.response?.data?.message || "Gagal mengecek status.",
+                "warning"
+            );
+        } finally {
+            setIsLoadingCheck(false);
+        }
     };
 
     const submitPayment = (e) => {
@@ -215,21 +299,67 @@ export default function InstallmentIndex({ transactions }) {
                                                                         "pending" ||
                                                                     inst.status ===
                                                                         "overdue" ? (
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                openUploadModal(
-                                                                                    inst
-                                                                                )
-                                                                            }
-                                                                            className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-blue-200 hover:bg-blue-700 transition-all hover:translate-y-[-1px] inline-flex items-center gap-1.5"
-                                                                        >
-                                                                            <Upload
-                                                                                size={
-                                                                                    14
+                                                                        <div className="flex gap-2 justify-center">
+                                                                            <button
+                                                                                onClick={() =>
+                                                                                    handleOnlinePayment(
+                                                                                        inst
+                                                                                    )
                                                                                 }
-                                                                            />{" "}
-                                                                            Bayar
-                                                                        </button>
+                                                                                disabled={
+                                                                                    isLoadingPay
+                                                                                }
+                                                                                className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-blue-200 hover:bg-blue-700 transition-all hover:translate-y-[-1px] inline-flex items-center gap-1.5"
+                                                                            >
+                                                                                <Zap
+                                                                                    size={
+                                                                                        14
+                                                                                    }
+                                                                                />
+                                                                                {isLoadingPay
+                                                                                    ? "Loading..."
+                                                                                    : "Bayar Online"}
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() =>
+                                                                                    handleCheckStatus(
+                                                                                        inst
+                                                                                    )
+                                                                                }
+                                                                                disabled={
+                                                                                    isLoadingCheck
+                                                                                }
+                                                                                className="bg-yellow-100 text-yellow-700 px-3 py-2 rounded-lg text-sm font-bold hover:bg-yellow-200 transition-all hover:translate-y-[-1px] inline-flex items-center gap-1.5"
+                                                                                title="Cek Status Pembayaran"
+                                                                            >
+                                                                                {isLoadingCheck ? (
+                                                                                    <span className="animate-spin">
+                                                                                        ⌛
+                                                                                    </span>
+                                                                                ) : (
+                                                                                    <Clock
+                                                                                        size={
+                                                                                            14
+                                                                                        }
+                                                                                    />
+                                                                                )}
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() =>
+                                                                                    openUploadModal(
+                                                                                        inst
+                                                                                    )
+                                                                                }
+                                                                                className="bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition-all hover:translate-y-[-1px] inline-flex items-center gap-1.5"
+                                                                            >
+                                                                                <Upload
+                                                                                    size={
+                                                                                        14
+                                                                                    }
+                                                                                />{" "}
+                                                                                {/* Bayar Title Removed for Icon only */}
+                                                                            </button>
+                                                                        </div>
                                                                     ) : inst.status ===
                                                                       "waiting_approval" ? (
                                                                         <span className="text-xs font-medium text-yellow-600 flex items-center justify-center gap-1">

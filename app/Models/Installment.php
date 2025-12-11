@@ -16,6 +16,8 @@ class Installment extends Model
         'payment_method',
         'payment_proof',
         'notes',
+        'snap_token',
+        'midtrans_booking_code',
     ];
 
     protected $casts = [

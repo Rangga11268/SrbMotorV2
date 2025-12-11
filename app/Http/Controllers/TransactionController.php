@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CreditStatusUpdated;
 
 class TransactionController extends Controller
 {
@@ -247,6 +249,15 @@ class TransactionController extends Controller
             }
         }
 
+        // Send email notification for status change
+        if ($request->has('status') || ($request->has('credit_detail') && isset($request->credit_detail['credit_status']))) {
+             // Reload transaction to get latest data including relationships
+             $transaction->refresh();
+             if ($transaction->user && $transaction->user->email) {
+                 Mail::to($transaction->user)->send(new CreditStatusUpdated($transaction));
+             }
+        }
+
         return redirect()->route('admin.transactions.show', $transaction->id)
             ->with('success', 'Transaction updated successfully.');
     }
@@ -287,6 +298,11 @@ class TransactionController extends Controller
         ]);
 
         $transaction->update(['status' => $request->status]);
+
+        // Send email notification
+        if ($transaction->user && $transaction->user->email) {
+            Mail::to($transaction->user)->send(new CreditStatusUpdated($transaction));
+        }
 
         return redirect()->back()
             ->with('success', 'Transaction status updated successfully.');
