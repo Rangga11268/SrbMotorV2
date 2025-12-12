@@ -112,6 +112,18 @@ class ReportController extends Controller
             ];
         });
 
+        // Add raw items for frontend table
+        $data['items'] = $transactions->map(function($t) {
+            return [
+                'id' => $t->id,
+                'created_at' => $t->created_at->format('d M Y H:i'),
+                'customer_name' => $t->user->name ?? 'Guest',
+                'motor_name' => $t->motor->name ?? 'Unknown',
+                'type' => $t->transaction_type,
+                'total_amount' => $t->total_amount,
+            ];
+        })->values();
+
         return $data;
     }
 
@@ -141,6 +153,18 @@ class ReportController extends Controller
                     'credit' => $group->where('transaction_type', 'CREDIT')->sum('total_amount'),
                 ];
             });
+
+        // Add raw items for frontend table
+        $data['items'] = $transactions->map(function($t) {
+            return [
+               'id' => $t->id,
+               'created_at' => $t->created_at->format('d M Y H:i'),
+               'customer_name' => $t->user->name ?? 'Guest',
+               'motor_name' => $t->motor->name ?? 'Unknown',
+               'type' => $t->transaction_type,
+               'total_amount' => $t->total_amount,
+            ];
+        })->values();
 
         return $data;
     }
