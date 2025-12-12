@@ -20,6 +20,7 @@ return [
 
     'fonnte' => [
         'token' => env('FONNTE_TOKEN'),
+        'admin_phone' => env('ADMIN_PHONE'),
     ],
 
     'resend' => [

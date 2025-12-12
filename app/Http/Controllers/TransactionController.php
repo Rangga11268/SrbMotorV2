@@ -268,6 +268,27 @@ class TransactionController extends Controller
              if ($transaction->user && $transaction->user->email) {
                  Mail::to($transaction->user)->send(new CreditStatusUpdated($transaction));
              }
+             
+             // --- WhatsApp Notification Start ---
+             try {
+                if ($transaction->customer_phone) {
+                    $waStatus = $request->status ?? ($request->input('credit_detail.credit_status') ?? 'Updated');
+                    
+                    // Customize message based on status
+                    if ($request->input('credit_detail.credit_status') === 'disetujui') {
+                         $msg = "Selamat {$transaction->customer_name}!\n\nPengajuan Kredit Anda untuk unit *{$transaction->motor->name}* telah *DISETUJUI*.\n\nHarap cek dashboard Anda untuk melihat jadwal pembayaran angsuran (Uang Muka).\n\n- SRB Motor";
+                    } else if ($request->input('credit_detail.credit_status') === 'ditolak') {
+                         $msg = "Halo {$transaction->customer_name},\n\nMohon maaf, pengajuan kredit Anda untuk unit *{$transaction->motor->name}* belum dapat kami setujui saat ini.\n\nHubungi admin untuk info lebih lanjut.\n\n- SRB Motor";
+                    } else {
+                         $msg = "Halo {$transaction->customer_name},\n\nStatus pengajuan #{$transaction->id} diperbarui menjadi: *" . strtoupper(str_replace('_', ' ', $waStatus)) . "*.\n\n- SRB Motor";
+                    }
+                    
+                    \App\Services\WhatsAppService::sendMessage($transaction->customer_phone, $msg);
+                }
+             } catch (\Exception $e) {
+                 \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
+             }
+             // --- WhatsApp Notification End ---
         }
 
         return redirect()->route('admin.transactions.show', $transaction->id)
@@ -315,6 +336,17 @@ class TransactionController extends Controller
         if ($transaction->user && $transaction->user->email) {
             Mail::to($transaction->user)->send(new CreditStatusUpdated($transaction));
         }
+        
+        // --- WhatsApp Notification Start ---
+        try {
+            if ($transaction->customer_phone) {
+                $statusMsg = "Halo {$transaction->customer_name},\n\nStatus pesanan #{$transaction->id} untuk motor *{$transaction->motor->name}* telah diperbarui menjadi: *" . strtoupper(str_replace('_', ' ', $request->status)) . "*.\n\nCek detailnya di dashboard user.\n\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($transaction->customer_phone, $statusMsg);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
+        }
+        // --- WhatsApp Notification End ---
 
         return redirect()->back()
             ->with('success', 'Transaction status updated successfully.');

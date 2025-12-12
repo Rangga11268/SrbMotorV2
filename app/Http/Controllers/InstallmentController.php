@@ -196,6 +196,17 @@ class InstallmentController extends Controller
                 'paid_at' => now(),
             ]);
 
+            // --- WhatsApp Notification: Notify Admin of New Payment Proof ---
+            try {
+                $adminPhone = config('services.fonnte.admin_phone');
+                if ($adminPhone) {
+                    $user = Auth::user();
+                    $motor = $installment->transaction->motor->name;
+                    $msg = "*[ADMIN] Bukti Pembayaran Cicilan Baru*\n\nUser: {$user->name}\nUnit: {$motor}\nCicilan Ke: {$installment->installment_number}\n\nSegera verifikasi di dashboard.";
+                    \App\Services\WhatsAppService::sendMessage($adminPhone, $msg);
+                }
+            } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }
+
             return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah. Menunggu verifikasi admin.');
         }
 
@@ -215,6 +226,24 @@ class InstallmentController extends Controller
             'status' => 'paid',
         ]);
 
+        // --- WhatsApp Notification: Notify User of Approval ---
+        try {
+            $user = $installment->transaction->user;
+            if ($user && $user->phone) { // Assuming phone is on User model based on previous code usage
+                // Wait, TransactionController used $transaction->customer_phone which comes from `transactions` table.
+                // InstallmentController assumes Auth::user() context for store, but approve is Admin context.
+                // Does User model have phone? TransactionController index uses $user->phone in some searches?
+                // Let's safe check transaction->customer_phone OR user->phone if available.
+                // Actually Transaction has customer_phone.
+                $phone = $installment->transaction->customer_phone ?? $user->phone;
+                
+                if ($phone) {
+                     $msg = "Halo {$user->name},\n\nPembayaran cicilan ke-{$installment->installment_number} Anda telah *DIVERIFIKASI/DITERIMA*.\n\nTerima kasih atas pembayarannya.\n\n- SRB Motor";
+                     \App\Services\WhatsAppService::sendMessage($phone, $msg);
+                }
+            }
+        } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }
+
         return redirect()->back()->with('success', 'Pembayaran cicilan berhasil diverifikasi.');
     }
 
@@ -228,12 +257,21 @@ class InstallmentController extends Controller
         }
 
         $installment->update([
-            'status' => 'pending', // Revert to pending so user can upload again
-            'payment_proof' => null, // Optional: Clear the invalid proof or keep it for history? Let's keep it in storage but maybe clear the reference? 
-            // Actually, better to keep the file but allow re-upload. 
-            // If we set status to pending, user logic in Index.jsx allows re-upload if status is pending or overdue.
-            // Let's just update status.
+            'status' => 'pending', 
+            // 'payment_proof' => null, // Optional
         ]);
+
+        // --- WhatsApp Notification: Notify User of Rejection ---
+        try {
+            $user = $installment->transaction->user;
+             // Use customer_phone from transaction if available
+            $phone = $installment->transaction->customer_phone ?? $user->phone;
+
+            if ($phone) {
+                  $msg = "Halo {$user->name},\n\nMohon maaf, bukti pembayaran cicilan ke-{$installment->installment_number} Anda *DITOLAK* (tidak valid/buram).\n\nSilakan unggah ulang bukti yang valid.\n\n- SRB Motor";
+                  \App\Services\WhatsAppService::sendMessage($phone, $msg);
+            }
+        } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }
 
         return redirect()->back()->with('success', 'Pembayaran cicilan ditolak. User dapat mengupload ulang bukti.');
     }

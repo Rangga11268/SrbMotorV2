@@ -138,6 +138,26 @@ class MotorGalleryController extends Controller
             'customer_occupation' => $request->customer_occupation,
         ]);
         
+        // --- WhatsApp Notification Start ---
+        try {
+            // 1. Notify User
+            if ($request->customer_phone) {
+                $userMsg = "Halo {$request->customer_name},\n\nTerima kasih! Pesanan motor *{$motor->name}* Anda telah kami terima.\nOrder ID: #{$transaction->id}\n\nSilakan lanjutkan pembayaran Booking Fee agar kami dapat segera memproses pesanan Anda.\n\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($request->customer_phone, $userMsg);
+            }
+
+            // 2. Notify Admin
+            $adminPhone = config('services.fonnte.admin_phone');
+            if ($adminPhone) {
+                $adminMsg = "*[ADMIN] Order Tunai Baru*\n\nPelanggan: {$request->customer_name}\nUnit: {$motor->name}\nTelp: {$request->customer_phone}\n\nSegera cek dashboard admin.";
+                \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
+            }
+        } catch (\Exception $e) {
+            // Log error or ignore to prevent blocking the flow
+            \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
+        }
+        // --- WhatsApp Notification End ---
+        
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
             ->with('success', 'Pesanan tunai Anda telah dibuat. Silakan lanjutkan ke halaman konfirmasi.');
     }
@@ -199,6 +219,25 @@ class MotorGalleryController extends Controller
             'credit_status' => 'menunggu_persetujuan', // Initially pending but waiting for documents
         ]);
         
+        // --- WhatsApp Notification Start ---
+        try {
+            // 1. Notify User
+            if ($request->customer_phone) {
+                $userMsg = "Halo {$request->customer_name},\n\nPengajuan Kredit untuk motor *{$motor->name}* telah diterima.\nOrder ID: #{$transaction->id}\nTenor: {$request->tenor} Bulan\nCicilan: Rp " . number_format($monthlyInstallment, 0, ',', '.') . "\n\nMohon SEGERA UNGGAH DOKUMEN (KTP, KK, Slip Gaji) agar pengajuan dapat kami proses.\n\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($request->customer_phone, $userMsg);
+            }
+
+            // 2. Notify Admin
+            $adminPhone = config('services.fonnte.admin_phone');
+            if ($adminPhone) {
+                $adminMsg = "*[ADMIN] Pengajuan Kredit Baru*\n\nPelanggan: {$request->customer_name}\nUnit: {$motor->name}\nTenor: {$request->tenor} Bulan\n\nSegera cek dokumen di dashboard.";
+                \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
+        }
+        // --- WhatsApp Notification End ---
+
         return redirect()->route('motors.upload-credit-documents', ['transaction' => $transaction->id])
             ->with('success', 'Pengajuan kredit berhasil dibuat. Silakan lengkapi dokumen untuk melanjutkan proses.');
     }

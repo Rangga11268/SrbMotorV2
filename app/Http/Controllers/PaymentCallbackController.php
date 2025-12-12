@@ -66,6 +66,7 @@ class PaymentCallbackController extends Controller
 
                 $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => $methodStr]);
                 $this->sendSuccessNotification($installment);
+            }
             
             // Check if all installments are paid for the transaction
             $transaction = $installment->transaction;
