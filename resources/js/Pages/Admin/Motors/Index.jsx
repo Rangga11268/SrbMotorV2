@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, usePage, router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Modal from "@/Components/Modal";
 import {
@@ -10,12 +10,15 @@ import {
     Bike,
     CheckCircle,
     XCircle,
+    Filter,
+    ChevronDown,
+    ArrowRight,
+    TriangleAlert,
+    Eye,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 export default function Index({ motors, filters }) {
-    const { auth } = usePage().props;
-
     // Search handling
     const [search, setSearch] = useState(filters.search || "");
 
@@ -69,168 +72,215 @@ export default function Index({ motors, filters }) {
                 processing={processing}
             />
 
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <h2 className="text-xl font-bold flex items-center gap-2">
-                        <Bike className="text-primary" /> Daftar Motor
-                    </h2>
-
-                    <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                        <form onSubmit={handleSearch} className="relative">
-                            <input
-                                type="text"
-                                placeholder="Cari unit motor..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none w-full md:w-64"
-                            />
-                            <Search
-                                className="absolute left-3 top-2.5 text-gray-400"
-                                size={18}
-                            />
-                        </form>
-
-                        <Link
-                            href={route("admin.motors.create")}
-                            className="bg-primary text-white px-4 py-2 rounded-lg font-bold hover:bg-dark-blue transition-colors flex items-center justify-center gap-2"
-                        >
-                            <Plus size={20} /> Tambah Motor
-                        </Link>
+            <div className="space-y-6">
+                {/* Header */}
+                <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+                    <div>
+                        <p className="text-gray-500 text-sm">
+                            Kelola katalog unit motor yang tersedia.
+                        </p>
                     </div>
+
+                    <Link
+                        href={route("admin.motors.create")}
+                        className="group inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold hover:bg-dark-blue transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95"
+                    >
+                        <Plus
+                            size={20}
+                            className="group-hover:rotate-90 transition-transform duration-300"
+                        />
+                        <span>Tambah Motor</span>
+                    </Link>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider">
-                                <th className="p-4 rounded-tl-xl">Gambar</th>
-                                <th className="p-4">Nama Motor</th>
-                                <th className="p-4">Brand</th>
-                                <th className="p-4">Tahun</th>
-                                <th className="p-4">Harga</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4 rounded-tr-xl text-center">
-                                    Aksi
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {motors.data.length > 0 ? (
-                                motors.data.map((motor) => (
-                                    <tr
-                                        key={motor.id}
-                                        className="hover:bg-gray-50 transition-colors"
-                                    >
-                                        <td className="p-4">
-                                            <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200">
-                                                <img
-                                                    src={`/storage/${motor.image_path}`}
-                                                    alt={motor.name}
-                                                    className="w-full h-full object-cover"
+                {/* Toolbar */}
+                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <form
+                        onSubmit={handleSearch}
+                        className="relative w-full md:max-w-md group"
+                    >
+                        <input
+                            type="text"
+                            placeholder="Cari unit motor..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-medium text-gray-700 placeholder-gray-400 group-hover:bg-gray-50/80"
+                        />
+                        <Search
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                            size={20}
+                        />
+                    </form>
+                </div>
+
+                {/* Table */}
+                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-slate-50/50 border-b border-gray-100 text-gray-400 text-xs font-bold uppercase tracking-wider">
+                                    <th className="p-6">Unit Motor</th>
+                                    <th className="p-6">Brand</th>
+                                    <th className="p-6">Harga OTR</th>
+                                    <th className="p-6">Tahun</th>
+                                    <th className="p-6">Status</th>
+                                    <th className="p-6 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
+                                {motors.data.length > 0 ? (
+                                    motors.data.map((motor) => (
+                                        <tr
+                                            key={motor.id}
+                                            className="hover:bg-blue-50/30 transition-colors group"
+                                        >
+                                            <td className="p-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden shrink-0 group-hover:scale-105 transition-transform duration-300">
+                                                        <img
+                                                            src={`/storage/${motor.image_path}`}
+                                                            alt={motor.name}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-bold text-gray-900 text-base">
+                                                            {motor.name}
+                                                        </div>
+                                                        <div className="text-xs text-gray-500 font-medium mt-0.5">
+                                                            {motor.type ||
+                                                                "Standard"}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-6">
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                                                        motor.brand === "Yamaha"
+                                                            ? "bg-blue-50 text-blue-700 border-blue-100"
+                                                            : "bg-red-50 text-red-700 border-red-100"
+                                                    }`}
+                                                >
+                                                    {motor.brand}
+                                                </span>
+                                            </td>
+                                            <td className="p-6">
+                                                <div className="font-bold text-gray-900">
+                                                    Rp{" "}
+                                                    {new Intl.NumberFormat(
+                                                        "id-ID"
+                                                    ).format(motor.price)}
+                                                </div>
+                                            </td>
+                                            <td className="p-6 text-gray-600 font-medium">
+                                                {motor.year}
+                                            </td>
+                                            <td className="p-6">
+                                                {motor.tersedia ? (
+                                                    <span className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full text-xs font-bold border border-emerald-100">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                        Tersedia
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center gap-1.5 text-rose-700 bg-rose-50 px-3 py-1 rounded-full text-xs font-bold border border-rose-100">
+                                                        <XCircle size={10} />{" "}
+                                                        Stok Habis
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="p-6">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <Link
+                                                        href={route(
+                                                            "admin.motors.show",
+                                                            motor.id
+                                                        )}
+                                                        className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                                                        title="Lihat Detail"
+                                                    >
+                                                        <Eye size={14} />
+                                                    </Link>
+                                                    <Link
+                                                        href={route(
+                                                            "admin.motors.edit",
+                                                            motor.id
+                                                        )}
+                                                        className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                                                        title="Edit Motor"
+                                                    >
+                                                        <Edit size={14} />
+                                                    </Link>
+                                                    <button
+                                                        onClick={() =>
+                                                            confirmDelete(motor)
+                                                        }
+                                                        className="w-8 h-8 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm"
+                                                        title="Hapus Motor"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td
+                                            colSpan="6"
+                                            className="p-12 text-center"
+                                        >
+                                            <div className="flex flex-col items-center justify-center text-gray-300">
+                                                <Bike
+                                                    size={48}
+                                                    className="mb-4 opacity-50"
                                                 />
-                                            </div>
-                                        </td>
-                                        <td className="p-4 font-bold text-gray-800">
-                                            {motor.name}
-                                        </td>
-                                        <td className="p-4">
-                                            <span
-                                                className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                                    motor.brand === "Yamaha"
-                                                        ? "bg-blue-100 text-blue-700"
-                                                        : "bg-red-100 text-red-700"
-                                                }`}
-                                            >
-                                                {motor.brand}
-                                            </span>
-                                        </td>
-                                        <td className="p-4 text-gray-600">
-                                            {motor.year}
-                                        </td>
-                                        <td className="p-4 font-bold text-dark-blue">
-                                            Rp{" "}
-                                            {new Intl.NumberFormat(
-                                                "id-ID"
-                                            ).format(motor.price)}
-                                        </td>
-                                        <td className="p-4">
-                                            {motor.tersedia ? (
-                                                <span className="flex items-center gap-1 text-green-600 bg-green-50 px-3 py-1 rounded-full text-xs font-bold w-fit">
-                                                    <CheckCircle size={14} />{" "}
-                                                    Tersedia
-                                                </span>
-                                            ) : (
-                                                <span className="flex items-center gap-1 text-red-600 bg-red-50 px-3 py-1 rounded-full text-xs font-bold w-fit">
-                                                    <XCircle size={14} /> Stok
-                                                    Habis
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className="p-4">
-                                            <div className="flex items-center justify-center gap-2">
-                                                <Link
-                                                    href={route(
-                                                        "admin.motors.edit",
-                                                        motor.id
-                                                    )}
-                                                    className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-                                                >
-                                                    <Edit size={18} />
-                                                </Link>
-                                                <button
-                                                    onClick={() =>
-                                                        confirmDelete(motor)
-                                                    }
-                                                    className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
+                                                <p className="text-lg font-bold text-gray-500">
+                                                    Tidak ada motor ditemukan.
+                                                </p>
+                                                <p className="text-sm">
+                                                    Mulai dengan menambahkan
+                                                    unit motor baru.
+                                                </p>
                                             </div>
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan="7"
-                                        className="p-8 text-center text-gray-500"
-                                    >
-                                        Data motor tidak ditemukan.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Pagination */}
-                <div className="mt-6 flex justify-center">
-                    <div className="flex gap-2">
-                        {motors.links.map((link, index) =>
-                            link.url ? (
-                                <Link
-                                    key={index}
-                                    href={link.url}
-                                    dangerouslySetInnerHTML={{
-                                        __html: link.label,
-                                    }}
-                                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
-                                        link.active
-                                            ? "bg-primary text-white"
-                                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                    }`}
-                                />
-                            ) : (
-                                <span
-                                    key={index}
-                                    dangerouslySetInnerHTML={{
-                                        __html: link.label,
-                                    }}
-                                    className="px-4 py-2 rounded-lg text-sm font-bold bg-gray-50 text-gray-300 cursor-not-allowed"
-                                />
-                            )
-                        )}
+                                )}
+                            </tbody>
+                        </table>
                     </div>
+
+                    {/* Pagination */}
+                    {motors.links.length > 3 && (
+                        <div className="p-6 border-t border-gray-100 flex justify-center bg-gray-50/30">
+                            <div className="flex flex-wrap gap-2 justify-center">
+                                {motors.links.map((link, index) =>
+                                    link.url ? (
+                                        <Link
+                                            key={index}
+                                            href={link.url}
+                                            dangerouslySetInnerHTML={{
+                                                __html: link.label,
+                                            }}
+                                            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                                                link.active
+                                                    ? "bg-primary text-white shadow-primary/30 scale-105"
+                                                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                                            }`}
+                                        />
+                                    ) : (
+                                        <span
+                                            key={index}
+                                            dangerouslySetInnerHTML={{
+                                                __html: link.label,
+                                            }}
+                                            className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 text-gray-300 cursor-not-allowed border border-transparent"
+                                        />
+                                    )
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </AdminLayout>

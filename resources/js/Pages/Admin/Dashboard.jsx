@@ -2,6 +2,10 @@ import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
+    RevenueChart,
+    StatusPieChart,
+} from "@/Components/Admin/DashboardCharts";
+import {
     Bike,
     Users,
     ShoppingCart,
@@ -13,6 +17,8 @@ import {
     CheckCircle,
     XCircle,
     AlertCircle,
+    BarChart3,
+    PieChart as PieChartIcon,
 } from "lucide-react";
 
 export default function Dashboard({
@@ -24,6 +30,8 @@ export default function Dashboard({
     creditTransactionsCount,
     recentTransactions,
     recentMotors,
+    monthlyStats,
+    statusStats,
 }) {
     const stats = [
         {
@@ -126,6 +134,44 @@ export default function Dashboard({
                         )}
                     </div>
                 ))}
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 className="font-bold text-lg text-gray-900 flex items-center gap-2">
+                                <BarChart3
+                                    size={20}
+                                    className="text-blue-500"
+                                />{" "}
+                                Pendapatan & Penjualan
+                            </h3>
+                            <p className="text-gray-500 text-xs mt-1">
+                                Tren pendapatan 6 bulan terakhir
+                            </p>
+                        </div>
+                    </div>
+                    <RevenueChart data={monthlyStats} />
+                </div>
+                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 className="font-bold text-lg text-gray-900 flex items-center gap-2">
+                                <PieChartIcon
+                                    size={20}
+                                    className="text-purple-500"
+                                />{" "}
+                                Status Pesanan
+                            </h3>
+                            <p className="text-gray-500 text-xs mt-1">
+                                Distribusi status transaksi
+                            </p>
+                        </div>
+                    </div>
+                    <StatusPieChart data={statusStats} />
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -309,9 +309,12 @@ export default function Show({ transaction }) {
             <div className="max-w-7xl mx-auto">
                 <Link
                     href={route("admin.transactions.index")}
-                    className="inline-flex items-center gap-2 text-gray-500 hover:text-primary mb-6 font-medium transition-colors"
+                    className="inline-flex items-center gap-2 text-gray-500 hover:text-primary mb-6 font-bold transition-colors group"
                 >
-                    <ArrowLeft size={20} /> Kembali ke Daftar Transaksi
+                    <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                        <ArrowLeft size={16} />
+                    </div>
+                    <span className="text-sm">Kembali ke Daftar</span>
                 </Link>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
@@ -854,10 +857,10 @@ export default function Show({ transaction }) {
                                         </p>
                                     </div>
                                     <div
-                                        className={`px-3 py-1 rounded-lg text-xs font-bold border capitalize ${
+                                        className={`px-3 py-1 rounded-full text-xs font-bold border capitalize ${
                                             transaction.transaction_type ===
                                             "CASH"
-                                                ? "bg-green-50 text-green-700 border-green-100"
+                                                ? "bg-emerald-50 text-emerald-700 border-emerald-100"
                                                 : "bg-purple-50 text-purple-700 border-purple-100"
                                         }`}
                                     >
@@ -868,7 +871,7 @@ export default function Show({ transaction }) {
                                 </div>
                                 <div className="mt-2">
                                     <span
-                                        className={`block w-full text-center py-2 rounded-xl text-sm font-bold capitalize ${getStatusColor(
+                                        className={`block w-full text-center py-2.5 rounded-xl text-sm font-black tracking-wide capitalize ${getStatusColor(
                                             transaction.status
                                         )}`}
                                     >

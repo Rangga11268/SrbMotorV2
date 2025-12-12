@@ -12,19 +12,19 @@
 
         /* Color Variables (Hardcoded for PDF compatibility) */
         :root {
-            --primary-color: #1a4f9c; /* Deep Blue */
-            --secondary-color: #f3f4f6; /* Light Gray */
-            --accent-color: #e74c3c; /* Red for emphasis/stamps */
-            --text-color: #2d3748;
-            --muted-color: #718096;
+            --primary-color: #1e3a8a; /* Premium Royal Blue */
+            --secondary-color: #f8fafc; /* Very Light Slate */
+            --accent-color: #dc2626; /* Red for stamps */
+            --text-color: #1e293b; /* Slate 800 */
+            --muted-color: #64748b; /* Slate 500 */
             --border-color: #e2e8f0;
         }
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 13px; /* Slightly smaller for density, but scalable */
+            font-size: 13px;
             line-height: 1.5;
-            color: #2d3748;
+            color: #1e293b;
             margin: 0;
             padding: 0;
             background: #fff;
@@ -32,16 +32,16 @@
 
         /* Main Container with A4 margins logic */
         .page-container {
-            padding: 50px 60px; /* Standard invoice margins */
+            padding: 50px 60px;
             position: relative;
-            height: 100vh; /* Approximate full height consideration */
+            height: 100vh;
         }
 
         /* Top Decorative Bar */
         .top-bar {
             width: 100%;
-            height: 10px;
-            background-color: #1a4f9c;
+            height: 12px;
+            background-color: #1e3a8a; /* Premium Blue */
             position: absolute;
             top: 0;
             left: 0;
@@ -59,14 +59,14 @@
         .logo-text {
             font-size: 28px;
             font-weight: 800;
-            color: #1a4f9c;
+            color: #1e3a8a;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
         .company-address {
             font-size: 11px;
-            color: #718096;
+            color: #64748b;
             line-height: 1.4;
         }
 
@@ -77,7 +77,7 @@
         }
         .invoice-title {
             font-size: 32px;
-            font-weight: 100; /* Thin look */
+            font-weight: 100;
             color: #cbd5e0;
             text-transform: uppercase;
             margin: 0 0 10px 0;
@@ -89,7 +89,7 @@
         }
         .meta-label {
             font-size: 11px;
-            color: #718096;
+            color: #64748b;
             font-weight: bold;
             text-transform: uppercase;
             padding-right: 10px;
@@ -97,7 +97,7 @@
         .meta-value {
             font-size: 13px;
             font-weight: bold;
-            color: #2d3748;
+            color: #1e293b;
         }
 
         /* Clearfix */
@@ -114,33 +114,31 @@
             padding-top: 30px;
         }
         .info-col {
-            width: 46%;
+            width: 48%;
             float: left;
         }
         .info-col-right {
             float: right;
-            text-align: right; /* Aligned right for balance */
+            text-align: right;
         }
         .section-title {
             font-size: 10px;
             font-weight: bold;
             text-transform: uppercase;
-            color: #a0aec0;
+            color: #94a3b8;
             letter-spacing: 1.5px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #edf2f7;
-            padding-bottom: 5px;
-            display: inline-block;
+            margin-bottom: 10px;
+            display: block;
         }
         .client-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            margin-bottom: 5px;
-            color: #1a4f9c;
+            margin-bottom: 4px;
+            color: #1e3a8a;
         }
         .client-address {
             font-size: 12px;
-            color: #4a5568;
+            color: #475569;
         }
 
         /* Main Table */
@@ -152,20 +150,22 @@
             border-collapse: collapse;
         }
         .custom-table th {
-            background-color: #f7fafc;
-            color: #1a4f9c;
-            font-size: 10px;
+            background-color: #f8fafc;
+            color: #1e3a8a;
+            font-size: 11px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             padding: 12px 15px;
             text-align: left;
-            border-bottom: 2px solid #1a4f9c;
+            border-top: 2px solid #1e3a8a;
+            border-bottom: 2px solid #1e3a8a;
         }
         .custom-table td {
             padding: 15px;
-            border-bottom: 1px solid #edf2f7;
+            border-bottom: 1px solid #e2e8f0;
             vertical-align: top;
+            color: #334155;
         }
         .custom-table tr:nth-child(even) {
             background-color: #fbfdff;
@@ -173,12 +173,12 @@
         .description-title {
             font-weight: bold;
             font-size: 14px;
-            color: #2d3748;
+            color: #1e293b;
             margin-bottom: 5px;
         }
         .description-sub {
             font-size: 11px;
-            color: #718096;
+            color: #64748b;
         }
 
         /* Total Section */
@@ -187,12 +187,12 @@
             margin-bottom: 50px;
         }
         .total-box {
-            width: 40%;
+            width: 45%;
             float: right;
-            background-color: #1a4f9c;
+            background-color: #1e3a8a;
             color: white;
-            padding: 20px;
-            border-radius: 4px;
+            padding: 25px;
+            border-radius: 12px; /* Rounded corners for premium feel */
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .total-row {
@@ -204,7 +204,7 @@
             display: table-cell;
             font-size: 12px;
             text-transform: uppercase;
-            opacity: 0.8;
+            opacity: 0.9;
             padding-right: 20px;
         }
         .total-value {
@@ -223,9 +223,10 @@
             font-family: 'Courier New', Courier, monospace;
             font-size: 60px;
             font-weight: 900;
-            color: #48bb78; /* Green */
-            border: 4px solid #48bb78;
-            padding: 10px 40px;
+            color: #22c55e; /* Green 500 */
+            border: 4px solid #22c55e;
+            border-radius: 10px;
+            padding: 15px 40px;
             transform: rotate(-15deg);
             opacity: 0.15;
             z-index: 0;
@@ -236,27 +237,28 @@
 
         /* Footer */
         .footer {
-            margin-top: 100px;
+            margin-top: 80px;
             border-top: 1px solid #e2e8f0;
             padding-top: 30px;
         }
         .footer-note {
             font-size: 11px;
-            color: #718096;
+            color: #64748b;
             margin-bottom: 20px;
             font-style: italic;
         }
         .footer-bottom {
             width: 100%;
             font-size: 10px;
-            color: #a0aec0;
+            color: #94a3b8;
             text-align: center;
+            margin-top: 40px;
         }
         .signature-area {
             width: 200px;
             float: right;
             text-align: center;
-            margin-top: -80px; /* Pull up into the margin */
+            margin-top: -60px;
         }
         .signature-line {
             border-bottom: 1px solid #cbd5e0;
@@ -265,7 +267,7 @@
         .signature-text {
             font-size: 11px;
             font-weight: bold;
-            color: #1a4f9c;
+            color: #1e3a8a;
         }
 
     </style>
@@ -281,6 +283,7 @@
         <!-- Header -->
         <div class="header clearfix">
             <div class="logo-section">
+                <!-- If you have a logo image, uncomment this: <img src="{{ public_path('images/logo.png') }}" height="50" style="margin-bottom:10px;"> -->
                 <div class="logo-text">SRB MOTOR</div>
                 <div class="company-address">
                     Jl. Raya Motor No. 123, Jakarta, Indonesia<br>
@@ -310,7 +313,7 @@
         <!-- Info Grid -->
         <div class="info-section clearfix">
             <div class="info-col">
-                <div class="section-title">DITERIMA DARI</div>
+                <span class="section-title">Kepada Yth.</span>
                 <div class="client-name">{{ $installment->transaction->user->name }}</div>
                 <div class="client-address">
                     @if($installment->transaction->customer_phone)
@@ -322,19 +325,19 @@
                     @if($installment->transaction->user->email)
                         {{ $installment->transaction->user->email }}<br>
                     @endif
-                    ID Pelanggan: CUST-{{ $installment->transaction->user_id }}
+                    ID: CUST-{{ $installment->transaction->user_id }}
                 </div>
             </div>
-            <div class="info-col info-col-right" style="width: 40%;"> <!-- Slightly narrower to balance -->
-                <div class="section-title">METODE PEMBAYARAN</div>
-                <div class="client-name" style="font-size: 16px;">
+            <div class="info-col info-col-right" style="width: 40%;"> 
+                <span class="section-title">Detail Pembayaran</span>
+                <div class="client-name" style="font-size: 15px;">
                     {{ ucwords(str_replace(['_', 'midtrans'], [' ', ''], $installment->payment_method)) }}
                 </div>
                 <div class="client-address">
                     @if($installment->midtrans_booking_code)
                         Kode Booking: {{ $installment->midtrans_booking_code }}<br>
                     @endif
-                    Waktu Bayar: {{ \Carbon\Carbon::parse($installment->paid_at)->format('d F Y, H:i') }} WIB
+                    Waktu: {{ \Carbon\Carbon::parse($installment->paid_at)->format('d F Y, H:i') }} WIB
                 </div>
             </div>
         </div>
@@ -373,11 +376,10 @@
                                 @endif
                             </div>
                         </td>
-                        <td style="text-align: right; font-weight: bold;">
+                        <td style="text-align: right; font-weight: bold; font-size: 14px;">
                             Rp {{ number_format($installment->amount, 0, ',', '.') }}
                         </td>
                     </tr>
-                    <!-- Adds some empty rows to fill visualization if needed, or keep clean -->
                 </tbody>
             </table>
         </div>
@@ -402,24 +404,25 @@
             <div class="signature-area">
                 <div class="signature-line"></div>
                 <div class="signature-text">Finance Department</div>
-                <div style="font-size: 9px; color: #a0aec0;">Generated electronically</div>
+                <div style="font-size: 9px; color: #94a3b8;">Digitally Signed</div>
             </div>
 
             <div style="float: left; width: 60%;">
                 <p class="footer-note">
                     <strong>Catatan Penting:</strong><br>
-                    Simpan bukti pembayaran ini sebagai bukti transaksi yang sah. Harap hubungi layanan pelanggan jika terdapat kesalahan data.<br>
-                    Syarat dan ketentuan berlaku.
+                    Pembayaran ini telah diverifikasi secara otomatis oleh sistem SRB Motor. 
+                    Simpan dokumen ini sebagai bukti pembayaran yang sah.
                 </p>
             </div>
             
             <div style="clear: both;"></div>
             
             <div class="footer-bottom">
-                 &copy; {{ date('Y') }} SRB Motor. All rights reserved. System Generated Receipt.
+                 &copy; {{ date('Y') }} SRB Motor. All rights reserved. • Generated by SRB System.
             </div>
         </div>
 
     </div>
 </body>
 </html>
+

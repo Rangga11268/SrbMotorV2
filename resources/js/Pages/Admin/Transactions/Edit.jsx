@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { ArrowLeft, Save } from "lucide-react";
+import {
+    ArrowLeft,
+    Save,
+    User,
+    Bike,
+    CreditCard,
+    Banknote,
+    FileText,
+    CheckCircle2,
+    Calculator,
+} from "lucide-react";
 
 export default function Edit({ transaction, users, motors }) {
     const { credit_detail } = transaction;
@@ -30,18 +40,33 @@ export default function Edit({ transaction, users, motors }) {
         },
     });
 
+    const [selectedMotorPrice, setSelectedMotorPrice] = useState(
+        transaction.total_amount || 0
+    );
+
+    // Initial load price logic
+    useEffect(() => {
+        if (transaction.motor_id) {
+            const motor = motors.find((m) => m.id == transaction.motor_id);
+            if (motor) setSelectedMotorPrice(motor.price);
+        }
+    }, []);
+
     // Auto-fill total amount when motor changes
     useEffect(() => {
-        if (data.motor_id && data.motor_id != transaction.motor_id) {
+        if (data.motor_id) {
+            // Always update if motor_id is selected
             const selectedMotor = motors.find((m) => m.id == data.motor_id);
             if (selectedMotor) {
+                const price = parseFloat(selectedMotor.price);
+                setSelectedMotorPrice(price);
                 setData((prev) => ({
                     ...prev,
-                    total_amount: parseFloat(selectedMotor.price),
+                    total_amount: price,
                 }));
             }
         }
-    }, [data.motor_id]);
+    }, [data.motor_id, motors]);
 
     // Calculate Installment
     useEffect(() => {
@@ -57,6 +82,10 @@ export default function Edit({ transaction, users, motors }) {
     ]);
 
     const calculateInstallment = () => {
+        // Prevent overwrite on initial load if no change
+        // In edit mode, we might want to respect existing values unless user changes parameters.
+        // For simplicity, we recalculate if parameters change.
+
         const total = parseFloat(data.total_amount) || 0;
         const dp = parseFloat(data.credit_detail.down_payment) || 0;
         const tenor = parseInt(data.credit_detail.tenor) || 12;
@@ -90,385 +119,597 @@ export default function Edit({ transaction, users, motors }) {
         }));
     };
 
+    const formatCurrency = (val) =>
+        new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+        }).format(val);
+
     return (
         <AdminLayout title={`Edit Transaksi #${transaction.id}`}>
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-800">
-                        Edit Transaksi #{transaction.id}
-                    </h1>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            Edit Transaksi #{transaction.id}
+                        </h1>
+                        <p className="text-gray-500 text-sm mt-1">
+                            Perbarui data transaksi dan status pembayaran.
+                        </p>
+                    </div>
                     <Link
                         href={route("admin.transactions.show", transaction.id)}
-                        className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors"
+                        className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors font-medium"
                     >
                         <ArrowLeft size={20} /> Kembali
                     </Link>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <form onSubmit={handleSubmit}>
-                        {/* Section 1: Main Selection */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Pelanggan
-                                </label>
-                                <select
-                                    value={data.user_id}
-                                    onChange={(e) =>
-                                        setData("user_id", e.target.value)
+                <form
+                    onSubmit={handleSubmit}
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+                >
+                    {/* LEFT COLUMN: FORM */}
+                    <div className="lg:col-span-2 space-y-8">
+                        {/* 1. Transaction Type Selection */}
+                        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                                    1
+                                </span>
+                                Tipe Transaksi
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div
+                                    onClick={() =>
+                                        setData("transaction_type", "CASH")
                                     }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-2 ${
+                                        data.transaction_type === "CASH"
+                                            ? "border-blue-500 bg-blue-50/50 text-blue-700"
+                                            : "border-gray-100 hover:border-blue-200 text-gray-500"
+                                    }`}
                                 >
-                                    {users.map((user) => (
-                                        <option key={user.id} value={user.id}>
-                                            {user.name} ({user.email})
+                                    <Banknote size={32} />
+                                    <span className="font-bold">
+                                        Tunai (CASH)
+                                    </span>
+                                </div>
+                                <div
+                                    onClick={() =>
+                                        setData("transaction_type", "CREDIT")
+                                    }
+                                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-2 ${
+                                        data.transaction_type === "CREDIT"
+                                            ? "border-purple-500 bg-purple-50/50 text-purple-700"
+                                            : "border-gray-100 hover:border-purple-200 text-gray-500"
+                                    }`}
+                                >
+                                    <CreditCard size={32} />
+                                    <span className="font-bold">
+                                        Kredit (CREDIT)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 2. Main Selection */}
+                        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                            <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                                    2
+                                </span>
+                                Data Produk & Pelanggan
+                            </h3>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                                        <User size={16} /> Pelanggan Terdaftar
+                                    </label>
+                                    <select
+                                        value={data.user_id}
+                                        onChange={(e) =>
+                                            setData("user_id", e.target.value)
+                                        }
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                                    >
+                                        <option value="">
+                                            -- Pilih Pelanggan --
                                         </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Motor
-                                </label>
-                                <select
-                                    value={data.motor_id}
-                                    onChange={(e) =>
-                                        setData("motor_id", e.target.value)
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                >
-                                    {motors.map((motor) => (
-                                        <option key={motor.id} value={motor.id}>
-                                            {motor.name} (Rp{" "}
-                                            {new Intl.NumberFormat(
-                                                "id-ID"
-                                            ).format(motor.price)}
-                                            )
+                                        {users.map((user) => (
+                                            <option
+                                                key={user.id}
+                                                value={user.id}
+                                            >
+                                                {user.name} ({user.email})
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.user_id && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.user_id}
+                                        </p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                                        <Bike size={16} /> Unit Motor
+                                    </label>
+                                    <select
+                                        value={data.motor_id}
+                                        onChange={(e) =>
+                                            setData("motor_id", e.target.value)
+                                        }
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                                    >
+                                        <option value="">
+                                            -- Pilih Motor --
                                         </option>
-                                    ))}
-                                </select>
+                                        {motors.map((motor) => (
+                                            <option
+                                                key={motor.id}
+                                                value={motor.id}
+                                            >
+                                                {motor.name} •{" "}
+                                                {formatCurrency(motor.price)}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.motor_id && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.motor_id}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Section 2: Customer Info */}
-                        <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b">
-                            Informasi Pelanggan
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Nama Pelanggan
-                                </label>
-                                <input
-                                    type="text"
-                                    value={data.customer_name}
-                                    onChange={(e) =>
-                                        setData("customer_name", e.target.value)
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                                        Status Pesanan
+                                    </label>
+                                    <select
+                                        value={data.status}
+                                        onChange={(e) =>
+                                            setData("status", e.target.value)
+                                        }
+                                        className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none"
+                                    >
+                                        <option value="new_order">
+                                            Pesanan Baru
+                                        </option>
+                                        <option value="menunggu_persetujuan">
+                                            Menunggu Persetujuan
+                                        </option>
+                                        <option value="dikirim_ke_surveyor">
+                                            Dikirim ke Surveyor
+                                        </option>
+                                        <option value="jadwal_survey">
+                                            Jadwal Survey
+                                        </option>
+                                        <option value="disetujui">
+                                            Disetujui
+                                        </option>
+                                        <option value="ditolak">Ditolak</option>
+                                        <option value="completed">
+                                            Selesai
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Nomor Telepon
-                                </label>
-                                <input
-                                    type="text"
-                                    value={data.customer_phone}
-                                    onChange={(e) =>
-                                        setData(
-                                            "customer_phone",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Pekerjaan
-                                </label>
-                                <input
-                                    type="text"
-                                    value={data.customer_occupation}
-                                    onChange={(e) =>
-                                        setData(
-                                            "customer_occupation",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                />
-                            </div>
-                        </div>
 
-                        {/* Section 3: Transaction Details */}
-                        <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b">
-                            Detail Transaksi
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Tipe Transaksi
-                                </label>
-                                <select
-                                    value={data.transaction_type}
-                                    onChange={(e) =>
-                                        setData(
-                                            "transaction_type",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                >
-                                    <option value="CASH">Tunai</option>
-                                    <option value="CREDIT">Kredit</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Status
-                                </label>
-                                <select
-                                    value={data.status}
-                                    onChange={(e) =>
-                                        setData("status", e.target.value)
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                >
-                                    <option value="new_order">
-                                        Pesanan Baru
-                                    </option>
-                                    <option value="menunggu_persetujuan">
-                                        Menunggu Persetujuan
-                                    </option>
-                                    <option value="dikirim_ke_surveyor">
-                                        Dikirim ke Surveyor
-                                    </option>
-                                    <option value="jadwal_survey">
-                                        Jadwal Survey
-                                    </option>
-                                    <option value="disetujui">Disetujui</option>
-                                    <option value="ditolak">Ditolak</option>
-                                    <option value="completed">Selesai</option>
-                                    {/* Add more as needed */}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Booking Fee (Rp)
-                                </label>
-                                <input
-                                    type="number"
-                                    value={data.booking_fee}
-                                    onChange={(e) =>
-                                        setData("booking_fee", e.target.value)
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Total Harga (Rp)
-                                </label>
-                                <input
-                                    type="number"
-                                    value={data.total_amount}
-                                    onChange={(e) =>
-                                        setData("total_amount", e.target.value)
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-gray-50"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Metode Pembayaran
-                                </label>
-                                <select
-                                    value={data.payment_method}
-                                    onChange={(e) =>
-                                        setData(
-                                            "payment_method",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                >
-                                    <option value="">Pilih Metode</option>
-                                    <option value="cash">Cash</option>
-                                    <option value="transfer">Transfer</option>
-                                    <option value="leasing">Leasing</option>
-                                    <option value="bank">Bank</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    Status Pembayaran
-                                </label>
-                                <select
-                                    value={data.payment_status}
-                                    onChange={(e) =>
-                                        setData(
-                                            "payment_status",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                >
-                                    <option value="pending">Pending</option>
-                                    <option value="confirmed">Confirmed</option>
-                                    <option value="failed">Failed</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-sm font-bold text-gray-700 mb-2">
-                                Catatan
-                            </label>
-                            <textarea
-                                value={data.notes}
-                                onChange={(e) =>
-                                    setData("notes", e.target.value)
-                                }
-                                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none h-24"
-                            ></textarea>
-                        </div>
-
-                        {/* Credit Section */}
-                        {data.transaction_type === "CREDIT" && (
-                            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 mb-6">
-                                <h3 className="text-lg font-bold text-blue-800 mb-4 flex items-center gap-2">
-                                    Detail Kredit
-                                </h3>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            {/* Optional Customer Info */}
+                            <div className="mt-6 pt-6 border-t border-gray-100">
+                                <h4 className="text-sm font-bold text-gray-900 mb-4">
+                                    Informasi Tambahan (Edit)
+                                </h4>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            Uang Muka (Rp)
+                                        <label className="text-xs font-bold text-gray-500 mb-1 block">
+                                            Nama Lengkap (Sesuai KTP)
                                         </label>
                                         <input
-                                            type="number"
-                                            value={
-                                                data.credit_detail.down_payment
-                                            }
+                                            type="text"
+                                            value={data.customer_name}
                                             onChange={(e) =>
-                                                handleCreditChange(
-                                                    "down_payment",
+                                                setData(
+                                                    "customer_name",
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-blue-500 outline-none"
+                                            placeholder="Nama Lengkap"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            Tenor (Bulan)
+                                        <label className="text-xs font-bold text-gray-500 mb-1 block">
+                                            No. Telepon / WA
                                         </label>
                                         <input
-                                            type="number"
-                                            value={data.credit_detail.tenor}
+                                            type="text"
+                                            value={data.customer_phone}
                                             onChange={(e) =>
-                                                handleCreditChange(
-                                                    "tenor",
+                                                setData(
+                                                    "customer_phone",
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-blue-500 outline-none"
+                                            placeholder="08..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500 mb-1 block">
+                                            Pekerjaan
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.customer_occupation}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "customer_occupation",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-blue-500 outline-none"
+                                            placeholder="Pekerjaan"
                                         />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            Cicilan/Bulan (Estimasi)
-                                        </label>
-                                        <input
-                                            type="number"
-                                            value={
-                                                data.credit_detail
-                                                    .monthly_installment
-                                            }
-                                            onChange={(e) =>
-                                                handleCreditChange(
-                                                    "monthly_installment",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white"
-                                        />
+                        {/* 3. Payment Details */}
+                        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                            <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                                    3
+                                </span>
+                                Rincian Pembayaran
+                            </h3>
+
+                            {data.transaction_type === "CREDIT" ? (
+                                <div className="bg-purple-50 p-6 rounded-xl border border-purple-100 mb-6">
+                                    <h4 className="flex items-center gap-2 font-bold text-purple-900 mb-4">
+                                        <Calculator size={18} /> Simulasi &
+                                        Status Kredit
+                                    </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                                                Uang Muka (DP)
+                                            </label>
+                                            <div className="relative">
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">
+                                                    Rp
+                                                </span>
+                                                <input
+                                                    type="number"
+                                                    value={
+                                                        data.credit_detail
+                                                            .down_payment
+                                                    }
+                                                    onChange={(e) =>
+                                                        handleCreditChange(
+                                                            "down_payment",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                                                Tenor (Bulan)
+                                            </label>
+                                            <select
+                                                value={data.credit_detail.tenor}
+                                                onChange={(e) =>
+                                                    handleCreditChange(
+                                                        "tenor",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none"
+                                            >
+                                                {[12, 24, 36, 48].map((t) => (
+                                                    <option key={t} value={t}>
+                                                        {t} Bulan
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                                                Status Pengajuan
+                                            </label>
+                                            <select
+                                                value={
+                                                    data.credit_detail
+                                                        .credit_status
+                                                }
+                                                onChange={(e) =>
+                                                    handleCreditChange(
+                                                        "credit_status",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none bg-white"
+                                            >
+                                                <option value="menunggu_persetujuan">
+                                                    Menunggu Persetujuan
+                                                </option>
+                                                <option value="data_tidak_valid">
+                                                    Data Tidak Valid
+                                                </option>
+                                                <option value="dikirim_ke_surveyor">
+                                                    Dikirim ke Surveyor
+                                                </option>
+                                                <option value="jadwal_survey">
+                                                    Jadwal Survey
+                                                </option>
+                                                <option value="disetujui">
+                                                    Disetujui
+                                                </option>
+                                                <option value="ditolak">
+                                                    Ditolak
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                                                Cicilan/Bulan (Fix)
+                                            </label>
+                                            <div className="relative">
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">
+                                                    Rp
+                                                </span>
+                                                <input
+                                                    type="number"
+                                                    value={
+                                                        data.credit_detail
+                                                            .monthly_installment
+                                                    }
+                                                    onChange={(e) =>
+                                                        handleCreditChange(
+                                                            "monthly_installment",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-6 text-blue-800 text-sm flex items-center gap-3">
+                                    <CheckCircle2 size={20} />
+                                    <span>Mode Tunai: Pembayaran penuh.</span>
+                                </div>
+                            )}
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                                        Metode Pembayaran
+                                    </label>
+                                    <select
+                                        value={data.payment_method}
+                                        onChange={(e) =>
+                                            setData(
+                                                "payment_method",
+                                                e.target.value
+                                            )
+                                        }
+                                        className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                    >
+                                        <option value="">Pilih Metode</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="transfer">
+                                            Transfer
+                                        </option>
+                                        <option value="leasing">Leasing</option>
+                                        <option value="bank">Bank</option>
+                                    </select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            Status Kredit
+                                            Status Bayar
                                         </label>
                                         <select
-                                            value={
-                                                data.credit_detail.credit_status
-                                            }
+                                            value={data.payment_status}
                                             onChange={(e) =>
-                                                handleCreditChange(
-                                                    "credit_status",
+                                                setData(
+                                                    "payment_status",
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white"
+                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                                         >
-                                            <option value="menunggu_persetujuan">
-                                                Menunggu Persetujuan
+                                            <option value="pending">
+                                                Pending
                                             </option>
-                                            <option value="data_tidak_valid">
-                                                Data Tidak Valid
+                                            <option value="confirmed">
+                                                Confirmed
                                             </option>
-                                            <option value="dikirim_ke_surveyor">
-                                                Dikirim ke Surveyor
-                                            </option>
-                                            <option value="jadwal_survey">
-                                                Jadwal Survey
-                                            </option>
-                                            <option value="disetujui">
-                                                Disetujui
-                                            </option>
-                                            <option value="ditolak">
-                                                Ditolak
+                                            <option value="failed">
+                                                Failed
                                             </option>
                                         </select>
                                     </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                                            Booking Fee
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={data.booking_fee}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "booking_fee",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        )}
 
-                        <div className="flex justify-end gap-3 mt-8">
-                            <Link
-                                href={route(
-                                    "admin.transactions.show",
-                                    transaction.id
-                                )}
-                                className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
-                            >
-                                Batal
-                            </Link>
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue transition-colors disabled:opacity-50"
-                            >
-                                <Save size={18} />
-                                {processing
-                                    ? "Menyimpan..."
-                                    : "Update Transaksi"}
-                            </button>
+                            <div className="mt-6">
+                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                    Catatan
+                                </label>
+                                <textarea
+                                    value={data.notes}
+                                    onChange={(e) =>
+                                        setData("notes", e.target.value)
+                                    }
+                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none h-24"
+                                ></textarea>
+                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    {/* RIGHT COLUMN: SUMMARY */}
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-6 space-y-6">
+                            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg">
+                                <div className="flex justify-between items-center mb-6 pb-4 border-b">
+                                    <h3 className="text-lg font-bold text-gray-900">
+                                        Ringkasan
+                                    </h3>
+                                    <span
+                                        className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                            data.status === "completed"
+                                                ? "bg-green-100 text-green-700"
+                                                : "bg-yellow-100 text-yellow-700"
+                                        }`}
+                                    >
+                                        {data.status
+                                            .replace("_", " ")
+                                            .toUpperCase()}
+                                    </span>
+                                </div>
+
+                                <div className="space-y-4 mb-8">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-gray-500 text-sm">
+                                            Unit Motor
+                                        </span>
+                                        <span className="font-bold text-right text-gray-900 max-w-[150px]">
+                                            {data.motor_id
+                                                ? motors.find(
+                                                      (m) =>
+                                                          m.id == data.motor_id
+                                                  )?.name
+                                                : "-"}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-500 text-sm">
+                                            Harga Unit
+                                        </span>
+                                        <span className="font-bold text-gray-900">
+                                            {formatCurrency(selectedMotorPrice)}
+                                        </span>
+                                    </div>
+
+                                    {data.transaction_type === "CREDIT" && (
+                                        <>
+                                            <div className="pt-4 border-t border-dashed border-gray-200"></div>
+                                            <div className="flex justify-between items-center text-purple-600">
+                                                <span className="text-sm font-medium">
+                                                    Uang Muka (DP)
+                                                </span>
+                                                <span className="font-bold">
+                                                    -{" "}
+                                                    {formatCurrency(
+                                                        data.credit_detail
+                                                            .down_payment
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-gray-500">
+                                                <span className="text-sm">
+                                                    Pokok Hutang
+                                                </span>
+                                                <span className="font-medium">
+                                                    {formatCurrency(
+                                                        Math.max(
+                                                            0,
+                                                            selectedMotorPrice -
+                                                                data
+                                                                    .credit_detail
+                                                                    .down_payment
+                                                        )
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="bg-purple-50 p-4 rounded-xl mt-2">
+                                                <div className="flex justify-between items-center mb-1">
+                                                    <span className="text-xs font-bold text-purple-400">
+                                                        ANGSURAN / BULAN
+                                                    </span>
+                                                    <span className="text-xs font-bold text-purple-700">
+                                                        {
+                                                            data.credit_detail
+                                                                .tenor
+                                                        }
+                                                        x
+                                                    </span>
+                                                </div>
+                                                <div className="text-2xl font-bold text-purple-600">
+                                                    {formatCurrency(
+                                                        data.credit_detail
+                                                            .monthly_installment
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {data.booking_fee > 0 && (
+                                        <div className="flex justify-between items-center text-green-600">
+                                            <span className="text-sm font-medium">
+                                                Booking Fee
+                                            </span>
+                                            <span className="font-bold">
+                                                {formatCurrency(
+                                                    data.booking_fee
+                                                )}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30"
+                                >
+                                    <Save size={20} />
+                                    {processing
+                                        ? "Menyimpan..."
+                                        : "Update Transaksi"}
+                                </button>
+
+                                <p className="text-xs text-center text-gray-400 mt-4">
+                                    Perubahan status mungkin mengirim notifikasi
+                                    ke WhatsApp pengguna.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </AdminLayout>
     );

@@ -113,10 +113,10 @@ class MotorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Motor $motor): View
+    public function show(Motor $motor): \Inertia\Response
     {
-        $motor = $this->motorRepository->findById($motor->id, true);
-        return view('pages.admin.motors.show', compact('motor'));
+        $motor->load('specifications');
+        return \Inertia\Inertia::render('Admin/Motors/Show', compact('motor'));
     }
 
     /**

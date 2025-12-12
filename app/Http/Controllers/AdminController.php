@@ -10,6 +10,9 @@ use App\Models\Transaction;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 class AdminController extends Controller
 {
     /**
@@ -32,6 +35,37 @@ class AdminController extends Controller
         $recentMotors = Motor::latest()->limit(5)->get();
         // $recentContactMessages = ContactMessage::latest()->limit(5)->get(); // Not used in current Dashboard design yet
         // $recentUsers = \App\Models\User::latest()->limit(5)->get(); // Not used in current Dashboard design yet
+
+        // --- Analytics Data ---
+
+        // 1. Monthly Transactions (Last 6 Months)
+        $monthlyStats = Transaction::select(
+            DB::raw('count(id) as count'),
+            DB::raw('SUM(total_amount) as revenue'),
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as date")
+        )
+        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('date')
+        ->orderBy('date', 'ASC')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'name' => Carbon::createFromFormat('Y-m', $item->date)->format('M Y'),
+                'sales' => $item->count,
+                'revenue' => (float) $item->revenue
+            ];
+        });
+
+        // 2. Transaction Status Distribution
+        $statusStats = Transaction::select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => strtoupper(str_replace('_', ' ', $item->status)),
+                    'value' => $item->count
+                ];
+            });
         
         return Inertia::render('Admin/Dashboard', [
             'motorsCount' => $motorsCount, 
@@ -41,7 +75,9 @@ class AdminController extends Controller
             'cashTransactionsCount' => $cashTransactionsCount,
             'creditTransactionsCount' => $creditTransactionsCount,
             'recentTransactions' => $recentTransactions,
-            'recentMotors' => $recentMotors, 
+            'recentMotors' => $recentMotors,
+            'monthlyStats' => $monthlyStats,
+            'statusStats' => $statusStats,
         ]);
     }
 }
