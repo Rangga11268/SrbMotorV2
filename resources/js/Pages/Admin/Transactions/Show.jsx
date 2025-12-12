@@ -26,6 +26,19 @@ export default function Show({ transaction }) {
     const { credit_detail, motor, user } = transaction;
     const documents = credit_detail?.documents || [];
 
+    // Calculate Credit Progress
+    const paidInstallments =
+        transaction.installments?.filter((i) => i.status === "paid").length ||
+        0;
+    const totalInstallments = credit_detail?.tenor || 0;
+    const progressPercentage =
+        totalInstallments > 0
+            ? Math.round((paidInstallments / totalInstallments) * 100)
+            : 0;
+    const nextInstallment = transaction.installments?.find(
+        (i) => i.status !== "paid" && i.installment_number > 0
+    );
+
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         type: "info",
@@ -242,7 +255,7 @@ export default function Show({ transaction }) {
 
     const handleUpload = (e) => {
         e.preventDefault();
-        postDoc(route("admin.transactions.upload_document", transaction.id), {
+        postDoc(route("admin.transactions.upload-document", transaction.id), {
             onSuccess: () => {
                 resetDoc();
                 toast.success("Dokumen berhasil diunggah");
@@ -302,104 +315,16 @@ export default function Show({ transaction }) {
                 </Link>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    {/* LEFT COLUMN: Main Info */}
+                    {/* LEFT COLUMN: Main Data (66%) */}
                     <div className="xl:col-span-2 space-y-6">
-                        {/* Status & General Info */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <div className="flex justify-between items-start mb-6 border-b border-gray-100 pb-4">
-                                <div>
-                                    <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">
-                                        ID Transaksi
-                                    </p>
-                                    <h1 className="text-2xl font-bold text-gray-900">
-                                        #{transaction.id}
-                                    </h1>
-                                </div>
-                                <div className="flex flex-col items-end gap-2">
-                                    <span
-                                        className={`px-4 py-1.5 rounded-full text-sm font-bold capitalize ${getStatusColor(
-                                            transaction.status
-                                        )}`}
-                                    >
-                                        {formatStatus(transaction.status)}
-                                    </span>
-                                    <p className="text-sm text-gray-500 flex items-center gap-1">
-                                        <Clock size={14} />
-                                        {new Date(
-                                            transaction.created_at
-                                        ).toLocaleString("id-ID")}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        Update Status Transaksi
-                                    </label>
-                                    <select
-                                        className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-gray-50 font-medium disabled:opacity-50"
-                                        value={transaction.status}
-                                        onChange={handleStatusUpdate}
-                                    >
-                                        {getStatusOptions().map((opt) => (
-                                            <option
-                                                key={opt.value}
-                                                value={opt.value}
-                                                disabled={opt.disabled}
-                                            >
-                                                {opt.label}{" "}
-                                                {opt.disabled
-                                                    ? "(Dokumen Belum Lengkap)"
-                                                    : ""}
-                                            </option>
-                                        ))}
-                                    </select>
-
-                                    {transaction.transaction_type ===
-                                        "CREDIT" &&
-                                        !checkDocumentsComplete() && (
-                                            <div className="mt-2 text-xs text-orange-600 bg-orange-50 p-2 rounded-lg border border-orange-100 flex items-start gap-2">
-                                                <AlertTriangle
-                                                    size={14}
-                                                    className="shrink-0 mt-0.5"
-                                                />
-                                                <span>
-                                                    Dokumen belum lengkap.
-                                                    Beberapa status mungkin
-                                                    tidak tersedia.
-                                                </span>
-                                            </div>
-                                        )}
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        Tipe Transaksi
-                                    </label>
-                                    <div
-                                        className={`px-4 py-2 rounded-xl font-bold border ${
-                                            transaction.transaction_type ===
-                                            "CASH"
-                                                ? "bg-green-50 text-green-700 border-green-100"
-                                                : "bg-purple-50 text-purple-700 border-purple-100"
-                                        }`}
-                                    >
-                                        {transaction.transaction_type === "CASH"
-                                            ? "TUNAI"
-                                            : "KREDIT"}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Motor Info */}
+                        {/* 1. Motor Info */}
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                 <Bike className="text-primary" size={20} />{" "}
-                                Detail Motor
+                                Detail Unit
                             </h3>
                             <div className="flex flex-col sm:flex-row items-center gap-6">
-                                <div className="w-full sm:w-32 h-32 bg-gray-100 rounded-xl overflow-hidden shrink-0 border border-gray-200">
+                                <div className="w-full sm:w-48 h-32 bg-gray-100 rounded-xl overflow-hidden shrink-0 border border-gray-200 relative group">
                                     {motor?.image_path ? (
                                         <img
                                             src={`/storage/${motor.image_path}`}
@@ -411,82 +336,661 @@ export default function Show({ transaction }) {
                                             <Bike />
                                         </div>
                                     )}
-                                </div>
-                                <div className="flex-1 text-center sm:text-left">
-                                    <h4 className="text-2xl font-bold text-gray-900">
-                                        {motor?.name}
-                                    </h4>
-                                    <p className="text-gray-600 mb-2">
-                                        {motor?.brand} - {motor?.year}
-                                    </p>
-                                    <p className="text-primary font-bold text-xl">
-                                        Rp{" "}
-                                        {new Intl.NumberFormat("id-ID").format(
-                                            motor?.price || 0
+                                    <Link
+                                        href={route(
+                                            "admin.motors.show",
+                                            motor.id
                                         )}
-                                    </p>
+                                        className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                                    >
+                                        <span className="text-white text-xs font-bold border border-white/50 px-3 py-1 rounded-full backdrop-blur-sm hover:bg-white/20 transition-colors">
+                                            Lihat Detail Motor
+                                        </span>
+                                    </Link>
+                                </div>
+                                <div className="flex-1 text-center sm:text-left space-y-2">
+                                    <div>
+                                        <h4 className="text-2xl font-black text-gray-900 leading-tight">
+                                            {motor?.name}
+                                        </h4>
+                                        <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
+                                            <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200 uppercase">
+                                                {motor?.brand}
+                                            </span>
+                                            <span className="text-gray-400 text-xs font-medium">
+                                                •
+                                            </span>
+                                            <span className="text-gray-600 font-medium">
+                                                {motor?.year}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">
+                                            Harga Cash
+                                        </p>
+                                        <p className="text-primary font-bold text-xl">
+                                            Rp{" "}
+                                            {new Intl.NumberFormat(
+                                                "id-ID"
+                                            ).format(motor?.price || 0)}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Credit Details (If Credit) */}
+                        {/* 2. Installment History (For Credit) */}
+                        {transaction.transaction_type === "CREDIT" &&
+                            transaction.installments &&
+                            transaction.installments.length > 0 && (
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                                    <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                            <Clock
+                                                className="text-primary"
+                                                size={20}
+                                            />
+                                            Riwayat Angsuran
+                                        </h3>
+                                        <div className="flex gap-2">
+                                            <span className="px-3 py-1 bg-green-50 text-green-700 rounded-lg text-xs font-bold border border-green-100">
+                                                Lunas: {paidInstallments}
+                                            </span>
+                                            <span className="px-3 py-1 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold border border-gray-200">
+                                                Sisa:{" "}
+                                                {totalInstallments -
+                                                    paidInstallments}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <div className="max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+                                            <table className="w-full text-sm text-left relative">
+                                                <thead className="text-xs text-gray-500 uppercase bg-gray-50/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10 shadow-sm">
+                                                    <tr>
+                                                        <th className="px-6 py-4 font-bold tracking-wider">
+                                                            Bulan Ke
+                                                        </th>
+                                                        <th className="px-6 py-4 font-bold tracking-wider">
+                                                            Jatuh Tempo
+                                                        </th>
+                                                        <th className="px-6 py-4 font-bold tracking-wider">
+                                                            Nominal
+                                                        </th>
+                                                        <th className="px-6 py-4 font-bold tracking-wider">
+                                                            Metode
+                                                        </th>
+                                                        <th className="px-6 py-4 font-bold tracking-wider">
+                                                            Bukti
+                                                        </th>
+                                                        <th className="px-6 py-4 font-bold tracking-wider">
+                                                            Status
+                                                        </th>
+                                                        <th className="px-6 py-4 text-right font-bold tracking-wider">
+                                                            Aksi
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-100 bg-white">
+                                                    {transaction.installments.map(
+                                                        (inst) => (
+                                                            <tr
+                                                                key={inst.id}
+                                                                className="hover:bg-gray-50/80 transition-colors"
+                                                            >
+                                                                <td className="px-6 py-4 font-bold text-gray-900">
+                                                                    {inst.installment_number ===
+                                                                    0 ? (
+                                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                                                            DP
+                                                                        </span>
+                                                                    ) : (
+                                                                        `#${inst.installment_number}`
+                                                                    )}
+                                                                </td>
+                                                                <td className="px-6 py-4 text-gray-600">
+                                                                    {new Date(
+                                                                        inst.due_date
+                                                                    ).toLocaleDateString(
+                                                                        "id-ID",
+                                                                        {
+                                                                            day: "numeric",
+                                                                            month: "short",
+                                                                            year: "numeric",
+                                                                        }
+                                                                    )}
+                                                                </td>
+                                                                <td className="px-6 py-4 font-bold font-mono text-gray-700">
+                                                                    Rp{" "}
+                                                                    {new Intl.NumberFormat(
+                                                                        "id-ID"
+                                                                    ).format(
+                                                                        inst.amount
+                                                                    )}
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    {inst.payment_method ? (
+                                                                        <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                                                                            {formatPaymentMethod(
+                                                                                inst.payment_method
+                                                                            )}
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="text-gray-400">
+                                                                            -
+                                                                        </span>
+                                                                    )}
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    {inst.payment_proof ? (
+                                                                        <a
+                                                                            href={`/storage/${inst.payment_proof}`}
+                                                                            target="_blank"
+                                                                            className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 font-medium text-xs hover:underline transition-all"
+                                                                        >
+                                                                            <Eye
+                                                                                size={
+                                                                                    14
+                                                                                }
+                                                                            />{" "}
+                                                                            Lihat
+                                                                        </a>
+                                                                    ) : (
+                                                                        <span className="text-gray-400">
+                                                                            -
+                                                                        </span>
+                                                                    )}
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    <span
+                                                                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${
+                                                                            inst.status ===
+                                                                            "paid"
+                                                                                ? "bg-green-50 text-green-700 border-green-100"
+                                                                                : inst.status ===
+                                                                                  "waiting_approval"
+                                                                                ? "bg-orange-50 text-orange-700 border-orange-100"
+                                                                                : inst.status ===
+                                                                                  "overdue"
+                                                                                ? "bg-red-50 text-red-700 border-red-100"
+                                                                                : "bg-gray-50 text-gray-500 border-gray-100"
+                                                                        }`}
+                                                                    >
+                                                                        {inst.status ===
+                                                                            "paid" && (
+                                                                            <CheckCircle
+                                                                                size={
+                                                                                    10
+                                                                                }
+                                                                            />
+                                                                        )}
+                                                                        {inst.status ===
+                                                                            "waiting_approval" && (
+                                                                            <Clock
+                                                                                size={
+                                                                                    10
+                                                                                }
+                                                                            />
+                                                                        )}
+                                                                        {inst.status ===
+                                                                            "overdue" && (
+                                                                            <AlertTriangle
+                                                                                size={
+                                                                                    10
+                                                                                }
+                                                                            />
+                                                                        )}
+                                                                        {formatStatus(
+                                                                            inst.status
+                                                                        )}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4 text-right">
+                                                                    {inst.status ===
+                                                                        "waiting_approval" && (
+                                                                        <div className="flex justify-end gap-2">
+                                                                            <button
+                                                                                onClick={() =>
+                                                                                    approvePayment(
+                                                                                        inst.id
+                                                                                    )
+                                                                                }
+                                                                                className="p-1.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-all shadow-sm"
+                                                                                title="Setujui Pembayaran"
+                                                                            >
+                                                                                <CheckCircle
+                                                                                    size={
+                                                                                        18
+                                                                                    }
+                                                                                />
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() =>
+                                                                                    rejectPayment(
+                                                                                        inst.id
+                                                                                    )
+                                                                                }
+                                                                                className="p-1.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                                                                                title="Tolak Pembayaran"
+                                                                            >
+                                                                                <XCircle
+                                                                                    size={
+                                                                                        18
+                                                                                    }
+                                                                                />
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                    {inst.status ===
+                                                                        "paid" && (
+                                                                        <span className="text-green-500 flex justify-end">
+                                                                            <CheckCircle
+                                                                                size={
+                                                                                    20
+                                                                                }
+                                                                                className="opacity-50"
+                                                                            />
+                                                                        </span>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                        {/* 3. Documents Section */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="p-6 border-b border-gray-100">
+                                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                    <Upload
+                                        className="text-primary"
+                                        size={20}
+                                    />
+                                    Dokumen Pendukung
+                                </h3>
+                                <p className="text-sm text-gray-500 mt-1">
+                                    {documents.length > 0
+                                        ? `${documents.length} dokumen telah diunggah`
+                                        : "Belum ada dokumen yang diunggah"}
+                                </p>
+                            </div>
+
+                            <div className="p-6">
+                                {/* Upload Form */}
+                                <form
+                                    onSubmit={handleUpload}
+                                    className="mb-8 p-6 bg-blue-50/50 rounded-2xl border border-dashed border-blue-200 hover:border-blue-300 transition-colors"
+                                >
+                                    <div className="flex flex-col md:flex-row gap-4 items-end">
+                                        <div className="w-full md:w-1/3">
+                                            <label className="block text-xs font-bold text-gray-700 mb-2">
+                                                Jenis Dokumen
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    value={
+                                                        docData.document_type
+                                                    }
+                                                    onChange={(e) =>
+                                                        setDocData(
+                                                            "document_type",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full pl-4 pr-10 py-2.5 bg-white rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all appearance-none cursor-pointer hover:border-blue-300"
+                                                    required
+                                                >
+                                                    <option value="">
+                                                        Pilih Jenis...
+                                                    </option>
+                                                    <option value="KTP">
+                                                        KTP
+                                                    </option>
+                                                    <option value="KK">
+                                                        Kartu Keluarga
+                                                    </option>
+                                                    <option value="SLIP_GAJI">
+                                                        Slip Gaji
+                                                    </option>
+                                                    <option value="BPKB">
+                                                        BPKB
+                                                    </option>
+                                                    <option value="STNK">
+                                                        STNK
+                                                    </option>
+                                                    <option value="FAKTUR">
+                                                        Faktur
+                                                    </option>
+                                                    <option value="LAINNYA">
+                                                        Lainnya
+                                                    </option>
+                                                </select>
+                                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                    <svg
+                                                        width="12"
+                                                        height="12"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    >
+                                                        <path d="m6 9 6 6 6-6" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="w-full md:w-1/2">
+                                            <label className="block text-xs font-bold text-gray-700 mb-2">
+                                                File Dokumen
+                                            </label>
+                                            <div className="relative">
+                                                <input
+                                                    type="file"
+                                                    id="file-upload"
+                                                    onChange={(e) =>
+                                                        setDocData(
+                                                            "document_file",
+                                                            e.target.files[0]
+                                                        )
+                                                    }
+                                                    className="hidden"
+                                                    required
+                                                />
+                                                <label
+                                                    htmlFor="file-upload"
+                                                    className="flex items-center justify-between w-full px-4 py-2.5 bg-white rounded-xl border border-gray-200 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition-all text-sm group"
+                                                >
+                                                    <span
+                                                        className={`truncate ${
+                                                            docData.document_file
+                                                                ? "text-gray-800 font-medium"
+                                                                : "text-gray-400"
+                                                        }`}
+                                                    >
+                                                        {docData.document_file
+                                                            ? docData
+                                                                  .document_file
+                                                                  .name
+                                                            : "Pilih file..."}
+                                                    </span>
+                                                    <div className="bg-gray-100 p-1 rounded-lg group-hover:bg-blue-100 group-hover:text-blue-600 text-gray-500 transition-colors">
+                                                        <Upload size={16} />
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="w-full md:w-auto">
+                                            <button
+                                                type="submit"
+                                                disabled={docProcessing}
+                                                className="w-full md:w-auto px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 hover:bg-blue-700 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:shadow-none flex items-center justify-center gap-2"
+                                            >
+                                                {docProcessing ? (
+                                                    <>
+                                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                        <span>Proses...</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Upload size={16} />
+                                                        <span>Upload</span>
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                {/* Document List */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    {documents && documents.length > 0 ? (
+                                        documents.map((doc) => (
+                                            <div
+                                                key={doc.id}
+                                                className="group p-4 bg-white border border-gray-100 rounded-xl hover:shadow-lg hover:border-blue-100 transition-all duration-300 relative"
+                                            >
+                                                <div className="flex items-start gap-4">
+                                                    <div className="bg-blue-50 text-blue-600 p-3 rounded-xl shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                                                        <FileText size={20} />
+                                                    </div>
+                                                    <div className="min-w-0 flex-1">
+                                                        <p
+                                                            className="font-bold text-gray-900 text-sm truncate"
+                                                            title={
+                                                                doc.document_type
+                                                            }
+                                                        >
+                                                            {doc.document_type}
+                                                        </p>
+                                                        <p className="text-xs text-gray-500 mt-1">
+                                                            {new Date(
+                                                                doc.created_at
+                                                            ).toLocaleDateString()}
+                                                        </p>
+                                                        <div className="flex flex-wrap gap-2 mt-3">
+                                                            <a
+                                                                href={`/storage/${doc.file_path}`}
+                                                                target="_blank"
+                                                                className="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-1"
+                                                            >
+                                                                <Eye
+                                                                    size={12}
+                                                                />{" "}
+                                                                Lihat
+                                                            </a>
+                                                            <a
+                                                                href={`/storage/${doc.file_path}`}
+                                                                download
+                                                                className="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold hover:bg-green-50 hover:text-green-600 transition-colors flex items-center gap-1"
+                                                            >
+                                                                <Download
+                                                                    size={12}
+                                                                />{" "}
+                                                                Unduh
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() =>
+                                                            confirmDeleteDocument(
+                                                                doc.id
+                                                            )
+                                                        }
+                                                        className="absolute top-2 right-2 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                                        title="Hapus Dokumen"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-full py-12 flex flex-col items-center justify-center text-center text-gray-400 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                                            <Upload
+                                                size={48}
+                                                className="mb-4 opacity-20"
+                                            />
+                                            <p className="font-medium">
+                                                Belum ada dokumen yang diunggah.
+                                            </p>
+                                            <p className="text-xs mt-1 opacity-70">
+                                                Gunakan form di atas untuk
+                                                mengunggah dokumen baru.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT COLUMN: Sidebar (33%) */}
+                    <div className="xl:col-span-1 space-y-6">
+                        {/* 1. Status & Management Panel */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="p-6 border-b border-gray-100 bg-gray-50/50">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div>
+                                        <p className="text-xs text-gray-500 font-bold uppercase tracking-wide">
+                                            ID Transaksi
+                                        </p>
+                                        <h1 className="text-xl font-black text-gray-900">
+                                            #{transaction.id}
+                                        </h1>
+                                        <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                            <Clock size={12} />
+                                            {new Date(
+                                                transaction.created_at
+                                            ).toLocaleString("id-ID")}
+                                        </p>
+                                    </div>
+                                    <div
+                                        className={`px-3 py-1 rounded-lg text-xs font-bold border capitalize ${
+                                            transaction.transaction_type ===
+                                            "CASH"
+                                                ? "bg-green-50 text-green-700 border-green-100"
+                                                : "bg-purple-50 text-purple-700 border-purple-100"
+                                        }`}
+                                    >
+                                        {transaction.transaction_type === "CASH"
+                                            ? "TUNAI"
+                                            : "KREDIT"}
+                                    </div>
+                                </div>
+                                <div className="mt-2">
+                                    <span
+                                        className={`block w-full text-center py-2 rounded-xl text-sm font-bold capitalize ${getStatusColor(
+                                            transaction.status
+                                        )}`}
+                                    >
+                                        {formatStatus(transaction.status)}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="p-6 space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-700 mb-2">
+                                        Update Status
+                                    </label>
+                                    <div className="relative">
+                                        <select
+                                            className="w-full pl-4 pr-10 py-2.5 bg-white rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-medium text-sm appearance-none"
+                                            value={transaction.status}
+                                            onChange={handleStatusUpdate}
+                                        >
+                                            {getStatusOptions().map((opt) => (
+                                                <option
+                                                    key={opt.value}
+                                                    value={opt.value}
+                                                    disabled={opt.disabled}
+                                                >
+                                                    {opt.label}{" "}
+                                                    {opt.disabled
+                                                        ? "(Dokumen Belum Lengkap)"
+                                                        : ""}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                            <svg
+                                                width="12"
+                                                height="12"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="m6 9 6 6 6-6" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    {transaction.transaction_type ===
+                                        "CREDIT" &&
+                                        !checkDocumentsComplete() && (
+                                            <div className="mt-3 text-xs text-orange-600 bg-orange-50 p-3 rounded-xl border border-orange-100 flex items-start gap-2">
+                                                <AlertTriangle
+                                                    size={14}
+                                                    className="shrink-0 mt-0.5"
+                                                />
+                                                <span>
+                                                    Dokumen belum lengkap.
+                                                    Beberapa status dibatasi.
+                                                </span>
+                                            </div>
+                                        )}
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 pt-2">
+                                    <a
+                                        href={getVALink()}
+                                        target="_blank"
+                                        className="col-span-1 flex flex-col items-center justify-center gap-1 py-3 bg-green-50 text-green-700 rounded-xl font-bold text-xs hover:bg-green-100 transition-colors border border-green-100"
+                                    >
+                                        <MessageCircle size={18} /> WhatsApp
+                                    </a>
+                                    <a
+                                        href={`mailto:${user?.email}`}
+                                        className="col-span-1 flex flex-col items-center justify-center gap-1 py-3 bg-blue-50 text-blue-700 rounded-xl font-bold text-xs hover:bg-blue-100 transition-colors border border-blue-100"
+                                    >
+                                        <Mail size={18} /> Email
+                                    </a>
+                                </div>
+                                <a
+                                    href={route(
+                                        "admin.transactions.invoice.download",
+                                        transaction.id
+                                    )}
+                                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors"
+                                >
+                                    <Printer size={16} /> Cetak Invoice
+                                </a>
+                                <button
+                                    onClick={confirmDelete}
+                                    className="flex items-center justify-center gap-2 w-full py-2.5 text-red-600 rounded-xl font-bold text-sm hover:bg-red-50 transition-colors border border-transparent hover:border-red-100"
+                                >
+                                    <Trash2 size={16} /> Hapus Transaksi
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 2. Credit Summary (Vertical Stack) */}
                         {transaction.transaction_type === "CREDIT" &&
                             credit_detail && (
-                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-4 opacity-5">
-                                        <FileText
-                                            size={150}
-                                            className="text-primary"
-                                        />
-                                    </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2 relative z-10">
-                                        <FileText
-                                            className="text-primary"
-                                            size={20}
-                                        />{" "}
-                                        Detail Kredit
-                                    </h3>
-                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
-                                        <div className="p-4 bg-gray-50 rounded-xl">
-                                            <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
-                                                Uang Muka
-                                            </p>
-                                            <p className="font-bold text-gray-900 text-lg">
-                                                Rp{" "}
-                                                {new Intl.NumberFormat(
-                                                    "id-ID"
-                                                ).format(
-                                                    credit_detail.down_payment
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                                    <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-blue-50/30">
+                                        <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                                            <FileText
+                                                className="text-blue-600"
+                                                size={18}
+                                            />
+                                            Ringkasan Kredit
+                                        </h3>
+                                        <div className="flex items-center gap-2">
+                                            <Link
+                                                href={route(
+                                                    "admin.transactions.edit",
+                                                    transaction.id
                                                 )}
-                                            </p>
-                                        </div>
-                                        <div className="p-4 bg-gray-50 rounded-xl">
-                                            <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
-                                                Tenor
-                                            </p>
-                                            <p className="font-bold text-gray-900 text-lg">
-                                                {credit_detail.tenor} Bulan
-                                            </p>
-                                        </div>
-                                        <div className="p-4 bg-gray-50 rounded-xl">
-                                            <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
-                                                Angsuran/Bulan
-                                            </p>
-                                            <p className="font-bold text-green-600 text-lg">
-                                                Rp{" "}
-                                                {new Intl.NumberFormat(
-                                                    "id-ID"
-                                                ).format(
-                                                    credit_detail.monthly_installment
-                                                )}
-                                            </p>
-                                        </div>
-                                        <div className="p-4 bg-gray-50 rounded-xl">
-                                            <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
-                                                Status Kredit
-                                            </p>
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm"
+                                                title="Edit Detail Kredit"
+                                            >
+                                                <Edit size={14} />
+                                            </Link>
                                             <span
-                                                className={`inline-block mt-1 px-2 py-1 rounded text-xs font-bold capitalize ${getStatusColor(
+                                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${getStatusColor(
                                                     credit_detail.credit_status
                                                 )}`}
                                             >
@@ -496,436 +1000,147 @@ export default function Show({ transaction }) {
                                             </span>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-
-                        {/* Installment History (For Credit) */}
-                        {transaction.transaction_type === "CREDIT" &&
-                            transaction.installments &&
-                            transaction.installments.length > 0 && (
-                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                        <Clock
-                                            className="text-primary"
-                                            size={20}
-                                        />{" "}
-                                        Riwayat Angsuran
-                                    </h3>
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full text-sm text-left">
-                                            <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
-                                                <tr>
-                                                    <th className="px-4 py-3">
-                                                        Ke
-                                                    </th>
-                                                    <th className="px-4 py-3">
-                                                        Jatuh Tempo
-                                                    </th>
-                                                    <th className="px-4 py-3">
-                                                        Nominal
-                                                    </th>
-                                                    <th className="px-4 py-3">
-                                                        Metode
-                                                    </th>
-                                                    <th className="px-4 py-3">
-                                                        Bukti
-                                                    </th>
-                                                    <th className="px-4 py-3">
-                                                        Status
-                                                    </th>
-                                                    <th className="px-4 py-3 text-right">
-                                                        Aksi
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="divide-y divide-gray-100">
-                                                {transaction.installments.map(
-                                                    (inst) => (
-                                                        <tr
-                                                            key={inst.id}
-                                                            className="hover:bg-gray-50"
-                                                        >
-                                                            <td className="px-4 py-3 font-medium text-gray-900">
-                                                                {inst.installment_number ===
-                                                                0 ? (
-                                                                    <span className="text-primary font-bold">
-                                                                        Uang
-                                                                        Muka
-                                                                        (DP)
-                                                                    </span>
-                                                                ) : (
-                                                                    `#${inst.installment_number}`
-                                                                )}
-                                                            </td>
-                                                            <td className="px-4 py-3">
-                                                                {new Date(
-                                                                    inst.due_date
-                                                                ).toLocaleDateString(
-                                                                    "id-ID",
-                                                                    {
-                                                                        day: "numeric",
-                                                                        month: "short",
-                                                                        year: "numeric",
-                                                                    }
-                                                                )}
-                                                            </td>
-                                                            <td className="px-4 py-3 font-medium">
-                                                                Rp{" "}
-                                                                {new Intl.NumberFormat(
-                                                                    "id-ID"
-                                                                ).format(
-                                                                    inst.amount
-                                                                )}
-                                                            </td>
-                                                            <td className="px-4 py-3">
-                                                                {inst.payment_method ? (
-                                                                    <span className="uppercase text-xs font-bold text-gray-600">
-                                                                        {formatPaymentMethod(
-                                                                            inst.payment_method
-                                                                        )}
-                                                                    </span>
-                                                                ) : (
-                                                                    "-"
-                                                                )}
-                                                            </td>
-                                                            <td className="px-4 py-3">
-                                                                {inst.payment_proof ? (
-                                                                    <a
-                                                                        href={`/storage/${inst.payment_proof}`}
-                                                                        target="_blank"
-                                                                        className="text-blue-600 hover:underline flex items-center gap-1 text-xs font-bold"
-                                                                    >
-                                                                        <Eye
-                                                                            size={
-                                                                                12
-                                                                            }
-                                                                        />{" "}
-                                                                        Lihat
-                                                                    </a>
-                                                                ) : (
-                                                                    "-"
-                                                                )}
-                                                            </td>
-                                                            <td className="px-4 py-3">
-                                                                <span
-                                                                    className={`px-2 py-1 rounded text-xs font-bold capitalize ${
-                                                                        inst.status ===
-                                                                        "paid"
-                                                                            ? "bg-green-100 text-green-700"
-                                                                            : inst.status ===
-                                                                              "waiting_approval"
-                                                                            ? "bg-orange-100 text-orange-700"
-                                                                            : inst.status ===
-                                                                              "overdue"
-                                                                            ? "bg-red-100 text-red-700"
-                                                                            : "bg-gray-100 text-gray-600"
-                                                                    }`}
-                                                                >
-                                                                    {formatStatus(
-                                                                        inst.status
-                                                                    )}
-                                                                </span>
-                                                            </td>
-                                                            <td className="px-4 py-3 text-right">
-                                                                {inst.status ===
-                                                                    "waiting_approval" && (
-                                                                    <div className="flex justify-end gap-1">
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                approvePayment(
-                                                                                    inst.id
-                                                                                )
-                                                                            }
-                                                                            className="bg-green-100 text-green-700 p-1.5 rounded hover:bg-green-200 transition-colors"
-                                                                            title="Setujui"
-                                                                        >
-                                                                            <CheckCircle
-                                                                                size={
-                                                                                    16
-                                                                                }
-                                                                            />
-                                                                        </button>
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                rejectPayment(
-                                                                                    inst.id
-                                                                                )
-                                                                            }
-                                                                            className="bg-red-100 text-red-700 p-1.5 rounded hover:bg-red-200 transition-colors"
-                                                                            title="Tolak"
-                                                                        >
-                                                                            <XCircle
-                                                                                size={
-                                                                                    16
-                                                                                }
-                                                                            />
-                                                                        </button>
-                                                                    </div>
-                                                                )}
-                                                                {inst.status ===
-                                                                    "paid" && (
-                                                                    <span className="text-green-600 text-xs font-bold flex items-center justify-end gap-1">
-                                                                        <CheckCircle
-                                                                            size={
-                                                                                14
-                                                                            }
-                                                                        />{" "}
-                                                                        Terverifikasi
-                                                                    </span>
-                                                                )}
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            )}
-
-                        {/* Documents Section */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                <Upload className="text-primary" size={20} />{" "}
-                                Dokumen Pendukung
-                            </h3>
-
-                            {/* Upload Form */}
-                            <form
-                                onSubmit={handleUpload}
-                                className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100"
-                            >
-                                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                                    <div className="md:col-span-4">
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">
-                                            Jenis Dokumen
-                                        </label>
-                                        <select
-                                            value={docData.document_type}
-                                            onChange={(e) =>
-                                                setDocData(
-                                                    "document_type",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full text-sm rounded-lg border-gray-300 focus:ring-primary focus:border-primary"
-                                            required
-                                        >
-                                            <option value="">
-                                                Pilih Jenis...
-                                            </option>
-                                            <option value="KTP">KTP</option>
-                                            <option value="KK">
-                                                Kartu Keluarga
-                                            </option>
-                                            <option value="SLIP_GAJI">
-                                                Slip Gaji
-                                            </option>
-                                            <option value="BPKB">BPKB</option>
-                                            <option value="STNK">STNK</option>
-                                            <option value="FAKTUR">
-                                                Faktur
-                                            </option>
-                                            <option value="LAINNYA">
-                                                Lainnya
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div className="md:col-span-6">
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">
-                                            File
-                                        </label>
-                                        <input
-                                            type="file"
-                                            onChange={(e) =>
-                                                setDocData(
-                                                    "document_file",
-                                                    e.target.files[0]
-                                                )
-                                            }
-                                            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <button
-                                            type="submit"
-                                            disabled={docProcessing}
-                                            className="w-full bg-primary text-white py-2 rounded-lg text-sm font-bold shadow hover:bg-dark-blue transition-colors disabled:opacity-70"
-                                        >
-                                            {docProcessing ? "..." : "Upload"}
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-
-                            {/* Document List */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                {documents && documents.length > 0 ? (
-                                    documents.map((doc) => (
-                                        <div
-                                            key={doc.id}
-                                            className="p-4 bg-white border border-gray-200 rounded-xl hover:shadow-md transition-all group relative"
-                                        >
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="bg-blue-50 text-primary p-2 rounded-lg shrink-0">
-                                                    <FileText size={20} />
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p
-                                                        className="font-bold text-gray-800 text-sm truncate"
-                                                        title={
-                                                            doc.document_type
-                                                        }
-                                                    >
-                                                        {doc.document_type}
-                                                    </p>
-                                                    <p className="text-xs text-gray-400 truncate">
-                                                        {new Date(
-                                                            doc.created_at
-                                                        ).toLocaleDateString()}
-                                                    </p>
-                                                </div>
+                                    <div className="p-6 space-y-5">
+                                        {/* Progress */}
+                                        <div>
+                                            <div className="flex justify-between items-end mb-2">
+                                                <span className="text-xs font-bold text-gray-500 uppercase">
+                                                    Progress Pembayaran
+                                                </span>
+                                                <span className="text-sm font-black text-primary">
+                                                    {progressPercentage}%
+                                                </span>
                                             </div>
+                                            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                                <div
+                                                    className="bg-primary h-2 rounded-full"
+                                                    style={{
+                                                        width: `${progressPercentage}%`,
+                                                    }}
+                                                ></div>
+                                            </div>
+                                            <p className="text-xs text-center mt-2 text-gray-500">
+                                                <span className="font-bold text-gray-900">
+                                                    {paidInstallments}
+                                                </span>{" "}
+                                                dari {totalInstallments}{" "}
+                                                angsuran lunas
+                                            </p>
+                                        </div>
 
-                                            <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
-                                                <div className="flex gap-2">
-                                                    <a
-                                                        href={`/storage/${doc.file_path}`}
-                                                        target="_blank"
-                                                        className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="Lihat"
-                                                    >
-                                                        <Eye size={16} />
-                                                    </a>
-                                                    <a
-                                                        href={`/storage/${doc.file_path}`}
-                                                        download
-                                                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                        title="Download"
-                                                    >
-                                                        <Download size={16} />
-                                                    </a>
-                                                </div>
-                                                <button
-                                                    onClick={() =>
-                                                        confirmDeleteDocument(
-                                                            doc.id
-                                                        )
-                                                    }
-                                                    className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Hapus"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
+                                        <div className="space-y-4 pt-4 border-t border-gray-100">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-gray-500">
+                                                    Uang Muka
+                                                </span>
+                                                <span className="text-base font-bold text-gray-900">
+                                                    Rp{" "}
+                                                    {new Intl.NumberFormat(
+                                                        "id-ID"
+                                                    ).format(
+                                                        credit_detail.down_payment
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-gray-500">
+                                                    Angsuran/Bulan
+                                                </span>
+                                                <span className="text-base font-bold text-green-600">
+                                                    Rp{" "}
+                                                    {new Intl.NumberFormat(
+                                                        "id-ID"
+                                                    ).format(
+                                                        credit_detail.monthly_installment
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-gray-500">
+                                                    Tenor
+                                                </span>
+                                                <span className="text-base font-bold text-gray-900">
+                                                    {credit_detail.tenor} Bulan
+                                                </span>
                                             </div>
                                         </div>
-                                    ))
-                                ) : (
-                                    <div className="col-span-full text-center py-8 text-gray-400 text-sm bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                                        Belum ada dokumen yang diunggah.
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* RIGHT COLUMN: Customer Info & Actions */}
-                    <div className="xl:col-span-1 space-y-6">
-                        {/* Customer Info */}
+                                        {nextInstallment && (
+                                            <div className="mt-4 p-3 bg-orange-50 border border-orange-100 rounded-xl">
+                                                <p className="text-xs text-orange-600 font-bold mb-1 flex items-center gap-1">
+                                                    <AlertTriangle size={10} />{" "}
+                                                    Tagihan Berikutnya
+                                                </p>
+                                                <p className="text-sm font-bold text-orange-800">
+                                                    {new Date(
+                                                        nextInstallment.due_date
+                                                    ).toLocaleDateString(
+                                                        "id-ID",
+                                                        {
+                                                            day: "numeric",
+                                                            month: "long",
+                                                            year: "numeric",
+                                                        }
+                                                    )}
+                                                </p>
+                                                <p className="text-xs text-orange-700 mt-0.5">
+                                                    Rp{" "}
+                                                    {new Intl.NumberFormat(
+                                                        "id-ID"
+                                                    ).format(
+                                                        nextInstallment.amount
+                                                    )}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                        {/* 3. Customer Info (Compact) */}
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <User className="text-primary" size={20} />{" "}
-                                Informasi Pelanggan
+                            <h3 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <User className="text-gray-400" size={18} />{" "}
+                                Data Pelanggan
                             </h3>
                             <div className="space-y-4">
-                                <div>
-                                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">
-                                        Nama Pelanggan
-                                    </p>
-                                    <p className="font-bold text-gray-900 text-lg">
-                                        {transaction.customer_name ||
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 shrink-0 font-bold text-lg">
+                                        {(
+                                            transaction.customer_name ||
                                             user?.name ||
-                                            "-"}
-                                    </p>
+                                            "?"
+                                        ).charAt(0)}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="font-bold text-gray-900 truncate">
+                                            {transaction.customer_name ||
+                                                user?.name ||
+                                                "-"}
+                                        </p>
+                                        <p className="text-xs text-gray-500 truncate">
+                                            {user?.email || "-"}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">
-                                        Nomor Telepon
-                                    </p>
-                                    <p className="font-bold text-gray-900">
-                                        {transaction.customer_phone || "-"}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">
-                                        Email
-                                    </p>
-                                    <p className="font-bold text-gray-900 break-all">
-                                        {user?.email || "-"}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">
-                                        Pekerjaan
-                                    </p>
-                                    <p className="font-bold text-gray-900">
-                                        {transaction.customer_occupation || "-"}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Actions Card */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">
-                                Aksi
-                            </h3>
-                            <div className="space-y-3">
-                                <a
-                                    href={`mailto:${user?.email}`}
-                                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-50 text-blue-600 rounded-xl font-bold hover:bg-blue-100 transition-colors"
-                                >
-                                    <Mail size={18} /> Email Pelanggan
-                                </a>
-
-                                <a
-                                    href={getVALink()}
-                                    target="_blank"
-                                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-green-50 text-green-600 rounded-xl font-bold hover:bg-green-100 transition-colors"
-                                >
-                                    <MessageCircle size={18} /> WhatsApp
-                                </a>
-
-                                <a
-                                    href={route(
-                                        "admin.transactions.invoice.download",
-                                        transaction.id
-                                    )}
-                                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors"
-                                >
-                                    <Printer size={18} /> Cetak Invoice
-                                </a>
-
-                                {transaction.transaction_type === "CREDIT" && (
-                                    <Link
-                                        href={route(
-                                            "admin.transactions.edit",
-                                            transaction.id
-                                        )}
-                                        className="flex items-center justify-center gap-2 w-full py-2.5 bg-yellow-50 text-yellow-600 rounded-xl font-bold hover:bg-yellow-100 transition-colors"
-                                    >
-                                        <Edit size={18} /> Edit Detail Kredit
-                                    </Link>
-                                )}
-
-                                <div className="pt-3 border-t border-gray-100 mt-2">
-                                    <button
-                                        onClick={confirmDelete}
-                                        className="flex items-center justify-center gap-2 w-full py-2.5 bg-red-50 text-red-600 rounded-xl font-bold hover:bg-red-100 transition-colors"
-                                    >
-                                        <Trash2 size={18} /> Hapus Transaksi
-                                    </button>
+                                <div className="pt-3 border-t border-gray-50 space-y-2">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500">
+                                            Telepon
+                                        </span>
+                                        <span className="font-medium text-gray-900">
+                                            {transaction.customer_phone || "-"}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500">
+                                            Pekerjaan
+                                        </span>
+                                        <span className="font-medium text-gray-900">
+                                            {transaction.customer_occupation ||
+                                                "-"}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

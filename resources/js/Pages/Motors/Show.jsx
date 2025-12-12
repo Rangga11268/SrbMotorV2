@@ -60,7 +60,7 @@ export default function Show({ motor, relatedMotors }) {
 
     return (
         <MainLayout title={motor.name}>
-            <div className="bg-gradient-to-br from-white via-blue-50/30 to-gray-50 min-h-screen py-10 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-white via-blue-50/30 to-gray-50 min-h-screen pt-32 pb-10 relative overflow-hidden">
                 {/* Decorative Background */}
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-100/20 to-transparent -skew-x-12 pointer-events-none"></div>
 

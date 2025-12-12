@@ -12,6 +12,7 @@ import {
     Eye,
     RotateCcw,
     AlertTriangle,
+    Plus,
 } from "lucide-react";
 
 export default function Index({
@@ -118,6 +119,14 @@ export default function Index({
                     </h2>
 
                     <div className="flex flex-col xl:flex-row gap-3 w-full xl:w-auto items-end">
+                        {/* Create Button */}
+                        <Link
+                            href={route("admin.transactions.create")}
+                            className="bg-primary text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-dark-blue transition-colors shadow-lg shadow-primary/30 w-full xl:w-auto justify-center"
+                        >
+                            <Plus size={18} /> Tambah Transaksi
+                        </Link>
+
                         {/* Search */}
                         <form
                             onSubmit={handleSearch}

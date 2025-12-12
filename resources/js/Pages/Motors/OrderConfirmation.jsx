@@ -148,7 +148,7 @@ export default function OrderConfirmation({ transaction }) {
 
     return (
         <MainLayout title="Konfirmasi Pesanan">
-            <div className="bg-gray-50 min-h-screen pt-28 pb-12">
+            <div className="bg-gray-50 min-h-screen pt-32 pb-12">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}

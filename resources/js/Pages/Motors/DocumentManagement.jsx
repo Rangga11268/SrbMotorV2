@@ -11,8 +11,10 @@ import {
     Clock,
     XCircle,
     AlertTriangle,
+    Image as ImageIcon,
+    Trash2,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function DocumentManagement({ transaction }) {
     const { data, setData, post, processing, errors, progress } = useForm({
@@ -61,10 +63,21 @@ export default function DocumentManagement({ transaction }) {
     };
 
     const handleFileChange = (e, type) => {
-        const files = Array.from(e.target.files);
+        const newFiles = Array.from(e.target.files);
+        // Append new files to existing ones
         setData("documents", {
             ...data.documents,
-            [type]: files,
+            [type]: [...data.documents[type], ...newFiles],
+        });
+        e.target.value = "";
+    };
+
+    const handleRemoveFile = (type, index) => {
+        const newFiles = [...data.documents[type]];
+        newFiles.splice(index, 1);
+        setData("documents", {
+            ...data.documents,
+            [type]: newFiles,
         });
     };
 
@@ -110,7 +123,7 @@ export default function DocumentManagement({ transaction }) {
 
     return (
         <MainLayout title="Manajemen Dokumen">
-            <div className="bg-gray-50 min-h-screen pt-28 pb-10">
+            <div className="bg-gray-50 min-h-screen pt-32 pb-10">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -280,8 +293,12 @@ export default function DocumentManagement({ transaction }) {
                                         <FileUploadField
                                             label="KTP"
                                             id="document_ktp"
+                                            accept="image/*,application/pdf"
                                             onChange={(e) =>
                                                 handleFileChange(e, "KTP")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("KTP", idx)
                                             }
                                             error={errors["documents.KTP"]}
                                             files={data.documents.KTP}
@@ -290,8 +307,12 @@ export default function DocumentManagement({ transaction }) {
                                         <FileUploadField
                                             label="Kartu Keluarga"
                                             id="document_kk"
+                                            accept="image/*,application/pdf"
                                             onChange={(e) =>
                                                 handleFileChange(e, "KK")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("KK", idx)
                                             }
                                             error={errors["documents.KK"]}
                                             files={data.documents.KK}
@@ -300,8 +321,15 @@ export default function DocumentManagement({ transaction }) {
                                         <FileUploadField
                                             label="Slip Gaji"
                                             id="document_slip_gaji"
+                                            accept="image/*,application/pdf"
                                             onChange={(e) =>
                                                 handleFileChange(e, "SLIP_GAJI")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile(
+                                                    "SLIP_GAJI",
+                                                    idx
+                                                )
                                             }
                                             error={
                                                 errors["documents.SLIP_GAJI"]
@@ -312,8 +340,12 @@ export default function DocumentManagement({ transaction }) {
                                         <FileUploadField
                                             label="Dokumen Lainnya"
                                             id="document_lainnya"
+                                            accept="image/*,application/pdf"
                                             onChange={(e) =>
                                                 handleFileChange(e, "LAINNYA")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("LAINNYA", idx)
                                             }
                                             error={errors["documents.LAINNYA"]}
                                             files={data.documents.LAINNYA}
@@ -372,48 +404,190 @@ function InfoBox({ label, value }) {
     );
 }
 
-function FileUploadField({ label, id, onChange, error, files, description }) {
+function FileUploadField({
+    label,
+    id,
+    accept,
+    onChange,
+    onRemove,
+    error,
+    files,
+    required,
+    description,
+}) {
+    const isImage = (file) => file.type.startsWith("image/");
+
     return (
-        <div>
-            <label
-                htmlFor={id}
-                className="block text-gray-700 font-bold mb-2 text-sm"
-            >
-                {label}
-            </label>
-            <div className="relative group">
-                <input
-                    type="file"
-                    id={id}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                    accept="image/*,application/pdf"
-                    multiple
-                    onChange={onChange}
-                />
-                <div
-                    className={`w-full p-3 rounded-xl border-2 border-dashed ${
-                        error
-                            ? "border-red-300 bg-red-50"
-                            : "border-gray-300 bg-gray-50 group-hover:border-blue-400 group-hover:bg-blue-50"
-                    } transition-all flex items-center gap-3`}
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="flex justify-between items-start mb-3">
+                <label
+                    htmlFor={id}
+                    className="block text-gray-800 font-bold text-sm flex items-center gap-2"
                 >
-                    <div className="bg-white p-2 rounded-lg shadow-sm">
-                        <Upload size={18} className="text-gray-400" />
-                    </div>
-                    <div className="flex-1 text-left">
-                        {files && files.length > 0 ? (
-                            <div className="text-sm font-medium text-gray-800">
-                                {files.length} file dipilih
+                    {label}
+                    {required && (
+                        <span className="text-xs font-normal text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+                            Wajib
+                        </span>
+                    )}
+                </label>
+            </div>
+
+            <div className="space-y-4">
+                {/* Dropzone Area */}
+                <div className="relative group">
+                    <input
+                        type="file"
+                        id={id}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                        accept={accept}
+                        multiple
+                        onChange={onChange}
+                        required={files.length === 0 && required}
+                    />
+                    <div
+                        className={`w-full p-6 rounded-xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center text-center relative overflow-hidden ${
+                            error
+                                ? "border-red-300 bg-red-50/50"
+                                : "border-gray-200 bg-gray-50/50 group-hover:border-primary group-hover:bg-blue-50/50"
+                        }`}
+                    >
+                        {/* Interactive Background Effect */}
+                        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
+
+                        <div className="relative z-10 transform group-hover:scale-105 transition-transform duration-300">
+                            <div
+                                className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto ${
+                                    error
+                                        ? "bg-red-100 text-red-500"
+                                        : "bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300"
+                                }`}
+                            >
+                                <Upload size={24} />
                             </div>
-                        ) : (
-                            <div className="text-sm text-gray-500">
+                            <span className="block text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">
+                                Klik atau Drag & Drop
+                            </span>
+                            <span className="block text-xs text-gray-400 mt-1 max-w-[200px] mx-auto leading-relaxed">
                                 {description}
-                            </div>
-                        )}
+                            </span>
+                        </div>
                     </div>
                 </div>
+
+                {/* File List Preview */}
+                <AnimatePresence mode="popLayout">
+                    {files && files.length > 0 && (
+                        <motion.div layout className="grid grid-cols-1 gap-3">
+                            {Array.from(files).map((file, idx) => (
+                                <motion.div
+                                    layout
+                                    key={`${file.name}-${idx}`}
+                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{
+                                        opacity: 0,
+                                        scale: 0.9,
+                                        transition: { duration: 0.2 },
+                                    }}
+                                    className="relative flex items-center p-3 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all group overflow-hidden"
+                                >
+                                    {/* Preview Thumbnail/Icon */}
+                                    <div className="w-16 h-16 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 overflow-hidden relative">
+                                        {isImage(file) ? (
+                                            <>
+                                                <img
+                                                    src={URL.createObjectURL(
+                                                        file
+                                                    )}
+                                                    alt="preview"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <ImageIcon
+                                                        size={16}
+                                                        className="text-white"
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center text-blue-500">
+                                                <FileText size={20} />
+                                                <span className="text-[10px] uppercase font-bold mt-1">
+                                                    {file.name.split(".").pop()}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* File Info */}
+                                    <div className="flex-1 min-w-0 ml-4 mr-12">
+                                        <p
+                                            className="text-sm font-bold text-gray-800 truncate"
+                                            title={file.name}
+                                        >
+                                            {file.name}
+                                        </p>
+                                        <p className="text-xs text-gray-400 flex items-center gap-2 mt-1">
+                                            <span>
+                                                {(
+                                                    file.size /
+                                                    1024 /
+                                                    1024
+                                                ).toFixed(2)}{" "}
+                                                MB
+                                            </span>
+                                            <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                            <span className="uppercase text-gray-500 font-medium">
+                                                {file.type.split("/")[1] ||
+                                                    "FILE"}
+                                            </span>
+                                        </p>
+                                        {/* Status Bar (Visual Only) */}
+                                        <div className="w-full h-1 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: "100%" }}
+                                                transition={{
+                                                    duration: 0.5,
+                                                    ease: "easeOut",
+                                                }}
+                                                className="h-full bg-green-500 rounded-full"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Remove Button */}
+                                    <button
+                                        type="button"
+                                        onClick={() => onRemove(idx)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                        title="Hapus file"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+
+                                    {/* Success Checkmark (Visual) */}
+                                    <div className="absolute right-3 top-3 text-green-500 opacity-100 group-hover:opacity-0 transition-opacity">
+                                        <CheckCircle size={16} />
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
+            {error && (
+                <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="flex items-center gap-2 mt-3 text-red-500 text-sm bg-red-50 p-2 rounded-lg border border-red-100"
+                >
+                    <AlertCircle size={16} className="shrink-0" />
+                    <span>{error}</span>
+                </motion.div>
+            )}
         </div>
     );
 }

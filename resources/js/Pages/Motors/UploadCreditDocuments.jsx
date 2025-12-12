@@ -26,12 +26,16 @@ export default function UploadCreditDocuments({ transaction }) {
 
     // Helper to handle file input changes
     const handleFileChange = (e, type) => {
-        const files = Array.from(e.target.files);
-        // Replace existing files
+        const newFiles = Array.from(e.target.files);
+
+        // Append new files to existing ones
         setData("documents", {
             ...data.documents,
-            [type]: files,
+            [type]: [...data.documents[type], ...newFiles],
         });
+
+        // Reset input value to allow selecting the same file again
+        e.target.value = "";
     };
 
     const handleRemoveFile = (type, index) => {
@@ -58,7 +62,7 @@ export default function UploadCreditDocuments({ transaction }) {
 
     return (
         <MainLayout title="Unggah Dokumen Kredit">
-            <div className="bg-gray-50 min-h-screen pt-28 pb-10">
+            <div className="bg-gray-50 min-h-screen pt-32 pb-10">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -278,108 +282,179 @@ function FileUploadField({
     required,
     description,
 }) {
+    const isImage = (file) => file.type.startsWith("image/");
+
     return (
-        <div>
-            <label
-                htmlFor={id}
-                className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary"
-            >
-                {label} {required && <span className="text-red-500">*</span>}
-            </label>
-            <div className="space-y-3">
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="flex justify-between items-start mb-3">
+                <label
+                    htmlFor={id}
+                    className="block text-gray-800 font-bold text-sm flex items-center gap-2"
+                >
+                    {label}
+                    {required && (
+                        <span className="text-xs font-normal text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+                            Wajib
+                        </span>
+                    )}
+                </label>
+            </div>
+
+            <div className="space-y-4">
                 {/* Dropzone Area */}
                 <div className="relative group">
                     <input
                         type="file"
                         id={id}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
                         accept={accept}
                         multiple
                         onChange={onChange}
                         required={files.length === 0 && required}
                     />
                     <div
-                        className={`w-full p-4 rounded-xl border-2 border-dashed ${
+                        className={`w-full p-6 rounded-xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center text-center relative overflow-hidden ${
                             error
-                                ? "border-red-300 bg-red-50"
-                                : "border-gray-300 bg-gray-50 group-hover:border-blue-400 group-hover:bg-blue-50"
-                        } transition-all flex flex-col items-center justify-center text-center`}
+                                ? "border-red-300 bg-red-50/50"
+                                : "border-gray-200 bg-gray-50/50 group-hover:border-primary group-hover:bg-blue-50/50"
+                        }`}
                     >
-                        <div className="flex items-center gap-3 text-gray-500 group-hover:text-blue-500 transition-colors">
-                            <Upload size={20} />
-                            <span className="text-sm font-medium">
-                                Klik untuk pilih file / Drag & Drop
+                        {/* Interactive Background Effect */}
+                        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
+
+                        <div className="relative z-10 transform group-hover:scale-105 transition-transform duration-300">
+                            <div
+                                className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto ${
+                                    error
+                                        ? "bg-red-100 text-red-500"
+                                        : "bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300"
+                                }`}
+                            >
+                                <Upload size={24} />
+                            </div>
+                            <span className="block text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">
+                                Klik atau Drag & Drop
                             </span>
-                        </div>
-                        <div className="text-xs text-gray-400 mt-1">
-                            {description}
+                            <span className="block text-xs text-gray-400 mt-1 max-w-[200px] mx-auto leading-relaxed">
+                                {description}
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 {/* File List Preview */}
-                <AnimatePresence>
+                <AnimatePresence mode="popLayout">
                     {files && files.length > 0 && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="space-y-2"
-                        >
+                        <motion.div layout className="grid grid-cols-1 gap-3">
                             {Array.from(files).map((file, idx) => (
                                 <motion.div
+                                    layout
                                     key={`${file.name}-${idx}`}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 10 }}
-                                    className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all group"
+                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{
+                                        opacity: 0,
+                                        scale: 0.9,
+                                        transition: { duration: 0.2 },
+                                    }}
+                                    className="relative flex items-center p-3 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all group overflow-hidden"
                                 >
-                                    <div className="flex items-center gap-3 overflow-hidden">
-                                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 border border-gray-200">
-                                            {file.type.startsWith("image/") ? (
+                                    {/* Preview Thumbnail/Icon */}
+                                    <div className="w-16 h-16 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 overflow-hidden relative">
+                                        {isImage(file) ? (
+                                            <>
                                                 <img
                                                     src={URL.createObjectURL(
                                                         file
                                                     )}
                                                     alt="preview"
-                                                    className="w-full h-full object-cover rounded-lg"
+                                                    className="w-full h-full object-cover"
                                                 />
-                                            ) : (
-                                                <FileText
-                                                    size={20}
-                                                    className="text-blue-500"
-                                                />
-                                            )}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-sm font-semibold text-gray-700 truncate">
-                                                {file.name}
-                                            </p>
-                                            <p className="text-xs text-gray-400">
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <ImageIcon
+                                                        size={16}
+                                                        className="text-white"
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center text-blue-500">
+                                                <FileText size={20} />
+                                                <span className="text-[10px] uppercase font-bold mt-1">
+                                                    {file.name.split(".").pop()}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* File Info */}
+                                    <div className="flex-1 min-w-0 ml-4 mr-12">
+                                        <p
+                                            className="text-sm font-bold text-gray-800 truncate"
+                                            title={file.name}
+                                        >
+                                            {file.name}
+                                        </p>
+                                        <p className="text-xs text-gray-400 flex items-center gap-2 mt-1">
+                                            <span>
                                                 {(
                                                     file.size /
                                                     1024 /
                                                     1024
                                                 ).toFixed(2)}{" "}
                                                 MB
-                                            </p>
+                                            </span>
+                                            <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                            <span className="uppercase text-gray-500 font-medium">
+                                                {file.type.split("/")[1] ||
+                                                    "FILE"}
+                                            </span>
+                                        </p>
+                                        {/* Status Bar (Visual Only) */}
+                                        <div className="w-full h-1 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: "100%" }}
+                                                transition={{
+                                                    duration: 0.5,
+                                                    ease: "easeOut",
+                                                }}
+                                                className="h-full bg-green-500 rounded-full"
+                                            />
                                         </div>
                                     </div>
+
+                                    {/* Remove Button */}
                                     <button
                                         type="button"
                                         onClick={() => onRemove(idx)}
-                                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
                                         title="Hapus file"
                                     >
                                         <Trash2 size={18} />
                                     </button>
+
+                                    {/* Success Checkmark (Visual) */}
+                                    <div className="absolute right-3 top-3 text-green-500 opacity-100 group-hover:opacity-0 transition-opacity">
+                                        <CheckCircle size={16} />
+                                    </div>
                                 </motion.div>
                             ))}
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
+            {error && (
+                <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="flex items-center gap-2 mt-3 text-red-500 text-sm bg-red-50 p-2 rounded-lg border border-red-100"
+                >
+                    <AlertCircle size={16} className="shrink-0" />
+                    <span>{error}</span>
+                </motion.div>
+            )}
         </div>
     );
 }
