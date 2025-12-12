@@ -1,5 +1,5 @@
 import React from "react";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import {
     CheckCircle,
@@ -24,11 +24,13 @@ import axios from "axios";
 export default function OrderConfirmation({ transaction }) {
     const [isLoadingPay, setIsLoadingPay] = useState(false);
 
+    const { config } = usePage().props;
+
     // Load Snap.js
     useEffect(() => {
         const snapUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-        // Using the Client Key provided by user
-        const clientKey = "MMid-client-aAUNIuf1fCSll2qz";
+        // Using the Client Key provided from backend
+        const clientKey = config.midtrans_client_key;
 
         const script = document.createElement("script");
         script.src = snapUrl;

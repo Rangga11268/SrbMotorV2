@@ -46,6 +46,9 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
             ],
             'admin_phone' => config('services.fonnte.admin_phone'),
+            'config' => [
+                'midtrans_client_key' => config('midtrans.client_key'),
+            ],
         ];
     }
 }

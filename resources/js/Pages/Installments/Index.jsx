@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Head, useForm, router } from "@inertiajs/react";
+import { Head, useForm, router, usePage } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import {
     CreditCard,
@@ -25,11 +25,13 @@ export default function InstallmentIndex({ transactions }) {
     const [isLoadingPay, setIsLoadingPay] = useState(false);
     const [isLoadingCheck, setIsLoadingCheck] = useState(false);
 
+    const { config } = usePage().props;
+
     // Load Snap.js
     useEffect(() => {
         const snapUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-        // Using the Client Key provided by user
-        const clientKey = "MMid-client-aAUNIuf1fCSll2qz";
+        // Using the Client Key provided from backend
+        const clientKey = config.midtrans_client_key;
 
         const script = document.createElement("script");
         script.src = snapUrl;
