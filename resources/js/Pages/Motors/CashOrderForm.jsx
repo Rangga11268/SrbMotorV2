@@ -284,11 +284,12 @@ export default function CashOrderForm({ motor }) {
                                             <option value="" disabled>
                                                 Pilih metode pembayaran
                                             </option>
-                                            <option value="cash">
-                                                Cash Langsung ke Dealer
+                                            <option value="online">
+                                                Pembayaran Online (VA, E-Wallet,
+                                                QRIS)
                                             </option>
-                                            <option value="transfer">
-                                                Transfer Bank
+                                            <option value="cod_dealer">
+                                                Cash di Dealer / COD
                                             </option>
                                         </select>
                                         {errors.payment_method && (

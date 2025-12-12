@@ -1,5 +1,5 @@
 import React from "react";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import {
     CheckCircle,
@@ -13,10 +13,87 @@ import {
     Upload,
     Home,
     ArrowRight,
+    Wallet,
+    Lock,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 export default function OrderConfirmation({ transaction }) {
+    const [isLoadingPay, setIsLoadingPay] = useState(false);
+
+    // Load Snap.js
+    useEffect(() => {
+        const snapUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+        // Using the Client Key provided by user
+        const clientKey = "MMid-client-aAUNIuf1fCSll2qz";
+
+        const script = document.createElement("script");
+        script.src = snapUrl;
+        script.setAttribute("data-client-key", clientKey);
+        script.async = true;
+
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    const handleOnlinePayment = async (installment) => {
+        setIsLoadingPay(true);
+        try {
+            const response = await axios.post(
+                route("installments.create-payment", installment.id)
+            );
+            const token = response.data.snap_token;
+
+            window.snap.pay(token, {
+                onSuccess: async function (result) {
+                    // Manual status check to ensure DB is updated (Midtrans Webhook might fail on localhost)
+                    try {
+                        await axios.post(
+                            route("installments.check-status", installment.id)
+                        );
+                    } catch (e) {
+                        console.error("Manual status check failed", e);
+                    }
+
+                    Swal.fire(
+                        "Berhasil!",
+                        "Pembayaran Booking Fee berhasil.",
+                        "success"
+                    );
+                    router.reload();
+                },
+                onPending: async function (result) {
+                    // Also check on pending just in case status changed during the window
+                    try {
+                        await axios.post(
+                            route("installments.check-status", installment.id)
+                        );
+                    } catch (e) {}
+
+                    Swal.fire("Pending", "Menunggu pembayaran Anda.", "info");
+                    router.reload();
+                },
+                onError: function (result) {
+                    Swal.fire("Gagal", "Pembayaran gagal.", "error");
+                },
+                onClose: function () {
+                    // Customer closed the popup without finishing the payment
+                },
+            });
+        } catch (error) {
+            console.error(error);
+            Swal.fire("Error", "Gagal memproses pembayaran online.", "error");
+        } finally {
+            setIsLoadingPay(false);
+        }
+    };
+
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat("id-ID", {
             style: "currency",
@@ -101,13 +178,33 @@ export default function OrderConfirmation({ transaction }) {
                                     />
                                 </motion.div>
                                 <h1 className="text-3xl font-bold text-white mb-2">
-                                    Pesanan Berhasil Dibuat!
+                                    {!isCredit &&
+                                    transaction.installments?.find(
+                                        (i) => i.installment_number === 0
+                                    )?.status === "paid"
+                                        ? "Booking Fee Lunas!"
+                                        : "Pesanan Berhasil Dibuat!"}
                                 </h1>
                                 <p className="text-green-100 text-lg">
-                                    Nomor Transaksi:{" "}
-                                    <span className="font-mono font-bold bg-white/20 px-2 py-1 rounded">
-                                        {transaction.id}
-                                    </span>
+                                    {!isCredit &&
+                                    transaction.installments?.find(
+                                        (i) => i.installment_number === 0
+                                    )?.status === "paid" ? (
+                                        <span>
+                                            Unit Anda telah diamankan. Nomor
+                                            Transaksi:{" "}
+                                            <span className="font-mono font-bold bg-white/20 px-2 py-1 rounded">
+                                                {transaction.id}
+                                            </span>
+                                        </span>
+                                    ) : (
+                                        <span>
+                                            Nomor Transaksi:{" "}
+                                            <span className="font-mono font-bold bg-white/20 px-2 py-1 rounded">
+                                                {transaction.id}
+                                            </span>
+                                        </span>
+                                    )}
                                 </p>
                             </div>
 
@@ -278,11 +375,337 @@ export default function OrderConfirmation({ transaction }) {
                                             </div>
                                         )}
 
-                                        <p className="text-gray-500 text-sm mt-6 text-center italic">
-                                            Tim kami akan segera menghubungi
-                                            Anda melalui WhatsApp untuk
-                                            konfirmasi pesanan.
-                                        </p>
+                                        {/* Booking Fee Payment for Cash Order */}
+                                        {!isCredit &&
+                                            transaction.installments &&
+                                            transaction.installments.find(
+                                                (i) =>
+                                                    i.installment_number === 0
+                                            ) && (
+                                                <div
+                                                    className={`mt-6 border rounded-2xl p-5 ${
+                                                        transaction.installments.find(
+                                                            (i) =>
+                                                                i.installment_number ===
+                                                                0
+                                                        ).status === "paid"
+                                                            ? "bg-green-50 border-green-200"
+                                                            : "bg-blue-50 border-blue-200"
+                                                    }`}
+                                                >
+                                                    <h4
+                                                        className={`font-bold mb-2 flex items-center gap-2 ${
+                                                            transaction.installments.find(
+                                                                (i) =>
+                                                                    i.installment_number ===
+                                                                    0
+                                                            ).status === "paid"
+                                                                ? "text-green-800"
+                                                                : "text-blue-800"
+                                                        }`}
+                                                    >
+                                                        {transaction.installments.find(
+                                                            (i) =>
+                                                                i.installment_number ===
+                                                                0
+                                                        ).status === "paid" ? (
+                                                            <>
+                                                                <CheckCircle
+                                                                    size={18}
+                                                                />{" "}
+                                                                Booking Fee
+                                                                Lunas
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <CreditCard
+                                                                    size={18}
+                                                                />{" "}
+                                                                Booking Fee
+                                                            </>
+                                                        )}
+                                                    </h4>
+                                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                                        <div
+                                                            className={`text-sm ${
+                                                                transaction.installments.find(
+                                                                    (i) =>
+                                                                        i.installment_number ===
+                                                                        0
+                                                                ).status ===
+                                                                "paid"
+                                                                    ? "text-green-700"
+                                                                    : "text-blue-600"
+                                                            }`}
+                                                        >
+                                                            {transaction.installments.find(
+                                                                (i) =>
+                                                                    i.installment_number ===
+                                                                    0
+                                                            ).status ===
+                                                            "paid" ? (
+                                                                <span>
+                                                                    Terima
+                                                                    kasih!
+                                                                    Pembayaran
+                                                                    sebesar{" "}
+                                                                    <b>
+                                                                        {formatCurrency(
+                                                                            transaction.installments.find(
+                                                                                (
+                                                                                    i
+                                                                                ) =>
+                                                                                    i.installment_number ===
+                                                                                    0
+                                                                            )
+                                                                                .amount
+                                                                        )}
+                                                                    </b>{" "}
+                                                                    telah
+                                                                    diterima.
+                                                                    Unit motor
+                                                                    Anda sudah
+                                                                    diamankan
+                                                                    dan akan
+                                                                    segera
+                                                                    diproses.
+                                                                </span>
+                                                            ) : (
+                                                                <span>
+                                                                    Untuk
+                                                                    mengamankan
+                                                                    unit motor
+                                                                    ini, silakan
+                                                                    bayar
+                                                                    Booking Fee
+                                                                    sebesar:
+                                                                    <div className="text-xl font-bold text-blue-800 mt-1">
+                                                                        {formatCurrency(
+                                                                            transaction.installments.find(
+                                                                                (
+                                                                                    i
+                                                                                ) =>
+                                                                                    i.installment_number ===
+                                                                                    0
+                                                                            )
+                                                                                .amount
+                                                                        )}
+                                                                    </div>
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Check Status */}
+                                                        {transaction.installments.find(
+                                                            (i) =>
+                                                                i.installment_number ===
+                                                                0
+                                                        ).status === "paid" ? (
+                                                            <div className="px-5 py-3 bg-white rounded-xl shadow-sm border border-green-100 flex flex-col items-center">
+                                                                <span className="text-xs text-green-500 font-bold uppercase tracking-wider mb-1">
+                                                                    Status
+                                                                </span>
+                                                                <span className="text-green-600 font-black text-lg flex items-center gap-1">
+                                                                    PAID{" "}
+                                                                    <CheckCircle
+                                                                        size={
+                                                                            16
+                                                                        }
+                                                                        fill="currentColor"
+                                                                        className="text-green-200"
+                                                                    />
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleOnlinePayment(
+                                                                        transaction.installments.find(
+                                                                            (
+                                                                                i
+                                                                            ) =>
+                                                                                i.installment_number ===
+                                                                                0
+                                                                        )
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    isLoadingPay
+                                                                }
+                                                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 flex items-center gap-2"
+                                                            >
+                                                                {isLoadingPay
+                                                                    ? "Loading..."
+                                                                    : "Bayar Sekarang"}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                        {/* Pelunasan Payment for Cash Order */}
+                                        {!isCredit &&
+                                            transaction.installments &&
+                                            transaction.installments.find(
+                                                (i) =>
+                                                    i.installment_number === 1
+                                            ) && (
+                                                <div
+                                                    className={`mt-4 border rounded-2xl p-5 ${
+                                                        transaction.installments.find(
+                                                            (i) =>
+                                                                i.installment_number ===
+                                                                1
+                                                        ).status === "paid"
+                                                            ? "bg-green-50 border-green-200"
+                                                            : "bg-white border-gray-200"
+                                                    }`}
+                                                >
+                                                    <h4
+                                                        className={`font-bold mb-2 flex items-center gap-2 ${
+                                                            transaction.installments.find(
+                                                                (i) =>
+                                                                    i.installment_number ===
+                                                                    1
+                                                            ).status === "paid"
+                                                                ? "text-green-800"
+                                                                : "text-gray-800"
+                                                        }`}
+                                                    >
+                                                        {transaction.installments.find(
+                                                            (i) =>
+                                                                i.installment_number ===
+                                                                1
+                                                        ).status === "paid" ? (
+                                                            <>
+                                                                <CheckCircle
+                                                                    size={18}
+                                                                />{" "}
+                                                                LUNAS
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <Wallet
+                                                                    size={18}
+                                                                />{" "}
+                                                                Pelunasan Unit
+                                                            </>
+                                                        )}
+                                                    </h4>
+                                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                                        <div className="text-sm text-gray-600">
+                                                            {transaction.installments.find(
+                                                                (i) =>
+                                                                    i.installment_number ===
+                                                                    1
+                                                            ).status ===
+                                                            "paid" ? (
+                                                                <span>
+                                                                    Seluruh
+                                                                    pembayaran
+                                                                    telah
+                                                                    diselesaikan.
+                                                                    Terima kasih
+                                                                    atas
+                                                                    kepercayaan
+                                                                    Anda!
+                                                                </span>
+                                                            ) : (
+                                                                <span>
+                                                                    Sisa
+                                                                    pembayaran
+                                                                    yang harus
+                                                                    diselesaikan:
+                                                                    <div className="text-xl font-bold text-gray-900 mt-1">
+                                                                        {formatCurrency(
+                                                                            transaction.installments.find(
+                                                                                (
+                                                                                    i
+                                                                                ) =>
+                                                                                    i.installment_number ===
+                                                                                    1
+                                                                            )
+                                                                                .amount
+                                                                        )}
+                                                                    </div>
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Check Status */}
+                                                        {transaction.installments.find(
+                                                            (i) =>
+                                                                i.installment_number ===
+                                                                1
+                                                        ).status === "paid" ? (
+                                                            <div className="px-5 py-3 bg-white rounded-xl shadow-sm border border-green-100 flex flex-col items-center">
+                                                                <span className="text-xs text-green-500 font-bold uppercase tracking-wider mb-1">
+                                                                    Status
+                                                                </span>
+                                                                <span className="text-green-600 font-black text-lg flex items-center gap-1">
+                                                                    PAID{" "}
+                                                                    <CheckCircle
+                                                                        size={
+                                                                            16
+                                                                        }
+                                                                        fill="currentColor"
+                                                                        className="text-green-200"
+                                                                    />
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            /* Check if Booking Fee (Inst 0) is paid or skipped */
+                                                            <>
+                                                                {!transaction.installments.find(
+                                                                    (i) =>
+                                                                        i.installment_number ===
+                                                                        0
+                                                                ) ||
+                                                                transaction.installments.find(
+                                                                    (i) =>
+                                                                        i.installment_number ===
+                                                                        0
+                                                                ).status ===
+                                                                    "paid" ? (
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleOnlinePayment(
+                                                                                transaction.installments.find(
+                                                                                    (
+                                                                                        i
+                                                                                    ) =>
+                                                                                        i.installment_number ===
+                                                                                        1
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                        disabled={
+                                                                            isLoadingPay
+                                                                        }
+                                                                        className="px-6 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-colors shadow-lg flex items-center gap-2"
+                                                                    >
+                                                                        {isLoadingPay
+                                                                            ? "Loading..."
+                                                                            : "Bayar Pelunasan"}
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        disabled
+                                                                        className="px-6 py-3 bg-gray-100 text-gray-400 rounded-xl font-bold cursor-not-allowed flex items-center gap-2 border border-gray-200"
+                                                                    >
+                                                                        <Lock
+                                                                            size={
+                                                                                18
+                                                                            }
+                                                                        />{" "}
+                                                                        Terkunci
+                                                                    </button>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
                                     </div>
                                 </div>
                             </div>

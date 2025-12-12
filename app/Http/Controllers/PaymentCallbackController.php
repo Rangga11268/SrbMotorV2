@@ -73,7 +73,14 @@ class PaymentCallbackController extends Controller
             if ($transaction) {
                 $unpaid = $transaction->installments()->where('status', '!=', 'paid')->count();
                 if ($unpaid == 0) {
-                    $transaction->update(['status' => 'completed']);
+                if ($unpaid == 0) {
+                    // For CASH transactions, set to 'payment_confirmed' so admin knows to process delivery
+                    if ($transaction->transaction_type == 'CASH') {
+                        $transaction->update(['status' => 'payment_confirmed']);
+                    } else {
+                        // For CREDIT, 'completed' means loan is fully paid
+                        $transaction->update(['status' => 'completed']);
+                    }
                 }
             }
 
@@ -91,20 +98,29 @@ class PaymentCallbackController extends Controller
         $amount = number_format($installment->amount, 0, ',', '.');
         $date = now()->format('d F Y H:i');
 
+        // Determine payment type label
+        if ($installment->installment_number == 0) {
+            $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
+        } else {
+            $typeLabel = "Cicilan ke-{$installment->installment_number}";
+        }
+
         $message = "Halo {$user->name},\n\n"
-            . "Pembayaran cicilan ke-{$installment->installment_number} untuk unit {$motorName} sebesar Rp {$amount} telah kami terima pada {$date}.\n\n"
+            . "Pembayaran *{$typeLabel}* untuk unit {$motorName} sebesar Rp {$amount} telah kami terima pada {$date}.\n\n"
             . "Status: LUNAS\n"
             . "Terima kasih telah melakukan pembayaran tepat waktu.\n\n"
             . "- SRB Motor System";
             
-        // Assuming user has 'phone_number' or using 'email' for now if phone unavailable
-        // Check if user table has phone column first.
-        // For now, I will use a placeholder method or try to fetch from user->phone
-        // If phone column doesn't exist, this will fail.
-        // Let's check user model first to be safe, but for now I'll suppress errors.
+        // Use customer_phone from transaction as it is more reliable
+        $phone = $installment->transaction->customer_phone ?? $user->phone;
 
-        if (!empty($user->phone)) {
-             \App\Services\WhatsAppService::sendMessage($user->phone, $message);
+        if (!empty($phone)) {
+            try {
+                \App\Services\WhatsAppService::sendMessage($phone, $message);
+            } catch (\Exception $e) {
+                // Ignore notification errors to ensure payment status is recorded
+                Log::error('Payment Notification Error: ' . $e->getMessage());
+            }
         }
     }
 }

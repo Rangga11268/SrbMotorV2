@@ -156,8 +156,8 @@ export default function Show({ transaction }) {
 
     const processStatusUpdate = (newStatus) => {
         setProcessingAction(true);
-        router.put(
-            route("admin.transactions.update_status", transaction.id),
+        router.post(
+            route("admin.transactions.updateStatus", transaction.id),
             { status: newStatus },
             {
                 onSuccess: () => {

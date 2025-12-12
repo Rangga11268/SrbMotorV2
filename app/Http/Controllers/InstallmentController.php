@@ -85,6 +85,19 @@ class InstallmentController extends Controller
                  }
 
                 $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => $methodStr]);
+
+                // Check and update Transaction Status if all installments paid
+                $transaction = $installment->transaction;
+                if ($transaction) {
+                    $unpaid = $transaction->installments()->where('status', '!=', 'paid')->count();
+                    if ($unpaid == 0) {
+                         if ($transaction->transaction_type == 'CASH') {
+                            $transaction->update(['status' => 'payment_confirmed']);
+                         } else {
+                            $transaction->update(['status' => 'completed']);
+                         }
+                    }
+                }
             } else if ($transactionStatus == 'pending') {
                 $installment->update(['status' => 'pending']);
             } else if ($transactionStatus == 'deny') {
@@ -202,7 +215,14 @@ class InstallmentController extends Controller
                 if ($adminPhone) {
                     $user = Auth::user();
                     $motor = $installment->transaction->motor->name;
-                    $msg = "*[ADMIN] Bukti Pembayaran Cicilan Baru*\n\nUser: {$user->name}\nUnit: {$motor}\nCicilan Ke: {$installment->installment_number}\n\nSegera verifikasi di dashboard.";
+                    
+                    if ($installment->installment_number == 0) {
+                        $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
+                    } else {
+                        $typeLabel = "Cicilan Ke-{$installment->installment_number}";
+                    }
+
+                    $msg = "*[ADMIN] Bukti Pembayaran Baru*\n\nUser: {$user->name}\nUnit: {$motor}\nJenis: {$typeLabel}\n\nSegera verifikasi di dashboard.";
                     \App\Services\WhatsAppService::sendMessage($adminPhone, $msg);
                 }
             } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }
@@ -229,16 +249,17 @@ class InstallmentController extends Controller
         // --- WhatsApp Notification: Notify User of Approval ---
         try {
             $user = $installment->transaction->user;
-            if ($user && $user->phone) { // Assuming phone is on User model based on previous code usage
-                // Wait, TransactionController used $transaction->customer_phone which comes from `transactions` table.
-                // InstallmentController assumes Auth::user() context for store, but approve is Admin context.
-                // Does User model have phone? TransactionController index uses $user->phone in some searches?
-                // Let's safe check transaction->customer_phone OR user->phone if available.
-                // Actually Transaction has customer_phone.
+            if ($user && $user->phone) { 
                 $phone = $installment->transaction->customer_phone ?? $user->phone;
                 
                 if ($phone) {
-                     $msg = "Halo {$user->name},\n\nPembayaran cicilan ke-{$installment->installment_number} Anda telah *DIVERIFIKASI/DITERIMA*.\n\nTerima kasih atas pembayarannya.\n\n- SRB Motor";
+                     if ($installment->installment_number == 0) {
+                        $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
+                     } else {
+                        $typeLabel = "cicilan ke-{$installment->installment_number}";
+                     }
+
+                     $msg = "Halo {$user->name},\n\nPembayaran *{$typeLabel}* Anda telah *DIVERIFIKASI/DITERIMA*.\n\nTerima kasih atas pembayarannya.\n\n- SRB Motor";
                      \App\Services\WhatsAppService::sendMessage($phone, $msg);
                 }
             }
@@ -258,17 +279,21 @@ class InstallmentController extends Controller
 
         $installment->update([
             'status' => 'pending', 
-            // 'payment_proof' => null, // Optional
         ]);
 
         // --- WhatsApp Notification: Notify User of Rejection ---
         try {
             $user = $installment->transaction->user;
-             // Use customer_phone from transaction if available
             $phone = $installment->transaction->customer_phone ?? $user->phone;
 
             if ($phone) {
-                  $msg = "Halo {$user->name},\n\nMohon maaf, bukti pembayaran cicilan ke-{$installment->installment_number} Anda *DITOLAK* (tidak valid/buram).\n\nSilakan unggah ulang bukti yang valid.\n\n- SRB Motor";
+                  if ($installment->installment_number == 0) {
+                     $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
+                  } else {
+                     $typeLabel = "cicilan ke-{$installment->installment_number}";
+                  }
+                  
+                  $msg = "Halo {$user->name},\n\nMohon maaf, bukti pembayaran *{$typeLabel}* Anda *DITOLAK* (tidak valid/buram).\n\nSilakan unggah ulang bukti yang valid.\n\n- SRB Motor";
                   \App\Services\WhatsAppService::sendMessage($phone, $msg);
             }
         } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }

@@ -138,6 +138,34 @@ class MotorGalleryController extends Controller
             'customer_occupation' => $request->customer_occupation,
         ]);
         
+        // --- Create Booking Fee "Installment" (Num 0) ---
+        // This leverages existing Installment/Midtrans logic for the booking fee payment
+        if ($transaction->booking_fee > 0) {
+            \App\Models\Installment::create([
+                'transaction_id' => $transaction->id,
+                'installment_number' => 0, // 0 = Booking Fee for Cash, DP for Credit
+                'amount' => $transaction->booking_fee,
+                'due_date' => now()->addDays(1), // Due within 24 hours
+                'status' => 'pending',
+            ]);
+        }
+
+        // --- Create Pelunasan "Installment" (Num 1) ---
+        // This allows the user to pay the remaining balance via Midtrans later
+        $remainingAmount = $motor->price - ($transaction->booking_fee ?? 0);
+        
+        if ($remainingAmount > 0) {
+            \App\Models\Installment::create([
+                'transaction_id' => $transaction->id,
+                'installment_number' => 1, // 1 = Pelunasan for Cash
+                'amount' => $remainingAmount,
+                'due_date' => now()->addDays(7), // Example: Due in 7 days
+                'status' => 'pending',
+            ]);
+        }
+        // ------------------------------------------------
+        // ------------------------------------------------
+        
         // --- WhatsApp Notification Start ---
         try {
             // 1. Notify User
@@ -247,7 +275,7 @@ class MotorGalleryController extends Controller
      */
     public function showOrderConfirmation($transactionId): \Inertia\Response
     {
-        $transaction = Transaction::with(['motor', 'creditDetail'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['motor', 'creditDetail', 'installments'])->findOrFail($transactionId);
         
         // Ensure the transaction belongs to the current user
         if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {

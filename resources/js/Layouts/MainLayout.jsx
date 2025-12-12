@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Head, usePage } from "@inertiajs/react";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
+import FloatingWhatsApp from "@/Components/FloatingWhatsApp";
 import { Toaster } from "react-hot-toast"; // We might want toast notifications
 
 export default function MainLayout({ children, title }) {
@@ -52,6 +53,9 @@ export default function MainLayout({ children, title }) {
 
                 {/* Global Toast Notification Container */}
                 <Toaster position="top-right" />
+
+                {/* Floating WhatsApp Widget */}
+                <FloatingWhatsApp />
             </div>
         </>
     );
