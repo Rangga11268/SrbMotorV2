@@ -11,11 +11,19 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\CreditStatusUpdated;
+use App\Http\Requests\StoreTransactionRequest;
+use App\Http\Requests\UpdateTransactionRequest;
+use App\Services\TransactionService;
 
 class TransactionController extends Controller
 {
+    protected $transactionService;
+
+    public function __construct(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
+
     /**
      * Display a listing of the transactions.
      */
@@ -82,57 +90,9 @@ class TransactionController extends Controller
     /**
      * Store a newly created transaction in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreTransactionRequest $request): RedirectResponse
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'motor_id' => 'required|exists:motors,id',
-            'transaction_type' => 'required|in:CASH,CREDIT',
-            'status' => 'required',
-            'notes' => 'nullable|string',
-            'booking_fee' => 'nullable|numeric|min:0|lt:total_amount',
-            'total_amount' => 'required|numeric|min:0',
-            'payment_method' => 'nullable|string',
-            'payment_status' => 'nullable|in:pending,confirmed,failed',
-            'customer_name' => 'nullable|string|max:255',
-            'customer_phone' => 'nullable|string|max:20',
-            'customer_occupation' => 'nullable|string|max:255',
-        ], [
-            'booking_fee.lt' => 'Booking fee harus lebih kecil dari total harga.',
-        ]);
-
-        $transactionData = $request->only([
-            'user_id',
-            'motor_id',
-            'transaction_type',
-            'status',
-            'notes',
-            'booking_fee',
-            'total_amount',
-            'payment_method',
-            'payment_status',
-            'customer_name',
-            'customer_phone',
-            'customer_occupation'
-        ]);
-
-        $transaction = Transaction::create($transactionData);
-
-        // Handle credit detail if this is a credit transaction
-        if ($request->transaction_type === 'CREDIT') {
-            $request->validate([
-                'credit_detail.down_payment' => 'required|numeric|min:0',
-                'credit_detail.tenor' => 'required|integer|min:1',
-                'credit_detail.monthly_installment' => 'required|numeric|min:0',
-                'credit_detail.credit_status' => 'required|in:menunggu_persetujuan,data_tidak_valid,dikirim_ke_surveyor,jadwal_survey,disetujui,ditolak',
-                'credit_detail.approved_amount' => 'nullable|numeric|min:0',
-            ]);
-
-            $creditDetailData = $request->input('credit_detail');
-            $creditDetailData['transaction_id'] = $transaction->id;
-            
-            CreditDetail::create($creditDetailData);
-        }
+        $this->transactionService->createTransaction($request->validated());
 
         return redirect()->route('admin.transactions.index')
             ->with('success', 'Transaction created successfully.');
@@ -173,123 +133,9 @@ class TransactionController extends Controller
     /**
      * Update the specified transaction in storage.
      */
-    public function update(Request $request, Transaction $transaction): RedirectResponse
+    public function update(UpdateTransactionRequest $request, Transaction $transaction): RedirectResponse
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'motor_id' => 'required|exists:motors,id',
-            'transaction_type' => 'required|in:CASH,CREDIT',
-            'status' => 'required',
-            'notes' => 'nullable|string',
-            'booking_fee' => 'nullable|numeric|min:0|lt:total_amount',
-            'total_amount' => 'required|numeric|min:0',
-            'payment_method' => 'nullable|string',
-            'payment_status' => 'nullable|in:pending,confirmed,failed',
-            'customer_name' => 'nullable|string|max:255',
-            'customer_phone' => 'nullable|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
-            'customer_occupation' => 'nullable|string|max:255',
-        ]);
-
-        $transactionData = $request->only([
-            'user_id',
-            'motor_id',
-            'transaction_type',
-            'status',
-            'notes',
-            'booking_fee',
-            'total_amount',
-            'payment_method',
-            'payment_status',
-            'customer_name',
-            'customer_phone',
-            'customer_occupation'
-        ]);
-
-        $transaction->update($transactionData);
-
-        // Handle credit detail if this is a credit transaction
-        if ($request->transaction_type === 'CREDIT') {
-            $request->validate([
-                'credit_detail.down_payment' => 'required|numeric|min:0|lt:total_amount',
-                'credit_detail.tenor' => 'required|integer|min:1',
-                'credit_detail.monthly_installment' => 'required|numeric|min:0',
-                'credit_detail.credit_status' => 'required|in:menunggu_persetujuan,data_tidak_valid,dikirim_ke_surveyor,jadwal_survey,disetujui,ditolak',
-                'credit_detail.approved_amount' => 'nullable|numeric|min:0|lte:total_amount',
-            ], [
-                'credit_detail.down_payment.lt' => 'Uang muka harus lebih kecil dari total harga motor.',
-                'credit_detail.approved_amount.lte' => 'Jumlah disetujui tidak boleh lebih besar dari total harga motor.',
-            ]);
-
-            $creditDetailData = $request->input('credit_detail');
-            $creditDetailData['transaction_id'] = $transaction->id;
-
-            if ($transaction->creditDetail) {
-                $transaction->creditDetail->update($creditDetailData);
-            } else {
-                CreditDetail::create($creditDetailData);
-            }
-
-            // Generate Installments if Approved
-            if ($creditDetailData['credit_status'] === 'disetujui' && $transaction->installments()->count() === 0) {
-                // 1. Create Down Payment Installment (Installment 0)
-                \App\Models\Installment::create([
-                    'transaction_id' => $transaction->id,
-                    'installment_number' => 0, // 0 indicates Down Payment
-                    'amount' => $creditDetailData['down_payment'],
-                    'due_date' => now(), // Due immediately
-                    'status' => 'pending',
-                ]);
-
-                // 2. Create Monthly Installments
-                $amount = $creditDetailData['monthly_installment'];
-                $tenor = $creditDetailData['tenor'];
-                
-                for ($i = 1; $i <= $tenor; $i++) {
-                    \App\Models\Installment::create([
-                        'transaction_id' => $transaction->id,
-                        'installment_number' => $i,
-                        'amount' => $amount,
-                        'due_date' => now()->addMonths($i),
-                        'status' => 'pending',
-                    ]);
-                }
-            }
-        } else {
-            // Remove credit detail if transaction type changed from credit to cash
-            if ($transaction->creditDetail) {
-                $transaction->creditDetail->delete();
-            }
-        }
-
-        // Send email notification for status change
-        if ($request->has('status') || ($request->has('credit_detail') && isset($request->credit_detail['credit_status']))) {
-             // Reload transaction to get latest data including relationships
-             $transaction->refresh();
-             if ($transaction->user && $transaction->user->email) {
-                 Mail::to($transaction->user)->send(new CreditStatusUpdated($transaction));
-             }
-             
-             // --- WhatsApp Notification Start ---
-             try {
-                if ($transaction->customer_phone) {
-                    $waStatus = $request->status ?? ($request->input('credit_detail.credit_status') ?? 'Updated');
-                    
-                    // Customize message based on status
-                    if ($request->input('credit_detail.credit_status') === 'disetujui') {
-                         $msg = "Selamat {$transaction->customer_name}!\n\nPengajuan Kredit Anda untuk unit *{$transaction->motor->name}* telah *DISETUJUI*.\n\nHarap cek dashboard Anda untuk melihat jadwal pembayaran angsuran (Uang Muka).\n\n- SRB Motor";
-                    } else if ($request->input('credit_detail.credit_status') === 'ditolak') {
-                         $msg = "Halo {$transaction->customer_name},\n\nMohon maaf, pengajuan kredit Anda untuk unit *{$transaction->motor->name}* belum dapat kami setujui saat ini.\n\nHubungi admin untuk info lebih lanjut.\n\n- SRB Motor";
-                    } else {
-                         $msg = "Halo {$transaction->customer_name},\n\nStatus pengajuan #{$transaction->id} diperbarui menjadi: *" . strtoupper(str_replace('_', ' ', $waStatus)) . "*.\n\n- SRB Motor";
-                    }
-                    
-                    \App\Services\WhatsAppService::sendMessage($transaction->customer_phone, $msg);
-                }
-             } catch (\Exception $e) {
-                 \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
-             }
-             // --- WhatsApp Notification End ---
-        }
+        $this->transactionService->updateTransaction($transaction, $request->validated());
 
         return redirect()->route('admin.transactions.show', $transaction->id)
             ->with('success', 'Transaction updated successfully.');
@@ -300,22 +146,7 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction): RedirectResponse
     {
-        // Delete associated credit details and documents first
-        if ($transaction->creditDetail) {
-            // Delete associated documents
-            if ($transaction->creditDetail->documents) {
-                foreach ($transaction->creditDetail->documents as $document) {
-                    // Delete the physical file
-                    if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
-                        Storage::disk('public')->delete($document->file_path);
-                    }
-                    $document->delete();
-                }
-            }
-            $transaction->creditDetail->delete();
-        }
-
-        $transaction->delete();
+        $this->transactionService->deleteTransaction($transaction);
 
         return redirect()->route('admin.transactions.index')
             ->with('success', 'Transaction deleted successfully.');
@@ -326,27 +157,12 @@ class TransactionController extends Controller
      */
     public function updateStatus(Request $request, Transaction $transaction): RedirectResponse
     {
+        // Simple validation can remain here or be moved to a request if complex
         $request->validate([
             'status' => 'required|string',
         ]);
 
-        $transaction->update(['status' => $request->status]);
-
-        // Send email notification
-        if ($transaction->user && $transaction->user->email) {
-            Mail::to($transaction->user)->send(new CreditStatusUpdated($transaction));
-        }
-        
-        // --- WhatsApp Notification Start ---
-        try {
-            if ($transaction->customer_phone) {
-                $statusMsg = "Halo {$transaction->customer_name},\n\nStatus pesanan #{$transaction->id} untuk motor *{$transaction->motor->name}* telah diperbarui menjadi: *" . strtoupper(str_replace('_', ' ', $request->status)) . "*.\n\nCek detailnya di dashboard user.\n\n- SRB Motor";
-                \App\Services\WhatsAppService::sendMessage($transaction->customer_phone, $statusMsg);
-            }
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
-        }
-        // --- WhatsApp Notification End ---
+        $this->transactionService->updateStatus($transaction, $request->status);
 
         return redirect()->back()
             ->with('success', 'Transaction status updated successfully.');
@@ -354,6 +170,7 @@ class TransactionController extends Controller
 
     /**
      * Upload a document for the specified transaction.
+     * Note: This could be moved to Service, but kept here for now as it handles specific file response/redirect logic.
      */
     public function uploadDocument(Request $request, Transaction $transaction): RedirectResponse
     {
@@ -403,7 +220,6 @@ class TransactionController extends Controller
      */
     public function deleteDocument(Document $document): RedirectResponse
     {
-        // Delete the physical file
         // Delete the physical file
         if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
             Storage::disk('public')->delete($document->file_path);
