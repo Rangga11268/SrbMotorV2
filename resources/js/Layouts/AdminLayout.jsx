@@ -16,11 +16,12 @@ import {
     AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ThemeProvider } from "../Contexts/ThemeContext";
+import ThemeToggle from "../Components/ThemeToggle";
 
-export default function AdminLayout({ children, title }) {
+function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [showFlash, setShowFlash] = useState(false);
 
     useEffect(() => {
@@ -32,7 +33,6 @@ export default function AdminLayout({ children, title }) {
     }, [flash]);
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-    const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
 
     const sidebarLinks = [
         {
@@ -74,7 +74,7 @@ export default function AdminLayout({ children, title }) {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex font-sans text-gray-900 dark:text-gray-100 transition-colors duration-200">
             <Head title={title} />
             {/* Flash Message Alert */}
             <AnimatePresence>
@@ -122,13 +122,13 @@ export default function AdminLayout({ children, title }) {
 
             {/* Sidebar */}
             <aside
-                className={`fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-gray-100 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+                className={`fixed lg:sticky top-0 left-0 h-screen w-72 bg-white dark:bg-gray-800 border-r border-gray-100 dark:border-gray-700 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
                     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
                 } print:hidden`}
             >
                 <div className="h-full flex flex-col">
                     {/* Logo Area */}
-                    <div className="p-4 border-b border-gray-50 flex items-center justify-between">
+                    <div className="p-4 border-b border-gray-50 dark:border-gray-700 flex items-center justify-between">
                         <Link
                             href="/"
                             className="flex items-center gap-2 group"
@@ -139,9 +139,9 @@ export default function AdminLayout({ children, title }) {
                                 className="h-10 w-10 object-contain mr-2 drop-shadow-sm"
                             />
                             <div className="flex flex-col">
-                                <span className="font-extrabold text-xl text-dark-blue leading-none tracking-tight">
+                                <span className="font-extrabold text-xl text-dark-blue dark:text-blue-400 leading-none tracking-tight">
                                     SRB
-                                    <span className="text-primary italic">
+                                    <span className="text-primary italic ml-1">
                                         Admin
                                     </span>
                                 </span>
@@ -149,7 +149,7 @@ export default function AdminLayout({ children, title }) {
                         </Link>
                         <button
                             onClick={() => setIsSidebarOpen(false)}
-                            className="lg:hidden text-gray-400 hover:text-gray-600"
+                            className="lg:hidden text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                         >
                             <X size={20} />
                         </button>
@@ -167,7 +167,7 @@ export default function AdminLayout({ children, title }) {
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                                     link.active
                                         ? "bg-primary text-white shadow-lg shadow-primary/30 translate-x-1"
-                                        : "text-gray-600 hover:bg-gray-50 hover:text-primary hover:pl-5"
+                                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary hover:pl-5"
                                 }`}
                             >
                                 <link.icon size={20} />
@@ -181,9 +181,9 @@ export default function AdminLayout({ children, title }) {
                             </p>
                             <Link
                                 href={route("admin.profile.show")}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:pl-5 ${
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary hover:pl-5 ${
                                     route().current("admin.profile.*")
-                                        ? "bg-gray-50 text-primary font-bold"
+                                        ? "bg-gray-50 dark:bg-gray-700 text-primary font-bold"
                                         : ""
                                 }`}
                             >
@@ -193,7 +193,7 @@ export default function AdminLayout({ children, title }) {
                             {/* Back to Website */}
                             <a
                                 href="/"
-                                className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:pl-5"
+                                className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary hover:pl-5"
                             >
                                 <LogOut size={20} className="rotate-180" />
                                 <span>Kembali ke Website</span>
@@ -202,16 +202,16 @@ export default function AdminLayout({ children, title }) {
                     </nav>
 
                     {/* User Profile Footer */}
-                    <div className="p-4 border-t border-gray-50">
-                        <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                    <div className="p-4 border-t border-gray-50 dark:border-gray-700">
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700">
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-dark-blue flex items-center justify-center text-white font-bold shadow-sm">
                                 {auth.user.name.charAt(0)}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-gray-900 truncate">
+                                <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
                                     {auth.user.name}
                                 </p>
-                                <p className="text-xs text-gray-500 truncate">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                                     Administrator
                                 </p>
                             </div>
@@ -219,7 +219,7 @@ export default function AdminLayout({ children, title }) {
                                 href={route("logout")}
                                 method="post"
                                 as="button"
-                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                             >
                                 <LogOut size={18} />
                             </Link>
@@ -231,30 +231,32 @@ export default function AdminLayout({ children, title }) {
             {/* Main Content */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* Topbar */}
-                <header className="bg-white border-b border-gray-100 h-16 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30 print:hidden">
+                <header className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 h-16 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30 print:hidden transition-colors duration-200">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={toggleSidebar}
-                            className="lg:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
+                            className="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
                         >
                             <Menu size={24} />
                         </button>
-                        <h1 className="text-2xl font-bold text-gray-900 hidden sm:block">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white hidden sm:block">
                             {title}
                         </h1>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
+                        <ThemeToggle />
+
+                        <div className="flex items-center gap-3 pl-6 border-l border-gray-100 dark:border-gray-700">
                             <span className="text-sm text-right hidden md:block">
-                                <span className="block font-bold text-gray-900">
+                                <span className="block font-bold text-gray-900 dark:text-white">
                                     {auth.user.name}
                                 </span>
-                                <span className="block text-xs text-gray-500">
+                                <span className="block text-xs text-gray-500 dark:text-gray-400">
                                     {auth.user.email}
                                 </span>
                             </span>
-                            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold border-2 border-white shadow-sm ring-1 ring-gray-100">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 text-primary flex items-center justify-center font-bold border-2 border-white dark:border-gray-700 shadow-sm ring-1 ring-gray-100 dark:ring-gray-700">
                                 {auth.user.name.charAt(0)}
                             </div>
                         </div>
@@ -267,5 +269,13 @@ export default function AdminLayout({ children, title }) {
                 </main>
             </div>
         </div>
+    );
+}
+
+export default function AdminLayout(props) {
+    return (
+        <ThemeProvider>
+            <AdminLayoutContent {...props} />
+        </ThemeProvider>
     );
 }

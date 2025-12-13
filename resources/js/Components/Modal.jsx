@@ -31,30 +31,34 @@ export default function Modal({
     const typeConfig = {
         danger: {
             icon: AlertTriangle,
-            iconColor: "text-red-600",
-            iconBg: "bg-red-100",
-            confirmBtn: "bg-red-600 hover:bg-red-700 text-white",
+            iconColor: "text-red-600 dark:text-red-400",
+            iconBg: "bg-red-100 dark:bg-red-900/30",
+            confirmBtn:
+                "bg-red-600 hover:bg-red-700 text-white dark:bg-red-600 dark:hover:bg-red-700",
             focusRing: "focus:ring-red-500",
         },
         success: {
             icon: CheckCircle,
-            iconColor: "text-green-600",
-            iconBg: "bg-green-100",
-            confirmBtn: "bg-green-600 hover:bg-green-700 text-white",
+            iconColor: "text-green-600 dark:text-green-400",
+            iconBg: "bg-green-100 dark:bg-green-900/30",
+            confirmBtn:
+                "bg-green-600 hover:bg-green-700 text-white dark:bg-green-600 dark:hover:bg-green-700",
             focusRing: "focus:ring-green-500",
         },
         warning: {
             icon: AlertTriangle,
-            iconColor: "text-orange-600",
-            iconBg: "bg-orange-100",
-            confirmBtn: "bg-orange-600 hover:bg-orange-700 text-white",
+            iconColor: "text-orange-600 dark:text-orange-400",
+            iconBg: "bg-orange-100 dark:bg-orange-900/30",
+            confirmBtn:
+                "bg-orange-600 hover:bg-orange-700 text-white dark:bg-orange-600 dark:hover:bg-orange-700",
             focusRing: "focus:ring-orange-500",
         },
         info: {
             icon: Info,
-            iconColor: "text-blue-600",
-            iconBg: "bg-blue-100",
-            confirmBtn: "bg-blue-600 hover:bg-blue-700 text-white",
+            iconColor: "text-blue-600 dark:text-blue-400",
+            iconBg: "bg-blue-100 dark:bg-blue-900/30",
+            confirmBtn:
+                "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-600 dark:hover:bg-blue-700",
             focusRing: "focus:ring-blue-500",
         },
     };
@@ -83,11 +87,11 @@ export default function Modal({
                         transition={{ duration: 0.2 }}
                         className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md p-4"
                     >
-                        <div className="bg-white rounded-2xl shadow-xl overflow-hidden relative">
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden relative transition-colors">
                             {/* Close Button */}
                             <button
                                 onClick={onClose}
-                                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                                className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                             >
                                 <X size={20} />
                             </button>
@@ -106,10 +110,10 @@ export default function Modal({
 
                                     {/* Text */}
                                     <div className="flex-1 pt-1">
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
                                             {title}
                                         </h3>
-                                        <p className="text-gray-500 leading-relaxed">
+                                        <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
                                             {message}
                                         </p>
                                     </div>
@@ -120,7 +124,7 @@ export default function Modal({
                                     <button
                                         onClick={onClose}
                                         disabled={processing}
-                                        className="px-4 py-2 text-gray-700 font-medium hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50"
+                                        className="px-4 py-2 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
                                     >
                                         {cancelText}
                                     </button>

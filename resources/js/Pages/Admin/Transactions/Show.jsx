@@ -58,7 +58,7 @@ export default function Show({ transaction }) {
                 "payment_confirmed",
             ].includes(status)
         )
-            return "bg-green-100 text-green-700";
+            return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
         if (
             [
                 "menunggu_persetujuan",
@@ -69,14 +69,14 @@ export default function Show({ transaction }) {
                 "jadwal_survey",
             ].includes(status)
         )
-            return "bg-yellow-100 text-yellow-700";
+            return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
         if (
             ["ditolak", "data_tidak_valid", "cancelled", "rejected"].includes(
                 status
             )
         )
-            return "bg-red-100 text-red-700";
-        return "bg-blue-100 text-blue-700";
+            return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+        return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
     };
 
     const formatStatus = (status) =>
@@ -309,9 +309,9 @@ export default function Show({ transaction }) {
             <div className="max-w-7xl mx-auto">
                 <Link
                     href={route("admin.transactions.index")}
-                    className="inline-flex items-center gap-2 text-gray-500 hover:text-primary mb-6 font-bold transition-colors group"
+                    className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary mb-6 font-bold transition-colors group"
                 >
-                    <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                         <ArrowLeft size={16} />
                     </div>
                     <span className="text-sm">Kembali ke Daftar</span>
@@ -321,13 +321,13 @@ export default function Show({ transaction }) {
                     {/* LEFT COLUMN: Main Data (66%) */}
                     <div className="xl:col-span-2 space-y-6">
                         {/* 1. Motor Info */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <Bike className="text-primary" size={20} />{" "}
                                 Detail Unit
                             </h3>
                             <div className="flex flex-col sm:flex-row items-center gap-6">
-                                <div className="w-full sm:w-48 h-32 bg-gray-100 rounded-xl overflow-hidden shrink-0 border border-gray-200 relative group">
+                                <div className="w-full sm:w-48 h-32 bg-gray-100 dark:bg-gray-700 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-600 relative group">
                                     {motor?.image_path ? (
                                         <img
                                             src={`/storage/${motor.image_path}`}
@@ -335,7 +335,7 @@ export default function Show({ transaction }) {
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                        <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
                                             <Bike />
                                         </div>
                                     )}
@@ -353,26 +353,26 @@ export default function Show({ transaction }) {
                                 </div>
                                 <div className="flex-1 text-center sm:text-left space-y-2">
                                     <div>
-                                        <h4 className="text-2xl font-black text-gray-900 leading-tight">
+                                        <h4 className="text-2xl font-black text-gray-900 dark:text-white leading-tight">
                                             {motor?.name}
                                         </h4>
                                         <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
-                                            <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200 uppercase">
+                                            <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 uppercase">
                                                 {motor?.brand}
                                             </span>
-                                            <span className="text-gray-400 text-xs font-medium">
+                                            <span className="text-gray-400 dark:text-gray-500 text-xs font-medium">
                                                 •
                                             </span>
-                                            <span className="text-gray-600 font-medium">
+                                            <span className="text-gray-600 dark:text-gray-300 font-medium">
                                                 {motor?.year}
                                             </span>
                                         </div>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-bold">
                                             Harga Cash
                                         </p>
-                                        <p className="text-primary font-bold text-xl">
+                                        <p className="text-primary dark:text-blue-400 font-bold text-xl">
                                             Rp{" "}
                                             {new Intl.NumberFormat(
                                                 "id-ID"
@@ -387,9 +387,9 @@ export default function Show({ transaction }) {
                         {transaction.transaction_type === "CREDIT" &&
                             transaction.installments &&
                             transaction.installments.length > 0 && (
-                                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                                    <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
+                                    <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                             <Clock
                                                 className="text-primary"
                                                 size={20}
@@ -397,10 +397,10 @@ export default function Show({ transaction }) {
                                             Riwayat Angsuran
                                         </h3>
                                         <div className="flex gap-2">
-                                            <span className="px-3 py-1 bg-green-50 text-green-700 rounded-lg text-xs font-bold border border-green-100">
+                                            <span className="px-3 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg text-xs font-bold border border-green-100 dark:border-green-800">
                                                 Lunas: {paidInstallments}
                                             </span>
-                                            <span className="px-3 py-1 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold border border-gray-200">
+                                            <span className="px-3 py-1 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-600">
                                                 Sisa:{" "}
                                                 {totalInstallments -
                                                     paidInstallments}
@@ -410,7 +410,7 @@ export default function Show({ transaction }) {
                                     <div className="overflow-hidden">
                                         <div className="max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
                                             <table className="w-full text-sm text-left relative">
-                                                <thead className="text-xs text-gray-500 uppercase bg-gray-50/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10 shadow-sm">
+                                                <thead className="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50/95 dark:bg-gray-700/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700 sticky top-0 z-10 shadow-sm">
                                                     <tr>
                                                         <th className="px-6 py-4 font-bold tracking-wider">
                                                             Bulan Ke
@@ -435,25 +435,25 @@ export default function Show({ transaction }) {
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-gray-100 bg-white">
+                                                <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
                                                     {transaction.installments.map(
                                                         (inst) => (
                                                             <tr
                                                                 key={inst.id}
-                                                                className="hover:bg-gray-50/80 transition-colors"
+                                                                className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors"
                                                             >
-                                                                <td className="px-6 py-4 font-bold text-gray-900">
+                                                                <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">
                                                                     {inst.installment_number ===
                                                                     0 ? (
-                                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs">
-                                                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                                                                             DP
                                                                         </span>
                                                                     ) : (
                                                                         `#${inst.installment_number}`
                                                                     )}
                                                                 </td>
-                                                                <td className="px-6 py-4 text-gray-600">
+                                                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">
                                                                     {new Date(
                                                                         inst.due_date
                                                                     ).toLocaleDateString(
@@ -465,7 +465,7 @@ export default function Show({ transaction }) {
                                                                         }
                                                                     )}
                                                                 </td>
-                                                                <td className="px-6 py-4 font-bold font-mono text-gray-700">
+                                                                <td className="px-6 py-4 font-bold font-mono text-gray-700 dark:text-gray-200">
                                                                     Rp{" "}
                                                                     {new Intl.NumberFormat(
                                                                         "id-ID"
@@ -475,13 +475,13 @@ export default function Show({ transaction }) {
                                                                 </td>
                                                                 <td className="px-6 py-4">
                                                                     {inst.payment_method ? (
-                                                                        <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                                                                        <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
                                                                             {formatPaymentMethod(
                                                                                 inst.payment_method
                                                                             )}
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="text-gray-400">
+                                                                        <span className="text-gray-400 dark:text-gray-500">
                                                                             -
                                                                         </span>
                                                                     )}
@@ -491,7 +491,7 @@ export default function Show({ transaction }) {
                                                                         <a
                                                                             href={`/storage/${inst.payment_proof}`}
                                                                             target="_blank"
-                                                                            className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 font-medium text-xs hover:underline transition-all"
+                                                                            className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-xs hover:underline transition-all"
                                                                         >
                                                                             <Eye
                                                                                 size={
@@ -501,7 +501,7 @@ export default function Show({ transaction }) {
                                                                             Lihat
                                                                         </a>
                                                                     ) : (
-                                                                        <span className="text-gray-400">
+                                                                        <span className="text-gray-400 dark:text-gray-500">
                                                                             -
                                                                         </span>
                                                                     )}
@@ -511,14 +511,14 @@ export default function Show({ transaction }) {
                                                                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${
                                                                             inst.status ===
                                                                             "paid"
-                                                                                ? "bg-green-50 text-green-700 border-green-100"
+                                                                                ? "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-100 dark:border-green-800"
                                                                                 : inst.status ===
                                                                                   "waiting_approval"
-                                                                                ? "bg-orange-50 text-orange-700 border-orange-100"
+                                                                                ? "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 border-orange-100 dark:border-orange-800"
                                                                                 : inst.status ===
                                                                                   "overdue"
-                                                                                ? "bg-red-50 text-red-700 border-red-100"
-                                                                                : "bg-gray-50 text-gray-500 border-gray-100"
+                                                                                ? "bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-100 dark:border-red-800"
+                                                                                : "bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-100 dark:border-gray-600"
                                                                         }`}
                                                                     >
                                                                         {inst.status ===
@@ -560,7 +560,7 @@ export default function Show({ transaction }) {
                                                                                         inst.id
                                                                                     )
                                                                                 }
-                                                                                className="p-1.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-all shadow-sm"
+                                                                                className="p-1.5 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg hover:bg-green-600 hover:text-white transition-all shadow-sm"
                                                                                 title="Setujui Pembayaran"
                                                                             >
                                                                                 <CheckCircle
@@ -575,7 +575,7 @@ export default function Show({ transaction }) {
                                                                                         inst.id
                                                                                     )
                                                                                 }
-                                                                                className="p-1.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                                                                                className="p-1.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm"
                                                                                 title="Tolak Pembayaran"
                                                                             >
                                                                                 <XCircle
@@ -588,7 +588,7 @@ export default function Show({ transaction }) {
                                                                     )}
                                                                     {inst.status ===
                                                                         "paid" && (
-                                                                        <span className="text-green-500 flex justify-end">
+                                                                        <span className="text-green-500 dark:text-green-400 flex justify-end">
                                                                             <CheckCircle
                                                                                 size={
                                                                                     20
@@ -609,16 +609,16 @@ export default function Show({ transaction }) {
                             )}
 
                         {/* 3. Documents Section */}
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="p-6 border-b border-gray-100">
-                                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
+                            <div className="p-6 border-b border-gray-100 dark:border-gray-700">
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                     <Upload
                                         className="text-primary"
                                         size={20}
                                     />
                                     Dokumen Pendukung
                                 </h3>
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     {documents.length > 0
                                         ? `${documents.length} dokumen telah diunggah`
                                         : "Belum ada dokumen yang diunggah"}
@@ -629,11 +629,11 @@ export default function Show({ transaction }) {
                                 {/* Upload Form */}
                                 <form
                                     onSubmit={handleUpload}
-                                    className="mb-8 p-6 bg-blue-50/50 rounded-2xl border border-dashed border-blue-200 hover:border-blue-300 transition-colors"
+                                    className="mb-8 p-6 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl border border-dashed border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-600 transition-colors"
                                 >
                                     <div className="flex flex-col md:flex-row gap-4 items-end">
                                         <div className="w-full md:w-1/3">
-                                            <label className="block text-xs font-bold text-gray-700 mb-2">
+                                            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
                                                 Jenis Dokumen
                                             </label>
                                             <div className="relative">
@@ -647,7 +647,7 @@ export default function Show({ transaction }) {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="w-full pl-4 pr-10 py-2.5 bg-white rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all appearance-none cursor-pointer hover:border-blue-300"
+                                                    className="w-full pl-4 pr-10 py-2.5 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all appearance-none cursor-pointer hover:border-blue-300 dark:text-white"
                                                     required
                                                 >
                                                     <option value="">
@@ -692,7 +692,7 @@ export default function Show({ transaction }) {
                                             </div>
                                         </div>
                                         <div className="w-full md:w-1/2">
-                                            <label className="block text-xs font-bold text-gray-700 mb-2">
+                                            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
                                                 File Dokumen
                                             </label>
                                             <div className="relative">
@@ -710,13 +710,13 @@ export default function Show({ transaction }) {
                                                 />
                                                 <label
                                                     htmlFor="file-upload"
-                                                    className="flex items-center justify-between w-full px-4 py-2.5 bg-white rounded-xl border border-gray-200 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition-all text-sm group"
+                                                    className="flex items-center justify-between w-full px-4 py-2.5 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 dark:hover:bg-blue-900/20 transition-all text-sm group"
                                                 >
                                                     <span
                                                         className={`truncate ${
                                                             docData.document_file
-                                                                ? "text-gray-800 font-medium"
-                                                                : "text-gray-400"
+                                                                ? "text-gray-800 dark:text-gray-200 font-medium"
+                                                                : "text-gray-400 dark:text-gray-500"
                                                         }`}
                                                     >
                                                         {docData.document_file
@@ -725,7 +725,7 @@ export default function Show({ transaction }) {
                                                                   .name
                                                             : "Pilih file..."}
                                                     </span>
-                                                    <div className="bg-gray-100 p-1 rounded-lg group-hover:bg-blue-100 group-hover:text-blue-600 text-gray-500 transition-colors">
+                                                    <div className="bg-gray-100 dark:bg-gray-600 p-1 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-900 group-hover:text-blue-600 dark:group-hover:text-blue-300 text-gray-500 dark:text-gray-400 transition-colors">
                                                         <Upload size={16} />
                                                     </div>
                                                 </label>
@@ -759,22 +759,22 @@ export default function Show({ transaction }) {
                                         documents.map((doc) => (
                                             <div
                                                 key={doc.id}
-                                                className="group p-4 bg-white border border-gray-100 rounded-xl hover:shadow-lg hover:border-blue-100 transition-all duration-300 relative"
+                                                className="group p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl hover:shadow-lg hover:border-blue-100 dark:hover:border-blue-900 transition-all duration-300 relative"
                                             >
                                                 <div className="flex items-start gap-4">
-                                                    <div className="bg-blue-50 text-blue-600 p-3 rounded-xl shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                                                    <div className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 p-3 rounded-xl shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                                                         <FileText size={20} />
                                                     </div>
                                                     <div className="min-w-0 flex-1">
                                                         <p
-                                                            className="font-bold text-gray-900 text-sm truncate"
+                                                            className="font-bold text-gray-900 dark:text-white text-sm truncate"
                                                             title={
                                                                 doc.document_type
                                                             }
                                                         >
                                                             {doc.document_type}
                                                         </p>
-                                                        <p className="text-xs text-gray-500 mt-1">
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                             {new Date(
                                                                 doc.created_at
                                                             ).toLocaleDateString()}
@@ -783,7 +783,7 @@ export default function Show({ transaction }) {
                                                             <a
                                                                 href={`/storage/${doc.file_path}`}
                                                                 target="_blank"
-                                                                className="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-1"
+                                                                className="px-3 py-1.5 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-bold hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1"
                                                             >
                                                                 <Eye
                                                                     size={12}
@@ -793,7 +793,7 @@ export default function Show({ transaction }) {
                                                             <a
                                                                 href={`/storage/${doc.file_path}`}
                                                                 download
-                                                                className="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold hover:bg-green-50 hover:text-green-600 transition-colors flex items-center gap-1"
+                                                                className="px-3 py-1.5 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-bold hover:bg-green-50 dark:hover:bg-green-900/30 hover:text-green-600 dark:hover:text-green-400 transition-colors flex items-center gap-1"
                                                             >
                                                                 <Download
                                                                     size={12}
@@ -808,7 +808,7 @@ export default function Show({ transaction }) {
                                                                 doc.id
                                                             )
                                                         }
-                                                        className="absolute top-2 right-2 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                                        className="absolute top-2 right-2 p-2 text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                                                         title="Hapus Dokumen"
                                                     >
                                                         <Trash2 size={16} />
@@ -817,7 +817,7 @@ export default function Show({ transaction }) {
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="col-span-full py-12 flex flex-col items-center justify-center text-center text-gray-400 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                                        <div className="col-span-full py-12 flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 transition-colors">
                                             <Upload
                                                 size={48}
                                                 className="mb-4 opacity-20"
@@ -839,17 +839,17 @@ export default function Show({ transaction }) {
                     {/* RIGHT COLUMN: Sidebar (33%) */}
                     <div className="xl:col-span-1 space-y-6">
                         {/* 1. Status & Management Panel */}
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="p-6 border-b border-gray-100 bg-gray-50/50">
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
+                            <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/50">
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
-                                        <p className="text-xs text-gray-500 font-bold uppercase tracking-wide">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wide">
                                             ID Transaksi
                                         </p>
-                                        <h1 className="text-xl font-black text-gray-900">
+                                        <h1 className="text-xl font-black text-gray-900 dark:text-white">
                                             #{transaction.id}
                                         </h1>
-                                        <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
                                             <Clock size={12} />
                                             {new Date(
                                                 transaction.created_at
@@ -860,8 +860,8 @@ export default function Show({ transaction }) {
                                         className={`px-3 py-1 rounded-full text-xs font-bold border capitalize ${
                                             transaction.transaction_type ===
                                             "CASH"
-                                                ? "bg-emerald-50 text-emerald-700 border-emerald-100"
-                                                : "bg-purple-50 text-purple-700 border-purple-100"
+                                                ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800"
+                                                : "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-100 dark:border-purple-800"
                                         }`}
                                     >
                                         {transaction.transaction_type === "CASH"
@@ -882,12 +882,12 @@ export default function Show({ transaction }) {
 
                             <div className="p-6 space-y-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 mb-2">
+                                    <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
                                         Update Status
                                     </label>
                                     <div className="relative">
                                         <select
-                                            className="w-full pl-4 pr-10 py-2.5 bg-white rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-medium text-sm appearance-none"
+                                            className="w-full pl-4 pr-10 py-2.5 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-medium text-sm appearance-none text-gray-900 dark:text-white"
                                             value={transaction.status}
                                             onChange={handleStatusUpdate}
                                         >
@@ -896,6 +896,7 @@ export default function Show({ transaction }) {
                                                     key={opt.value}
                                                     value={opt.value}
                                                     disabled={opt.disabled}
+                                                    className="dark:bg-gray-800"
                                                 >
                                                     {opt.label}{" "}
                                                     {opt.disabled
@@ -923,7 +924,7 @@ export default function Show({ transaction }) {
                                     {transaction.transaction_type ===
                                         "CREDIT" &&
                                         !checkDocumentsComplete() && (
-                                            <div className="mt-3 text-xs text-orange-600 bg-orange-50 p-3 rounded-xl border border-orange-100 flex items-start gap-2">
+                                            <div className="mt-3 text-xs text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/10 p-3 rounded-xl border border-orange-100 dark:border-orange-900/30 flex items-start gap-2">
                                                 <AlertTriangle
                                                     size={14}
                                                     className="shrink-0 mt-0.5"
@@ -940,13 +941,13 @@ export default function Show({ transaction }) {
                                     <a
                                         href={getVALink()}
                                         target="_blank"
-                                        className="col-span-1 flex flex-col items-center justify-center gap-1 py-3 bg-green-50 text-green-700 rounded-xl font-bold text-xs hover:bg-green-100 transition-colors border border-green-100"
+                                        className="col-span-1 flex flex-col items-center justify-center gap-1 py-3 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-xl font-bold text-xs hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors border border-green-100 dark:border-green-800"
                                     >
                                         <MessageCircle size={18} /> WhatsApp
                                     </a>
                                     <a
                                         href={`mailto:${user?.email}`}
-                                        className="col-span-1 flex flex-col items-center justify-center gap-1 py-3 bg-blue-50 text-blue-700 rounded-xl font-bold text-xs hover:bg-blue-100 transition-colors border border-blue-100"
+                                        className="col-span-1 flex flex-col items-center justify-center gap-1 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl font-bold text-xs hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors border border-blue-100 dark:border-blue-800"
                                     >
                                         <Mail size={18} /> Email
                                     </a>
@@ -956,13 +957,13 @@ export default function Show({ transaction }) {
                                         "admin.transactions.invoice.download",
                                         transaction.id
                                     )}
-                                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors"
+                                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                 >
                                     <Printer size={16} /> Cetak Invoice
                                 </a>
                                 <button
                                     onClick={confirmDelete}
-                                    className="flex items-center justify-center gap-2 w-full py-2.5 text-red-600 rounded-xl font-bold text-sm hover:bg-red-50 transition-colors border border-transparent hover:border-red-100"
+                                    className="flex items-center justify-center gap-2 w-full py-2.5 text-red-600 dark:text-red-400 rounded-xl font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-transparent hover:border-red-100 dark:hover:border-red-900/50"
                                 >
                                     <Trash2 size={16} /> Hapus Transaksi
                                 </button>
@@ -972,11 +973,11 @@ export default function Show({ transaction }) {
                         {/* 2. Credit Summary (Vertical Stack) */}
                         {transaction.transaction_type === "CREDIT" &&
                             credit_detail && (
-                                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                                    <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-blue-50/30">
-                                        <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
+                                    <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-blue-50/30 dark:bg-blue-900/10">
+                                        <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                             <FileText
-                                                className="text-blue-600"
+                                                className="text-blue-600 dark:text-blue-400"
                                                 size={18}
                                             />
                                             Ringkasan Kredit
@@ -987,7 +988,7 @@ export default function Show({ transaction }) {
                                                     "admin.transactions.edit",
                                                     transaction.id
                                                 )}
-                                                className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm"
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-500 transition-colors shadow-sm"
                                                 title="Edit Detail Kredit"
                                             >
                                                 <Edit size={14} />
@@ -1007,23 +1008,23 @@ export default function Show({ transaction }) {
                                         {/* Progress */}
                                         <div>
                                             <div className="flex justify-between items-end mb-2">
-                                                <span className="text-xs font-bold text-gray-500 uppercase">
+                                                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">
                                                     Progress Pembayaran
                                                 </span>
-                                                <span className="text-sm font-black text-primary">
+                                                <span className="text-sm font-black text-primary dark:text-blue-400">
                                                     {progressPercentage}%
                                                 </span>
                                             </div>
-                                            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                                                 <div
-                                                    className="bg-primary h-2 rounded-full"
+                                                    className="bg-primary dark:bg-blue-500 h-2 rounded-full"
                                                     style={{
                                                         width: `${progressPercentage}%`,
                                                     }}
                                                 ></div>
                                             </div>
-                                            <p className="text-xs text-center mt-2 text-gray-500">
-                                                <span className="font-bold text-gray-900">
+                                            <p className="text-xs text-center mt-2 text-gray-500 dark:text-gray-400">
+                                                <span className="font-bold text-gray-900 dark:text-white">
                                                     {paidInstallments}
                                                 </span>{" "}
                                                 dari {totalInstallments}{" "}
@@ -1031,12 +1032,12 @@ export default function Show({ transaction }) {
                                             </p>
                                         </div>
 
-                                        <div className="space-y-4 pt-4 border-t border-gray-100">
+                                        <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-500">
+                                                <span className="text-sm text-gray-500 dark:text-gray-400">
                                                     Uang Muka
                                                 </span>
-                                                <span className="text-base font-bold text-gray-900">
+                                                <span className="text-base font-bold text-gray-900 dark:text-white">
                                                     Rp{" "}
                                                     {new Intl.NumberFormat(
                                                         "id-ID"
@@ -1046,10 +1047,10 @@ export default function Show({ transaction }) {
                                                 </span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-500">
+                                                <span className="text-sm text-gray-500 dark:text-gray-400">
                                                     Angsuran/Bulan
                                                 </span>
-                                                <span className="text-base font-bold text-green-600">
+                                                <span className="text-base font-bold text-green-600 dark:text-green-400">
                                                     Rp{" "}
                                                     {new Intl.NumberFormat(
                                                         "id-ID"
@@ -1059,22 +1060,22 @@ export default function Show({ transaction }) {
                                                 </span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-500">
+                                                <span className="text-sm text-gray-500 dark:text-gray-400">
                                                     Tenor
                                                 </span>
-                                                <span className="text-base font-bold text-gray-900">
+                                                <span className="text-base font-bold text-gray-900 dark:text-white">
                                                     {credit_detail.tenor} Bulan
                                                 </span>
                                             </div>
                                         </div>
 
                                         {nextInstallment && (
-                                            <div className="mt-4 p-3 bg-orange-50 border border-orange-100 rounded-xl">
-                                                <p className="text-xs text-orange-600 font-bold mb-1 flex items-center gap-1">
+                                            <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-900/40 rounded-xl">
+                                                <p className="text-xs text-orange-600 dark:text-orange-400 font-bold mb-1 flex items-center gap-1">
                                                     <AlertTriangle size={10} />{" "}
                                                     Tagihan Berikutnya
                                                 </p>
-                                                <p className="text-sm font-bold text-orange-800">
+                                                <p className="text-sm font-bold text-orange-800 dark:text-orange-300">
                                                     {new Date(
                                                         nextInstallment.due_date
                                                     ).toLocaleDateString(
@@ -1086,7 +1087,7 @@ export default function Show({ transaction }) {
                                                         }
                                                     )}
                                                 </p>
-                                                <p className="text-xs text-orange-700 mt-0.5">
+                                                <p className="text-xs text-orange-700 dark:text-orange-400 mt-0.5">
                                                     Rp{" "}
                                                     {new Intl.NumberFormat(
                                                         "id-ID"
@@ -1101,14 +1102,17 @@ export default function Show({ transaction }) {
                             )}
 
                         {/* 3. Customer Info (Compact) */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                            <h3 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <User className="text-gray-400" size={18} />{" "}
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <User
+                                    className="text-gray-400 dark:text-gray-500"
+                                    size={18}
+                                />{" "}
                                 Data Pelanggan
                             </h3>
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 shrink-0 font-bold text-lg">
+                                    <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 shrink-0 font-bold text-lg">
                                         {(
                                             transaction.customer_name ||
                                             user?.name ||
@@ -1116,30 +1120,30 @@ export default function Show({ transaction }) {
                                         ).charAt(0)}
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="font-bold text-gray-900 truncate">
+                                        <p className="font-bold text-gray-900 dark:text-white truncate">
                                             {transaction.customer_name ||
                                                 user?.name ||
                                                 "-"}
                                         </p>
-                                        <p className="text-xs text-gray-500 truncate">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                                             {user?.email || "-"}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="pt-3 border-t border-gray-50 space-y-2">
+                                <div className="pt-3 border-t border-gray-50 dark:border-gray-700 space-y-2">
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500">
+                                        <span className="text-gray-500 dark:text-gray-400">
                                             Telepon
                                         </span>
-                                        <span className="font-medium text-gray-900">
+                                        <span className="font-medium text-gray-900 dark:text-white">
                                             {transaction.customer_phone || "-"}
                                         </span>
                                     </div>
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500">
+                                        <span className="text-gray-500 dark:text-gray-400">
                                             Pekerjaan
                                         </span>
-                                        <span className="font-medium text-gray-900">
+                                        <span className="font-medium text-gray-900 dark:text-white">
                                             {transaction.customer_occupation ||
                                                 "-"}
                                         </span>

@@ -29,7 +29,7 @@ export default function Index() {
             bg: "bg-emerald-500/10",
             border: "group-hover:border-emerald-500/50",
             activeClass:
-                "ring-emerald-500/30 bg-emerald-50/50 border-emerald-500",
+                "ring-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-500",
         },
         {
             id: "income",
@@ -39,7 +39,8 @@ export default function Index() {
             color: "text-blue-500",
             bg: "bg-blue-500/10",
             border: "group-hover:border-blue-500/50",
-            activeClass: "ring-blue-500/30 bg-blue-50/50 border-blue-500",
+            activeClass:
+                "ring-blue-500/30 bg-blue-50/50 dark:bg-blue-900/20 border-blue-500",
         },
         {
             id: "customer",
@@ -49,7 +50,8 @@ export default function Index() {
             color: "text-violet-500",
             bg: "bg-violet-500/10",
             border: "group-hover:border-violet-500/50",
-            activeClass: "ring-violet-500/30 bg-violet-50/50 border-violet-500",
+            activeClass:
+                "ring-violet-500/30 bg-violet-50/50 dark:bg-violet-900/20 border-violet-500",
         },
         {
             id: "status",
@@ -59,7 +61,8 @@ export default function Index() {
             color: "text-amber-500",
             bg: "bg-amber-500/10",
             border: "group-hover:border-amber-500/50",
-            activeClass: "ring-amber-500/30 bg-amber-50/50 border-amber-500",
+            activeClass:
+                "ring-amber-500/30 bg-amber-50/50 dark:bg-amber-900/20 border-amber-500",
         },
     ];
 
@@ -100,18 +103,18 @@ export default function Index() {
                 {/* Header Section */}
                 <div className="text-center mb-12 relative">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/20 rounded-full blur-3xl -z-10"></div>
-                    <h1 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+                    <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
                             Analytics Hub
                         </span>
                     </h1>
-                    <p className="text-gray-500 text-lg max-w-2xl mx-auto font-medium">
+                    <p className="text-gray-500 dark:text-gray-400 text-lg max-w-2xl mx-auto font-medium">
                         Generate laporan komprehensif untuk memantau performa
                         bisnis Anda secara real-time.
                     </p>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-gray-200/50 border border-white/50 relative overflow-hidden">
+                <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-gray-200/50 dark:shadow-black/50 border border-white/50 dark:border-white/5 relative overflow-hidden transition-colors">
                     {/* Decorative top bar */}
                     <div className="h-2 w-full bg-gradient-to-r from-primary via-blue-500 to-violet-500"></div>
 
@@ -120,14 +123,14 @@ export default function Index() {
                             {/* Section 1: Report Type */}
                             <div className="space-y-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shadow-sm">
+                                    <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center shadow-sm">
                                         <Sparkles className="w-5 h-5 text-amber-500" />
                                     </div>
                                     <div>
-                                        <h2 className="text-lg font-bold text-gray-900">
+                                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                                             Pilih Jenis Laporan
                                         </h2>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
                                             Data apa yang ingin Anda lihat?
                                         </p>
                                     </div>
@@ -147,7 +150,7 @@ export default function Index() {
                                                 className={`group cursor-pointer relative p-6 rounded-2xl border-2 transition-all duration-300 ${
                                                     isSelected
                                                         ? `${type.activeClass} shadow-lg scale-[1.02]`
-                                                        : "border-gray-100 bg-white hover:bg-gray-50 hover:border-gray-200"
+                                                        : "border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-200 dark:hover:border-gray-600"
                                                 }`}
                                             >
                                                 <div
@@ -156,7 +159,7 @@ export default function Index() {
                                                             ? type.bg +
                                                               " " +
                                                               type.color
-                                                            : "bg-gray-100 text-gray-400 group-hover:bg-white group-hover:shadow-sm"
+                                                            : "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 group-hover:bg-white dark:group-hover:bg-gray-600 group-hover:shadow-sm"
                                                     }`}
                                                 >
                                                     <Icon size={28} />
@@ -164,13 +167,13 @@ export default function Index() {
                                                 <h3
                                                     className={`font-bold text-lg mb-1 transition-colors ${
                                                         isSelected
-                                                            ? "text-gray-900"
-                                                            : "text-gray-700"
+                                                            ? "text-gray-900 dark:text-white"
+                                                            : "text-gray-700 dark:text-gray-300"
                                                     }`}
                                                 >
                                                     {type.label}
                                                 </h3>
-                                                <p className="text-xs text-gray-400 font-medium leading-relaxed">
+                                                <p className="text-xs text-gray-400 dark:text-gray-500 font-medium leading-relaxed">
                                                     {type.desc}
                                                 </p>
 
@@ -192,16 +195,16 @@ export default function Index() {
 
                             {/* Section 2: Date Range */}
                             <div className="space-y-6">
-                                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-t border-gray-100 pt-8">
+                                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-t border-gray-100 dark:border-gray-700 pt-8">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shadow-sm">
+                                        <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center shadow-sm">
                                             <Calendar className="w-5 h-5 text-blue-500" />
                                         </div>
                                         <div>
-                                            <h2 className="text-lg font-bold text-gray-900">
+                                            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                                                 Periode Waktu
                                             </h2>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">
                                                 Tentukan rentang tanggal laporan
                                             </p>
                                         </div>
@@ -215,7 +218,7 @@ export default function Index() {
                                                 onClick={() =>
                                                     applyPreset(preset)
                                                 }
-                                                className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-gray-600 border border-gray-200 hover:border-primary hover:text-primary hover:shadow-md transition-all active:scale-95"
+                                                className="px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary dark:hover:text-primary hover:shadow-md transition-all active:scale-95"
                                             >
                                                 {preset.label}
                                             </button>
@@ -223,10 +226,10 @@ export default function Index() {
                                     </div>
                                 </div>
 
-                                <div className="p-1 bg-gray-100/50 rounded-2xl border border-gray-200 flex flex-col md:flex-row items-center">
+                                <div className="p-1 bg-gray-100/50 dark:bg-gray-700/50 rounded-2xl border border-gray-200 dark:border-gray-600 flex flex-col md:flex-row items-center transition-colors">
                                     <div className="relative w-full group">
                                         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                            <Calendar className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                                            <Calendar className="h-5 w-5 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors" />
                                         </div>
                                         <input
                                             type="date"
@@ -237,14 +240,14 @@ export default function Index() {
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full pl-14 pr-4 py-5 bg-white md:bg-transparent border-none rounded-xl focus:ring-0 font-bold text-gray-700 text-lg cursor-pointer"
+                                            className="w-full pl-14 pr-4 py-5 bg-white md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent border-none rounded-xl focus:ring-0 font-bold text-gray-700 dark:text-white text-lg cursor-pointer"
                                         />
-                                        <span className="absolute top-2 left-14 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                        <span className="absolute top-2 left-14 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
                                             Dari Tanggal
                                         </span>
                                     </div>
 
-                                    <div className="hidden md:flex items-center justify-center w-12 text-gray-300">
+                                    <div className="hidden md:flex items-center justify-center w-12 text-gray-300 dark:text-gray-600">
                                         <ArrowRight
                                             size={24}
                                             strokeWidth={1.5}
@@ -253,7 +256,7 @@ export default function Index() {
 
                                     <div className="relative w-full group">
                                         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                            <Calendar className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                                            <Calendar className="h-5 w-5 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors" />
                                         </div>
                                         <input
                                             type="date"
@@ -264,9 +267,9 @@ export default function Index() {
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full pl-14 pr-4 py-5 bg-white md:bg-transparent border-none rounded-xl focus:ring-0 font-bold text-gray-700 text-lg cursor-pointer"
+                                            className="w-full pl-14 pr-4 py-5 bg-white md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent border-none rounded-xl focus:ring-0 font-bold text-gray-700 dark:text-white text-lg cursor-pointer"
                                         />
-                                        <span className="absolute top-2 left-14 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                        <span className="absolute top-2 left-14 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
                                             Sampai Tanggal
                                         </span>
                                     </div>
@@ -280,8 +283,8 @@ export default function Index() {
                                     disabled={processing}
                                     className="relative w-full group overflow-hidden rounded-2xl p-[1px]"
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 group-hover:via-black transition-all duration-500"></div>
-                                    <div className="relative bg-gray-900 rounded-[15px] px-8 py-5 flex items-center justify-center gap-3 overflow-hidden group-hover:bg-opacity-90 transition-all">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-black dark:via-gray-900 dark:to-black group-hover:via-black transition-all duration-500"></div>
+                                    <div className="relative bg-gray-900 dark:bg-black rounded-[15px] px-8 py-5 flex items-center justify-center gap-3 overflow-hidden group-hover:bg-opacity-90 transition-all">
                                         <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                         {processing ? (
                                             <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>

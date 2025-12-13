@@ -40,16 +40,16 @@ export default function Edit({ user }) {
         <AdminLayout title="Profil Saya">
             <div className="max-w-4xl mx-auto space-y-8">
                 {/* Profile Information */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
-                        <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl font-bold">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
+                        <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 text-primary flex items-center justify-center text-2xl font-bold">
                             {user.name.charAt(0)}
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-gray-900">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                                 Informasi Profil
                             </h2>
-                            <p className="text-gray-500 text-sm">
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">
                                 Update informasi akun anda dan alamat email.
                             </p>
                         </div>
@@ -58,7 +58,7 @@ export default function Edit({ user }) {
                     <form onSubmit={submitProfile} className="max-w-xl">
                         <div className="space-y-4 mb-6">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                     Nama Lengkap
                                 </label>
                                 <div className="relative">
@@ -68,10 +68,10 @@ export default function Edit({ user }) {
                                         onChange={(e) =>
                                             setData("name", e.target.value)
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                     />
                                     <User
-                                        className="absolute left-3 top-2.5 text-gray-400"
+                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
                                         size={18}
                                     />
                                 </div>
@@ -83,7 +83,7 @@ export default function Edit({ user }) {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                     Email
                                 </label>
                                 <div className="relative">
@@ -93,9 +93,9 @@ export default function Edit({ user }) {
                                         onChange={(e) =>
                                             setData("email", e.target.value)
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                     />
-                                    <div className="absolute left-3 top-2.5 text-gray-400">
+                                    <div className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500">
                                         @
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@ export default function Edit({ user }) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue transition-colors disabled:opacity-50"
+                                className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue dark:hover:bg-blue-700 transition-colors disabled:opacity-50"
                             >
                                 <Save size={18} /> Simpan Perubahan
                             </button>
@@ -120,16 +120,16 @@ export default function Edit({ user }) {
                 </div>
 
                 {/* Password Update */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
-                        <div className="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center font-bold">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
+                        <div className="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-500 dark:text-orange-400 flex items-center justify-center font-bold">
                             <Lock size={24} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-gray-900">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                                 Update Password
                             </h2>
-                            <p className="text-gray-500 text-sm">
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">
                                 Pastikan akun anda aman dengan password yang
                                 kuat.
                             </p>
@@ -139,7 +139,7 @@ export default function Edit({ user }) {
                     <form onSubmit={submitPassword} className="max-w-xl">
                         <div className="space-y-4 mb-6">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                     Password Saat Ini
                                 </label>
                                 <div className="relative">
@@ -152,10 +152,10 @@ export default function Edit({ user }) {
                                                 e.target.value
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                     />
                                     <Key
-                                        className="absolute left-3 top-2.5 text-gray-400"
+                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
                                         size={18}
                                     />
                                 </div>
@@ -167,7 +167,7 @@ export default function Edit({ user }) {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                     Password Baru
                                 </label>
                                 <div className="relative">
@@ -180,10 +180,10 @@ export default function Edit({ user }) {
                                                 e.target.value
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                     />
                                     <Lock
-                                        className="absolute left-3 top-2.5 text-gray-400"
+                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
                                         size={18}
                                     />
                                 </div>
@@ -195,7 +195,7 @@ export default function Edit({ user }) {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                     Konfirmasi Password Baru
                                 </label>
                                 <div className="relative">
@@ -210,10 +210,10 @@ export default function Edit({ user }) {
                                                 e.target.value
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                     />
                                     <Lock
-                                        className="absolute left-3 top-2.5 text-gray-400"
+                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
                                         size={18}
                                     />
                                 </div>
@@ -224,7 +224,7 @@ export default function Edit({ user }) {
                             <button
                                 type="submit"
                                 disabled={passwordProcessing}
-                                className="flex items-center gap-2 px-6 py-2 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors disabled:opacity-50"
+                                className="flex items-center gap-2 px-6 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-xl font-bold hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
                             >
                                 <Save size={18} /> Update Password
                             </button>

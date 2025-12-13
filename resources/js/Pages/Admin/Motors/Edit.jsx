@@ -107,9 +107,9 @@ export default function Edit({ motor }) {
             <div className="max-w-7xl mx-auto">
                 <Link
                     href={route("admin.motors.index")}
-                    className="inline-flex items-center gap-2 text-gray-500 hover:text-primary mb-6 font-bold transition-colors group"
+                    className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary mb-6 font-bold transition-colors group"
                 >
-                    <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                         <ArrowLeft size={16} />
                     </div>
                     <span className="text-sm">Kembali ke Daftar</span>
@@ -120,8 +120,8 @@ export default function Edit({ motor }) {
                     <div className="xl:col-span-2 space-y-8">
                         <form onSubmit={handleSubmit} id="edit-motor-form">
                             {/* Basic Info Card */}
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                                <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <Info className="text-primary" size={20} />
                                     Informasi Dasar
                                 </h3>
@@ -129,7 +129,7 @@ export default function Edit({ motor }) {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {/* Name */}
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Nama Unit Motor
                                         </label>
                                         <input
@@ -138,7 +138,7 @@ export default function Edit({ motor }) {
                                             onChange={(e) =>
                                                 setData("name", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 text-lg placeholder-gray-300"
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white text-lg placeholder-gray-300 dark:placeholder-gray-600"
                                         />
                                         {errors.name && (
                                             <div className="text-rose-500 text-xs mt-1 font-bold">
@@ -149,7 +149,7 @@ export default function Edit({ motor }) {
 
                                     {/* Brand */}
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Brand / Merek
                                         </label>
                                         <div className="relative">
@@ -161,7 +161,7 @@ export default function Edit({ motor }) {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white appearance-none cursor-pointer font-bold text-gray-700"
+                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none cursor-pointer font-bold text-gray-700 dark:text-white"
                                             >
                                                 <option value="Yamaha">
                                                     Yamaha
@@ -195,7 +195,7 @@ export default function Edit({ motor }) {
 
                                     {/* Type */}
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Kategori / Tipe
                                         </label>
                                         <input
@@ -204,13 +204,13 @@ export default function Edit({ motor }) {
                                             onChange={(e) =>
                                                 setData("type", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium"
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
                                         />
                                     </div>
 
                                     {/* Price */}
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Harga OTR (Rp)
                                         </label>
                                         <div className="relative">
@@ -226,14 +226,14 @@ export default function Edit({ motor }) {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900"
+                                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Year */}
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Tahun Pembuatan
                                         </label>
                                         <input
@@ -242,13 +242,13 @@ export default function Edit({ motor }) {
                                             onChange={(e) =>
                                                 setData("year", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold"
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white"
                                         />
                                     </div>
 
                                     {/* Availability */}
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Status Ketersediaan
                                         </label>
                                         <div className="grid grid-cols-2 gap-3">
@@ -259,8 +259,8 @@ export default function Edit({ motor }) {
                                                 }
                                                 className={`py-3 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
                                                     data.tersedia == 1
-                                                        ? "bg-emerald-50 text-emerald-700 border-emerald-200 shadow-sm"
-                                                        : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
+                                                        ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 shadow-sm"
+                                                        : "bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
                                                 }`}
                                             >
                                                 Tersedia
@@ -272,8 +272,8 @@ export default function Edit({ motor }) {
                                                 }
                                                 className={`py-3 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
                                                     data.tersedia == 0
-                                                        ? "bg-rose-50 text-rose-700 border-rose-200 shadow-sm"
-                                                        : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
+                                                        ? "bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800 shadow-sm"
+                                                        : "bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
                                                 }`}
                                             >
                                                 Habis
@@ -283,29 +283,29 @@ export default function Edit({ motor }) {
 
                                     {/* Image Upload */}
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Ubah Foto Unit (Opsional)
                                         </label>
-                                        <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 hover:border-primary/50 hover:bg-blue-50/10 transition-colors text-center cursor-pointer relative bg-gray-50 group">
+                                        <div className="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-8 hover:border-primary/50 hover:bg-blue-50/10 dark:hover:bg-blue-900/10 transition-colors text-center cursor-pointer relative bg-gray-50 dark:bg-gray-700/50 group">
                                             <input
                                                 type="file"
                                                 accept="image/*"
                                                 onChange={handleImageChange}
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             />
-                                            <div className="flex flex-col items-center gap-3 text-gray-400 group-hover:text-primary transition-colors">
-                                                <div className="bg-white p-4 rounded-full shadow-sm group-hover:shadow-md transition-all">
+                                            <div className="flex flex-col items-center gap-3 text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">
+                                                <div className="bg-white dark:bg-gray-800 p-4 rounded-full shadow-sm group-hover:shadow-md transition-all">
                                                     <Upload
                                                         size={24}
                                                         className="text-primary"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <span className="font-bold text-gray-700 block text-sm">
+                                                    <span className="font-bold text-gray-700 dark:text-gray-300 block text-sm">
                                                         Klik untuk ganti foto
                                                         unit
                                                     </span>
-                                                    <span className="text-xs text-gray-400 block mt-1">
+                                                    <span className="text-xs text-gray-400 dark:text-gray-500 block mt-1">
                                                         Biarkan kosong jika
                                                         tidak ingin mengubah
                                                     </span>
@@ -322,8 +322,8 @@ export default function Edit({ motor }) {
                             </div>
 
                             {/* Specifications Card */}
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                                <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <Settings
                                         className="text-gray-400"
                                         size={20}
@@ -368,7 +368,7 @@ export default function Edit({ motor }) {
                                         },
                                     ].map((spec) => (
                                         <div key={spec.key}>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                                 {spec.label}
                                             </label>
                                             <div className="relative">
@@ -389,13 +389,13 @@ export default function Edit({ motor }) {
                                                         spec.suffix
                                                             ? "pr-12"
                                                             : "pr-4"
-                                                    } py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm`}
+                                                    } py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm text-gray-900 dark:text-white`}
                                                     placeholder={
                                                         spec.placeholder
                                                     }
                                                 />
                                                 {spec.suffix && (
-                                                    <div className="absolute right-0 top-0 bottom-0 px-4 bg-gray-50 border-l border-gray-200 rounded-r-xl flex items-center text-gray-500 font-bold text-xs pointer-events-none">
+                                                    <div className="absolute right-0 top-0 bottom-0 px-4 bg-gray-50 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 rounded-r-xl flex items-center text-gray-500 dark:text-gray-400 font-bold text-xs pointer-events-none">
                                                         {spec.suffix}
                                                     </div>
                                                 )}
@@ -404,7 +404,7 @@ export default function Edit({ motor }) {
                                     ))}
 
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Catatan Tambahan
                                         </label>
                                         <textarea
@@ -419,7 +419,7 @@ export default function Edit({ motor }) {
                                                 )
                                             }
                                             rows="4"
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm"
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
                                             placeholder="Tuliskan spesifikasi unggulan lainnya..."
                                         ></textarea>
                                     </div>
@@ -428,12 +428,12 @@ export default function Edit({ motor }) {
                         </form>
 
                         {/* Danger Zone */}
-                        <div className="bg-red-50 p-6 rounded-2xl border border-red-100">
-                            <h3 className="text-lg font-bold text-rose-700 mb-2 flex items-center gap-2">
+                        <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border border-red-100 dark:border-red-900/50 transition-colors">
+                            <h3 className="text-lg font-bold text-rose-700 dark:text-rose-400 mb-2 flex items-center gap-2">
                                 <AlertTriangle size={20} />
                                 Danger Zone
                             </h3>
-                            <p className="text-sm text-rose-600 mb-4">
+                            <p className="text-sm text-rose-600 dark:text-rose-300 mb-4">
                                 Tindakan ini akan menghapus motor ini secara
                                 permanen dari database. Data yang sudah dihapus
                                 tidak dapat dikembalikan.
@@ -441,7 +441,7 @@ export default function Edit({ motor }) {
                             <button
                                 type="button"
                                 onClick={() => setIsDeleteModalOpen(true)}
-                                className="px-6 py-2.5 bg-white border border-rose-200 text-rose-600 rounded-xl font-bold hover:bg-rose-600 hover:text-white transition-all shadow-sm text-sm"
+                                className="px-6 py-2.5 bg-white dark:bg-red-900/30 border border-rose-200 dark:border-red-800 text-rose-600 dark:text-rose-400 rounded-xl font-bold hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all shadow-sm text-sm"
                             >
                                 <Trash2 size={16} className="inline mr-2" />
                                 Hapus Motor Ini
@@ -453,15 +453,15 @@ export default function Edit({ motor }) {
                     <div className="xl:col-span-1">
                         <div className="sticky top-6 space-y-6">
                             {/* Main Action Card */}
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                                <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                                <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                     <Box size={18} className="text-primary" />
                                     Live Preview
                                 </h3>
 
                                 {/* Card Preview */}
-                                <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm bg-white">
-                                    <div className="aspect-[4/3] bg-gray-100 relative">
+                                <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-800 transition-colors">
+                                    <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-700 relative flex items-center justify-center">
                                         {previewUrl ? (
                                             <img
                                                 src={previewUrl}
@@ -469,7 +469,7 @@ export default function Edit({ motor }) {
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                            <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-500">
                                                 <Bike size={48} />
                                             </div>
                                         )}
@@ -488,16 +488,16 @@ export default function Edit({ motor }) {
                                         </div>
                                     </div>
                                     <div className="p-4">
-                                        <h4 className="font-black text-gray-900 text-lg leading-tight mb-1">
+                                        <h4 className="font-black text-gray-900 dark:text-white text-lg leading-tight mb-1">
                                             {data.name || "Nama Motor"}
                                         </h4>
-                                        <p className="text-xs text-gray-500 font-bold mb-3 uppercase">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-3 uppercase">
                                             {data.type || "Tipe"} &bull;{" "}
                                             {data.year}
                                         </p>
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-[10px] text-gray-400 font-bold uppercase">
+                                                <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">
                                                     Harga OTR
                                                 </p>
                                                 <p className="text-primary font-black text-lg">
@@ -511,11 +511,11 @@ export default function Edit({ motor }) {
                                             </div>
                                             <div className="text-right">
                                                 {data.tersedia == 1 ? (
-                                                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
+                                                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md border border-emerald-100 dark:border-emerald-800">
                                                         Stok Tersedia
                                                     </span>
                                                 ) : (
-                                                    <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-1 rounded-md border border-rose-100">
+                                                    <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-1 rounded-md border border-rose-100 dark:border-rose-800">
                                                         Stok Habis
                                                     </span>
                                                 )}
@@ -524,7 +524,7 @@ export default function Edit({ motor }) {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 pt-6 border-t border-gray-100 space-y-3">
+                                <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 space-y-3">
                                     <button
                                         onClick={handleSubmit}
                                         disabled={processing}
@@ -539,7 +539,7 @@ export default function Edit({ motor }) {
                                     </button>
                                     <Link
                                         href={route("admin.motors.index")}
-                                        className="w-full bg-white text-gray-600 border border-gray-200 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                                        className="w-full bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border border-gray-200 dark:border-gray-600 py-3 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
                                         Batal
                                     </Link>

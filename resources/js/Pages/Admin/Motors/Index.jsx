@@ -76,7 +76,7 @@ export default function Index({ motors, filters }) {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-end gap-4">
                     <div>
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">
                             Kelola katalog unit motor yang tersedia.
                         </p>
                     </div>
@@ -94,7 +94,7 @@ export default function Index({ motors, filters }) {
                 </div>
 
                 {/* Toolbar */}
-                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <form
                         onSubmit={handleSearch}
                         className="relative w-full md:max-w-md group"
@@ -104,21 +104,21 @@ export default function Index({ motors, filters }) {
                             placeholder="Cari unit motor..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-medium text-gray-700 placeholder-gray-400 group-hover:bg-gray-50/80"
+                            className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-gray-600 transition-all font-medium text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 group-hover:bg-gray-50/80 dark:group-hover:bg-gray-700/80"
                         />
                         <Search
-                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors"
                             size={20}
                         />
                     </form>
                 </div>
 
                 {/* Table */}
-                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-slate-50/50 border-b border-gray-100 text-gray-400 text-xs font-bold uppercase tracking-wider">
+                                <tr className="bg-slate-50/50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700 text-gray-400 dark:text-gray-500 text-xs font-bold uppercase tracking-wider">
                                     <th className="p-6">Unit Motor</th>
                                     <th className="p-6">Brand</th>
                                     <th className="p-6">Harga OTR</th>
@@ -127,16 +127,16 @@ export default function Index({ motors, filters }) {
                                     <th className="p-6 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50">
+                            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
                                 {motors.data.length > 0 ? (
                                     motors.data.map((motor) => (
                                         <tr
                                             key={motor.id}
-                                            className="hover:bg-blue-50/30 transition-colors group"
+                                            className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors group"
                                         >
                                             <td className="p-6">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden shrink-0 group-hover:scale-105 transition-transform duration-300">
+                                                    <div className="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 overflow-hidden shrink-0 group-hover:scale-105 transition-transform duration-300">
                                                         <img
                                                             src={`/storage/${motor.image_path}`}
                                                             alt={motor.name}
@@ -144,10 +144,10 @@ export default function Index({ motors, filters }) {
                                                         />
                                                     </div>
                                                     <div>
-                                                        <div className="font-bold text-gray-900 text-base">
+                                                        <div className="font-bold text-gray-900 dark:text-white text-base">
                                                             {motor.name}
                                                         </div>
-                                                        <div className="text-xs text-gray-500 font-medium mt-0.5">
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">
                                                             {motor.type ||
                                                                 "Standard"}
                                                         </div>
@@ -158,32 +158,32 @@ export default function Index({ motors, filters }) {
                                                 <span
                                                     className={`px-3 py-1 rounded-full text-xs font-bold border ${
                                                         motor.brand === "Yamaha"
-                                                            ? "bg-blue-50 text-blue-700 border-blue-100"
-                                                            : "bg-red-50 text-red-700 border-red-100"
+                                                            ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
+                                                            : "bg-red-50 text-red-700 border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
                                                     }`}
                                                 >
                                                     {motor.brand}
                                                 </span>
                                             </td>
                                             <td className="p-6">
-                                                <div className="font-bold text-gray-900">
+                                                <div className="font-bold text-gray-900 dark:text-white">
                                                     Rp{" "}
                                                     {new Intl.NumberFormat(
                                                         "id-ID"
                                                     ).format(motor.price)}
                                                 </div>
                                             </td>
-                                            <td className="p-6 text-gray-600 font-medium">
+                                            <td className="p-6 text-gray-600 dark:text-gray-300 font-medium">
                                                 {motor.year}
                                             </td>
                                             <td className="p-6">
                                                 {motor.tersedia ? (
-                                                    <span className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full text-xs font-bold border border-emerald-100">
+                                                    <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full text-xs font-bold border border-emerald-100 dark:border-emerald-800">
                                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                                         Tersedia
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center gap-1.5 text-rose-700 bg-rose-50 px-3 py-1 rounded-full text-xs font-bold border border-rose-100">
+                                                    <span className="inline-flex items-center gap-1.5 text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-3 py-1 rounded-full text-xs font-bold border border-rose-100 dark:border-rose-800">
                                                         <XCircle size={10} />{" "}
                                                         Stok Habis
                                                     </span>
@@ -196,7 +196,7 @@ export default function Index({ motors, filters }) {
                                                             "admin.motors.show",
                                                             motor.id
                                                         )}
-                                                        className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                                                        className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 dark:hover:text-white transition-all shadow-sm"
                                                         title="Lihat Detail"
                                                     >
                                                         <Eye size={14} />
@@ -206,7 +206,7 @@ export default function Index({ motors, filters }) {
                                                             "admin.motors.edit",
                                                             motor.id
                                                         )}
-                                                        className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                                                        className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 flex items-center justify-center hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all shadow-sm"
                                                         title="Edit Motor"
                                                     >
                                                         <Edit size={14} />
@@ -215,7 +215,7 @@ export default function Index({ motors, filters }) {
                                                         onClick={() =>
                                                             confirmDelete(motor)
                                                         }
-                                                        className="w-8 h-8 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm"
+                                                        className="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800 flex items-center justify-center hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all shadow-sm"
                                                         title="Hapus Motor"
                                                     >
                                                         <Trash2 size={14} />
@@ -230,12 +230,12 @@ export default function Index({ motors, filters }) {
                                             colSpan="6"
                                             className="p-12 text-center"
                                         >
-                                            <div className="flex flex-col items-center justify-center text-gray-300">
+                                            <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-600">
                                                 <Bike
                                                     size={48}
                                                     className="mb-4 opacity-50"
                                                 />
-                                                <p className="text-lg font-bold text-gray-500">
+                                                <p className="text-lg font-bold text-gray-500 dark:text-gray-400">
                                                     Tidak ada motor ditemukan.
                                                 </p>
                                                 <p className="text-sm">
@@ -252,7 +252,7 @@ export default function Index({ motors, filters }) {
 
                     {/* Pagination */}
                     {motors.links.length > 3 && (
-                        <div className="p-6 border-t border-gray-100 flex justify-center bg-gray-50/30">
+                        <div className="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-center bg-gray-50/30 dark:bg-gray-900/30">
                             <div className="flex flex-wrap gap-2 justify-center">
                                 {motors.links.map((link, index) =>
                                     link.url ? (
@@ -265,7 +265,7 @@ export default function Index({ motors, filters }) {
                                             className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm ${
                                                 link.active
                                                     ? "bg-primary text-white shadow-primary/30 scale-105"
-                                                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                                                    : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
                                             }`}
                                         />
                                     ) : (
@@ -274,7 +274,7 @@ export default function Index({ motors, filters }) {
                                             dangerouslySetInnerHTML={{
                                                 __html: link.label,
                                             }}
-                                            className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 text-gray-300 cursor-not-allowed border border-transparent"
+                                            className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 dark:bg-gray-700 text-gray-300 dark:text-gray-500 cursor-not-allowed border border-transparent"
                                         />
                                     )
                                 )}
