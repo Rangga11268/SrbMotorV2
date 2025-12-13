@@ -42,7 +42,7 @@ export default function MainLayout({ children, title }) {
 
     return (
         <>
-            <Head title={title ? `SRB MOTORS - ${title}` : "SRB MOTORS"} />
+            <Head title={title} />
 
             <div className="min-h-screen flex flex-col font-sans text-gray-900 bg-white">
                 <Navbar />

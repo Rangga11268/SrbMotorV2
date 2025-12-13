@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, Head } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
     Calendar,
@@ -9,7 +9,7 @@ import {
     Users,
     Briefcase,
     ArrowRight,
-    Filter,
+    Sparkles,
 } from "lucide-react";
 
 export default function Index() {
@@ -22,39 +22,44 @@ export default function Index() {
     const reportTypes = [
         {
             id: "sales",
-            label: "Penjualan",
-            desc: "Analisis transaksi & pendapatan",
+            label: "Analisis Penjualan",
+            desc: "Tren transaksi & performa produk",
             icon: TrendingUp,
-            color: "text-emerald-600",
-            bg: "bg-emerald-50",
-            border: "border-emerald-100",
+            color: "text-emerald-500",
+            bg: "bg-emerald-500/10",
+            border: "group-hover:border-emerald-500/50",
+            activeClass:
+                "ring-emerald-500/30 bg-emerald-50/50 border-emerald-500",
         },
         {
             id: "income",
-            label: "Pendapatan",
-            desc: "Laporan cash flow detail",
+            label: "Laporan Pendapatan",
+            desc: "Arus kas & detail revenue",
             icon: DollarSign,
-            color: "text-blue-600",
-            bg: "bg-blue-50",
-            border: "border-blue-100",
+            color: "text-blue-500",
+            bg: "bg-blue-500/10",
+            border: "group-hover:border-blue-500/50",
+            activeClass: "ring-blue-500/30 bg-blue-50/50 border-blue-500",
         },
         {
             id: "customer",
-            label: "Pelanggan",
-            desc: "Top spending & aktivitas",
+            label: "Wawasan Pelanggan",
+            desc: "Top spender & demografi",
             icon: Users,
-            color: "text-purple-600",
-            bg: "bg-purple-50",
-            border: "border-purple-100",
+            color: "text-violet-500",
+            bg: "bg-violet-500/10",
+            border: "group-hover:border-violet-500/50",
+            activeClass: "ring-violet-500/30 bg-violet-50/50 border-violet-500",
         },
         {
             id: "status",
-            label: "Status",
-            desc: "Distribusi status pesanan",
+            label: "Distribusi Status",
+            desc: "Monitoring status pesanan",
             icon: Briefcase,
-            color: "text-orange-600",
-            bg: "bg-orange-50",
-            border: "border-orange-100",
+            color: "text-amber-500",
+            bg: "bg-amber-500/10",
+            border: "group-hover:border-amber-500/50",
+            activeClass: "ring-amber-500/30 bg-amber-50/50 border-amber-500",
         },
     ];
 
@@ -88,28 +93,44 @@ export default function Index() {
     };
 
     return (
-        <AdminLayout title="Pusat Laporan">
-            <div className="max-w-4xl mx-auto py-8">
-                <div className="text-center mb-10">
-                    <h1 className="text-3xl font-black text-gray-900 mb-2">
-                        Control Center Laporan
+        <AdminLayout>
+            <Head title="Pusat Laporan" />
+
+            <div className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                {/* Header Section */}
+                <div className="text-center mb-12 relative">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+                    <h1 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+                            Analytics Hub
+                        </span>
                     </h1>
-                    <p className="text-gray-500 text-lg">
-                        Generate insight mendalam untuk bisnis Anda dalam sekali
-                        klik.
+                    <p className="text-gray-500 text-lg max-w-2xl mx-auto font-medium">
+                        Generate laporan komprehensif untuk memantau performa
+                        bisnis Anda secara real-time.
                     </p>
                 </div>
 
-                <div className="bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden relative">
-                    <div className="p-8 md:p-10">
-                        <form onSubmit={handleGenerate} className="space-y-10">
+                <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-gray-200/50 border border-white/50 relative overflow-hidden">
+                    {/* Decorative top bar */}
+                    <div className="h-2 w-full bg-gradient-to-r from-primary via-blue-500 to-violet-500"></div>
+
+                    <div className="p-8 lg:p-12">
+                        <form onSubmit={handleGenerate} className="space-y-12">
                             {/* Section 1: Report Type */}
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-gray-900 font-bold text-lg">
-                                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                                        1
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shadow-sm">
+                                        <Sparkles className="w-5 h-5 text-amber-500" />
                                     </div>
-                                    Pilih Jenis Laporan
+                                    <div>
+                                        <h2 className="text-lg font-bold text-gray-900">
+                                            Pilih Jenis Laporan
+                                        </h2>
+                                        <p className="text-sm text-gray-500">
+                                            Data apa yang ingin Anda lihat?
+                                        </p>
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -123,23 +144,25 @@ export default function Index() {
                                                 onClick={() =>
                                                     setData("type", type.id)
                                                 }
-                                                className={`cursor-pointer relative p-5 rounded-2xl border-2 transition-all duration-300 group ${
+                                                className={`group cursor-pointer relative p-6 rounded-2xl border-2 transition-all duration-300 ${
                                                     isSelected
-                                                        ? `border-primary bg-primary/5 ring-4 ring-primary/10 shadow-lg shadow-primary/10 scale-105 z-10`
-                                                        : "border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50 hover:-translate-y-1"
+                                                        ? `${type.activeClass} shadow-lg scale-[1.02]`
+                                                        : "border-gray-100 bg-white hover:bg-gray-50 hover:border-gray-200"
                                                 }`}
                                             >
                                                 <div
-                                                    className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-colors ${
+                                                    className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-colors duration-300 ${
                                                         isSelected
-                                                            ? "bg-primary text-white"
-                                                            : `${type.bg} ${type.color}`
+                                                            ? type.bg +
+                                                              " " +
+                                                              type.color
+                                                            : "bg-gray-100 text-gray-400 group-hover:bg-white group-hover:shadow-sm"
                                                     }`}
                                                 >
-                                                    <Icon size={24} />
+                                                    <Icon size={28} />
                                                 </div>
                                                 <h3
-                                                    className={`font-bold text-base mb-1 ${
+                                                    className={`font-bold text-lg mb-1 transition-colors ${
                                                         isSelected
                                                             ? "text-gray-900"
                                                             : "text-gray-700"
@@ -147,15 +170,20 @@ export default function Index() {
                                                 >
                                                     {type.label}
                                                 </h3>
-                                                <p className="text-xs text-gray-400 font-medium">
+                                                <p className="text-xs text-gray-400 font-medium leading-relaxed">
                                                     {type.desc}
                                                 </p>
 
-                                                {isSelected && (
-                                                    <div className="absolute top-4 right-4 text-primary">
-                                                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                                                    </div>
-                                                )}
+                                                <div
+                                                    className={`absolute top-4 right-4 w-3 h-3 rounded-full transition-all duration-500 ${
+                                                        isSelected
+                                                            ? type.color.replace(
+                                                                  "text-",
+                                                                  "bg-"
+                                                              )
+                                                            : "bg-transparent"
+                                                    }`}
+                                                ></div>
                                             </div>
                                         );
                                     })}
@@ -164,15 +192,21 @@ export default function Index() {
 
                             {/* Section 2: Date Range */}
                             <div className="space-y-6">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                    <div className="flex items-center gap-2 text-gray-900 font-bold text-lg">
-                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                                            2
+                                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-t border-gray-100 pt-8">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shadow-sm">
+                                            <Calendar className="w-5 h-5 text-blue-500" />
                                         </div>
-                                        Periode Waktu
+                                        <div>
+                                            <h2 className="text-lg font-bold text-gray-900">
+                                                Periode Waktu
+                                            </h2>
+                                            <p className="text-sm text-gray-500">
+                                                Tentukan rentang tanggal laporan
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    {/* Presets */}
                                     <div className="flex flex-wrap gap-2">
                                         {presets.map((preset, idx) => (
                                             <button
@@ -181,7 +215,7 @@ export default function Index() {
                                                 onClick={() =>
                                                     applyPreset(preset)
                                                 }
-                                                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-50 text-gray-600 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200 transition-all"
+                                                className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-gray-600 border border-gray-200 hover:border-primary hover:text-primary hover:shadow-md transition-all active:scale-95"
                                             >
                                                 {preset.label}
                                             </button>
@@ -189,9 +223,9 @@ export default function Index() {
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 p-2 rounded-2xl border border-gray-100 flex flex-col md:flex-row items-center gap-2 md:gap-0">
+                                <div className="p-1 bg-gray-100/50 rounded-2xl border border-gray-200 flex flex-col md:flex-row items-center">
                                     <div className="relative w-full group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                             <Calendar className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
                                         </div>
                                         <input
@@ -203,19 +237,22 @@ export default function Index() {
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 font-bold text-gray-700 text-center md:text-left"
+                                            className="w-full pl-14 pr-4 py-5 bg-white md:bg-transparent border-none rounded-xl focus:ring-0 font-bold text-gray-700 text-lg cursor-pointer"
                                         />
-                                        <span className="absolute top-2 left-12 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                                            Mulai Tanggal
+                                        <span className="absolute top-2 left-14 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                            Dari Tanggal
                                         </span>
                                     </div>
 
-                                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-gray-300 shadow-sm shrink-0 z-10">
-                                        <ArrowRight size={18} />
+                                    <div className="hidden md:flex items-center justify-center w-12 text-gray-300">
+                                        <ArrowRight
+                                            size={24}
+                                            strokeWidth={1.5}
+                                        />
                                     </div>
 
                                     <div className="relative w-full group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                             <Calendar className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
                                         </div>
                                         <input
@@ -227,9 +264,9 @@ export default function Index() {
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 font-bold text-gray-700 text-center md:text-left"
+                                            className="w-full pl-14 pr-4 py-5 bg-white md:bg-transparent border-none rounded-xl focus:ring-0 font-bold text-gray-700 text-lg cursor-pointer"
                                         />
-                                        <span className="absolute top-2 left-12 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                                        <span className="absolute top-2 left-14 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                                             Sampai Tanggal
                                         </span>
                                     </div>
@@ -237,16 +274,26 @@ export default function Index() {
                             </div>
 
                             {/* Submit Button */}
-                            <div className="pt-4">
+                            <div className="pt-6">
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="w-full py-4 rounded-xl bg-gray-900 text-white font-black text-lg shadow-xl shadow-gray-900/10 hover:shadow-2xl hover:scale-[1.01] hover:bg-black transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="relative w-full group overflow-hidden rounded-2xl p-[1px]"
                                 >
-                                    <Search size={22} strokeWidth={2.5} />
-                                    {processing
-                                        ? "Memproses Laporan..."
-                                        : "Tampilkan Laporan Analisa"}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 group-hover:via-black transition-all duration-500"></div>
+                                    <div className="relative bg-gray-900 rounded-[15px] px-8 py-5 flex items-center justify-center gap-3 overflow-hidden group-hover:bg-opacity-90 transition-all">
+                                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                        {processing ? (
+                                            <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        ) : (
+                                            <Search className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
+                                        )}
+                                        <span className="font-black text-xl text-white tracking-wide">
+                                            {processing
+                                                ? "MEMPROSES..."
+                                                : "GENERATE REPORT"}
+                                        </span>
+                                    </div>
                                 </button>
                             </div>
                         </form>

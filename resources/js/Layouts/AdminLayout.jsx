@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, Head } from "@inertiajs/react";
 import {
     LayoutDashboard,
     Users,
@@ -75,6 +75,7 @@ export default function AdminLayout({ children, title }) {
 
     return (
         <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900">
+            <Head title={title} />
             {/* Flash Message Alert */}
             <AnimatePresence>
                 {showFlash && (flash.success || flash.error) && (
@@ -96,7 +97,7 @@ export default function AdminLayout({ children, title }) {
                         <span className="font-bold text-sm">
                             {flash.success || flash.error}
                         </span>
-                        <button 
+                        <button
                             onClick={() => setShowFlash(false)}
                             className="ml-auto hover:bg-white/20 rounded-full p-1 transition-colors"
                         >
@@ -123,7 +124,7 @@ export default function AdminLayout({ children, title }) {
             <aside
                 className={`fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-gray-100 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
                     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-                }`}
+                } print:hidden`}
             >
                 <div className="h-full flex flex-col">
                     {/* Logo Area */}
@@ -230,7 +231,7 @@ export default function AdminLayout({ children, title }) {
             {/* Main Content */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* Topbar */}
-                <header className="bg-white border-b border-gray-100 h-16 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30">
+                <header className="bg-white border-b border-gray-100 h-16 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30 print:hidden">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={toggleSidebar}

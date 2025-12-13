@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, Head } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
     ArrowLeft,
@@ -13,8 +13,9 @@ import {
     Users,
     Briefcase,
     ShoppingCart,
+    CreditCard,
+    MoreHorizontal,
 } from "lucide-react";
-import { useReactToPrint } from "react-to-print";
 import {
     RevenueChart,
     StatusPieChart,
@@ -26,10 +27,10 @@ export default function Show({
     description,
     startDate,
     endDate,
+    rawStartDate,
+    rawEndDate,
     data,
 }) {
-    const componentRef = useRef();
-
     // Helper to calculate or get total
     const getSummaryStats = () => {
         if (!data) return [];
@@ -41,6 +42,8 @@ export default function Show({
                         label: "Total Transaksi",
                         value: data.total_transactions,
                         icon: ShoppingCart,
+                        color: "text-emerald-500",
+                        bg: "bg-emerald-500/10",
                     },
                     {
                         label: "Total Pendapatan",
@@ -48,30 +51,38 @@ export default function Show({
                             data.total_revenue
                         )}`,
                         icon: DollarSign,
+                        color: "text-blue-500",
+                        bg: "bg-blue-500/10",
                     },
                 ];
             case "income":
                 return [
                     {
-                        label: "Total Pendapatan",
+                        label: "Gross Income",
                         value: `Rp ${new Intl.NumberFormat("id-ID").format(
                             data.total_income
                         )}`,
-                        icon: DollarSign,
+                        icon: TrendingUp,
+                        color: "text-emerald-500",
+                        bg: "bg-emerald-500/10",
                     },
                     {
-                        label: "Tunai",
+                        label: "Cash Income",
                         value: `Rp ${new Intl.NumberFormat("id-ID").format(
                             data.cash_income
                         )}`,
                         icon: DollarSign,
+                        color: "text-blue-500",
+                        bg: "bg-blue-500/10",
                     },
                     {
-                        label: "Kredit",
+                        label: "Credit Income",
                         value: `Rp ${new Intl.NumberFormat("id-ID").format(
                             data.credit_income
                         )}`,
-                        icon: DollarSign,
+                        icon: CreditCard,
+                        color: "text-amber-500",
+                        bg: "bg-amber-500/10",
                     },
                 ];
             case "customer":
@@ -80,11 +91,15 @@ export default function Show({
                         label: "Total Pelanggan",
                         value: data.total_customers,
                         icon: Users,
+                        color: "text-violet-500",
+                        bg: "bg-violet-500/10",
                     },
                     {
                         label: "Pelanggan Baru",
                         value: data.new_customers,
-                        icon: Users,
+                        icon: [Users, SparklesIcon], // Custom composition logic needed if multiple icons, kept simple here
+                        color: "text-pink-500",
+                        bg: "bg-pink-500/10",
                     },
                 ];
             case "status":
@@ -93,6 +108,8 @@ export default function Show({
                         label: "Total Transaksi",
                         value: data.total_transactions,
                         icon: Box,
+                        color: "text-gray-500",
+                        bg: "bg-gray-500/10",
                     },
                 ];
             default:
@@ -103,32 +120,31 @@ export default function Show({
     // Prepare Data for Charts
     const getChartData = () => {
         if (!data) return [];
-        
+
         switch (type) {
             case "sales":
             case "income":
-                // Aggregate items by Date
                 if (!data.items) return [];
                 const grouped = data.items.reduce((acc, item) => {
-                    // Item created_at is "dd MMM yyyy HH:mm", let's take just the date part
                     const dateKey = item.created_at.substring(0, 6); // "01 Jan"
                     if (!acc[dateKey]) acc[dateKey] = 0;
                     acc[dateKey] += parseFloat(item.total_amount || 0);
                     return acc;
                 }, {});
-                
-                return Object.keys(grouped).map(date => ({
+
+                return Object.keys(grouped).map((date) => ({
                     name: date,
-                    revenue: grouped[date]
+                    revenue: grouped[date],
                 }));
 
             case "status":
                 if (!data.by_status) return [];
-                // by_status is an object from controller: { "Status": {count, revenue...} }
-                return Object.entries(data.by_status).map(([status, stats]) => ({
-                    name: status.replace(/_/g, " "),
-                    value: stats.count
-                }));
+                return Object.entries(data.by_status).map(
+                    ([status, stats]) => ({
+                        name: status.replace(/_/g, " "),
+                        value: stats.count,
+                    })
+                );
 
             default:
                 return [];
@@ -139,26 +155,45 @@ export default function Show({
         const chartData = getChartData();
         if (chartData.length === 0) return null;
 
-        if (type === 'sales' || type === 'income') {
-             return (
-                 <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100 print:hidden">
-                     <h3 className="font-bold text-gray-700 mb-4 flex items-center gap-2">
-                        <TrendingUp size={20} className="text-primary"/> 
-                        Tren Pendapatan
-                     </h3>
-                     <RevenueChart data={chartData} />
-                 </div>
-             );
-        } else if (type === 'status') {
-             return (
-                 <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100 print:hidden">
-                     <h3 className="font-bold text-gray-700 mb-4 flex items-center gap-2">
-                        <Box size={20} className="text-primary"/>
-                        Distribusi Status
-                     </h3>
-                     <StatusPieChart data={chartData} />
-                 </div>
-             );
+        if (type === "sales" || type === "income") {
+            return (
+                <div className="mb-8 p-6 bg-white rounded-3xl border border-gray-100 shadow-sm print:hidden">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                                <TrendingUp
+                                    size={20}
+                                    className="text-blue-600"
+                                />
+                            </div>
+                            <h3 className="font-bold text-gray-800 text-lg">
+                                Tren Pendapatan
+                            </h3>
+                        </div>
+                    </div>
+                    <div className="h-[350px] w-full">
+                        <RevenueChart data={chartData} />
+                    </div>
+                </div>
+            );
+        } else if (type === "status") {
+            return (
+                <div className="mb-8 p-6 bg-white rounded-3xl border border-gray-100 shadow-sm print:hidden">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                                <Box size={20} className="text-amber-600" />
+                            </div>
+                            <h3 className="font-bold text-gray-800 text-lg">
+                                Distribusi Status
+                            </h3>
+                        </div>
+                    </div>
+                    <div className="h-[350px] w-full">
+                        <StatusPieChart data={chartData} />
+                    </div>
+                </div>
+            );
         }
         return null;
     };
@@ -172,38 +207,53 @@ export default function Show({
         );
     };
 
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
+    // Native Print Strategy
+    const handlePrint = () => {
+        window.print();
+    };
+
+    const handleExportPdf = () => {
+        const url = route("admin.reports.export", {
+            type: type,
+            start_date: rawStartDate,
+            end_date: rawEndDate,
+        });
+        window.open(url, "_blank");
+    };
 
     const getReportIcon = () => {
         switch (type) {
             case "sales":
-                return <TrendingUp size={24} className="text-emerald-600" />;
+                return <TrendingUp size={24} className="text-emerald-500" />;
             case "income":
-                return <DollarSign size={24} className="text-blue-600" />;
+                return <DollarSign size={24} className="text-blue-500" />;
             case "customer":
-                return <Users size={24} className="text-purple-600" />;
+                return <Users size={24} className="text-violet-500" />;
             default:
-                return <FileText size={24} className="text-gray-600" />;
+                return <FileText size={24} className="text-gray-500" />;
         }
     };
 
     const renderTable = () => {
-        // Determine the list data array based on report type
         let listData = [];
         if (type === "sales" || type === "income") {
             listData = data.items || [];
         } else if (type === "customer") {
             listData = data.top_customers || [];
         } else if (type === "status") {
-            listData = data.by_status ? Object.values(data.by_status) : [];
+            // Re-map listData for status to include keys if it was an object
+            const statusEntries = data.by_status
+                ? Object.entries(data.by_status)
+                : [];
+            // We'll process this below directly or map it here.
+            // Let's use statusEntries directly in the map below for 'status' type.
+            listData = statusEntries; // Just to pass the empty check
         }
 
         if (!listData || listData.length === 0) {
             return (
-                <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+                    <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <Box className="text-gray-400" size={32} />
                     </div>
                     <p className="font-bold text-gray-500 text-lg">
@@ -216,36 +266,52 @@ export default function Show({
             );
         }
 
-        // Dynamic table headers based on type
         let headers = [];
         let rows = [];
 
         if (type === "sales" || type === "income") {
-            headers = ["ID", "Tanggal", "Pelanggan", "Motor", "Tipe", "Total"];
+            headers = [
+                "ID Transaksi",
+                "Tanggal",
+                "Pelanggan",
+                "Motor",
+                "Metode",
+                "Total",
+            ];
             rows = listData.map((item, index) => (
-                <tr key={item.id || index} className="hover:bg-gray-50/50">
-                    <td className="p-4 font-mono text-xs font-bold text-gray-500">
+                <tr
+                    key={item.id || index}
+                    className="group hover:bg-blue-50/50 transition-colors"
+                >
+                    <td className="p-5 font-mono text-xs font-bold text-gray-500">
                         #{item.id}
                     </td>
-                    <td className="p-4 text-sm text-gray-600">
+                    <td className="p-5 text-sm font-medium text-gray-600">
                         {item.created_at}
                     </td>
-                    <td className="p-4 font-bold text-gray-800">
-                        {item.customer_name}
+                    <td className="p-5 font-bold text-gray-800">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
+                                {item.customer_name.charAt(0)}
+                            </div>
+                            {item.customer_name}
+                        </div>
                     </td>
-                    <td className="p-4 text-gray-600">{item.motor_name}</td>
-                    <td className="p-4">
+                    <td className="p-5 text-sm text-gray-600">
+                        {item.motor_name}
+                    </td>
+                    <td className="p-5">
                         <span
-                            className={`px-2 py-1 rounded-lg text-xs font-bold uppercase ${
+                            className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase ${
                                 item.type === "CASH"
-                                    ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
-                                    : "bg-purple-50 text-purple-600 border border-purple-100"
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : "bg-amber-100 text-amber-700"
                             }`}
                         >
                             {item.type}
                         </span>
                     </td>
-                    <td className="p-4 font-bold text-gray-900 text-right">
+                    <td className="p-5 font-bold text-gray-900 text-right">
                         Rp{" "}
                         {new Intl.NumberFormat("id-ID").format(
                             item.total_amount || 0
@@ -254,15 +320,30 @@ export default function Show({
                 </tr>
             ));
         } else if (type === "customer") {
-            headers = ["Nama", "Email", "Total Transaksi", "Total Belanja"];
+            headers = [
+                "Pelanggan",
+                "Email",
+                "Total Transaksi",
+                "Total Belanja",
+            ];
             rows = listData.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50/50">
-                    <td className="p-4 font-bold text-gray-800">{item.name}</td>
-                    <td className="p-4 text-gray-600">{item.email}</td>
-                    <td className="p-4 text-center font-bold">
+                <tr
+                    key={index}
+                    className="group hover:bg-violet-50/50 transition-colors"
+                >
+                    <td className="p-5 font-bold text-gray-800">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center text-xs font-bold text-violet-600">
+                                {item.name.charAt(0)}
+                            </div>
+                            {item.name}
+                        </div>
+                    </td>
+                    <td className="p-5 text-gray-600 text-sm">{item.email}</td>
+                    <td className="p-5 text-center font-bold text-gray-900">
                         {item.transaction_count}
                     </td>
-                    <td className="p-4 font-bold text-gray-900 text-right">
+                    <td className="p-5 font-bold text-gray-900 text-right">
                         Rp{" "}
                         {new Intl.NumberFormat("id-ID").format(
                             item.total_spent || 0
@@ -271,27 +352,25 @@ export default function Show({
                 </tr>
             ));
         } else if (type === "status") {
-            headers = ["Status", "Jumlah", "Total Nilai"];
-            // Handle by_status object transformation if needed, here we assume listData is already array of {count, revenue}
-            // BUT wait, by_status was mapped with keys in controller. We need to handle that.
-            // Actually in controller: $data['by_status'] = map(...) -> returns object keyed by status if groupBy used.
-            // So listData = Object.values(data.by_status) above is correct, but we lost the key (status name).
-            // Let's rely on Object.entries in the loop below.
-
-            // Quick fix: Re-map listData for status to include keys if it was an object
+            headers = ["Status Pesanan", "Jumlah", "Valuasi"];
             const statusEntries = data.by_status
                 ? Object.entries(data.by_status)
                 : [];
 
             rows = statusEntries.map(([status, stats], index) => (
-                <tr key={index} className="hover:bg-gray-50/50">
-                    <td className="p-4">
-                        <span className="font-bold text-gray-700 uppercase px-3 py-1 bg-gray-100 rounded-lg border border-gray-200 text-xs">
+                <tr
+                    key={index}
+                    className="group hover:bg-amber-50/50 transition-colors"
+                >
+                    <td className="p-5">
+                        <span className="font-bold text-gray-700 uppercase px-4 py-1.5 bg-gray-100 rounded-full border border-gray-200 text-xs tracking-wider">
                             {status.replace(/_/g, " ")}
                         </span>
                     </td>
-                    <td className="p-4 font-bold text-lg">{stats.count}</td>
-                    <td className="p-4 font-bold text-gray-900 text-right">
+                    <td className="p-5 font-black text-lg text-gray-800 pl-10">
+                        {stats.count}
+                    </td>
+                    <td className="p-5 font-bold text-gray-900 text-right">
                         Rp{" "}
                         {new Intl.NumberFormat("id-ID").format(
                             stats.revenue || 0
@@ -300,129 +379,154 @@ export default function Show({
                 </tr>
             ));
         }
-        // The original code had a syntax error here, closing the map and then immediately closing the if block.
-        // The `));` should be followed by the closing `}` for the `if` block.
-        // The provided snippet ends with `)); }`, which is still incorrect.
-        // I will correct it to `)); }` for the `if (type === 'status')` block.
-        // Then the `return` statement for the table.
 
         return (
-            <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                    <thead>
-                        <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs tracking-wider">
-                            {headers.map((h, i) => (
-                                <th
-                                    key={i}
-                                    className={`p-4 font-bold ${
-                                        h === "Total" ||
-                                        h === "Total Belanja" ||
-                                        h === "Total Nilai"
-                                            ? "text-right"
-                                            : ""
-                                    }`}
-                                >
-                                    {h}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">{rows}</tbody>
-                    {/* Footer for totals if applicable */}
-                    {(type === "sales" || type === "income") && (
-                        <tfoot className="bg-gray-50 font-black text-gray-900">
-                            <tr>
-                                <td
-                                    colSpan="5"
-                                    className="p-4 text-right uppercase tracking-wide"
-                                >
-                                    Grand Total
-                                </td>
-                                <td className="p-4 text-right">
-                                    Rp{" "}
-                                    {new Intl.NumberFormat("id-ID").format(
-                                        calculateTotal("total_amount")
-                                    )}
-                                </td>
+            <div className="bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
+                <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                    <h3 className="font-bold text-gray-800 text-lg flex items-center gap-2">
+                        <MoreHorizontal size={20} className="text-gray-400" />
+                        Rincian Data
+                    </h3>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                        <thead>
+                            <tr className="bg-gray-50 border-b border-gray-100/50 text-gray-400 uppercase text-[10px] tracking-widest font-bold">
+                                {headers.map((h, i) => (
+                                    <th
+                                        key={i}
+                                        className={`p-5 ${
+                                            h.includes("Total") ||
+                                            h.includes("Valuasi")
+                                                ? "text-right"
+                                                : ""
+                                        }`}
+                                    >
+                                        {h}
+                                    </th>
+                                ))}
                             </tr>
-                        </tfoot>
-                    )}
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                            {rows}
+                        </tbody>
+
+                        {(type === "sales" || type === "income") && (
+                            <tfoot className="bg-gray-50/80 backdrop-blur font-black text-gray-900">
+                                <tr>
+                                    <td
+                                        colSpan="5"
+                                        className="p-5 text-right uppercase tracking-wide text-xs text-gray-500"
+                                    >
+                                        Grand Total
+                                    </td>
+                                    <td className="p-5 text-right text-lg">
+                                        Rp{" "}
+                                        {new Intl.NumberFormat("id-ID").format(
+                                            calculateTotal("total_amount")
+                                        )}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        )}
+                    </table>
+                </div>
             </div>
         );
     };
 
+    // Dummy component for icon fallback
+    const SparklesIcon = () => <Sparkles size={24} className="text-pink-500" />;
+
     return (
-        <AdminLayout title={title}>
-            <div className="max-w-5xl mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+        <AdminLayout>
+            <Head title={title} />
+
+            <div className="max-w-7xl mx-auto py-8 px-4">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
                     <Link
                         href={route("admin.reports.index")}
-                        className="inline-flex items-center gap-2 text-gray-500 hover:text-primary font-bold transition-colors group"
+                        className="inline-flex items-center gap-3 text-gray-500 hover:text-gray-900 font-bold transition-all group"
                     >
-                        <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                            <ArrowLeft size={16} />
+                        <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center group-hover:border-gray-900 group-hover:bg-gray-900 group-hover:text-white transition-all shadow-sm">
+                            <ArrowLeft size={18} />
                         </div>
-                        <span className="text-sm">Kembali ke Menu</span>
+                        <div>
+                            <span className="text-xs uppercase tracking-wider font-bold text-gray-400 block mb-0.5 group-hover:text-gray-500">
+                                Kembali ke
+                            </span>
+                            <span className="text-lg">Control Center</span>
+                        </div>
                     </Link>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-3 print:hidden">
+                        <div className="px-4 py-2 bg-white rounded-xl border border-gray-200 text-sm font-bold text-gray-600 shadow-sm flex items-center gap-2">
+                            <Calendar size={14} className="text-gray-400" />
+                            {startDate} - {endDate}
+                        </div>
+
+                        <div className="h-8 w-[1px] bg-gray-200 mx-2 hidden lg:block"></div>
+
                         <button
                             onClick={handlePrint}
-                            className="px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-colors flex items-center gap-2 shadow-sm"
+                            className="px-5 py-2.5 bg-white text-gray-700 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center gap-2 shadow-sm"
                         >
-                            <Printer size={16} /> Cetak
+                            <Printer size={18} />
+                            <span className="hidden sm:inline">Cetak</span>
                         </button>
-                        <button className="px-4 py-2 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue transition-colors flex items-center gap-2 shadow-lg shadow-primary/20">
-                            <Download size={16} /> Export PDF
+                        <button
+                            onClick={handleExportPdf}
+                            className="px-5 py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-all flex items-center gap-2 shadow-xl shadow-gray-900/10 hover:shadow-2xl hover:-translate-y-0.5"
+                        >
+                            <Download size={18} /> Export PDF
                         </button>
                     </div>
                 </div>
 
                 {/* Printable Area */}
-                <div
-                    ref={componentRef}
-                    className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 print:shadow-none print:border-none print:p-0"
-                >
-                    <div className="flex items-start justify-between mb-8 border-b border-gray-100 pb-8">
+                <div className="print:p-0 print:border-none">
+                    <div className="flex items-center gap-5 mb-10">
+                        <div className="w-16 h-16 rounded-[1.2rem] bg-white border border-gray-100 flex items-center justify-center shadow-lg shadow-gray-200/50">
+                            {getReportIcon()}
+                        </div>
                         <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
-                                    {getReportIcon()}
-                                </div>
-                                <h1 className="text-2xl font-black text-gray-900">
-                                    {title}
-                                </h1>
-                            </div>
-                            <p className="text-gray-500 text-sm">
+                            <h1 className="text-4xl font-black text-gray-900 mb-1">
+                                {title}
+                            </h1>
+                            <p className="text-lg text-gray-500 font-medium">
                                 {description}
                             </p>
                         </div>
-                        <div className="text-right">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 text-sm font-bold text-gray-700">
-                                <Calendar size={14} className="text-gray-400" />
-                                {startDate} - {endDate}
-                            </div>
-                        </div>
                     </div>
 
-                    {/* Summary Stats - ADDED */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    {/* Summary Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
                         {getSummaryStats().map((stat, idx) => {
                             const Icon = stat.icon;
+                            // Check if Icon is array or component
+                            const isIconComponent =
+                                typeof Icon === "function" ||
+                                typeof Icon === "object";
+
                             return (
                                 <div
                                     key={idx}
-                                    className="p-4 bg-white border border-gray-100 rounded-2xl shadow-sm flex items-center gap-4"
+                                    className="p-6 bg-white border border-gray-100 rounded-[2rem] shadow-xl shadow-gray-100/50 flex flex-col justify-between group hover:scale-[1.02] transition-transform duration-300"
                                 >
-                                    <div className="p-3 bg-primary/10 text-primary rounded-xl">
-                                        <Icon size={24} />
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div
+                                            className={`p-3 rounded-2xl ${stat.bg} ${stat.color}`}
+                                        >
+                                            {isIconComponent && (
+                                                <Icon size={24} />
+                                            )}
+                                        </div>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">
+                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">
                                             {stat.label}
                                         </p>
-                                        <p className="text-xl font-black text-gray-900">
+                                        <p className="text-3xl font-black text-gray-900 tracking-tight">
                                             {stat.value}
                                         </p>
                                     </div>
@@ -434,7 +538,7 @@ export default function Show({
                     {renderChart()}
                     {renderTable()}
 
-                    <div className="mt-8 text-center print:block hidden">
+                    <div className="mt-12 text-center print:block hidden">
                         <p className="text-xs text-gray-400">
                             Dicetak otomatis oleh Sistem Admin SRB Motor pada{" "}
                             {new Date().toLocaleString()}
