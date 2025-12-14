@@ -13,6 +13,7 @@ import {
     ArrowRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ComparisonButton from "@/Components/ComparisonButton";
 
 export default function Index({ motors, filters, brands, types, years }) {
     // State for filters
@@ -317,13 +318,17 @@ export default function Index({ motors, filters, brands, types, years }) {
                                                 )}
                                             </div>
 
-                                            <div className="mt-auto pt-4 border-t border-gray-50">
+                                            <div className="mt-auto pt-4 border-t border-gray-50 flex gap-2">
+                                                <ComparisonButton
+                                                    motor={motor}
+                                                    className="w-12 h-12 flex-none"
+                                                />
                                                 <Link
                                                     href={route(
                                                         "motors.show",
                                                         motor.id
                                                     )}
-                                                    className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wider transition-all shadow-lg ${
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wider transition-all shadow-lg ${
                                                         motor.tersedia
                                                             ? "bg-dark-blue text-white hover:bg-primary shadow-blue-900/10 hover:shadow-primary/30"
                                                             : "bg-gray-200 text-gray-400 cursor-not-allowed"

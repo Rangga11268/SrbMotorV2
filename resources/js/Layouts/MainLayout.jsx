@@ -3,6 +3,7 @@ import { Head, usePage } from "@inertiajs/react";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import FloatingWhatsApp from "@/Components/FloatingWhatsApp";
+import ComparisonFloatingBar from "@/Components/ComparisonFloatingBar";
 import { Toaster } from "react-hot-toast"; // We might want toast notifications
 
 export default function MainLayout({ children, title }) {
@@ -56,6 +57,9 @@ export default function MainLayout({ children, title }) {
 
                 {/* Floating WhatsApp Widget */}
                 <FloatingWhatsApp />
+
+                {/* Comparison Floating Bar */}
+                <ComparisonFloatingBar />
             </div>
         </>
     );

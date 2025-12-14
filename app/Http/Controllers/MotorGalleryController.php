@@ -22,6 +22,27 @@ class MotorGalleryController extends Controller
     }
 
     /**
+     * Display a comparison of selected motors.
+     */
+    public function compare(Request $request)
+    {
+        $ids = explode(',', $request->query('ids', ''));
+        $ids = array_filter($ids, fn($id) => is_numeric($id));
+        
+        if (empty($ids)) {
+            return redirect()->route('motors.index');
+        }
+
+        $motors = Motor::with(['specifications'])
+            ->whereIn('id', $ids)
+            ->get();
+
+        return \Inertia\Inertia::render('Motors/Compare', [
+            'motors' => $motors
+        ]);
+    }
+
+    /**
      * Display a listing of the motors with filtering and search capabilities.
      */
     public function index(Request $request): \Inertia\Response

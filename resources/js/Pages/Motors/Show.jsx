@@ -19,6 +19,7 @@ import {
     Disc,
     Tag,
 } from "lucide-react";
+import ComparisonButton from "@/Components/ComparisonButton";
 
 export default function Show({ motor, relatedMotors }) {
     const { auth } = usePage().props;
@@ -237,6 +238,10 @@ export default function Show({ motor, relatedMotors }) {
                                         >
                                             <Phone size={20} /> WhatsApp
                                         </button>
+                                        <ComparisonButton
+                                            motor={motor}
+                                            className="h-[54px] px-6"
+                                        />
                                     </div>
                                 </motion.div>
                             </div>
