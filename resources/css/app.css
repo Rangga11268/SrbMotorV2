@@ -20,6 +20,13 @@
 @source '../**/*.js';
 @source '../**/*.jsx';
 
+/* 
+   We added tailwind.config.js with darkMode: 'selector', 
+   but ensuring custom variants are supported in app.css 
+   can help if config loading is tricky in some environments.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
