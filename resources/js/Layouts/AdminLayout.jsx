@@ -264,7 +264,7 @@ function AdminLayoutContent({ children, title }) {
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-y-auto px-4 pb-4 lg:px-8 lg:pb-8 scroll-smooth">
+                <main className="flex-1 overflow-y-auto px-4 pb-4 lg:px-8 lg:pb-8 pt-8 scroll-smooth">
                     {children}
                 </main>
             </div>
