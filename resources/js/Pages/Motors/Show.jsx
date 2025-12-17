@@ -78,9 +78,9 @@ export default function Show({ motor, relatedMotors }) {
 
                     {/* Motor Info Section */}
                     <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden mb-12 border border-gray-100">
-                        <div className="flex flex-col lg:flex-row">
+                        <div className="flex flex-col md:flex-row">
                             {/* Image Column */}
-                            <div className="lg:w-1/2 bg-gradient-to-br from-gray-50 to-gray-100 p-8 lg:p-12 flex items-center justify-center relative overflow-hidden">
+                            <div className="md:w-1/2 bg-gradient-to-br from-gray-50 to-gray-100 p-8 lg:p-12 flex items-center justify-center relative overflow-hidden">
                                 <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-50"></div>
                                 <motion.img
                                     initial={{ opacity: 0, scale: 0.9, x: -20 }}
@@ -94,7 +94,7 @@ export default function Show({ motor, relatedMotors }) {
                             </div>
 
                             {/* Info Column */}
-                            <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+                            <div className="md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
                                 <motion.div
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
@@ -174,7 +174,7 @@ export default function Show({ motor, relatedMotors }) {
                                         </p>
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row gap-4">
+                                    <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                                         {auth.user ? (
                                             <>
                                                 <Link
@@ -182,7 +182,7 @@ export default function Show({ motor, relatedMotors }) {
                                                         "motors.cash-order",
                                                         motor.id
                                                     )}
-                                                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold shadow-lg transition-transform active:scale-95 ${
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold shadow-lg transition-transform active:scale-95 whitespace-nowrap ${
                                                         !motor.tersedia
                                                             ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
                                                             : "bg-green-600 text-white hover:bg-green-700 shadow-green-200"
@@ -200,7 +200,7 @@ export default function Show({ motor, relatedMotors }) {
                                                         "motors.credit-order",
                                                         motor.id
                                                     )}
-                                                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold shadow-lg transition-transform active:scale-95 ${
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold shadow-lg transition-transform active:scale-95 whitespace-nowrap ${
                                                         !motor.tersedia
                                                             ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
                                                             : "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-200"
@@ -218,17 +218,17 @@ export default function Show({ motor, relatedMotors }) {
                                             <>
                                                 <Link
                                                     href={route("login")}
-                                                    className="flex-1 bg-green-600/90 text-white flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-200"
+                                                    className="flex-1 bg-green-600/90 text-white flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-200 whitespace-nowrap"
                                                 >
                                                     <ShoppingCart size={20} />{" "}
-                                                    Beli Tunai (Login)
+                                                    Beli Tunai
                                                 </Link>
                                                 <Link
                                                     href={route("login")}
-                                                    className="flex-1 bg-blue-600/90 text-white flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+                                                    className="flex-1 bg-blue-600/90 text-white flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 whitespace-nowrap"
                                                 >
                                                     <FileText size={20} />{" "}
-                                                    Ajukan Kredit (Login)
+                                                    Ajukan Kredit
                                                 </Link>
                                             </>
                                         )}

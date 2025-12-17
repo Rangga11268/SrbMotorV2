@@ -2,7 +2,11 @@ import React from "react";
 import { useComparison } from "@/Contexts/ComparisonContext";
 import { CopyPlus, Check } from "lucide-react";
 
-export default function ComparisonButton({ motor, className = "" }) {
+export default function ComparisonButton({
+    motor,
+    className = "",
+    showText = true,
+}) {
     const { addToCompare, isInComparison } = useComparison();
     const active = isInComparison(motor.id);
 
@@ -24,7 +28,11 @@ export default function ComparisonButton({ motor, className = "" }) {
             {active ? (
                 <>
                     <Check size={18} />
-                    <span className="hidden sm:inline text-sm">Terpilih</span>
+                    {showText && (
+                        <span className="hidden sm:inline text-sm">
+                            Terpilih
+                        </span>
+                    )}
                 </>
             ) : (
                 <>
@@ -32,7 +40,11 @@ export default function ComparisonButton({ motor, className = "" }) {
                         size={18}
                         className="group-hover:scale-110 transition-transform"
                     />
-                    <span className="hidden sm:inline text-sm">Bandingkan</span>
+                    {showText && (
+                        <span className="hidden sm:inline text-sm">
+                            Bandingkan
+                        </span>
+                    )}
                 </>
             )}
         </button>

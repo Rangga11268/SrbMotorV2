@@ -11,12 +11,15 @@ import {
     ShoppingCart,
     CheckCircle,
     ArrowRight,
+    ChevronDown,
+    ChevronUp,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ComparisonButton from "@/Components/ComparisonButton";
 
 export default function Index({ motors, filters, brands, types, years }) {
     // State for filters
+    const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [values, setValues] = useState({
         search: filters.search || "",
         brand: filters.brand || "",
@@ -90,153 +93,200 @@ export default function Index({ motors, filters, brands, types, years }) {
                     </motion.div>
 
                     {/* Filter Section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-white rounded-[2rem] shadow-xl p-8 mb-12 border border-gray-100"
-                    >
-                        <div className="flex items-center gap-2 mb-6 text-gray-800 font-bold text-lg border-b border-gray-100 pb-4">
-                            <Filter size={20} className="text-primary" /> Filter
-                            Pencarian
-                        </div>
-
-                        <div className="flex flex-col lg:flex-row gap-6 mb-8">
-                            {/* Search */}
-                            <div className="flex-grow relative">
-                                <Search
-                                    className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                    size={22}
-                                />
-                                <input
-                                    type="text"
-                                    name="search"
-                                    value={values.search}
-                                    onChange={handleChange}
-                                    placeholder="Cari berdasarkan nama motor..."
-                                    className="w-full pl-14 pr-6 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white text-lg"
-                                />
+                    <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 mb-12 border border-gray-100">
+                        <div
+                            className="flex items-center justify-between cursor-pointer md:cursor-default"
+                            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                        >
+                            <div className="flex items-center gap-2 text-gray-800 font-bold text-lg">
+                                <Filter size={20} className="text-primary" />{" "}
+                                Filter Pencarian
                             </div>
-                            <button
-                                onClick={resetFilters}
-                                className="px-8 py-4 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-red-500 hover:border-red-200 transition-all flex items-center justify-center gap-2 font-bold shadow-sm"
-                            >
-                                <RotateCcw size={20} /> Reset
-                            </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {/* Brand Filter */}
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                    Brand
-                                </label>
-                                <div className="relative">
-                                    <select
-                                        name="brand"
-                                        value={values.brand}
-                                        onChange={handleChange}
-                                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
-                                    >
-                                        <option value="">Semua Brand</option>
-                                        {brands.map((brand) => (
-                                            <option key={brand} value={brand}>
-                                                {brand}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                                        <ArrowRight
-                                            size={16}
-                                            className="rotate-90"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Type Filter */}
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                    Tipe
-                                </label>
-                                <div className="relative">
-                                    <select
-                                        name="type"
-                                        value={values.type}
-                                        onChange={handleChange}
-                                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
-                                    >
-                                        <option value="">Semua Tipe</option>
-                                        {types.map((type) => (
-                                            <option key={type} value={type}>
-                                                {type}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                                        <ArrowRight
-                                            size={16}
-                                            className="rotate-90"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Year Filter */}
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                    Tahun
-                                </label>
-                                <div className="relative">
-                                    <select
-                                        name="year"
-                                        value={values.year}
-                                        onChange={handleChange}
-                                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
-                                    >
-                                        <option value="">Semua Tahun</option>
-                                        {years.map((year) => (
-                                            <option key={year} value={year}>
-                                                {year}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                                        <ArrowRight
-                                            size={16}
-                                            className="rotate-90"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Price Range */}
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                    Range Harga (Juta)
-                                </label>
-                                <div className="flex gap-2 items-center">
-                                    <input
-                                        type="number"
-                                        name="min_price"
-                                        value={values.min_price}
-                                        onChange={handleChange}
-                                        placeholder="Min"
-                                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 text-sm font-medium"
-                                    />
-                                    <span className="text-gray-400">-</span>
-                                    <input
-                                        type="number"
-                                        name="max_price"
-                                        value={values.max_price}
-                                        onChange={handleChange}
-                                        placeholder="Max"
-                                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 text-sm font-medium"
-                                    />
-                                </div>
+                            <div className="md:hidden text-gray-400">
+                                {isFiltersOpen ? (
+                                    <ChevronUp size={20} />
+                                ) : (
+                                    <ChevronDown size={20} />
+                                )}
                             </div>
                         </div>
-                    </motion.div>
+
+                        {/* Divider only visible when open on mobile or always on desktop */}
+                        <div
+                            className={`border-b border-gray-100 my-4 md:mb-8 md:mt-4 ${
+                                isFiltersOpen ? "block" : "hidden md:block"
+                            }`}
+                        ></div>
+
+                        <AnimatePresence>
+                            {(isFiltersOpen || window.innerWidth >= 768) && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className={`overflow-hidden md:!h-auto md:!opacity-100 ${
+                                        isFiltersOpen
+                                            ? "block"
+                                            : "hidden md:block"
+                                    }`}
+                                >
+                                    <div className="flex flex-col lg:flex-row gap-6 mb-8">
+                                        {/* Search */}
+                                        <div className="flex-grow relative">
+                                            <Search
+                                                className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                                                size={22}
+                                            />
+                                            <input
+                                                type="text"
+                                                name="search"
+                                                value={values.search}
+                                                onChange={handleChange}
+                                                placeholder="Cari berdasarkan nama motor..."
+                                                className="w-full pl-14 pr-6 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white text-lg"
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={resetFilters}
+                                            className="px-8 py-4 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-red-500 hover:border-red-200 transition-all flex items-center justify-center gap-2 font-bold shadow-sm"
+                                        >
+                                            <RotateCcw size={20} /> Reset
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        {/* Brand Filter */}
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
+                                                Brand
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="brand"
+                                                    value={values.brand}
+                                                    onChange={handleChange}
+                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
+                                                >
+                                                    <option value="">
+                                                        Semua Brand
+                                                    </option>
+                                                    {brands.map((brand) => (
+                                                        <option
+                                                            key={brand}
+                                                            value={brand}
+                                                        >
+                                                            {brand}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                                    <ArrowRight
+                                                        size={16}
+                                                        className="rotate-90"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Type Filter */}
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
+                                                Tipe
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="type"
+                                                    value={values.type}
+                                                    onChange={handleChange}
+                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
+                                                >
+                                                    <option value="">
+                                                        Semua Tipe
+                                                    </option>
+                                                    {types.map((type) => (
+                                                        <option
+                                                            key={type}
+                                                            value={type}
+                                                        >
+                                                            {type}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                                    <ArrowRight
+                                                        size={16}
+                                                        className="rotate-90"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Year Filter */}
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
+                                                Tahun
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="year"
+                                                    value={values.year}
+                                                    onChange={handleChange}
+                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
+                                                >
+                                                    <option value="">
+                                                        Semua Tahun
+                                                    </option>
+                                                    {years.map((year) => (
+                                                        <option
+                                                            key={year}
+                                                            value={year}
+                                                        >
+                                                            {year}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                                    <ArrowRight
+                                                        size={16}
+                                                        className="rotate-90"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Price Range */}
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
+                                                Range Harga (Juta)
+                                            </label>
+                                            <div className="flex gap-2 items-center">
+                                                <input
+                                                    type="number"
+                                                    name="min_price"
+                                                    value={values.min_price}
+                                                    onChange={handleChange}
+                                                    placeholder="Min"
+                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 text-sm font-medium"
+                                                />
+                                                <span className="text-gray-400">
+                                                    -
+                                                </span>
+                                                <input
+                                                    type="number"
+                                                    name="max_price"
+                                                    value={values.max_price}
+                                                    onChange={handleChange}
+                                                    placeholder="Max"
+                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 text-sm font-medium"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
 
                     {/* Grid Section */}
                     {motors.data.length > 0 ? (
@@ -321,7 +371,8 @@ export default function Index({ motors, filters, brands, types, years }) {
                                             <div className="mt-auto pt-4 border-t border-gray-50 flex gap-2">
                                                 <ComparisonButton
                                                     motor={motor}
-                                                    className="w-12 h-12 flex-none"
+                                                    className="flex-none"
+                                                    showText={false}
                                                 />
                                                 <Link
                                                     href={route(

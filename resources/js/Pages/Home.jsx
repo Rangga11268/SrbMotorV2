@@ -62,7 +62,7 @@ export default function Home({ popularMotors }) {
             {/* HERO SECTION */}
             <section
                 id="home"
-                className="relative min-h-screen flex flex-col md:flex-row items-center md:items-start justify-start bg-gradient-to-br from-white via-indigo-50 to-blue-50 overflow-hidden px-6 pt-10 pb-20"
+                className="relative min-h-[90vh] flex flex-col md:flex-row items-center md:items-start justify-start bg-gradient-to-br from-white via-indigo-50 to-blue-50 overflow-hidden px-4 md:px-6 pt-4 pb-12"
             >
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-100/30 to-transparent skew-x-12 transform translate-x-20 pointer-events-none"></div>
@@ -148,13 +148,13 @@ export default function Home({ popularMotors }) {
                             delay: 0.2,
                             ease: "easeOut",
                         }}
-                        className="w-full md:w-1/2 relative z-10"
+                        className="w-full md:w-1/2 relative z-10 flex justify-center md:justify-end"
                     >
                         <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-transparent rounded-full opacity-50 blur-3xl transform scale-90"></div>
                         <img
                             src="/assets/img/home.svg"
                             alt="Motor Illustration"
-                            className="w-full max-w-xl mx-auto drop-shadow-2xl animate-float relative z-10"
+                            className="w-full md:w-[120%] max-w-4xl drop-shadow-2xl animate-float relative z-10"
                         />
                     </motion.div>
                 </div>
