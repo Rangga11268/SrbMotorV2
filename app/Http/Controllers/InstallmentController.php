@@ -136,7 +136,7 @@ class InstallmentController extends Controller
         $params = [
             'transaction_details' => [
                 'order_id' => $orderId,
-                'gross_amount' => (int) $installment->amount,
+                'gross_amount' => (int) ($installment->amount + $installment->penalty_amount),
             ],
             'customer_details' => [
                 'first_name' => Auth::user()->name,
@@ -145,9 +145,9 @@ class InstallmentController extends Controller
             'item_details' => [
                 [
                     'id' => 'INST-' . $installment->id,
-                    'price' => (int) $installment->amount,
+                    'price' => (int) ($installment->amount + $installment->penalty_amount),
                     'quantity' => 1,
-                    'name' => 'Cicilan Ke-' . $installment->installment_number . ' ' . $installment->transaction->motor->name,
+                    'name' => 'Cicilan Ke-' . $installment->installment_number . ' ' . $installment->transaction->motor->name . ($installment->penalty_amount > 0 ? ' (+Denda)' : ''),
                 ]
             ]
         ];

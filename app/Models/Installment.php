@@ -10,6 +10,7 @@ class Installment extends Model
         'transaction_id',
         'installment_number',
         'amount',
+        'penalty_amount',
         'due_date',
         'status',
         'paid_at',

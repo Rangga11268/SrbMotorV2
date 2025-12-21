@@ -291,7 +291,24 @@ export default function InstallmentIndex({ transactions }) {
                                                                 </td>
                                                                 <td className="py-4 font-bold text-gray-900">
                                                                     {formatCurrency(
-                                                                        inst.amount
+                                                                        Number(
+                                                                            inst.amount
+                                                                        ) +
+                                                                            Number(
+                                                                                inst.penalty_amount ||
+                                                                                    0
+                                                                            )
+                                                                    )}
+                                                                    {Number(
+                                                                        inst.penalty_amount
+                                                                    ) > 0 && (
+                                                                        <div className="text-xs text-red-500 font-bold mt-1">
+                                                                            +
+                                                                            Denda:{" "}
+                                                                            {formatCurrency(
+                                                                                inst.penalty_amount
+                                                                            )}
+                                                                        </div>
                                                                     )}
                                                                 </td>
                                                                 <td className="py-4">
@@ -496,7 +513,13 @@ export default function InstallmentIndex({ transactions }) {
                                             <span>Total Bayar</span>
                                             <span>
                                                 {formatCurrency(
-                                                    selectedInstallment.amount
+                                                    Number(
+                                                        selectedInstallment.amount
+                                                    ) +
+                                                        Number(
+                                                            selectedInstallment.penalty_amount ||
+                                                                0
+                                                        )
                                                 )}
                                             </span>
                                         </div>
@@ -504,6 +527,32 @@ export default function InstallmentIndex({ transactions }) {
                                             Silakan transfer ke rekening BCA:{" "}
                                             <b>123-456-7890</b> a.n SRB Motor.
                                         </div>
+                                        {Number(
+                                            selectedInstallment.penalty_amount
+                                        ) > 0 && (
+                                            <div className="bg-red-50 border border-red-100 rounded-lg p-3 mt-3 flex items-start gap-2">
+                                                <AlertTriangle
+                                                    size={16}
+                                                    className="text-red-600 mt-0.5"
+                                                />
+                                                <div>
+                                                    <p className="text-xs font-bold text-red-700">
+                                                        Keterlambatan Pembayaran
+                                                    </p>
+                                                    <p className="text-xs text-red-600 mt-0.5">
+                                                        Anda dikenakan denda
+                                                        sebesar{" "}
+                                                        <b>
+                                                            {formatCurrency(
+                                                                selectedInstallment.penalty_amount
+                                                            )}
+                                                        </b>{" "}
+                                                        karena melewati jatuh
+                                                        tempo.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="space-y-4">
