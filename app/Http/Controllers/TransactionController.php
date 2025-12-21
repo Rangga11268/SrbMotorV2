@@ -24,15 +24,13 @@ class TransactionController extends Controller
         $this->transactionService = $transactionService;
     }
 
-    /**
-     * Display a listing of the transactions.
-     */
+
     public function index(Request $request): \Inertia\Response
     {
         $query = Transaction::with(['user', 'motor', 'creditDetail.documents'])
             ->orderBy('created_at', 'desc');
 
-        // Apply filters
+
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -56,7 +54,7 @@ class TransactionController extends Controller
 
         $transactions = $query->paginate(10)->appends($request->query());
 
-        // Transform collection to include documents_complete status
+
         $transactions->getCollection()->transform(function ($transaction) {
             $transaction->documents_complete = $transaction->transaction_type === 'CREDIT' && $transaction->creditDetail
                 ? $transaction->creditDetail->hasRequiredDocuments()
@@ -64,7 +62,7 @@ class TransactionController extends Controller
             return $transaction;
         });
 
-        // Get unique transaction types and statuses for filter dropdowns
+
         $transactionTypes = Transaction::distinct('transaction_type')->pluck('transaction_type');
         $statuses = Transaction::distinct('status')->pluck('status');
 
@@ -76,9 +74,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new transaction.
-     */
+
     public function create(): \Inertia\Response
     {
         return \Inertia\Inertia::render('Admin/Transactions/Create', [
@@ -87,9 +83,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created transaction in storage.
-     */
+
     public function store(StoreTransactionRequest $request): RedirectResponse
     {
         $this->transactionService->createTransaction($request->validated());
@@ -98,9 +92,7 @@ class TransactionController extends Controller
             ->with('success', 'Transaction created successfully.');
     }
 
-    /**
-     * Display the specified transaction.
-     */
+
     public function show(Transaction $transaction): \Inertia\Response
     {
         $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'installments' => function($q) {
@@ -116,9 +108,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified transaction.
-     */
+
     public function edit(Transaction $transaction): \Inertia\Response
     {
         $transaction->load(['creditDetail', 'user', 'motor']);
@@ -130,9 +120,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified transaction in storage.
-     */
+
     public function update(UpdateTransactionRequest $request, Transaction $transaction): RedirectResponse
     {
         $this->transactionService->updateTransaction($transaction, $request->validated());
@@ -141,9 +129,7 @@ class TransactionController extends Controller
             ->with('success', 'Transaction updated successfully.');
     }
 
-    /**
-     * Remove the specified transaction from storage.
-     */
+
     public function destroy(Transaction $transaction): RedirectResponse
     {
         $this->transactionService->deleteTransaction($transaction);
@@ -152,12 +138,10 @@ class TransactionController extends Controller
             ->with('success', 'Transaction deleted successfully.');
     }
 
-    /**
-     * Update the status of the specified transaction.
-     */
+
     public function updateStatus(Request $request, Transaction $transaction): RedirectResponse
     {
-        // Simple validation can remain here or be moved to a request if complex
+
         $request->validate([
             'status' => 'required|string',
         ]);
@@ -168,18 +152,15 @@ class TransactionController extends Controller
             ->with('success', 'Transaction status updated successfully.');
     }
 
-    /**
-     * Upload a document for the specified transaction.
-     * Note: This could be moved to Service, but kept here for now as it handles specific file response/redirect logic.
-     */
+
     public function uploadDocument(Request $request, Transaction $transaction): RedirectResponse
     {
         $request->validate([
             'document_type' => 'required|string|in:KTP,KK,SLIP_GAJI,BPKB,STNK,FAKTUR,LAINNYA',
-            'document_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // Max 5MB
+            'document_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        // Create credit detail if it doesn't exist
+
         if (!$transaction->creditDetail) {
             $creditDetail = CreditDetail::create([
                 'transaction_id' => $transaction->id,
@@ -192,18 +173,18 @@ class TransactionController extends Controller
             $creditDetail = $transaction->creditDetail;
         }
 
-        // Handle file upload
+
         $file = $request->file('document_file');
         $originalName = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
 
-        // Create a unique filename
+
         $filename = time() . '_' . uniqid() . '.' . $extension;
 
-        // Store the file in the public storage
+
         $path = $file->storeAs('documents', $filename, 'public');
 
-        // Create the document record
+
         Document::create([
             'credit_detail_id' => $creditDetail->id,
             'document_type' => $request->document_type,
@@ -215,17 +196,15 @@ class TransactionController extends Controller
             ->with('success', 'Dokumen berhasil diunggah.');
     }
 
-    /**
-     * Delete a document.
-     */
+
     public function deleteDocument(Document $document): RedirectResponse
     {
-        // Delete the physical file
+
         if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
             Storage::disk('public')->delete($document->file_path);
         }
 
-        // Delete the document record
+
         $document->delete();
 
         return redirect()->back()

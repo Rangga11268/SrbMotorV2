@@ -101,7 +101,6 @@ export default function Index({ users, filters }) {
         );
     };
 
-    // Helper to generate initials
     const getInitials = (name) => {
         return name
             .split(" ")
@@ -111,7 +110,6 @@ export default function Index({ users, filters }) {
             .toUpperCase();
     };
 
-    // Helper for random gradient based on name
     const getGradient = (name) => {
         const colors = [
             "from-blue-400 to-indigo-500",
@@ -140,7 +138,6 @@ export default function Index({ users, filters }) {
             />
 
             <div className="max-w-7xl mx-auto space-y-6">
-                {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <div>
                         <h2 className="text-xl font-black text-gray-900 dark:text-white">
@@ -169,7 +166,6 @@ export default function Index({ users, filters }) {
                     </form>
                 </div>
 
-                {/* Table Section */}
                 <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
@@ -338,7 +334,6 @@ export default function Index({ users, filters }) {
                         </table>
                     </div>
 
-                    {/* Pagination */}
                     {users.links.length > 3 && (
                         <div className="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-center bg-gray-50/30 dark:bg-gray-900/30 transition-colors">
                             <div className="flex flex-wrap gap-2 justify-center">

@@ -154,7 +154,6 @@ export default function Index({ contactMessages, filters }) {
                     )}
                 </div>
 
-                {/* Pagination */}
                 {contactMessages.links && contactMessages.links.length > 3 && (
                     <div className="mt-6 flex justify-center">
                         <div className="flex gap-2">

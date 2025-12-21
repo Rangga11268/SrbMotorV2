@@ -16,26 +16,20 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
-    /**
-     * Display the reports dashboard.
-     */
+
     public function index(): \Inertia\Response
     {
         return \Inertia\Inertia::render('Admin/Reports/Index');
     }
 
-    /**
-     * Show the form for creating a new report.
-     */
+
     public function create(): View
     {
-        // This method might be redundant with the new Index page handling generation
+
         return view('pages.admin.reports.create');
     }
 
-    /**
-     * Generate and show a report based on type and date range.
-     */
+
     public function generate(Request $request)
     {
         $request->validate([
@@ -78,9 +72,7 @@ class ReportController extends Controller
         ]);
     }
 
-    /**
-     * Generate sales report data.
-     */
+
     private function generateSalesReport(Carbon $startDate, Carbon $endDate)
     {
         $transactions = Transaction::with(['motor', 'user'])
@@ -96,7 +88,7 @@ class ReportController extends Controller
             'credit_revenue' => $transactions->where('transaction_type', 'CREDIT')->sum('total_amount'),
         ];
 
-        // Group by motor brand
+
         $data['by_brand'] = $transactions->groupBy('motor.brand')->map(function ($group) {
             return [
                 'count' => $group->count(),
@@ -104,7 +96,7 @@ class ReportController extends Controller
             ];
         });
 
-        // Group by motor type
+
         $data['by_type'] = $transactions->groupBy('motor.type')->map(function ($group) {
             return [
                 'count' => $group->count(),
@@ -112,7 +104,7 @@ class ReportController extends Controller
             ];
         });
 
-        // Add raw items for frontend table
+
         $data['items'] = $transactions->map(function($t) {
             return [
                 'id' => $t->id,
@@ -127,9 +119,7 @@ class ReportController extends Controller
         return $data;
     }
 
-    /**
-     * Generate income report data.
-     */
+
     private function generateIncomeReport(Carbon $startDate, Carbon $endDate)
     {
         $transactions = Transaction::whereBetween('created_at', [$startDate, $endDate])
@@ -141,7 +131,7 @@ class ReportController extends Controller
             'credit_income' => $transactions->where('transaction_type', 'CREDIT')->sum('total_amount'),
         ];
 
-        // Group by month
+
         $data['by_month'] = $transactions
             ->groupBy(function ($transaction) {
                 return $transaction->created_at->format('Y-m');
@@ -154,7 +144,7 @@ class ReportController extends Controller
                 ];
             });
 
-        // Add raw items for frontend table
+
         $data['items'] = $transactions->map(function($t) {
             return [
                'id' => $t->id,
@@ -169,9 +159,7 @@ class ReportController extends Controller
         return $data;
     }
 
-    /**
-     * Generate customer report data.
-     */
+
     private function generateCustomerReport(Carbon $startDate, Carbon $endDate)
     {
         $transactions = Transaction::with(['user', 'motor'])
@@ -183,7 +171,7 @@ class ReportController extends Controller
             'new_customers' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
         ];
 
-        // Top customers by transaction count
+
         $data['top_customers'] = $transactions
             ->groupBy('user_id')
             ->map(function ($group) {
@@ -202,9 +190,7 @@ class ReportController extends Controller
         return $data;
     }
 
-    /**
-     * Generate status report data.
-     */
+
     private function generateStatusReport(Carbon $startDate, Carbon $endDate)
     {
         $transactions = Transaction::with(['motor', 'user'])
@@ -215,7 +201,7 @@ class ReportController extends Controller
             'total_transactions' => $transactions->count(),
         ];
 
-        // Group by status
+
         $totalTransactionsCount = $transactions->count();
         $data['by_status'] = $transactions
             ->groupBy('status')
@@ -227,7 +213,7 @@ class ReportController extends Controller
                 ];
             });
 
-        // Group by transaction type
+
         $data['by_type'] = $transactions
             ->groupBy('transaction_type')
             ->map(function ($group) {
@@ -240,9 +226,7 @@ class ReportController extends Controller
         return $data;
     }
 
-    /**
-     * Export the specified report as PDF.
-     */
+
     public function export(Request $request)
     {
         $request->validate([
@@ -284,19 +268,17 @@ class ReportController extends Controller
             'data' => $reportData
         ];
 
-        // Generate the PDF
+
         $pdf = Pdf::loadView('pages.admin.reports.report_pdf', compact('report'));
 
-        // Set the filename with a prefix and the report type
+
         $filename = 'report-' . $request->type . '-' . $startDate->format('Y-m-d') . '.pdf';
 
-        // Return the PDF download response
+
         return $pdf->download($filename);
     }
 
-    /**
-     * Export the specified report as Excel.
-     */
+
     public function exportExcel(Request $request)
     {
         $request->validate([
@@ -308,13 +290,13 @@ class ReportController extends Controller
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date)->endOfDay();
 
-        // Create the export instance
+
         $export = new ReportExport($request->type, $startDate, $endDate);
 
-        // Set the filename with a prefix and the report type
+
         $filename = 'report-' . $request->type . '-' . $startDate->format('Y-m-d') . '.xlsx';
 
-        // Return the Excel download response
+
         return Excel::download($export, $filename);
     }
 }

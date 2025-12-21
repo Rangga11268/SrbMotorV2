@@ -27,7 +27,7 @@ export default function Create({ users, motors }) {
         total_amount: 0,
         payment_method: "",
         payment_status: "pending",
-        // Credit Details
+
         credit_detail: {
             down_payment: 0,
             tenor: 12,
@@ -39,7 +39,6 @@ export default function Create({ users, motors }) {
 
     const [selectedMotorPrice, setSelectedMotorPrice] = useState(0);
 
-    // Auto-fill total amount when motor changes
     useEffect(() => {
         if (data.motor_id) {
             const selectedMotor = motors.find((m) => m.id == data.motor_id);
@@ -54,7 +53,6 @@ export default function Create({ users, motors }) {
         }
     }, [data.motor_id]);
 
-    // Calculate Installment
     useEffect(() => {
         if (data.transaction_type === "CREDIT" && data.total_amount > 0) {
             calculateInstallment();
@@ -132,9 +130,7 @@ export default function Create({ users, motors }) {
                     onSubmit={handleSubmit}
                     className="grid grid-cols-1 lg:grid-cols-3 gap-8"
                 >
-                    {/* LEFT COLUMN: FORM */}
                     <div className="lg:col-span-2 space-y-8">
-                        {/* 1. Transaction Type Selection */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm border border-blue-100 dark:border-blue-800">
@@ -176,7 +172,6 @@ export default function Create({ users, motors }) {
                             </div>
                         </div>
 
-                        {/* 2. Main Selection */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                 <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm border border-blue-100 dark:border-blue-800">
@@ -255,7 +250,6 @@ export default function Create({ users, motors }) {
                                 </div>
                             </div>
 
-                            {/* Optional Customer Info */}
                             <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
                                 <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
                                     Informasi Tambahan (Opsional)
@@ -316,7 +310,6 @@ export default function Create({ users, motors }) {
                             </div>
                         </div>
 
-                        {/* 3. Payment Details */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                 <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm border border-blue-100 dark:border-blue-800">
@@ -478,7 +471,6 @@ export default function Create({ users, motors }) {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: SUMMARY */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-6 space-y-6">
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-lg transition-colors">

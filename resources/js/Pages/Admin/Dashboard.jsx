@@ -106,7 +106,6 @@ export default function Dashboard({
                 </p>
             </div>
 
-            {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 {stats.map((stat, index) => (
                     <div
@@ -136,7 +135,6 @@ export default function Dashboard({
                 ))}
             </div>
 
-            {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
                 <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
@@ -175,7 +173,6 @@ export default function Dashboard({
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Recent Transactions */}
                 <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
                     <div className="p-6 border-b border-gray-50 dark:border-gray-700 flex justify-between items-center">
                         <h3 className="font-bold text-lg text-gray-900 dark:text-white">
@@ -275,7 +272,6 @@ export default function Dashboard({
                     </div>
                 </div>
 
-                {/* Recent Motors */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden flex flex-col">
                     <div className="p-6 border-b border-gray-50 dark:border-gray-700 flex justify-between items-center">
                         <h3 className="font-bold text-lg text-gray-900 dark:text-white">

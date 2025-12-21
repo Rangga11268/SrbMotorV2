@@ -26,7 +26,6 @@ export default function Show({ transaction }) {
     const { credit_detail, motor, user } = transaction;
     const documents = credit_detail?.documents || [];
 
-    // Calculate Credit Progress
     const paidInstallments =
         transaction.installments?.filter((i) => i.status === "paid").length ||
         0;
@@ -100,7 +99,6 @@ export default function Show({ transaction }) {
         return method.replace("midtrans_", "").replace(/_/g, " ").toUpperCase();
     };
 
-    // WhatsApp Link Logic
     const getVALink = () => {
         const phone = transaction.customer_phone || user?.phone_number;
         if (!phone) return "#";
@@ -111,7 +109,6 @@ export default function Show({ transaction }) {
         return `https://wa.me/${waNumber}`;
     };
 
-    // Conditional Status Options
     const getStatusOptions = () => {
         if (transaction.transaction_type === "CASH") {
             return [
@@ -146,13 +143,10 @@ export default function Show({ transaction }) {
         }
     };
 
-    // Check if documents are complete
     const checkDocumentsComplete = () => {
-        // Use property from backend populated in controller
         return transaction.documents_complete !== false;
     };
 
-    // Update Status Handler
     const handleStatusUpdate = (e) => {
         const newStatus = e.target.value;
         setModalConfig({
@@ -213,7 +207,6 @@ export default function Show({ transaction }) {
         });
     };
 
-    // Installment Action Handlers
     const approvePayment = (installmentId) => {
         if (confirm("Apakah anda yakin ingin menyetujui pembayaran ini?")) {
             router.post(
@@ -240,7 +233,6 @@ export default function Show({ transaction }) {
         }
     };
 
-    // Document Upload Form
     const {
         data: docData,
         setData: setDocData,
@@ -318,9 +310,7 @@ export default function Show({ transaction }) {
                 </Link>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    {/* LEFT COLUMN: Main Data (66%) */}
                     <div className="xl:col-span-2 space-y-6">
-                        {/* 1. Motor Info */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <Bike className="text-primary" size={20} />{" "}
@@ -383,7 +373,6 @@ export default function Show({ transaction }) {
                             </div>
                         </div>
 
-                        {/* 2. Installment History (For Credit) */}
                         {transaction.transaction_type === "CREDIT" &&
                             transaction.installments &&
                             transaction.installments.length > 0 && (
@@ -608,7 +597,6 @@ export default function Show({ transaction }) {
                                 </div>
                             )}
 
-                        {/* 3. Documents Section */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
                             <div className="p-6 border-b border-gray-100 dark:border-gray-700">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -626,7 +614,6 @@ export default function Show({ transaction }) {
                             </div>
 
                             <div className="p-6">
-                                {/* Upload Form */}
                                 <form
                                     onSubmit={handleUpload}
                                     className="mb-8 p-6 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl border border-dashed border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-600 transition-colors"
@@ -753,7 +740,6 @@ export default function Show({ transaction }) {
                                     </div>
                                 </form>
 
-                                {/* Document List */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                     {documents && documents.length > 0 ? (
                                         documents.map((doc) => (
@@ -836,9 +822,7 @@ export default function Show({ transaction }) {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: Sidebar (33%) */}
                     <div className="xl:col-span-1 space-y-6">
-                        {/* 1. Status & Management Panel */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
                             <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/50">
                                 <div className="flex justify-between items-start mb-4">
@@ -970,7 +954,6 @@ export default function Show({ transaction }) {
                             </div>
                         </div>
 
-                        {/* 2. Credit Summary (Vertical Stack) */}
                         {transaction.transaction_type === "CREDIT" &&
                             credit_detail && (
                                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
@@ -1005,7 +988,6 @@ export default function Show({ transaction }) {
                                         </div>
                                     </div>
                                     <div className="p-6 space-y-5">
-                                        {/* Progress */}
                                         <div>
                                             <div className="flex justify-between items-end mb-2">
                                                 <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">
@@ -1101,7 +1083,6 @@ export default function Show({ transaction }) {
                                 </div>
                             )}
 
-                        {/* 3. Customer Info (Compact) */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                             <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <User

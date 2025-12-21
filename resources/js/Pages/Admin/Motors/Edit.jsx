@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link, useForm, router } from "@inertiajs/react"; // Added router
+import { Link, useForm, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import Modal from "@/Components/Modal"; // Added Modal
+import Modal from "@/Components/Modal";
 import {
     ArrowLeft,
     Save,
@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 
 export default function Edit({ motor }) {
-    // Helper to parse specifications array into object
     const parseSpecs = (specsArray) => {
         if (!Array.isArray(specsArray)) return {};
         return specsArray.reduce((acc, spec) => {
@@ -53,7 +52,6 @@ export default function Edit({ motor }) {
         motor.image_path ? `/storage/${motor.image_path}` : null
     );
 
-    // Delete Modal State
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -116,10 +114,8 @@ export default function Edit({ motor }) {
                 </Link>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    {/* LEFT COLUMN: FORM (2/3) */}
                     <div className="xl:col-span-2 space-y-8">
                         <form onSubmit={handleSubmit} id="edit-motor-form">
-                            {/* Basic Info Card */}
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <Info className="text-primary" size={20} />
@@ -127,7 +123,6 @@ export default function Edit({ motor }) {
                                 </h3>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Name */}
                                     <div className="col-span-2">
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Nama Unit Motor
@@ -147,7 +142,6 @@ export default function Edit({ motor }) {
                                         )}
                                     </div>
 
-                                    {/* Brand */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Brand / Merek
@@ -193,7 +187,6 @@ export default function Edit({ motor }) {
                                         </div>
                                     </div>
 
-                                    {/* Type */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Kategori / Tipe
@@ -208,7 +201,6 @@ export default function Edit({ motor }) {
                                         />
                                     </div>
 
-                                    {/* Price */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Harga OTR (Rp)
@@ -231,7 +223,6 @@ export default function Edit({ motor }) {
                                         </div>
                                     </div>
 
-                                    {/* Year */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Tahun Pembuatan
@@ -246,7 +237,6 @@ export default function Edit({ motor }) {
                                         />
                                     </div>
 
-                                    {/* Availability */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Status Ketersediaan
@@ -281,7 +271,6 @@ export default function Edit({ motor }) {
                                         </div>
                                     </div>
 
-                                    {/* Image Upload */}
                                     <div className="col-span-2">
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Ubah Foto Unit (Opsional)
@@ -321,7 +310,6 @@ export default function Edit({ motor }) {
                                 </div>
                             </div>
 
-                            {/* Specifications Card */}
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <Settings
@@ -427,7 +415,6 @@ export default function Edit({ motor }) {
                             </div>
                         </form>
 
-                        {/* Danger Zone */}
                         <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border border-red-100 dark:border-red-900/50 transition-colors">
                             <h3 className="text-lg font-bold text-rose-700 dark:text-rose-400 mb-2 flex items-center gap-2">
                                 <AlertTriangle size={20} />
@@ -449,17 +436,14 @@ export default function Edit({ motor }) {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: PREVIEW (1/3) */}
                     <div className="xl:col-span-1">
                         <div className="sticky top-6 space-y-6">
-                            {/* Main Action Card */}
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                                 <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                     <Box size={18} className="text-primary" />
                                     Live Preview
                                 </h3>
 
-                                {/* Card Preview */}
                                 <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-800 transition-colors">
                                     <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-700 relative flex items-center justify-center">
                                         {previewUrl ? (

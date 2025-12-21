@@ -78,7 +78,7 @@ export default function Index() {
         const start = new Date();
 
         if (preset.type === "month") {
-            start.setDate(1); // First day of month
+            start.setDate(1);
         } else {
             start.setDate(end.getDate() - preset.days);
         }
@@ -100,7 +100,6 @@ export default function Index() {
             <Head title="Pusat Laporan" />
 
             <div className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                {/* Header Section */}
                 <div className="text-center mb-12 relative">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/20 rounded-full blur-3xl -z-10"></div>
                     <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">
@@ -115,12 +114,10 @@ export default function Index() {
                 </div>
 
                 <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-gray-200/50 dark:shadow-black/50 border border-white/50 dark:border-white/5 relative overflow-hidden transition-colors">
-                    {/* Decorative top bar */}
                     <div className="h-2 w-full bg-gradient-to-r from-primary via-blue-500 to-violet-500"></div>
 
                     <div className="p-8 lg:p-12">
                         <form onSubmit={handleGenerate} className="space-y-12">
-                            {/* Section 1: Report Type */}
                             <div className="space-y-6">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center shadow-sm">
@@ -193,7 +190,6 @@ export default function Index() {
                                 </div>
                             </div>
 
-                            {/* Section 2: Date Range */}
                             <div className="space-y-6">
                                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-t border-gray-100 dark:border-gray-700 pt-8">
                                     <div className="flex items-center gap-3">
@@ -276,7 +272,6 @@ export default function Index() {
                                 </div>
                             </div>
 
-                            {/* Submit Button */}
                             <div className="pt-6">
                                 <button
                                     type="submit"

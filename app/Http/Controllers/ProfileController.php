@@ -9,30 +9,22 @@ use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile.
-     */
-    /**
-     * Display the user's profile.
-     */
+
+
     public function show()
     {
         $user = Auth::user();
         return \Inertia\Inertia::render('Profile/Show', compact('user'));
     }
 
-    /**
-     * Show the form for editing the user's profile.
-     */
+
     public function edit()
     {
         $user = Auth::user();
         return \Inertia\Inertia::render('Profile/Edit', compact('user'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
+
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -55,9 +47,7 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
     }
 
-    /**
-     * Update the user's password.
-     */
+
     public function updatePassword(Request $request)
     {
         $user = Auth::user();
@@ -72,14 +62,14 @@ class ProfileController extends Controller
             'password.min' => 'Password minimal harus 8 karakter.',
         ]);
 
-        // Verify current password
+
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors([
                 'current_password' => 'Password saat ini tidak sesuai.'
             ]);
         }
 
-        // Update password
+
         $user->password = Hash::make($request->password);
         $user->save();
 

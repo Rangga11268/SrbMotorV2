@@ -7,9 +7,7 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $query = User::query();
@@ -30,9 +28,7 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -46,12 +42,10 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Peran pengguna berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(User $user)
     {
-        // Prevent deletion of the current user
+
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }

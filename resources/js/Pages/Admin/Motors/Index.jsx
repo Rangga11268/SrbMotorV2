@@ -19,10 +19,8 @@ import {
 import { toast } from "react-hot-toast";
 
 export default function Index({ motors, filters }) {
-    // Search handling
     const [search, setSearch] = useState(filters.search || "");
 
-    // Modal State
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedMotor, setSelectedMotor] = useState(null);
     const [processing, setProcessing] = useState(false);
@@ -73,7 +71,6 @@ export default function Index({ motors, filters }) {
             />
 
             <div className="space-y-6">
-                {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-end gap-4">
                     <div>
                         <p className="text-gray-500 dark:text-gray-400 text-sm">
@@ -93,7 +90,6 @@ export default function Index({ motors, filters }) {
                     </Link>
                 </div>
 
-                {/* Toolbar */}
                 <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <form
                         onSubmit={handleSearch}
@@ -113,7 +109,6 @@ export default function Index({ motors, filters }) {
                     </form>
                 </div>
 
-                {/* Table */}
                 <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
@@ -250,7 +245,6 @@ export default function Index({ motors, filters }) {
                         </table>
                     </div>
 
-                    {/* Pagination */}
                     {motors.links.length > 3 && (
                         <div className="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-center bg-gray-50/30 dark:bg-gray-900/30">
                             <div className="flex flex-wrap gap-2 justify-center">

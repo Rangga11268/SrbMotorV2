@@ -9,21 +9,15 @@ use Illuminate\Validation\Rules\Password;
 
 class AdminProfileController extends Controller
 {
-    /**
-     * Display the admin's profile.
-     */
-    /**
-     * Display the admin's profile.
-     */
+
+
     public function show()
     {
-        // Redirect to edit as main profile page
+
         return redirect()->route('admin.profile.edit');
     }
 
-    /**
-     * Show the form for editing the admin's profile.
-     */
+
     public function edit()
     {
         return \Inertia\Inertia::render('Admin/Profile/Edit', [
@@ -32,9 +26,7 @@ class AdminProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the admin's profile information.
-     */
+
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -57,9 +49,7 @@ class AdminProfileController extends Controller
         return redirect()->route('admin.profile.edit')->with('success', 'Profil berhasil diperbarui.');
     }
 
-    /**
-     * Update the admin's password.
-     */
+
     public function updatePassword(Request $request)
     {
         $user = Auth::user();
@@ -74,14 +64,14 @@ class AdminProfileController extends Controller
             'password.min' => 'Password minimal harus 8 karakter.',
         ]);
 
-        // Verify current password
+
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors([
                 'current_password' => 'Password saat ini tidak sesuai.'
             ]);
         }
 
-        // Update password
+
         $user->password = Hash::make($request->password);
         $user->save();
 

@@ -29,7 +29,7 @@ export default function Edit({ transaction, users, motors }) {
         total_amount: transaction.total_amount,
         payment_method: transaction.payment_method || "",
         payment_status: transaction.payment_status || "pending",
-        // Credit Details
+
         credit_detail: {
             down_payment: credit_detail?.down_payment || 0,
             tenor: credit_detail?.tenor || 12,
@@ -44,7 +44,6 @@ export default function Edit({ transaction, users, motors }) {
         transaction.total_amount || 0
     );
 
-    // Initial load price logic
     useEffect(() => {
         if (transaction.motor_id) {
             const motor = motors.find((m) => m.id == transaction.motor_id);
@@ -52,10 +51,8 @@ export default function Edit({ transaction, users, motors }) {
         }
     }, []);
 
-    // Auto-fill total amount when motor changes
     useEffect(() => {
         if (data.motor_id) {
-            // Always update if motor_id is selected
             const selectedMotor = motors.find((m) => m.id == data.motor_id);
             if (selectedMotor) {
                 const price = parseFloat(selectedMotor.price);
@@ -68,10 +65,8 @@ export default function Edit({ transaction, users, motors }) {
         }
     }, [data.motor_id, motors]);
 
-    // Calculate Installment
     useEffect(() => {
         if (data.transaction_type === "CREDIT" && data.total_amount > 0) {
-            // Only auto-calc if not initial load or values changed meaningfully
             calculateInstallment();
         }
     }, [
@@ -82,10 +77,6 @@ export default function Edit({ transaction, users, motors }) {
     ]);
 
     const calculateInstallment = () => {
-        // Prevent overwrite on initial load if no change
-        // In edit mode, we might want to respect existing values unless user changes parameters.
-        // For simplicity, we recalculate if parameters change.
-
         const total = parseFloat(data.total_amount) || 0;
         const dp = parseFloat(data.credit_detail.down_payment) || 0;
         const tenor = parseInt(data.credit_detail.tenor) || 12;
@@ -150,9 +141,7 @@ export default function Edit({ transaction, users, motors }) {
                     onSubmit={handleSubmit}
                     className="grid grid-cols-1 lg:grid-cols-3 gap-8"
                 >
-                    {/* LEFT COLUMN: FORM */}
                     <div className="lg:col-span-2 space-y-8">
-                        {/* 1. Transaction Type Selection */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm border border-blue-100 dark:border-blue-800">
@@ -194,7 +183,6 @@ export default function Edit({ transaction, users, motors }) {
                             </div>
                         </div>
 
-                        {/* 2. Main Selection */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                 <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm border border-blue-100 dark:border-blue-800">
@@ -331,7 +319,6 @@ export default function Edit({ transaction, users, motors }) {
                                 </div>
                             </div>
 
-                            {/* Optional Customer Info */}
                             <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
                                 <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
                                     Informasi Tambahan (Edit)
@@ -392,7 +379,6 @@ export default function Edit({ transaction, users, motors }) {
                             </div>
                         </div>
 
-                        {/* 3. Payment Details */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                 <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm border border-blue-100 dark:border-blue-800">
@@ -664,7 +650,6 @@ export default function Edit({ transaction, users, motors }) {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: SUMMARY */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-6 space-y-6">
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-lg transition-colors">
