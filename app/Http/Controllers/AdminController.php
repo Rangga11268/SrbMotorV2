@@ -7,40 +7,72 @@ use App\Models\Motor;
 use App\Models\ContactMessage;
 use App\Models\Transaction;
 
+use Inertia\Inertia;
+use Inertia\Response;
+
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 class AdminController extends Controller
 {
-    /**
-     * Display the admin dashboard.
-     */
-    public function index()
+
+    public function index(): Response
     {
         $motorsCount = Motor::count();
         $contactMessagesCount = ContactMessage::count();
         $usersCount = \App\Models\User::count();
         $transactionsCount = Transaction::count();
         
-        // Transaction counts by type
+
         $cashTransactionsCount = Transaction::where('transaction_type', 'CASH')->count();
         $creditTransactionsCount = Transaction::where('transaction_type', 'CREDIT')->count();
         
-        // Recent transactions
+
         $recentTransactions = Transaction::with(['user', 'motor'])->latest()->limit(5)->get();
         
         $recentMotors = Motor::latest()->limit(5)->get();
-        $recentContactMessages = ContactMessage::latest()->limit(5)->get();
-        $recentUsers = \App\Models\User::latest()->limit(5)->get();
+
+
+
+        $monthlyStats = Transaction::select(
+            DB::raw('count(id) as count'),
+            DB::raw('SUM(total_amount) as revenue'),
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as date")
+        )
+        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('date')
+        ->orderBy('date', 'ASC')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'name' => Carbon::createFromFormat('Y-m', $item->date)->format('M Y'),
+                'sales' => $item->count,
+                'revenue' => (float) $item->revenue
+            ];
+        });
+
+
+        $statusStats = Transaction::select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => strtoupper(str_replace('_', ' ', $item->status)),
+                    'value' => $item->count
+                ];
+            });
         
-        return view('pages.admin.dashboard', compact(
-            'motorsCount', 
-            'contactMessagesCount', 
-            'usersCount',
-            'transactionsCount',
-            'cashTransactionsCount',
-            'creditTransactionsCount',
-            'recentTransactions',
-            'recentMotors', 
-            'recentContactMessages',
-            'recentUsers'
-        ));
+        return Inertia::render('Admin/Dashboard', [
+            'motorsCount' => $motorsCount, 
+            'contactMessagesCount' => $contactMessagesCount, 
+            'usersCount' => $usersCount,
+            'transactionsCount' => $transactionsCount,
+            'cashTransactionsCount' => $cashTransactionsCount,
+            'creditTransactionsCount' => $creditTransactionsCount,
+            'recentTransactions' => $recentTransactions,
+            'recentMotors' => $recentMotors,
+            'monthlyStats' => $monthlyStats,
+            'statusStats' => $statusStats,
+        ]);
     }
 }

@@ -30,7 +30,7 @@ class Document extends Model
     {
         return $this->belongsTo(CreditDetail::class);
     }
-    
+
     /**
      * Delete the file when the document is deleted
      */

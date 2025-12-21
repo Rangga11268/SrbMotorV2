@@ -10,17 +10,14 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * Show the login form.
-     */
+
+
     public function showLoginForm()
     {
-        return view('auth.login');
+        return \Inertia\Inertia::render('Auth/Login');
     }
 
-    /**
-     * Handle a login request.
-     */
+
     public function login(Request $request)
     {
         $request->validate([
@@ -35,7 +32,7 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            // Redirect based on user role
+
             if (Auth::user()->isAdmin()) {
                 return redirect()->route('admin.dashboard');
             }
@@ -43,7 +40,7 @@ class AuthController extends Controller
             return redirect()->intended('/');
         }
 
-        // Check if user exists with email
+
         $user = User::where('email', $request->email)->first();
         
         if (!$user) {
@@ -52,15 +49,13 @@ class AuthController extends Controller
             ])->withInput();
         }
 
-        // If email exists but password is incorrect
+
         return back()->withErrors([
             'password' => 'Kata sandi yang Anda masukkan salah. Silakan coba lagi.',
         ])->withInput();
     }
 
-    /**
-     * Log the user out of the application.
-     */
+
     public function logout(Request $request)
     {
         Auth::logout();
@@ -71,17 +66,13 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    /**
-     * Show the registration form.
-     */
+
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        return \Inertia\Inertia::render('Auth/Register');
     }
 
-    /**
-     * Handle a registration request.
-     */
+
     public function register(Request $request)
     {
         $request->validate([

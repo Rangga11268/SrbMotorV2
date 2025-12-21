@@ -7,9 +7,7 @@ use App\Models\ContactMessage;
 
 class ContactMessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $query = ContactMessage::query();
@@ -21,22 +19,22 @@ class ContactMessageController extends Controller
                   ->orWhere('message', 'like', '%' . request('search') . '%');
         }
         
-        $contactMessages = $query->latest()->paginate(10);
+        $contactMessages = $query->latest()->paginate(10)->withQueryString();
         
-        return view('pages.admin.contact.index', compact('contactMessages'));
+        return \Inertia\Inertia::render('Admin/ContactMessages/Index', [
+            'contactMessages' => $contactMessages,
+            'filters' => request()->all('search')
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(ContactMessage $contact)
     {
-        return view('pages.admin.contact.show', compact('contact'));
+
+         return \Inertia\Inertia::render('Admin/ContactMessages/Show', compact('contact'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(ContactMessage $contact)
     {
         $contact->delete();

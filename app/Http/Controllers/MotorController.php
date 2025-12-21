@@ -23,10 +23,8 @@ class MotorController extends Controller
         $this->motorRepository = $motorRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+
+    public function index(): \Inertia\Response
     {
         $filters = [];
         if (request('search')) {
@@ -35,23 +33,22 @@ class MotorController extends Controller
         if (request('tersedia') !== null) {
             $filters['tersedia'] = request('tersedia');
         }
-        
+
         $motors = $this->motorRepository->getWithFilters($filters, true, 10);
-        
-        return view('pages.admin.motors.index', compact('motors'));
+
+        return \Inertia\Inertia::render('Admin/Motors/Index', [
+            'motors' => $motors,
+            'filters' => request()->all(['search', 'tersedia']),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
+
+    public function create(): \Inertia\Response
     {
-        return view('pages.admin.motors.create');
+        return \Inertia\Inertia::render('Admin/Motors/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -88,7 +85,7 @@ class MotorController extends Controller
             'details' => $request->details,
         ]);
 
-        // Save specifications to the separate table
+
         $specifications = $request->input('specifications', []);
         if (!empty($specifications)) {
             foreach ($specifications as $key => $value) {
@@ -101,33 +98,27 @@ class MotorController extends Controller
             }
         }
 
-        // Clear motor cache after creating a new motor
+
         $this->motorRepository->clearCache();
 
         return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Motor $motor): View
+
+    public function show(Motor $motor): \Inertia\Response
     {
-        $motor = $this->motorRepository->findById($motor->id, true);
-        return view('pages.admin.motors.show', compact('motor'));
+        $motor->load('specifications');
+        return \Inertia\Inertia::render('Admin/Motors/Show', compact('motor'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Motor $motor): View
+
+    public function edit(Motor $motor): \Inertia\Response
     {
-        $motor->load('specifications'); // Load specifications
-        return view('pages.admin.motors.edit', compact('motor'));
+        $motor->load('specifications');
+        return \Inertia\Inertia::render('Admin/Motors/Edit', compact('motor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, Motor $motor): RedirectResponse
     {
         $request->validate([
@@ -161,9 +152,9 @@ class MotorController extends Controller
             'details' => $request->details,
         ];
 
-        // Handle image upload
+
         if ($request->hasFile('image')) {
-            // Delete old image
+
             if ($motor->image_path) {
                 Storage::disk('public')->delete($motor->image_path);
             }
@@ -172,13 +163,13 @@ class MotorController extends Controller
 
         $motor->update($data);
 
-        // Update specifications in the separate table
+
         $newSpecs = $request->input('specifications', []);
-        
-        // Delete existing specifications
+
+
         $motor->specifications()->delete();
-        
-        // Add new specifications
+
+
         if (!empty($newSpecs)) {
             foreach ($newSpecs as $key => $value) {
                 if (!empty($value) && trim($value) !== '') {
@@ -190,25 +181,23 @@ class MotorController extends Controller
             }
         }
 
-        // Clear motor cache after updating a motor
+
         $this->motorRepository->clearCache();
 
         return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Motor $motor): RedirectResponse
     {
-        // Delete the image file
+
         if ($motor->image_path) {
             Storage::disk('public')->delete($motor->image_path);
         }
 
         $motor->delete();
 
-        // Clear motor cache after deleting a motor
+
         $this->motorRepository->clearCache();
 
         return redirect()->route('admin.motors.index')->with('success', 'Motor berhasil dihapus.');

@@ -79,4 +79,26 @@ class CreditDetail extends Model
             $creditDetail->documents()->delete();
         });
     }
+    /**
+     * Accessor to get the human-readable credit status text
+     */
+    public function getCreditStatusTextAttribute()
+    {
+        $statusMap = [
+            'menunggu_persetujuan' => 'Menunggu Persetujuan',
+            'data_tidak_valid' => 'Data Tidak Valid',
+            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+            'jadwal_survey' => 'Jadwal Survey',
+            'disetujui' => 'Disetujui',
+            'ditolak' => 'Ditolak',
+            'PENDING_REVIEW' => 'Menunggu Persetujuan',
+            'DATA_INVALID' => 'Data Tidak Valid',
+            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
+            'SURVEY_SCHEDULED' => 'Jadwal Survey',
+            'APPROVED' => 'Disetujui',
+            'REJECTED' => 'Ditolak'
+        ];
+        
+        return $statusMap[$this->credit_status] ?? $this->credit_status;
+    }
 }

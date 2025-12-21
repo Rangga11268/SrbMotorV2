@@ -36,7 +36,7 @@ class Motor extends Model
         'price' => 'decimal:2',
         'tersedia' => 'boolean',
     ];
-    
+
     /**
      * Get the specifications for the motor.
      */
@@ -44,7 +44,7 @@ class Motor extends Model
     {
         return $this->hasMany(MotorSpecification::class, 'motor_id');
     }
-    
+
     /**
      * Get the specifications as an associative array.
      */
@@ -52,14 +52,14 @@ class Motor extends Model
     {
         $specs = $this->specifications;
         $result = [];
-        
+
         foreach ($specs as $spec) {
             $result[$spec->spec_key] = $spec->spec_value;
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Delete the image file when the motor is deleted
      */
@@ -78,7 +78,7 @@ class Motor extends Model
                     }
                 }
             }
-            
+
             // Delete all associated specifications
             $motor->specifications()->delete();
         });

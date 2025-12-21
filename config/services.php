@@ -18,6 +18,11 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
+    'fonnte' => [
+        'token' => env('FONNTE_TOKEN'),
+        'admin_phone' => env('ADMIN_PHONE'),
+    ],
+
     'resend' => [
         'key' => env('RESEND_KEY'),
     ],

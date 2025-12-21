@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Transaction extends Model
@@ -63,6 +64,14 @@ class Transaction extends Model
     public function creditDetail(): HasOne
     {
         return $this->hasOne(CreditDetail::class);
+    }
+
+    /**
+     * Get the installments for the transaction.
+     */
+    public function installments(): HasMany
+    {
+        return $this->hasMany(Installment::class);
     }
 
     /**
