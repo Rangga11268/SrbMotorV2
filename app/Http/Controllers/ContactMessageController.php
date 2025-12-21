@@ -7,9 +7,7 @@ use App\Models\ContactMessage;
 
 class ContactMessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $query = ContactMessage::query();
@@ -29,18 +27,14 @@ class ContactMessageController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(ContactMessage $contact)
     {
-         // Usually index is enough for messages, but if a detail view is needed:
+
          return \Inertia\Inertia::render('Admin/ContactMessages/Show', compact('contact'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(ContactMessage $contact)
     {
         $contact->delete();

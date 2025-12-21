@@ -21,13 +21,11 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 export default function Home({ popularMotors }) {
-    // Contact Form Handling
     const { data, setData, post, processing, reset } = useForm({
         name: "",
         email: "",
@@ -59,12 +57,10 @@ export default function Home({ popularMotors }) {
 
     return (
         <MainLayout title="Home">
-            {/* HERO SECTION */}
             <section
                 id="home"
                 className="relative min-h-[90vh] flex flex-col md:flex-row items-center md:items-start justify-start bg-gradient-to-br from-white via-indigo-50 to-blue-50 overflow-hidden px-4 md:px-6 pt-4 pb-12"
             >
-                {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-100/30 to-transparent skew-x-12 transform translate-x-20 pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -159,7 +155,6 @@ export default function Home({ popularMotors }) {
                     </motion.div>
                 </div>
 
-                {/* Scroll Down Indicator */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -173,7 +168,6 @@ export default function Home({ popularMotors }) {
                 </motion.div>
             </section>
 
-            {/* ADVANTAGES SECTION */}
             <section id="advantages" className="py-24 bg-white relative">
                 <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
                 <div className="container mx-auto px-6 relative z-10">
@@ -244,7 +238,6 @@ export default function Home({ popularMotors }) {
                 </div>
             </section>
 
-            {/* POPULAR MOTORS SECTION */}
             <section
                 id="popular-motors"
                 className="py-24 bg-gray-50/80 relative overflow-hidden"
@@ -354,11 +347,9 @@ export default function Home({ popularMotors }) {
                 </div>
             </section>
 
-            {/* ABOUT PREVIEW */}
             <section id="about-us" className="py-24 bg-white relative">
                 <div className="container mx-auto px-6">
                     <div className="bg-dark-blue rounded-[2.5rem] overflow-hidden shadow-2xl relative">
-                        {/* Background Pattern */}
                         <div className="absolute top-0 right-0 w-2/3 h-full bg-primary/10 -skew-x-12 transform translate-x-32"></div>
 
                         <div className="flex flex-col md:flex-row items-stretch">
@@ -401,7 +392,6 @@ export default function Home({ popularMotors }) {
                 </div>
             </section>
 
-            {/* CALL TO ACTION / GALLERY PREVIEW */}
             <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
                 <div className="container mx-auto px-6 text-center">
                     <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -450,18 +440,15 @@ export default function Home({ popularMotors }) {
                 </div>
             </section>
 
-            {/* CONTACT SECTION */}
             <section
                 id="contact"
                 className="py-24 bg-dark-blue relative overflow-hidden"
             >
-                {/* Decorative Blobs */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px] pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none"></div>
 
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-stretch">
-                        {/* Contact Info */}
                         <div className="lg:w-1/2 text-white">
                             <span className="text-primary font-bold tracking-wider uppercase text-sm">
                                 Hubungi Kami
@@ -538,7 +525,6 @@ export default function Home({ popularMotors }) {
                             </div>
                         </div>
 
-                        {/* Contact Form */}
                         <div className="lg:w-1/2">
                             <div className="bg-white rounded-3xl p-8 md:p-10 shadow-2xl">
                                 <h3 className="text-2xl font-bold text-gray-900 mb-6">

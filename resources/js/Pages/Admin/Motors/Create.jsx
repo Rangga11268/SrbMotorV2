@@ -15,7 +15,7 @@ import {
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
-        brand: "Yamaha", // Default
+        brand: "Yamaha",
         model: "",
         price: "",
         year: new Date().getFullYear(),
@@ -23,7 +23,7 @@ export default function Create() {
         tersedia: 1,
         image: null,
         details: "",
-        // Specifications
+
         specifications: {
             engine_type: "",
             engine_size: "",
@@ -35,7 +35,6 @@ export default function Create() {
         },
     });
 
-    // Preview URL for image
     const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleSubmit = (e) => {
@@ -72,10 +71,8 @@ export default function Create() {
                 </Link>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    {/* LEFT COLUMN: FORM (2/3) */}
                     <div className="xl:col-span-2 space-y-6">
                         <form onSubmit={handleSubmit}>
-                            {/* Basic Info Card */}
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <Info className="text-primary" size={20} />
@@ -83,7 +80,6 @@ export default function Create() {
                                 </h3>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Name */}
                                     <div className="col-span-2">
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Nama Unit Motor
@@ -104,7 +100,6 @@ export default function Create() {
                                         )}
                                     </div>
 
-                                    {/* Brand */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Brand / Merek
@@ -155,7 +150,6 @@ export default function Create() {
                                         )}
                                     </div>
 
-                                    {/* Type */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Kategori / Tipe
@@ -176,7 +170,6 @@ export default function Create() {
                                         )}
                                     </div>
 
-                                    {/* Price */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Harga OTR (Rp)
@@ -205,7 +198,6 @@ export default function Create() {
                                         )}
                                     </div>
 
-                                    {/* Year */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Tahun Pembuatan
@@ -225,7 +217,6 @@ export default function Create() {
                                         )}
                                     </div>
 
-                                    {/* Availability */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Status Ketersediaan
@@ -260,7 +251,6 @@ export default function Create() {
                                         </div>
                                     </div>
 
-                                    {/* Image Upload */}
                                     <div className="col-span-2">
                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                             Foto Utama Unit
@@ -300,7 +290,6 @@ export default function Create() {
                                 </div>
                             </div>
 
-                            {/* Specifications Card */}
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <Settings
@@ -394,24 +383,20 @@ export default function Create() {
                                 </div>
                             </div>
 
-                            {/* Hidden Submit Button for Mobile / Compatibility */}
                             <div className="hidden">
                                 <button type="submit">Submit</button>
                             </div>
                         </form>
                     </div>
 
-                    {/* RIGHT COLUMN: PREVIEW (1/3) */}
                     <div className="xl:col-span-1">
                         <div className="sticky top-6 space-y-6">
-                            {/* Main Action Card */}
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                                 <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                     <Box size={18} className="text-primary" />
                                     Live Preview
                                 </h3>
 
-                                {/* Card Preview */}
                                 <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-800 transition-colors">
                                     <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-700 relative flex items-center justify-center">
                                         {previewUrl ? (

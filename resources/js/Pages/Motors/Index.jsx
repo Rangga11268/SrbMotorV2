@@ -18,7 +18,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import ComparisonButton from "@/Components/ComparisonButton";
 
 export default function Index({ motors, filters, brands, types, years }) {
-    // State for filters
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [values, setValues] = useState({
         search: filters.search || "",
@@ -29,7 +28,6 @@ export default function Index({ motors, filters, brands, types, years }) {
         max_price: filters.max_price || "",
     });
 
-    // Handle filter changes
     const handleChange = (e) => {
         const key = e.target.name;
         const value = e.target.value;
@@ -39,14 +37,12 @@ export default function Index({ motors, filters, brands, types, years }) {
         }));
     };
 
-    // Debounce search and trigger filter update
     useEffect(() => {
         const query = Object.keys(values).reduce((acc, key) => {
             if (values[key]) acc[key] = values[key];
             return acc;
         }, {});
 
-        // Use a timeout to debounce the request to avoid spamming server
         const timer = setTimeout(() => {
             router.get(route("motors.index"), query, {
                 preserveState: true,
@@ -92,7 +88,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                         </p>
                     </motion.div>
 
-                    {/* Filter Section */}
                     <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 mb-12 border border-gray-100">
                         <div
                             className="flex items-center justify-between cursor-pointer md:cursor-default"
@@ -111,7 +106,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                             </div>
                         </div>
 
-                        {/* Divider only visible when open on mobile or always on desktop */}
                         <div
                             className={`border-b border-gray-100 my-4 md:mb-8 md:mt-4 ${
                                 isFiltersOpen ? "block" : "hidden md:block"
@@ -132,7 +126,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                                     }`}
                                 >
                                     <div className="flex flex-col lg:flex-row gap-6 mb-8">
-                                        {/* Search */}
                                         <div className="flex-grow relative">
                                             <Search
                                                 className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -156,7 +149,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                        {/* Brand Filter */}
                                         <div className="space-y-2">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
                                                 Brand
@@ -189,7 +181,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                                             </div>
                                         </div>
 
-                                        {/* Type Filter */}
                                         <div className="space-y-2">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
                                                 Tipe
@@ -222,7 +213,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                                             </div>
                                         </div>
 
-                                        {/* Year Filter */}
                                         <div className="space-y-2">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
                                                 Tahun
@@ -255,7 +245,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                                             </div>
                                         </div>
 
-                                        {/* Price Range */}
                                         <div className="space-y-2">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
                                                 Range Harga (Juta)
@@ -288,7 +277,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                         </AnimatePresence>
                     </div>
 
-                    {/* Grid Section */}
                     {motors.data.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             <AnimatePresence>
@@ -414,7 +402,6 @@ export default function Index({ motors, filters, brands, types, years }) {
                         </div>
                     )}
 
-                    {/* Pagination */}
                     {motors.links && motors.links.length > 3 && (
                         <div className="mt-16 flex justify-center flex-wrap gap-2">
                             {motors.links.map((link, k) => (

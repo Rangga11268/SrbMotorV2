@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 
 export default function Show({ motor }) {
-    // Delete Modal State
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -35,7 +34,6 @@ export default function Show({ motor }) {
         });
     };
 
-    // Helper to parse specifications if they are an array (from backend)
     const specs = Array.isArray(motor.specifications)
         ? motor.specifications.reduce(
               (acc, spec) => ({ ...acc, [spec.spec_key]: spec.spec_value }),
@@ -58,7 +56,6 @@ export default function Show({ motor }) {
             />
 
             <div className="max-w-7xl mx-auto">
-                {/* Navigation Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <Link
                         href={route("admin.motors.index")}
@@ -87,9 +84,7 @@ export default function Show({ motor }) {
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    {/* LEFT COLUMN: Image & Quick Stats (1/3) */}
                     <div className="xl:col-span-1 space-y-6">
-                        {/* Main Image Card */}
                         <div className="bg-white dark:bg-gray-800 p-2 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
                             <div className="aspect-[4/3] bg-gray-50 dark:bg-gray-700 rounded-[1.5rem] relative overflow-hidden group">
                                 {motor.image_path ? (
@@ -119,7 +114,6 @@ export default function Show({ motor }) {
                             </div>
                         </div>
 
-                        {/* Status Card */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                             <h3 className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">
                                 Status & Harga
@@ -155,9 +149,7 @@ export default function Show({ motor }) {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: Details & Specs (2/3) */}
                     <div className="xl:col-span-2 space-y-6">
-                        {/* Main Info */}
                         <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                             <h1 className="text-3xl font-black text-gray-900 dark:text-white mb-2">
                                 {motor.name}
@@ -187,7 +179,6 @@ export default function Show({ motor }) {
                             )}
                         </div>
 
-                        {/* Technical Specs */}
                         <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2 pb-4 border-b border-gray-100 dark:border-gray-700">
                                 <Settings className="text-primary" size={20} />
@@ -257,7 +248,6 @@ export default function Show({ motor }) {
     );
 }
 
-// Sub-component for Spec Items
 function SpecItem({ label, value, icon }) {
     return (
         <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">

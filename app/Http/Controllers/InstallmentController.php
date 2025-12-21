@@ -16,9 +16,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class InstallmentController extends Controller
 {
-    /**
-     * Download Payment Receipt
-     */
+
     public function downloadReceipt(Installment $installment)
     {
         if ($installment->transaction->user_id !== Auth::id()) {
@@ -61,24 +59,23 @@ class InstallmentController extends Controller
                     }
                 }
             } else if ($transactionStatus == 'settlement') {
-                 // Determine specific payment method
+
                  $methodStr = 'midtrans_' . $type;
                 
-                 // Check for VA (Bank Transfer)
-                 // Note: MidtransTransaction::status returns object, va_numbers is array of objects
+
                  if ($type == 'bank_transfer' && isset($status->va_numbers)) {
-                     // Check if va_numbers is array and has items
+
                      $vaNumbers = $status->va_numbers;
                      if (is_array($vaNumbers) && count($vaNumbers) > 0) {
                           $bank = $vaNumbers[0]->bank ?? 'other';
                           $methodStr = 'midtrans_' . $bank . '_va';
                      }
                  }
-                 // Check for E-Wallet
+
                  else if ($type == 'gopay' || $type == 'shopeepay') {
                      $methodStr = 'midtrans_' . $type;
                  }
-                 // Check for Cstore
+
                  else if ($type == 'cstore') {
                      $store = $status->store ?? 'store';
                      $methodStr = 'midtrans_' . $store;
@@ -86,7 +83,6 @@ class InstallmentController extends Controller
 
                 $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => $methodStr]);
 
-                // Check and update Transaction Status if all installments paid
                 $transaction = $installment->transaction;
                 if ($transaction) {
                     $unpaid = $transaction->installments()->where('status', '!=', 'paid')->count();
@@ -117,9 +113,7 @@ class InstallmentController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    /**
-     * Generate Midtrans Snap Token
-     */
+
     public function createPayment(Installment $installment)
     {
         if ($installment->transaction->user_id !== Auth::id()) {
@@ -157,7 +151,7 @@ class InstallmentController extends Controller
             
             $installment->update([
                 'snap_token' => $snapToken,
-                'midtrans_booking_code' => $orderId // Save Order ID for status checking
+                'midtrans_booking_code' => $orderId
             ]);
 
             return response()->json(['snap_token' => $snapToken]);
@@ -165,17 +159,15 @@ class InstallmentController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $transactions = Transaction::where('user_id', Auth::id())
-            ->whereHas('creditDetail') // Only get credit transactions
+            ->whereHas('creditDetail')
             ->with(['installments' => function ($query) {
                 $query->orderBy('installment_number', 'asc');
             }, 'motor'])
-            ->whereIn('status', ['disetujui', 'completed', 'APPROVED']) // Only active/approved loans
+            ->whereIn('status', ['disetujui', 'completed', 'APPROVED'])
             ->latest()
             ->get();
 
@@ -184,9 +176,7 @@ class InstallmentController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function store(Request $request, Installment $installment)
     {
         $request->validate([
@@ -194,7 +184,7 @@ class InstallmentController extends Controller
             'payment_method' => 'required|string',
         ]);
 
-        // Verify ownership
+
         if ($installment->transaction->user_id !== Auth::id()) {
             abort(403);
         }
@@ -209,7 +199,7 @@ class InstallmentController extends Controller
                 'paid_at' => now(),
             ]);
 
-            // --- WhatsApp Notification: Notify Admin of New Payment Proof ---
+
             try {
                 $adminPhone = config('services.fonnte.admin_phone');
                 if ($adminPhone) {
@@ -233,9 +223,7 @@ class InstallmentController extends Controller
         return redirect()->back()->with('error', 'Gagal mengunggah bukti pembayaran.');
     }
 
-    /**
-     * Approve the installment payment (Admin only).
-     */
+
     public function approve(Installment $installment)
     {
         if ($installment->status !== 'waiting_approval') {
@@ -246,7 +234,7 @@ class InstallmentController extends Controller
             'status' => 'paid',
         ]);
 
-        // --- WhatsApp Notification: Notify User of Approval ---
+
         try {
             $user = $installment->transaction->user;
             if ($user && $user->phone) { 
@@ -268,9 +256,7 @@ class InstallmentController extends Controller
         return redirect()->back()->with('success', 'Pembayaran cicilan berhasil diverifikasi.');
     }
 
-    /**
-     * Reject the installment payment (Admin only).
-     */
+
     public function reject(Installment $installment)
     {
         if ($installment->status !== 'waiting_approval') {
@@ -281,7 +267,7 @@ class InstallmentController extends Controller
             'status' => 'pending', 
         ]);
 
-        // --- WhatsApp Notification: Notify User of Rejection ---
+
         try {
             $user = $installment->transaction->user;
             $phone = $installment->transaction->customer_phone ?? $user->phone;

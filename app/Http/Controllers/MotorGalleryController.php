@@ -21,9 +21,7 @@ class MotorGalleryController extends Controller
         $this->motorRepository = $motorRepository;
     }
 
-    /**
-     * Display a comparison of selected motors.
-     */
+
     public function compare(Request $request)
     {
         $ids = explode(',', $request->query('ids', ''));
@@ -42,12 +40,10 @@ class MotorGalleryController extends Controller
         ]);
     }
 
-    /**
-     * Display a listing of the motors with filtering and search capabilities.
-     */
+
     public function index(Request $request): \Inertia\Response
     {
-        // Prepare filters array
+
         $filters = [];
         if ($request->has('search') && !empty($request->search)) {
             $filters['search'] = $request->search;
@@ -68,10 +64,10 @@ class MotorGalleryController extends Controller
             $filters['max_price'] = $request->max_price;
         }
         
-        // Get motors with filters using caching
+
         $motors = $this->motorRepository->getWithFilters($filters, true, 12);
         
-        // Get filter options using caching
+
         $filterOptions = $this->motorRepository->getFilterOptions($request->get('search'));
         $brands = $filterOptions['brands'];
         $types = $filterOptions['types'];
@@ -86,16 +82,13 @@ class MotorGalleryController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified motor.
-     */
+
     public function show(Motor $motor): \Inertia\Response
     {
-        // Get motor using repository (with caching)
+
         $motor = $this->motorRepository->findById($motor->id, true);
         
-        // Get related motors (same brand, different model, limit 4) - this one we'll keep as a direct query
-        // since related motors might change frequently and caching could lead to stale data
+
         $relatedMotors = Motor::where('brand', $motor->brand)
             ->where('id', '!=', $motor->id)
             ->with('specifications')
@@ -108,25 +101,19 @@ class MotorGalleryController extends Controller
         ]);
     }
 
-    /**
-     * Show the credit calculation page for a specific motor.
-     */
+
     public function showCreditCalculation(Motor $motor): View
     {
         return view('pages.motors.credit_calculation', compact('motor'));
     }
     
-    /**
-     * Show the cash order form for a specific motor.
-     */
+
     public function showCashOrderForm(Motor $motor): View|\Inertia\Response
     {
         return \Inertia\Inertia::render('Motors/CashOrderForm', compact('motor'));
     }
     
-    /**
-     * Process the cash order for a specific motor.
-     */
+
     public function processCashOrder(Request $request, Motor $motor): RedirectResponse
     {
         $request->validate([
@@ -138,12 +125,12 @@ class MotorGalleryController extends Controller
             'payment_method' => 'required|string',
         ]);
 
-        // Ensure booking fee is less than motor price
+
         if ($request->booking_fee && $request->booking_fee >= $motor->price) {
             return back()->withErrors(['booking_fee' => 'Booking fee tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
         }
         
-        // Create the transaction
+
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
             'motor_id' => $motor->id,
@@ -159,69 +146,61 @@ class MotorGalleryController extends Controller
             'customer_occupation' => $request->customer_occupation,
         ]);
         
-        // --- Create Booking Fee "Installment" (Num 0) ---
-        // This leverages existing Installment/Midtrans logic for the booking fee payment
+
         if ($transaction->booking_fee > 0) {
             \App\Models\Installment::create([
                 'transaction_id' => $transaction->id,
-                'installment_number' => 0, // 0 = Booking Fee for Cash, DP for Credit
+                'installment_number' => 0,
                 'amount' => $transaction->booking_fee,
-                'due_date' => now()->addDays(1), // Due within 24 hours
+                'due_date' => now()->addDays(1),
                 'status' => 'pending',
             ]);
         }
 
-        // --- Create Pelunasan "Installment" (Num 1) ---
-        // This allows the user to pay the remaining balance via Midtrans later
+
         $remainingAmount = $motor->price - ($transaction->booking_fee ?? 0);
         
         if ($remainingAmount > 0) {
             \App\Models\Installment::create([
                 'transaction_id' => $transaction->id,
-                'installment_number' => 1, // 1 = Pelunasan for Cash
+                'installment_number' => 1,
                 'amount' => $remainingAmount,
-                'due_date' => now()->addDays(7), // Example: Due in 7 days
+                'due_date' => now()->addDays(7),
                 'status' => 'pending',
             ]);
         }
-        // ------------------------------------------------
-        // ------------------------------------------------
+
         
-        // --- WhatsApp Notification Start ---
+
         try {
-            // 1. Notify User
+
             if ($request->customer_phone) {
                 $userMsg = "Halo {$request->customer_name},\n\nTerima kasih! Pesanan motor *{$motor->name}* Anda telah kami terima.\nOrder ID: #{$transaction->id}\n\nSilakan lanjutkan pembayaran Booking Fee agar kami dapat segera memproses pesanan Anda.\n\n- SRB Motor";
                 \App\Services\WhatsAppService::sendMessage($request->customer_phone, $userMsg);
             }
 
-            // 2. Notify Admin
+
             $adminPhone = config('services.fonnte.admin_phone');
             if ($adminPhone) {
                 $adminMsg = "*[ADMIN] Order Tunai Baru*\n\nPelanggan: {$request->customer_name}\nUnit: {$motor->name}\nTelp: {$request->customer_phone}\n\nSegera cek dashboard admin.";
                 \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
             }
         } catch (\Exception $e) {
-            // Log error or ignore to prevent blocking the flow
             \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
         }
-        // --- WhatsApp Notification End ---
+
         
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
             ->with('success', 'Pesanan tunai Anda telah dibuat. Silakan lanjutkan ke halaman konfirmasi.');
     }
     
-    /**
-     * Show the credit order form for a specific motor.
-     */
+
     public function showCreditOrderForm(Motor $motor): View|\Inertia\Response
     {
         return \Inertia\Inertia::render('Motors/CreditOrderForm', compact('motor'));
     }
     
-    /**
-     * Process the credit order for a specific motor.
-     */
+
     public function processCreditOrder(Request $request, Motor $motor): RedirectResponse
     {
         $request->validate([
@@ -230,17 +209,17 @@ class MotorGalleryController extends Controller
             'customer_occupation' => 'required|string|max:255',
             'down_payment' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1',
-            // 'monthly_installment' is calculated server-side, so we don't need to validate the input value
+
             'notes' => 'nullable|string',
             'payment_method' => 'required|string',
         ]);
 
-        // Ensure down payment is less than motor price
+
         if ($request->down_payment >= $motor->price) {
             return back()->withErrors(['down_payment' => 'Uang muka tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
         }
         
-        // Create the transaction
+
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
             'motor_id' => $motor->id,
@@ -255,28 +234,28 @@ class MotorGalleryController extends Controller
             'customer_occupation' => $request->customer_occupation,
         ]);
         
-        // Calculate monthly installment server-side to prevent manipulation
+
         $loanAmount = $motor->price - $request->down_payment;
         $monthlyInstallment = $loanAmount / $request->tenor;
         
-        // Create credit details
+
         CreditDetail::create([
             'transaction_id' => $transaction->id,
             'down_payment' => $request->down_payment,
             'tenor' => $request->tenor,
             'monthly_installment' => $monthlyInstallment,
-            'credit_status' => 'menunggu_persetujuan', // Initially pending but waiting for documents
+            'credit_status' => 'menunggu_persetujuan',
         ]);
         
-        // --- WhatsApp Notification Start ---
+
         try {
-            // 1. Notify User
+
             if ($request->customer_phone) {
                 $userMsg = "Halo {$request->customer_name},\n\nPengajuan Kredit untuk motor *{$motor->name}* telah diterima.\nOrder ID: #{$transaction->id}\nTenor: {$request->tenor} Bulan\nCicilan: Rp " . number_format($monthlyInstallment, 0, ',', '.') . "\n\nMohon SEGERA UNGGAH DOKUMEN (KTP, KK, Slip Gaji) agar pengajuan dapat kami proses.\n\n- SRB Motor";
                 \App\Services\WhatsAppService::sendMessage($request->customer_phone, $userMsg);
             }
 
-            // 2. Notify Admin
+
             $adminPhone = config('services.fonnte.admin_phone');
             if ($adminPhone) {
                 $adminMsg = "*[ADMIN] Pengajuan Kredit Baru*\n\nPelanggan: {$request->customer_name}\nUnit: {$motor->name}\nTenor: {$request->tenor} Bulan\n\nSegera cek dokumen di dashboard.";
@@ -285,20 +264,18 @@ class MotorGalleryController extends Controller
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
         }
-        // --- WhatsApp Notification End ---
+
 
         return redirect()->route('motors.upload-credit-documents', ['transaction' => $transaction->id])
             ->with('success', 'Pengajuan kredit berhasil dibuat. Silakan lengkapi dokumen untuk melanjutkan proses.');
     }
     
-    /**
-     * Show order confirmation page.
-     */
+
     public function showOrderConfirmation($transactionId): \Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail', 'installments'])->findOrFail($transactionId);
         
-        // Ensure the transaction belongs to the current user
+
         if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized access to this transaction');
         }
@@ -306,14 +283,12 @@ class MotorGalleryController extends Controller
         return \Inertia\Inertia::render('Motors/OrderConfirmation', compact('transaction'));
     }
     
-    /**
-     * Show the document upload form for credit transactions.
-     */
+
     public function showUploadCreditDocuments($transactionId): View|\Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail'])->findOrFail($transactionId);
         
-        // Ensure the transaction belongs to the current user and is a credit transaction
+
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
@@ -321,21 +296,19 @@ class MotorGalleryController extends Controller
         return \Inertia\Inertia::render('Motors/UploadCreditDocuments', compact('transaction'));
     }
     
-    /**
-     * Handle document uploads for credit transactions.
-     */
+
     public function uploadCreditDocuments(Request $request, $transactionId)
     {
         $transaction = Transaction::with(['creditDetail'])->findOrFail($transactionId);
         
-        // Ensure the transaction belongs to the current user and is a credit transaction
+
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
         
         $request->validate([
             'documents.KTP' => 'required|array|min:1',
-            'documents.KTP.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048', // Max 2MB per file
+            'documents.KTP.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'documents.KK' => 'required|array|min:1',
             'documents.KK.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'documents.SLIP_GAJI' => 'required|array|min:1',
@@ -363,15 +336,15 @@ class MotorGalleryController extends Controller
             'documents.LAINNYA.*.max' => 'Ukuran file tambahan tidak boleh lebih dari 2MB',
         ]);
         
-        // Process and save documents
+
         foreach ($request->file('documents', []) as $docType => $files) {
             if (is_array($files)) {
                 foreach ($files as $file) {
                     if ($file) {
-                        // Store file in storage
+
                         $path = $file->store('credit-documents/' . $transaction->id, 'public');
                         
-                        // Create document record
+
                         Document::create([
                             'credit_detail_id' => $transaction->creditDetail->id,
                             'document_type' => $docType,
@@ -383,7 +356,7 @@ class MotorGalleryController extends Controller
             }
         }
         
-        // Update transaction status to indicate documents have been submitted and are pending admin review
+
         $transaction->update(['status' => 'menunggu_persetujuan']);
         if ($transaction->creditDetail) {
             $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
@@ -393,14 +366,12 @@ class MotorGalleryController extends Controller
             ->with('success', 'Dokumen berhasil diunggah. Pengajuan kredit Anda sedang dalam proses review.');
     }
     
-    /**
-     * Show document management page for a credit transaction.
-     */
+
     public function showDocumentManagement($transactionId): View|\Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail', 'creditDetail.documents'])->findOrFail($transactionId);
         
-        // Ensure the transaction belongs to the current user and is a credit transaction
+
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
@@ -408,19 +379,17 @@ class MotorGalleryController extends Controller
         return \Inertia\Inertia::render('Motors/DocumentManagement', compact('transaction'));
     }
     
-    /**
-     * Update documents for a credit transaction.
-     */
+
     public function updateDocuments(Request $request, $transactionId)
     {
         $transaction = Transaction::with(['creditDetail'])->findOrFail($transactionId);
 
-        // Ensure the transaction belongs to the current user and is a credit transaction
+
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
 
-        // Verify that the transaction has a credit detail
+
         if (!$transaction->creditDetail) {
             return redirect()->back()->withErrors(['error' => 'Transaksi tidak memiliki detail kredit yang valid.']);
         }
@@ -451,17 +420,17 @@ class MotorGalleryController extends Controller
 
         $documentsProcessed = false;
 
-        // Process and save new documents
+
         $documents = $request->file('documents');
         if ($documents) {
             foreach ($documents as $docType => $files) {
                 if (is_array($files)) {
                     foreach ($files as $file) {
                         if ($file) {
-                            // Store file in storage
+
                             $path = $file->store('credit-documents/' . $transaction->id, 'public');
 
-                            // Create document record
+
                             Document::create([
                                 'credit_detail_id' => $transaction->creditDetail->id,
                                 'document_type' => $docType,
@@ -476,9 +445,9 @@ class MotorGalleryController extends Controller
             }
         }
 
-        // Only update status if new documents were actually uploaded
+
         if ($documentsProcessed) {
-            // Update transaction status to indicate documents have been updated
+
             $transaction->update(['status' => 'menunggu_persetujuan']);
             if ($transaction->creditDetail) {
                 $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
@@ -492,12 +461,10 @@ class MotorGalleryController extends Controller
         }
     }
     
-    /**
-     * Show the user's transactions.
-     */
+
     public function showUserTransactions()
     {
-        // Check if user is authenticated
+
         if (!Auth::check()) {
             abort(403, 'Anda harus login terlebih dahulu untuk mengakses halaman ini.');
         }

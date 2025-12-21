@@ -31,7 +31,6 @@ export default function Index({
     const [type, setType] = useState(filters.type || "");
     const [status, setStatus] = useState(filters.status || "");
 
-    // Modal State
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         type: "info",
@@ -103,7 +102,6 @@ export default function Index({
             .replace(/\b\w/g, (l) => l.toUpperCase());
     };
 
-    // Helper for Avatar Initials
     const getInitials = (name) => {
         if (!name) return "?";
         return name
@@ -129,7 +127,6 @@ export default function Index({
             />
 
             <div className="space-y-6">
-                {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-end gap-4">
                     <div>
                         <p className="text-gray-500 dark:text-gray-400">
@@ -149,9 +146,7 @@ export default function Index({
                     </Link>
                 </div>
 
-                {/* Filters & Search Bar */}
                 <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col xl:flex-row gap-4 items-center justify-between transition-colors">
-                    {/* Search */}
                     <form
                         onSubmit={handleSearch}
                         className="relative w-full xl:w-96 group"
@@ -170,9 +165,7 @@ export default function Index({
                         />
                     </form>
 
-                    {/* Filters Row */}
                     <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto overflow-x-auto pb-1 sm:pb-0">
-                        {/* Filter Type */}
                         <div className="relative min-w-[140px]">
                             <select
                                 value={type}
@@ -198,7 +191,6 @@ export default function Index({
                             />
                         </div>
 
-                        {/* Filter Status */}
                         <div className="relative min-w-[180px]">
                             <select
                                 value={status}
@@ -224,7 +216,6 @@ export default function Index({
                             />
                         </div>
 
-                        {/* Reset Button */}
                         {(search || type || status) && (
                             <button
                                 onClick={resetFilters}
@@ -237,7 +228,6 @@ export default function Index({
                     </div>
                 </div>
 
-                {/* Main Content Card */}
                 <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
@@ -385,7 +375,7 @@ export default function Index({
                                                                 transaction.status
                                                             )}
                                                         </span>
-                                                        {/* Document Warning */}
+
                                                         {transaction.transaction_type ===
                                                             "CREDIT" &&
                                                             !transaction.documents_complete && (
@@ -471,7 +461,6 @@ export default function Index({
                         </table>
                     </div>
 
-                    {/* Pagination */}
                     {transactions.links.length > 3 && (
                         <div className="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-center bg-gray-50/30 dark:bg-gray-900/30">
                             <div className="flex flex-wrap gap-2 justify-center">

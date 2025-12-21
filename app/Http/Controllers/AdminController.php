@@ -15,9 +15,7 @@ use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    /**
-     * Display the admin dashboard.
-     */
+
     public function index(): Response
     {
         $motorsCount = Motor::count();
@@ -25,20 +23,17 @@ class AdminController extends Controller
         $usersCount = \App\Models\User::count();
         $transactionsCount = Transaction::count();
         
-        // Transaction counts by type
+
         $cashTransactionsCount = Transaction::where('transaction_type', 'CASH')->count();
         $creditTransactionsCount = Transaction::where('transaction_type', 'CREDIT')->count();
         
-        // Recent transactions
+
         $recentTransactions = Transaction::with(['user', 'motor'])->latest()->limit(5)->get();
         
         $recentMotors = Motor::latest()->limit(5)->get();
-        // $recentContactMessages = ContactMessage::latest()->limit(5)->get(); // Not used in current Dashboard design yet
-        // $recentUsers = \App\Models\User::latest()->limit(5)->get(); // Not used in current Dashboard design yet
 
-        // --- Analytics Data ---
 
-        // 1. Monthly Transactions (Last 6 Months)
+
         $monthlyStats = Transaction::select(
             DB::raw('count(id) as count'),
             DB::raw('SUM(total_amount) as revenue'),
@@ -56,7 +51,7 @@ class AdminController extends Controller
             ];
         });
 
-        // 2. Transaction Status Distribution
+
         $statusStats = Transaction::select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
             ->get()

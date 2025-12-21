@@ -4,13 +4,11 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { Save, User, Lock, Key } from "lucide-react";
 
 export default function Edit({ user }) {
-    // Profile Form
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
     });
 
-    // Password Form
     const {
         data: passwordData,
         setData: setPasswordData,
@@ -39,7 +37,6 @@ export default function Edit({ user }) {
     return (
         <AdminLayout title="Profil Saya">
             <div className="max-w-4xl mx-auto space-y-8">
-                {/* Profile Information */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
                         <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 text-primary flex items-center justify-center text-2xl font-bold">
@@ -119,7 +116,6 @@ export default function Edit({ user }) {
                     </form>
                 </div>
 
-                {/* Password Update */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
                         <div className="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-500 dark:text-orange-400 flex items-center justify-center font-bold">

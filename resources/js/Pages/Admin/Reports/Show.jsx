@@ -32,7 +32,6 @@ export default function Show({
     rawEndDate,
     data,
 }) {
-    // Helper to calculate or get total
     const getSummaryStats = () => {
         if (!data) return [];
 
@@ -98,7 +97,7 @@ export default function Show({
                     {
                         label: "Pelanggan Baru",
                         value: data.new_customers,
-                        icon: [Users, SparklesIcon], // Custom composition logic needed if multiple icons, kept simple here
+                        icon: [Users, SparklesIcon],
                         color: "text-pink-500",
                         bg: "bg-pink-500/10 dark:bg-pink-500/20",
                     },
@@ -118,7 +117,6 @@ export default function Show({
         }
     };
 
-    // Prepare Data for Charts
     const getChartData = () => {
         if (!data) return [];
 
@@ -127,7 +125,7 @@ export default function Show({
             case "income":
                 if (!data.items) return [];
                 const grouped = data.items.reduce((acc, item) => {
-                    const dateKey = item.created_at.substring(0, 6); // "01 Jan"
+                    const dateKey = item.created_at.substring(0, 6);
                     if (!acc[dateKey]) acc[dateKey] = 0;
                     acc[dateKey] += parseFloat(item.total_amount || 0);
                     return acc;
@@ -202,7 +200,6 @@ export default function Show({
         return null;
     };
 
-    // Header Stats to show summary at a glance
     const calculateTotal = (key) => {
         if (!data || !data.items || data.items.length === 0) return 0;
         return data.items.reduce(
@@ -211,7 +208,6 @@ export default function Show({
         );
     };
 
-    // Native Print Strategy
     const handlePrint = () => {
         window.print();
     };
@@ -250,13 +246,10 @@ export default function Show({
         } else if (type === "customer") {
             listData = data.top_customers || [];
         } else if (type === "status") {
-            // Re-map listData for status to include keys if it was an object
             const statusEntries = data.by_status
                 ? Object.entries(data.by_status)
                 : [];
-            // We'll process this below directly or map it here.
-            // Let's use statusEntries directly in the map below for 'status' type.
-            listData = statusEntries; // Just to pass the empty check
+            listData = statusEntries;
         }
 
         if (!listData || listData.length === 0) {
@@ -449,7 +442,6 @@ export default function Show({
         );
     };
 
-    // Dummy component for icon fallback
     const SparklesIcon = () => <Sparkles size={24} className="text-pink-500" />;
 
     return (
@@ -497,7 +489,6 @@ export default function Show({
                     </div>
                 </div>
 
-                {/* Printable Area */}
                 <div className="print:p-0 print:border-none">
                     <div className="flex items-center gap-5 mb-10">
                         <div className="w-16 h-16 rounded-[1.2rem] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 flex items-center justify-center shadow-lg shadow-gray-200/50 dark:shadow-black/50 transition-colors">
@@ -513,11 +504,10 @@ export default function Show({
                         </div>
                     </div>
 
-                    {/* Summary Stats Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
                         {getSummaryStats().map((stat, idx) => {
                             const Icon = stat.icon;
-                            // Check if Icon is array or component
+
                             const isIconComponent =
                                 typeof Icon === "function" ||
                                 typeof Icon === "object";

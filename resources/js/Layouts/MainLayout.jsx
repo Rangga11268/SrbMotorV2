@@ -4,13 +4,11 @@ import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import FloatingWhatsApp from "@/Components/FloatingWhatsApp";
 import ComparisonFloatingBar from "@/Components/ComparisonFloatingBar";
-import { Toaster } from "react-hot-toast"; // We might want toast notifications
 
 export default function MainLayout({ children, title }) {
     const { flash } = usePage().props;
 
     useEffect(() => {
-        // Handle scroll behavior for anchor links
         const handleAnchorClick = (e) => {
             const targetId = e.target.getAttribute("href");
             if (targetId && targetId.startsWith("#") && targetId.length > 1) {
@@ -52,13 +50,10 @@ export default function MainLayout({ children, title }) {
 
                 <Footer />
 
-                {/* Global Toast Notification Container */}
                 <Toaster position="top-right" />
 
-                {/* Floating WhatsApp Widget */}
                 <FloatingWhatsApp />
 
-                {/* Comparison Floating Bar */}
                 <ComparisonFloatingBar />
             </div>
         </>
