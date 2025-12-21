@@ -276,6 +276,13 @@
     object-fit: cover;
 }
 
+/* Theme options in user dropdown on mobile */
+.navbar-user .dropdown-menu .dropdown-item i {
+    width: 16px;
+    margin-right: 8px;
+    text-align: center;
+}
+
 /* Button styling for navbar */
 .admin-navbar .btn {
     border-radius: 8px !important;
@@ -676,6 +683,40 @@
 
     .sidebar-overlay.open {
         display: block;
+    }
+
+    /* Mobile dropdown improvements */
+    .navbar-nav .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
+
+    /* Transaction table adjustments for tablets */
+    @media (max-width: 991.98px) {
+        .admin-table th.d-xl-table-cell,
+        .admin-table td.d-xl-table-cell {
+            display: none !important;
+        }
+    }
+
+    /* For smaller tablets and mobile */
+    @media (max-width: 767.98px) {
+        .admin-table th.d-lg-table-cell,
+        .admin-table td.d-lg-table-cell {
+            display: none !important;
+        }
+    }
+
+    /* For extra small screens */
+    @media (max-width: 575.98px) {
+        .admin-table {
+            font-size: 0.875rem;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 0.5rem 0.25rem;
+        }
     }
 }
 
