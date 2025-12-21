@@ -4,6 +4,7 @@ import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import FloatingWhatsApp from "@/Components/FloatingWhatsApp";
 import ComparisonFloatingBar from "@/Components/ComparisonFloatingBar";
+import { Toaster } from "react-hot-toast";
 
 export default function MainLayout({ children, title }) {
     const { flash } = usePage().props;
