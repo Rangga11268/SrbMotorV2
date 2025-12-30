@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import {
@@ -15,28 +15,28 @@ import {
     ArrowRight,
     Wallet,
     Lock,
+    Copy,
+    Download,
+    Share2,
+    ShieldCheck,
+    Clock,
 } from "lucide-react";
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Swal from "sweetalert2";
 import axios from "axios";
 
 export default function OrderConfirmation({ transaction }) {
     const [isLoadingPay, setIsLoadingPay] = useState(false);
-
     const { config } = usePage().props;
 
     // Load Snap.js
     useEffect(() => {
         const snapUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-        // Using the Client Key provided from backend
         const clientKey = config.midtrans_client_key;
-
         const script = document.createElement("script");
         script.src = snapUrl;
         script.setAttribute("data-client-key", clientKey);
         script.async = true;
-
         document.body.appendChild(script);
 
         return () => {
@@ -54,7 +54,6 @@ export default function OrderConfirmation({ transaction }) {
 
             window.snap.pay(token, {
                 onSuccess: async function (result) {
-                    // Manual status check to ensure DB is updated (Midtrans Webhook might fail on localhost)
                     try {
                         await axios.post(
                             route("installments.check-status", installment.id)
@@ -62,35 +61,56 @@ export default function OrderConfirmation({ transaction }) {
                     } catch (e) {
                         console.error("Manual status check failed", e);
                     }
-
-                    Swal.fire(
-                        "Berhasil!",
-                        "Pembayaran Booking Fee berhasil.",
-                        "success"
-                    );
+                    Swal.fire({
+                        title: "PAYMENT SUCCESSFUL",
+                        text: "Pembayaran Booking Fee berhasil diterima.",
+                        icon: "success",
+                        background: "#09090b",
+                        color: "#ffffff",
+                        confirmButtonColor: "#84cc16",
+                    });
                     router.reload();
                 },
                 onPending: async function (result) {
-                    // Also check on pending just in case status changed during the window
                     try {
                         await axios.post(
                             route("installments.check-status", installment.id)
                         );
                     } catch (e) {}
-
-                    Swal.fire("Pending", "Menunggu pembayaran Anda.", "info");
+                    Swal.fire({
+                        title: "PAYMENT PENDING",
+                        text: "Menunggu pembayaran Anda.",
+                        icon: "info",
+                        background: "#09090b",
+                        color: "#ffffff",
+                        confirmButtonColor: "#3b82f6",
+                    });
                     router.reload();
                 },
                 onError: function (result) {
-                    Swal.fire("Gagal", "Pembayaran gagal.", "error");
+                    Swal.fire({
+                        title: "PAYMENT FAILED",
+                        text: "Pembayaran gagal diproses.",
+                        icon: "error",
+                        background: "#09090b",
+                        color: "#ffffff",
+                        confirmButtonColor: "#ef4444",
+                    });
                 },
                 onClose: function () {
-                    // Customer closed the popup without finishing the payment
+                    // Customer closed the popup
                 },
             });
         } catch (error) {
             console.error(error);
-            Swal.fire("Error", "Gagal memproses pembayaran online.", "error");
+            Swal.fire({
+                title: "SYSTEM ERROR",
+                text: "Gagal memproses pembayaran online.",
+                icon: "error",
+                background: "#09090b",
+                color: "#ffffff",
+                confirmButtonColor: "#ef4444",
+            });
         } finally {
             setIsLoadingPay(false);
         }
@@ -104,629 +124,378 @@ export default function OrderConfirmation({ transaction }) {
         }).format(amount);
     };
 
-    const getStatusInfo = (status) => {
-        switch (status) {
-            case "completed":
-            case "disetujui":
-            case "ready_for_delivery":
-                return {
-                    label: "Disetujui",
-                    color: "bg-green-100 text-green-700",
-                };
-            case "menunggu_persetujuan":
-            case "new_order":
-            case "waiting_payment":
-                return {
-                    label: "Menunggu",
-                    color: "bg-yellow-100 text-yellow-700",
-                };
-            case "ditolak":
-            case "data_tidak_valid":
-                return { label: "Ditolak", color: "bg-red-100 text-red-700" };
-            default:
-                return { label: status, color: "bg-gray-100 text-gray-700" };
-        }
-    };
-
-    const formatStatusText = (status) => {
-        const map = {
-            new_order: "Pesanan Baru",
-            menunggu_persetujuan: "Menunggu Persetujuan",
-            waiting_payment: "Menunggu Pembayaran",
-            completed: "Selesai",
-            disetujui: "Disetujui",
-            ready_for_delivery: "Siap Dikirim",
-            ditolak: "Ditolak",
-            data_tidak_valid: "Data Tidak Valid",
-        };
-        return (
-            map[status] ||
-            status.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
-        );
-    };
-
     const isCredit = transaction.transaction_type === "CREDIT";
-    const statusInfo = getStatusInfo(transaction.status);
+
+    // Animation Variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2,
+            },
+        },
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+            },
+        },
+    };
+
+    const ticketVariants = {
+        hidden: { scale: 0.9, opacity: 0, rotateX: 10 },
+        visible: {
+            scale: 1,
+            opacity: 1,
+            rotateX: 0,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+            },
+        },
+    };
 
     return (
-        <MainLayout title="Konfirmasi Pesanan">
-            <div className="bg-gray-50 min-h-screen pt-32 pb-12">
-                <div className="container mx-auto px-4">
+        <MainLayout title="Order Confirmation">
+            <div className="min-h-screen bg-surface-dark text-white pt-32 pb-24 relative overflow-hidden">
+                {/* Background FX */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                    <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-green-500/10 rounded-full blur-[120px]" />
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px]" />
+                </div>
+
+                <div className="container mx-auto px-4 relative z-10">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
                         className="max-w-4xl mx-auto"
                     >
-                        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-                            {/* Success Header */}
-                            <div className="bg-green-600 p-10 text-center relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full transform translate-x-1/2 -translate-y-1/2"></div>
-                                <div className="absolute bottom-0 left-0 p-20 bg-white/10 rounded-full transform -translate-x-1/2 translate-y-1/2"></div>
-
+                        {/* Status Header */}
+                        <motion.div
+                            variants={itemVariants}
+                            className="text-center mb-12"
+                        >
+                            <div className="relative inline-block mb-6">
                                 <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
+                                    initial={{ scale: 0, rotate: -180 }}
+                                    animate={{ scale: 1, rotate: 0 }}
                                     transition={{
                                         type: "spring",
                                         stiffness: 200,
-                                        delay: 0.2,
+                                        delay: 0.3,
                                     }}
-                                    className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+                                    className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.4)] relative z-10"
                                 >
                                     <CheckCircle
                                         size={48}
-                                        className="text-green-600"
+                                        className="text-black"
+                                        strokeWidth={3}
                                     />
                                 </motion.div>
-                                <h1 className="text-3xl font-bold text-white mb-2">
-                                    {!isCredit &&
-                                    transaction.installments?.find(
-                                        (i) => i.installment_number === 0
-                                    )?.status === "paid"
-                                        ? "Booking Fee Lunas!"
-                                        : "Pesanan Berhasil Dibuat!"}
-                                </h1>
-                                <p className="text-green-100 text-lg">
-                                    {!isCredit &&
-                                    transaction.installments?.find(
-                                        (i) => i.installment_number === 0
-                                    )?.status === "paid" ? (
-                                        <span>
-                                            Unit Anda telah diamankan. Nomor
-                                            Transaksi:{" "}
-                                            <span className="font-mono font-bold bg-white/20 px-2 py-1 rounded">
-                                                {transaction.id}
-                                            </span>
-                                        </span>
-                                    ) : (
-                                        <span>
-                                            Nomor Transaksi:{" "}
-                                            <span className="font-mono font-bold bg-white/20 px-2 py-1 rounded">
-                                                {transaction.id}
-                                            </span>
-                                        </span>
-                                    )}
-                                </p>
+                                <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full animate-pulse" />
                             </div>
 
-                            <div className="p-8">
-                                <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                                    {/* Left Column: Motor Details */}
-                                    <div className="md:col-span-5">
-                                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-full">
-                                            <div className="h-48 bg-gray-100 p-4 flex items-center justify-center relative">
-                                                <img
-                                                    src={`/storage/${transaction.motor.image_path}`}
-                                                    alt={transaction.motor.name}
-                                                    className="max-h-full max-w-full object-contain"
-                                                />
+                            <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter mb-4">
+                                ORDER{" "}
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">
+                                    CONFIRMED
+                                </span>
+                            </h1>
+                            <p className="text-lg text-white/60 font-sans max-w-xl mx-auto">
+                                Terima kasih! Pesanan Anda telah berhasil
+                                dibuat. Simpan bukti transaksi ini untuk
+                                keperluan administrasi.
+                            </p>
+                        </motion.div>
+
+                        {/* Digital Ticket */}
+                        <motion.div
+                            variants={ticketVariants}
+                            className="relative group perspective-1000"
+                        >
+                            <div className="absolute -inset-1 bg-gradient-to-b from-white/20 to-transparent rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+
+                            <div className="relative bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
+                                {/* Ticket Header: ID & Date */}
+                                <div className="bg-white/5 border-b border-white/5 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-white/10 rounded-lg">
+                                            <ShieldCheck
+                                                className="text-green-400"
+                                                size={24}
+                                            />
+                                        </div>
+                                        <div>
+                                            <div className="text-xs text-white/40 font-bold tracking-widest uppercase">
+                                                Transaction ID
                                             </div>
-                                            <div className="p-5">
-                                                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                                                    {transaction.motor.name}
-                                                </h3>
-                                                <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                                                    <span className="flex items-center gap-1">
-                                                        <Calendar size={14} />{" "}
-                                                        {transaction.motor.year}
-                                                    </span>
-                                                    <span>•</span>
-                                                    <span>
-                                                        {transaction.motor.type}
-                                                    </span>
+                                            <div className="font-mono text-xl text-white font-bold tracking-wider">
+                                                {transaction.id}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-right hidden md:block">
+                                            <div className="text-xs text-white/40 font-bold tracking-widest uppercase">
+                                                Date
+                                            </div>
+                                            <div className="text-white font-bold">
+                                                {new Date(
+                                                    transaction.created_at
+                                                ).toLocaleDateString("id-ID", {
+                                                    day: "numeric",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => window.print()}
+                                            className="p-3 hover:bg-white/10 rounded-full transition-colors text-white/60 hover:text-white"
+                                            title="Print/Save Receipt"
+                                        >
+                                            <Download size={20} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-12">
+                                    {/* Left: Motor Visual */}
+                                    <div className="lg:col-span-5 relative bg-gradient-to-b from-white/5 to-transparent p-8 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-white/5">
+                                        <div className="absolute top-4 left-4">
+                                            <span className="px-3 py-1 rounded-full border border-white/10 text-xs font-bold text-white/60 uppercase tracking-wider bg-black/20 backdrop-blur-md">
+                                                Selected Unit
+                                            </span>
+                                        </div>
+
+                                        <motion.img
+                                            initial={{ y: 20, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            transition={{ delay: 0.5 }}
+                                            src={`/storage/${transaction.motor.image_path}`}
+                                            alt={transaction.motor.name}
+                                            className="w-full max-w-[280px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] mb-6 hover:scale-105 transition-transform duration-500"
+                                        />
+
+                                        <div className="text-center w-full">
+                                            <h3 className="text-2xl font-display font-bold text-white mb-1">
+                                                {transaction.motor.name}
+                                            </h3>
+                                            <div className="text-white/40 text-sm mb-4">
+                                                {transaction.motor.type} •{" "}
+                                                {transaction.motor.year}
+                                            </div>
+
+                                            <div className="inline-block px-6 py-2 bg-white/5 rounded-xl border border-white/10">
+                                                <div className="text-xs text-white/40 uppercase tracking-widest mb-1">
+                                                    Total Harga
                                                 </div>
-                                                <div className="text-2xl font-bold text-primary mb-1">
+                                                <div className="text-xl font-bold text-accent">
                                                     {formatCurrency(
                                                         transaction.motor.price
                                                     )}
-                                                </div>
-                                                <div className="text-xs text-gray-400">
-                                                    Harga OTR
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Right Column: Transaction Details */}
-                                    <div className="md:col-span-7">
-                                        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                            <Info
-                                                size={20}
-                                                className="text-blue-500"
-                                            />{" "}
-                                            Detail Pemesanan
-                                        </h3>
-
-                                        <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 space-y-4">
-                                            <DetailRow
-                                                label="Nama Pemesan"
-                                                value={
-                                                    transaction.customer_name
-                                                }
-                                                icon={User}
-                                            />
-                                            <DetailRow
-                                                label="No. Telepon"
-                                                value={
-                                                    transaction.customer_phone
-                                                }
-                                                icon={Phone}
-                                            />
-                                            <DetailRow
-                                                label="Pekerjaan"
-                                                value={
-                                                    transaction.customer_occupation
-                                                }
-                                                icon={Briefcase}
-                                            />
-                                            <DetailRow
-                                                label="Jenis Transaksi"
-                                                value={
-                                                    <span
-                                                        className={`px-3 py-1 rounded-lg text-xs font-bold ${
+                                    {/* Right: Details & Actions */}
+                                    <div className="lg:col-span-7 p-8">
+                                        <div className="space-y-8">
+                                            {/* Customer Info */}
+                                            <div>
+                                                <h4 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                                    <User size={14} /> Customer
+                                                    Details
+                                                </h4>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <InfoBox
+                                                        label="Nama Lengkap"
+                                                        value={
+                                                            transaction.customer_name
+                                                        }
+                                                    />
+                                                    <InfoBox
+                                                        label="No. Telepon"
+                                                        value={
+                                                            transaction.customer_phone
+                                                        }
+                                                    />
+                                                    <InfoBox
+                                                        label="Pekerjaan"
+                                                        value={
+                                                            transaction.customer_occupation
+                                                        }
+                                                    />
+                                                    <InfoBox
+                                                        label="Metode Pembayaran"
+                                                        value={
                                                             isCredit
-                                                                ? "bg-purple-100 text-purple-700"
-                                                                : "bg-blue-100 text-blue-700"
-                                                        }`}
-                                                    >
-                                                        {isCredit
-                                                            ? "Kredit"
-                                                            : "Tunai"}
-                                                    </span>
-                                                }
-                                                icon={CreditCard}
-                                            />
-                                            <DetailRow
-                                                label="Status Order"
-                                                value={
-                                                    <span
-                                                        className={`px-3 py-1 rounded-lg text-xs font-bold ${statusInfo.color}`}
-                                                    >
-                                                        {formatStatusText(
-                                                            transaction.status
-                                                        )}
-                                                    </span>
-                                                }
-                                                icon={Info}
-                                            />
+                                                                ? "Kredit (Leasing)"
+                                                                : "Cash (Tunai)"
+                                                        }
+                                                        highlight={true}
+                                                    />
+                                                </div>
+                                            </div>
 
+                                            {/* Credit Spec (If Credit) */}
                                             {isCredit &&
                                                 transaction.credit_detail && (
-                                                    <>
-                                                        <div className="border-t border-gray-200 my-4 pt-4">
-                                                            <h4 className="font-bold text-sm text-gray-700 mb-3">
-                                                                Detail Kredit
-                                                            </h4>
-                                                            <DetailRow
-                                                                label="Down Payment (DP)"
+                                                    <div className="pt-6 border-t border-white/5 animate-pulse-once">
+                                                        <h4 className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                                            <CreditCard
+                                                                size={14}
+                                                            />{" "}
+                                                            Credit Simulation
+                                                        </h4>
+                                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                            <InfoBox
+                                                                label="Down Payment"
                                                                 value={formatCurrency(
                                                                     transaction
                                                                         .credit_detail
                                                                         .down_payment
                                                                 )}
                                                             />
-                                                            <DetailRow
-                                                                label="Cicilan/Bulan"
+                                                            <InfoBox
+                                                                label="Tenor"
+                                                                value={`${transaction.credit_detail.tenor} Bulan`}
+                                                            />
+                                                            <InfoBox
+                                                                label="Angsuran/Bulan"
                                                                 value={formatCurrency(
                                                                     transaction
                                                                         .credit_detail
                                                                         .monthly_installment
                                                                 )}
                                                             />
-                                                            <DetailRow
-                                                                label="Tenor"
-                                                                value={`${transaction.credit_detail.tenor} Bulan`}
-                                                            />
                                                         </div>
-                                                    </>
-                                                )}
-                                        </div>
-
-                                        {/* Document Upload CTA for Credit */}
-                                        {isCredit && (
-                                            <div className="mt-6 bg-blue-50 border border-blue-200 rounded-2xl p-5">
-                                                <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
-                                                    <FileText size={18} />{" "}
-                                                    Status Dokumen
-                                                </h4>
-
-                                                {/* Logic to check document completeness - simplified for frontend, assuming status passed or derived */}
-                                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                                    <div>
-                                                        <p className="text-sm text-blue-600 mb-1">
-                                                            {/* You might want to pass a 'hasRequiredDocuments' prop from controller */}
-                                                            Silakan lengkapi
-                                                            dokumen persyaratan
-                                                            kredit agar pesanan
-                                                            dapat segera
-                                                            diproses.
-                                                        </p>
                                                     </div>
-                                                    <Link
-                                                        href={route(
-                                                            "motors.manage-documents",
-                                                            transaction.id
-                                                        )}
-                                                        className="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 flex items-center gap-2 whitespace-nowrap"
-                                                    >
-                                                        <Upload size={16} />{" "}
-                                                        Kelola Dokumen
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        )}
+                                                )}
 
-                                        {/* Booking Fee Payment for Cash Order */}
-                                        {!isCredit &&
-                                            transaction.installments &&
-                                            transaction.installments.find(
-                                                (i) =>
-                                                    i.installment_number === 0
-                                            ) && (
-                                                <div
-                                                    className={`mt-6 border rounded-2xl p-5 ${
-                                                        transaction.installments.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                0
-                                                        ).status === "paid"
-                                                            ? "bg-green-50 border-green-200"
-                                                            : "bg-blue-50 border-blue-200"
-                                                    }`}
-                                                >
-                                                    <h4
-                                                        className={`font-bold mb-2 flex items-center gap-2 ${
-                                                            transaction.installments.find(
+                                            {/* Action Zone: Booking Fee / Status */}
+                                            <div className="bg-black/40 rounded-xl p-6 border border-white/10">
+                                                {!isCredit &&
+                                                    transaction.installments?.find(
+                                                        (i) =>
+                                                            i.installment_number ===
+                                                            0
+                                                    ) && (
+                                                        <CashPaymentModule
+                                                            installment={transaction.installments.find(
                                                                 (i) =>
                                                                     i.installment_number ===
                                                                     0
-                                                            ).status === "paid"
-                                                                ? "text-green-800"
-                                                                : "text-blue-800"
-                                                        }`}
-                                                    >
-                                                        {transaction.installments.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                0
-                                                        ).status === "paid" ? (
-                                                            <>
-                                                                <CheckCircle
-                                                                    size={18}
-                                                                />{" "}
-                                                                Booking Fee
-                                                                Lunas
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <CreditCard
-                                                                    size={18}
-                                                                />{" "}
-                                                                Booking Fee
-                                                            </>
-                                                        )}
-                                                    </h4>
-                                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                                        <div
-                                                            className={`text-sm ${
-                                                                transaction.installments.find(
+                                                            )}
+                                                            type="BOOKING FEE"
+                                                            isLoading={
+                                                                isLoadingPay
+                                                            }
+                                                            onPay={
+                                                                handleOnlinePayment
+                                                            }
+                                                            formatCurrency={
+                                                                formatCurrency
+                                                            }
+                                                        />
+                                                    )}
+
+                                                {/* If Cash & Booking Fee Paid, Show Pelunasan */}
+                                                {!isCredit &&
+                                                    transaction.installments?.find(
+                                                        (i) =>
+                                                            i.installment_number ===
+                                                            0
+                                                    )?.status === "paid" &&
+                                                    transaction.installments?.find(
+                                                        (i) =>
+                                                            i.installment_number ===
+                                                            1
+                                                    ) && (
+                                                        <div className="mt-6 pt-6 border-t border-white/10">
+                                                            <CashPaymentModule
+                                                                installment={transaction.installments.find(
                                                                     (i) =>
                                                                         i.installment_number ===
-                                                                        0
-                                                                ).status ===
-                                                                "paid"
-                                                                    ? "text-green-700"
-                                                                    : "text-blue-600"
-                                                            }`}
-                                                        >
-                                                            {transaction.installments.find(
-                                                                (i) =>
-                                                                    i.installment_number ===
-                                                                    0
-                                                            ).status ===
-                                                            "paid" ? (
-                                                                <span>
-                                                                    Terima
-                                                                    kasih!
-                                                                    Pembayaran
-                                                                    sebesar{" "}
-                                                                    <b>
-                                                                        {formatCurrency(
-                                                                            transaction.installments.find(
-                                                                                (
-                                                                                    i
-                                                                                ) =>
-                                                                                    i.installment_number ===
-                                                                                    0
-                                                                            )
-                                                                                .amount
-                                                                        )}
-                                                                    </b>{" "}
-                                                                    telah
-                                                                    diterima.
-                                                                    Unit motor
-                                                                    Anda sudah
-                                                                    diamankan
-                                                                    dan akan
-                                                                    segera
-                                                                    diproses.
-                                                                </span>
-                                                            ) : (
-                                                                <span>
-                                                                    Untuk
-                                                                    mengamankan
-                                                                    unit motor
-                                                                    ini, silakan
-                                                                    bayar
-                                                                    Booking Fee
-                                                                    sebesar:
-                                                                    <div className="text-xl font-bold text-blue-800 mt-1">
-                                                                        {formatCurrency(
-                                                                            transaction.installments.find(
-                                                                                (
-                                                                                    i
-                                                                                ) =>
-                                                                                    i.installment_number ===
-                                                                                    0
-                                                                            )
-                                                                                .amount
-                                                                        )}
-                                                                    </div>
-                                                                </span>
-                                                            )}
-                                                        </div>
-
-                                                        {/* Check Status */}
-                                                        {transaction.installments.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                0
-                                                        ).status === "paid" ? (
-                                                            <div className="px-5 py-3 bg-white rounded-xl shadow-sm border border-green-100 flex flex-col items-center">
-                                                                <span className="text-xs text-green-500 font-bold uppercase tracking-wider mb-1">
-                                                                    Status
-                                                                </span>
-                                                                <span className="text-green-600 font-black text-lg flex items-center gap-1">
-                                                                    PAID{" "}
-                                                                    <CheckCircle
-                                                                        size={
-                                                                            16
-                                                                        }
-                                                                        fill="currentColor"
-                                                                        className="text-green-200"
-                                                                    />
-                                                                </span>
-                                                            </div>
-                                                        ) : (
-                                                            <button
-                                                                onClick={() =>
-                                                                    handleOnlinePayment(
-                                                                        transaction.installments.find(
-                                                                            (
-                                                                                i
-                                                                            ) =>
-                                                                                i.installment_number ===
-                                                                                0
-                                                                        )
-                                                                    )
-                                                                }
-                                                                disabled={
+                                                                        1
+                                                                )}
+                                                                type="PELUNASAN UNIT"
+                                                                isLoading={
                                                                     isLoadingPay
                                                                 }
-                                                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 flex items-center gap-2"
-                                                            >
-                                                                {isLoadingPay
-                                                                    ? "Loading..."
-                                                                    : "Bayar Sekarang"}
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                        {/* Pelunasan Payment for Cash Order */}
-                                        {!isCredit &&
-                                            transaction.installments &&
-                                            transaction.installments.find(
-                                                (i) =>
-                                                    i.installment_number === 1
-                                            ) && (
-                                                <div
-                                                    className={`mt-4 border rounded-2xl p-5 ${
-                                                        transaction.installments.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                1
-                                                        ).status === "paid"
-                                                            ? "bg-green-50 border-green-200"
-                                                            : "bg-white border-gray-200"
-                                                    }`}
-                                                >
-                                                    <h4
-                                                        className={`font-bold mb-2 flex items-center gap-2 ${
-                                                            transaction.installments.find(
-                                                                (i) =>
-                                                                    i.installment_number ===
-                                                                    1
-                                                            ).status === "paid"
-                                                                ? "text-green-800"
-                                                                : "text-gray-800"
-                                                        }`}
-                                                    >
-                                                        {transaction.installments.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                1
-                                                        ).status === "paid" ? (
-                                                            <>
-                                                                <CheckCircle
-                                                                    size={18}
-                                                                />{" "}
-                                                                LUNAS
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <Wallet
-                                                                    size={18}
-                                                                />{" "}
-                                                                Pelunasan Unit
-                                                            </>
-                                                        )}
-                                                    </h4>
-                                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                                        <div className="text-sm text-gray-600">
-                                                            {transaction.installments.find(
-                                                                (i) =>
-                                                                    i.installment_number ===
-                                                                    1
-                                                            ).status ===
-                                                            "paid" ? (
-                                                                <span>
-                                                                    Seluruh
-                                                                    pembayaran
-                                                                    telah
-                                                                    diselesaikan.
-                                                                    Terima kasih
-                                                                    atas
-                                                                    kepercayaan
-                                                                    Anda!
-                                                                </span>
-                                                            ) : (
-                                                                <span>
-                                                                    Sisa
-                                                                    pembayaran
-                                                                    yang harus
-                                                                    diselesaikan:
-                                                                    <div className="text-xl font-bold text-gray-900 mt-1">
-                                                                        {formatCurrency(
-                                                                            transaction.installments.find(
-                                                                                (
-                                                                                    i
-                                                                                ) =>
-                                                                                    i.installment_number ===
-                                                                                    1
-                                                                            )
-                                                                                .amount
-                                                                        )}
-                                                                    </div>
-                                                                </span>
-                                                            )}
+                                                                onPay={
+                                                                    handleOnlinePayment
+                                                                }
+                                                                formatCurrency={
+                                                                    formatCurrency
+                                                                }
+                                                            />
                                                         </div>
+                                                    )}
 
-                                                        {/* Check Status */}
-                                                        {transaction.installments.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                1
-                                                        ).status === "paid" ? (
-                                                            <div className="px-5 py-3 bg-white rounded-xl shadow-sm border border-green-100 flex flex-col items-center">
-                                                                <span className="text-xs text-green-500 font-bold uppercase tracking-wider mb-1">
-                                                                    Status
-                                                                </span>
-                                                                <span className="text-green-600 font-black text-lg flex items-center gap-1">
-                                                                    PAID{" "}
-                                                                    <CheckCircle
-                                                                        size={
-                                                                            16
-                                                                        }
-                                                                        fill="currentColor"
-                                                                        className="text-green-200"
-                                                                    />
-                                                                </span>
+                                                {/* Credit Document CTA */}
+                                                {isCredit && (
+                                                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                                                        <div>
+                                                            <div className="text-white font-bold mb-1">
+                                                                Lengkapi Dokumen
                                                             </div>
-                                                        ) : (
-                                                            /* Check if Booking Fee (Inst 0) is paid or skipped */
-                                                            <>
-                                                                {!transaction.installments.find(
-                                                                    (i) =>
-                                                                        i.installment_number ===
-                                                                        0
-                                                                ) ||
-                                                                transaction.installments.find(
-                                                                    (i) =>
-                                                                        i.installment_number ===
-                                                                        0
-                                                                ).status ===
-                                                                    "paid" ? (
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            handleOnlinePayment(
-                                                                                transaction.installments.find(
-                                                                                    (
-                                                                                        i
-                                                                                    ) =>
-                                                                                        i.installment_number ===
-                                                                                        1
-                                                                                )
-                                                                            )
-                                                                        }
-                                                                        disabled={
-                                                                            isLoadingPay
-                                                                        }
-                                                                        className="px-6 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-colors shadow-lg flex items-center gap-2"
-                                                                    >
-                                                                        {isLoadingPay
-                                                                            ? "Loading..."
-                                                                            : "Bayar Pelunasan"}
-                                                                    </button>
-                                                                ) : (
-                                                                    <button
-                                                                        disabled
-                                                                        className="px-6 py-3 bg-gray-100 text-gray-400 rounded-xl font-bold cursor-not-allowed flex items-center gap-2 border border-gray-200"
-                                                                    >
-                                                                        <Lock
-                                                                            size={
-                                                                                18
-                                                                            }
-                                                                        />{" "}
-                                                                        Terkunci
-                                                                    </button>
-                                                                )}
-                                                            </>
-                                                        )}
+                                                            <div className="text-sm text-white/50">
+                                                                Upload KTP, KK,
+                                                                dan Slip Gaji
+                                                                untuk proses
+                                                                survey.
+                                                            </div>
+                                                        </div>
+                                                        <Link
+                                                            href={route(
+                                                                "motors.manage-documents",
+                                                                transaction.id
+                                                            )}
+                                                            className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2 whitespace-nowrap"
+                                                        >
+                                                            <Upload size={18} />{" "}
+                                                            Upload Dokumen
+                                                        </Link>
                                                     </div>
-                                                </div>
-                                            )}
+                                                )}
+                                            </div>
+
+                                            {/* Navigation Buttons */}
+                                            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                                                <Link
+                                                    href={route("home")}
+                                                    className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold transition-all flex items-center gap-2"
+                                                >
+                                                    <Home size={18} /> Beranda
+                                                </Link>
+                                                <Link
+                                                    href={route("motors.index")}
+                                                    className="px-8 py-3 bg-white text-black hover:bg-gray-200 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2"
+                                                >
+                                                    <ArrowRight size={18} />{" "}
+                                                    Cari Motor Lain
+                                                </Link>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="bg-gray-50 p-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-center gap-4">
-                                <Link
-                                    href={route("home")}
-                                    className="px-8 py-3 bg-white text-gray-700 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-colors flex items-center gap-2"
-                                >
-                                    <Home size={18} /> Kembali ke Beranda
-                                </Link>
-                                <Link
-                                    href={route("motors.index")}
-                                    className="px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue transition-colors shadow-lg hover:translate-y-[-2px] flex items-center gap-2"
-                                >
-                                    <ArrowRight size={18} /> Lihat Motor Lain
-                                </Link>
+                                {/* Decor: Barcode Line */}
+                                <div className="h-2 w-full bg-[repeating-linear-gradient(90deg,transparent,transparent_4px,#ffffff_4px,#ffffff_8px)] opacity-10"></div>
                             </div>
-                        </div>
+                        </motion.div>
                     </motion.div>
                 </div>
             </div>
@@ -734,15 +503,88 @@ export default function OrderConfirmation({ transaction }) {
     );
 }
 
-function DetailRow({ label, value, icon: Icon }) {
+// Subcomponents
+function InfoBox({ label, value, highlight = false }) {
     return (
-        <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2 text-gray-500 text-sm">
-                {Icon && <Icon size={14} />}
-                <span>{label}</span>
+        <div
+            className={`p-3 rounded-lg border ${
+                highlight
+                    ? "bg-white/5 border-white/20"
+                    : "bg-transparent border-transparent"
+            }`}
+        >
+            <div className="text-xs text-white/40 uppercase tracking-wide mb-1">
+                {label}
             </div>
-            <div className="text-gray-900 font-bold text-sm text-right">
+            <div
+                className={`font-medium ${
+                    highlight ? "text-accent" : "text-white"
+                }`}
+            >
                 {value}
+            </div>
+        </div>
+    );
+}
+
+function CashPaymentModule({
+    installment,
+    type,
+    isLoading,
+    onPay,
+    formatCurrency,
+}) {
+    const isPaid = installment.status === "paid";
+
+    return (
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+            <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                    {isPaid ? (
+                        <CheckCircle className="text-green-500" size={18} />
+                    ) : (
+                        <Wallet className="text-yellow-500" size={18} />
+                    )}
+                    <h5 className="font-bold text-white">{type}</h5>
+                </div>
+                <div className="text-2xl font-mono font-bold text-white tracking-tight">
+                    {formatCurrency(installment.amount)}
+                </div>
+                <p className="text-xs text-white/40 mt-1">
+                    {isPaid
+                        ? "Pembayaran telah diverifikasi."
+                        : "Segera selesaikan pembayaran untuk diproses."}
+                </p>
+            </div>
+
+            <div>
+                {isPaid ? (
+                    <span className="px-4 py-2 bg-green-500/20 border border-green-500/30 text-green-400 font-bold rounded-lg flex items-center gap-2">
+                        PAID{" "}
+                        <CheckCircle
+                            size={16}
+                            fill="currentColor"
+                            className="text-green-900"
+                        />
+                    </span>
+                ) : (
+                    <button
+                        onClick={() => onPay(installment)}
+                        disabled={isLoading}
+                        className="px-6 py-3 bg-accent hover:bg-lime-400 text-black font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(132,204,22,0.3)] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isLoading ? (
+                            <span className="flex items-center gap-2">
+                                <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
+                                Processing...
+                            </span>
+                        ) : (
+                            <>
+                                Bayar Sekarang <ArrowRight size={18} />
+                            </>
+                        )}
+                    </button>
+                )}
             </div>
         </div>
     );

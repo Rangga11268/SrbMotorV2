@@ -44,7 +44,7 @@ export default function MainLayout({ children, title }) {
     return (
         <>
             <Head title={title} />
-            <div className="min-h-screen flex flex-col font-sans text-text-main bg-surface-light selection:bg-primary selection:text-white">
+            <div className="min-h-screen flex flex-col font-sans text-text-main bg-surface-light selection:bg-primary selection:text-white overflow-x-hidden">
                 <Navbar />
                 <main className="flex-grow pt-24">{children}</main>
                 <Footer />

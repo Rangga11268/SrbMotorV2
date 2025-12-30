@@ -19,7 +19,6 @@ import {
     Sparkles,
     Zap,
     MapPin,
-    ArrowUpRight,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import ComparisonButton from "@/Components/ComparisonButton";
