@@ -7,12 +7,10 @@ import {
     Filter,
     Calendar,
     Info,
-    AlertCircle,
-    ShoppingCart,
-    CheckCircle,
-    ArrowRight,
-    ChevronDown,
-    ChevronUp,
+    ArrowUpRight,
+    CheckCircle2,
+    SlidersHorizontal,
+    X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ComparisonButton from "@/Components/ComparisonButton";
@@ -66,314 +64,197 @@ export default function Index({ motors, filters, brands, types, years }) {
     };
 
     return (
-        <MainLayout title="Semua Motor">
-            <div className="bg-gradient-to-br from-gray-50 to-blue-50/20 min-h-screen py-16">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center mb-12"
-                    >
-                        <span className="text-primary font-bold tracking-wider uppercase text-sm">
-                            Katalog Lengkap
-                        </span>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-2 mb-6">
-                            Temukan{" "}
-                            <span className="text-primary">Motor Impian</span>{" "}
-                            Anda
-                        </h1>
-                        <p className="text-gray-500 max-w-2xl mx-auto text-lg">
-                            Jelajahi berbagai pilihan motor berkualitas dengan
-                            harga terbaik dan proses yang mudah.
+        <MainLayout title="The Collection">
+            <div className="min-h-screen bg-surface-dark pt-24 pb-20">
+                {/* HEADLINE */}
+                <div className="container mx-auto px-4 mb-12">
+                    <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/10 pb-8">
+                        <div>
+                            <span className="text-accent font-bold tracking-[0.2em] uppercase text-sm mb-2 block animate-pulse">
+                                Premium Inventory
+                            </span>
+                            <h1 className="text-5xl md:text-8xl font-display font-black text-white tracking-tighter leading-none">
+                                THE{" "}
+                                <span className="text-transparent stroke-text-white">
+                                    FLEET
+                                </span>
+                            </h1>
+                        </div>
+                        <p className="text-gray-400 max-w-md text-right md:text-left">
+                            Curated for performance, inspected for perfection.{" "}
+                            <br />
+                            Find your next machine below.
                         </p>
-                    </motion.div>
+                    </div>
+                </div>
 
-                    <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 mb-12 border border-gray-100">
-                        <div
-                            className="flex items-center justify-between cursor-pointer md:cursor-default"
-                            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                        >
-                            <div className="flex items-center gap-2 text-gray-800 font-bold text-lg">
-                                <Filter size={20} className="text-primary" />{" "}
-                                Filter Pencarian
-                            </div>
-                            <div className="md:hidden text-gray-400">
-                                {isFiltersOpen ? (
-                                    <ChevronUp size={20} />
-                                ) : (
-                                    <ChevronDown size={20} />
-                                )}
+                {/* STICKY FILTER BAR */}
+                <div className="sticky top-20 z-30 bg-surface-dark/80 backdrop-blur-xl border-y border-white/10 py-4 mb-12">
+                    <div className="container mx-auto px-4">
+                        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                            {/* Mobile Toggle */}
+                            <button
+                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                className="md:hidden w-full flex items-center justify-between px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-bold"
+                            >
+                                <span className="flex items-center gap-2">
+                                    <SlidersHorizontal size={18} /> Filters
+                                </span>
+                                <span className="text-xs bg-accent text-black px-2 py-1 rounded-md">
+                                    {
+                                        Object.values(values).filter(Boolean)
+                                            .length
+                                    }{" "}
+                                    Active
+                                </span>
+                            </button>
+
+                            {/* Desktop Filters / Mobile Drawer Content */}
+                            <div
+                                className={`w-full md:flex md:items-center md:gap-4 ${
+                                    isFiltersOpen ? "block" : "hidden"
+                                } space-y-4 md:space-y-0`}
+                            >
+                                <div className="relative flex-grow max-w-md">
+                                    <Search
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+                                        size={18}
+                                    />
+                                    <input
+                                        type="text"
+                                        name="search"
+                                        value={values.search}
+                                        onChange={handleChange}
+                                        placeholder="Search model..."
+                                        className="w-full bg-black/20 border border-white/10 rounded-full pl-12 pr-4 py-2.5 text-white placeholder-gray-600 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"
+                                    />
+                                </div>
+
+                                <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+                                    <select
+                                        name="brand"
+                                        value={values.brand}
+                                        onChange={handleChange}
+                                        className="bg-black/20 border border-white/10 text-white text-sm rounded-full px-4 py-2.5 focus:border-accent outline-none cursor-pointer hover:bg-white/5 transition-colors appearance-none min-w-[120px]"
+                                    >
+                                        <option value="">All Brands</option>
+                                        {brands.map((b) => (
+                                            <option key={b} value={b}>
+                                                {b}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <select
+                                        name="type"
+                                        value={values.type}
+                                        onChange={handleChange}
+                                        className="bg-black/20 border border-white/10 text-white text-sm rounded-full px-4 py-2.5 focus:border-accent outline-none cursor-pointer hover:bg-white/5 transition-colors appearance-none min-w-[120px]"
+                                    >
+                                        <option value="">All Types</option>
+                                        {types.map((t) => (
+                                            <option key={t} value={t}>
+                                                {t}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <button
+                                        onClick={resetFilters}
+                                        className="p-2.5 rounded-full border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                                        title="Reset Filters"
+                                    >
+                                        <RotateCcw size={18} />
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <div
-                            className={`border-b border-gray-100 my-4 md:mb-8 md:mt-4 ${
-                                isFiltersOpen ? "block" : "hidden md:block"
-                            }`}
-                        ></div>
-
-                        <AnimatePresence>
-                            {(isFiltersOpen || window.innerWidth >= 768) && (
-                                <motion.div
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: "auto", opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className={`overflow-hidden md:!h-auto md:!opacity-100 ${
-                                        isFiltersOpen
-                                            ? "block"
-                                            : "hidden md:block"
-                                    }`}
-                                >
-                                    <div className="flex flex-col lg:flex-row gap-6 mb-8">
-                                        <div className="flex-grow relative">
-                                            <Search
-                                                className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                size={22}
-                                            />
-                                            <input
-                                                type="text"
-                                                name="search"
-                                                value={values.search}
-                                                onChange={handleChange}
-                                                placeholder="Cari berdasarkan nama motor..."
-                                                className="w-full pl-14 pr-6 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white text-lg"
-                                            />
-                                        </div>
-                                        <button
-                                            onClick={resetFilters}
-                                            className="px-8 py-4 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-red-500 hover:border-red-200 transition-all flex items-center justify-center gap-2 font-bold shadow-sm"
-                                        >
-                                            <RotateCcw size={20} /> Reset
-                                        </button>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                                Brand
-                                            </label>
-                                            <div className="relative">
-                                                <select
-                                                    name="brand"
-                                                    value={values.brand}
-                                                    onChange={handleChange}
-                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
-                                                >
-                                                    <option value="">
-                                                        Semua Brand
-                                                    </option>
-                                                    {brands.map((brand) => (
-                                                        <option
-                                                            key={brand}
-                                                            value={brand}
-                                                        >
-                                                            {brand}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                                                    <ArrowRight
-                                                        size={16}
-                                                        className="rotate-90"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                                Tipe
-                                            </label>
-                                            <div className="relative">
-                                                <select
-                                                    name="type"
-                                                    value={values.type}
-                                                    onChange={handleChange}
-                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
-                                                >
-                                                    <option value="">
-                                                        Semua Tipe
-                                                    </option>
-                                                    {types.map((type) => (
-                                                        <option
-                                                            key={type}
-                                                            value={type}
-                                                        >
-                                                            {type}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                                                    <ArrowRight
-                                                        size={16}
-                                                        className="rotate-90"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                                Tahun
-                                            </label>
-                                            <div className="relative">
-                                                <select
-                                                    name="year"
-                                                    value={values.year}
-                                                    onChange={handleChange}
-                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 appearance-none font-medium text-gray-700"
-                                                >
-                                                    <option value="">
-                                                        Semua Tahun
-                                                    </option>
-                                                    {years.map((year) => (
-                                                        <option
-                                                            key={year}
-                                                            value={year}
-                                                        >
-                                                            {year}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                                                    <ArrowRight
-                                                        size={16}
-                                                        className="rotate-90"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">
-                                                Range Harga (Juta)
-                                            </label>
-                                            <div className="flex gap-2 items-center">
-                                                <input
-                                                    type="number"
-                                                    name="min_price"
-                                                    value={values.min_price}
-                                                    onChange={handleChange}
-                                                    placeholder="Min"
-                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 text-sm font-medium"
-                                                />
-                                                <span className="text-gray-400">
-                                                    -
-                                                </span>
-                                                <input
-                                                    type="number"
-                                                    name="max_price"
-                                                    value={values.max_price}
-                                                    onChange={handleChange}
-                                                    placeholder="Max"
-                                                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none bg-gray-50 text-sm font-medium"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
                     </div>
+                </div>
 
+                {/* GRID GALLERY */}
+                <div className="container mx-auto px-4">
                     {motors.data.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                            <AnimatePresence>
-                                {motors.data.map((motor, index) => (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <AnimatePresence mode="popLayout">
+                                {motors.data.map((motor, i) => (
                                     <motion.div
+                                        layout
                                         key={motor.id}
-                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
                                         transition={{
                                             duration: 0.3,
-                                            delay: index * 0.05,
+                                            delay: i * 0.05,
                                         }}
-                                        className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden group flex flex-col h-full transform hover:-translate-y-2 ${
-                                            !motor.tersedia
-                                                ? "opacity-80 grayscale"
-                                                : ""
-                                        }`}
+                                        className="group relative bg-zinc-900 rounded-3xl overflow-hidden border border-white/5 hover:border-accent/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(190,242,100,0.1)]"
                                     >
-                                        <div className="relative h-64 bg-gradient-to-br from-gray-50 to-white p-6 flex items-center justify-center overflow-hidden">
-                                            <div className="absolute top-4 left-4 z-10">
-                                                <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-gray-700 shadow-sm border border-gray-100">
+                                        {/* Image Area */}
+                                        <div className="aspect-[4/3] bg-zinc-800 relative overflow-hidden">
+                                            <img
+                                                src={`/storage/${motor.image_path}`}
+                                                alt={motor.name}
+                                                className={`w-full h-full object-cover transition-all duration-700 ${
+                                                    !motor.tersedia
+                                                        ? "grayscale brightness-50"
+                                                        : "group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                                }`}
+                                            />
+
+                                            {/* Overlays */}
+                                            <div className="absolute top-4 left-4">
+                                                <span className="px-3 py-1 bg-black/60 backdrop-blur-md rounded-full text-xs font-bold text-white border border-white/10 uppercase tracking-wider">
                                                     {motor.brand}
                                                 </span>
                                             </div>
 
-                                            <img
-                                                src={`/storage/${motor.image_path}`}
-                                                alt={motor.name}
-                                                className="max-h-full max-w-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-500"
-                                            />
+                                            <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                <ComparisonButton
+                                                    motor={motor}
+                                                    showText={false}
+                                                    className="!bg-black/50 !backdrop-blur-md !border-white/20 hover:!bg-accent hover:!text-black"
+                                                />
+                                            </div>
 
                                             {!motor.tersedia && (
-                                                <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-20">
-                                                    <div className="bg-red-500 text-white px-4 py-2 rounded-full font-bold shadow-lg transform rotate-[-12deg] border-2 border-white">
-                                                        Terjual / Tidak Tersedia
-                                                    </div>
+                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                    <span className="text-3xl font-display font-black text-red-500 border-4 border-red-500 px-6 py-2 -rotate-12 uppercase tracking-tight">
+                                                        SOLD OUT
+                                                    </span>
                                                 </div>
                                             )}
                                         </div>
 
-                                        <div className="p-6 flex-grow flex flex-col">
-                                            <div className="flex justify-between items-start mb-2">
-                                                <h3 className="text-xl font-extrabold text-gray-900 line-clamp-1 group-hover:text-primary transition-colors">
-                                                    {motor.name}
-                                                </h3>
+                                        {/* Content Area */}
+                                        <div className="p-6">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div>
+                                                    <p className="text-xs text-gray-500 mb-1">
+                                                        {motor.year} •{" "}
+                                                        {motor.type}
+                                                    </p>
+                                                    <h3 className="text-lg font-bold text-white leading-tight group-hover:text-accent transition-colors">
+                                                        {motor.name}
+                                                    </h3>
+                                                </div>
                                             </div>
 
-                                            <div className="text-2xl font-bold text-primary mb-4">
-                                                Rp{" "}
-                                                {new Intl.NumberFormat(
-                                                    "id-ID"
-                                                ).format(motor.price)}
-                                            </div>
-
-                                            <div className="flex flex-wrap gap-2 text-sm text-gray-500 mb-6">
-                                                <span className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-lg font-medium text-gray-600">
-                                                    <Calendar
-                                                        size={14}
-                                                        className="text-primary"
-                                                    />{" "}
-                                                    {motor.year}
-                                                </span>
-                                                <span className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-lg font-medium text-gray-600">
-                                                    <Info
-                                                        size={14}
-                                                        className="text-primary"
-                                                    />
-                                                    {motor.type}
-                                                </span>
-                                                {motor.tersedia && (
-                                                    <span className="flex items-center gap-1.5 bg-green-50 border border-green-100 px-3 py-1.5 rounded-lg font-medium text-green-700">
-                                                        <CheckCircle
-                                                            size={14}
-                                                        />{" "}
-                                                        Tersedia
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <div className="mt-auto pt-4 border-t border-gray-50 flex gap-2">
-                                                <ComparisonButton
-                                                    motor={motor}
-                                                    className="flex-none"
-                                                    showText={false}
-                                                />
+                                            <div className="flex items-end justify-between border-t border-white/5 pt-4">
+                                                <div className="text-xl font-display font-bold text-white">
+                                                    Rp{" "}
+                                                    {parseFloat(
+                                                        motor.price
+                                                    ).toLocaleString("id-ID")}
+                                                </div>
                                                 <Link
                                                     href={route(
                                                         "motors.show",
                                                         motor.id
                                                     )}
-                                                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wider transition-all shadow-lg ${
-                                                        motor.tersedia
-                                                            ? "bg-dark-blue text-white hover:bg-primary shadow-blue-900/10 hover:shadow-primary/30"
-                                                            : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                                                    }`}
+                                                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-accent group-hover:text-black transition-all duration-300"
                                                 >
-                                                    Lihat Detail
+                                                    <ArrowUpRight size={20} />
                                                 </Link>
                                             </div>
                                         </div>
@@ -382,41 +263,43 @@ export default function Index({ motors, filters, brands, types, years }) {
                             </AnimatePresence>
                         </div>
                     ) : (
-                        <div className="text-center py-24 bg-white rounded-[2.5rem] shadow-lg border border-gray-100">
-                            <div className="bg-gray-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Search size={40} className="text-gray-300" />
+                        <div className="min-h-[40vh] flex flex-col items-center justify-center text-center border-2 border-dashed border-white/10 rounded-[3rem] p-12">
+                            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center text-gray-500 mb-6">
+                                <Search size={32} />
                             </div>
-                            <h3 className="text-3xl font-bold text-gray-900 mb-3">
-                                Tidak ada motor ditemukan
+                            <h3 className="text-2xl font-bold text-white mb-2">
+                                No Motors Found
                             </h3>
-                            <p className="text-gray-500 max-w-md mx-auto mb-8">
-                                Coba ubah kata kunci pencarian atau reset filter
-                                untuk melihat lebih banyak pilihan.
+                            <p className="text-gray-500 mb-8">
+                                Try adjusting your filters or search terms.
                             </p>
                             <button
                                 onClick={resetFilters}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-full font-bold hover:bg-dark-blue transition-colors shadow-lg shadow-primary/30"
+                                className="px-8 py-3 bg-accent text-black font-bold rounded-full hover:bg-white transition-colors"
                             >
-                                <RotateCcw size={18} /> Reset Filter
+                                Clear All Filters
                             </button>
                         </div>
                     )}
 
+                    {/* PAGINATION */}
                     {motors.links && motors.links.length > 3 && (
-                        <div className="mt-16 flex justify-center flex-wrap gap-2">
+                        <div className="mt-20 flex justify-center flex-wrap gap-2">
                             {motors.links.map((link, k) => (
                                 <Link
                                     key={k}
                                     href={link.url || "#"}
-                                    className={`px-5 py-3 rounded-xl font-bold text-sm transition-all ${
+                                    className={`w-12 h-12 flex items-center justify-center rounded-full font-bold text-sm transition-all border ${
                                         link.active
-                                            ? "bg-primary text-white shadow-lg shadow-primary/30 scale-105"
+                                            ? "bg-accent text-black border-accent"
                                             : link.url
-                                            ? "bg-white text-gray-600 hover:bg-gray-50 hover:text-primary border border-gray-200 shadow-sm"
-                                            : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                                            ? "bg-transparent text-gray-500 border-white/10 hover:border-white hover:text-white"
+                                            : "opacity-30 cursor-not-allowed border-transparent text-gray-600"
                                     }`}
                                     dangerouslySetInnerHTML={{
-                                        __html: link.label,
+                                        __html: link.label
+                                            .replace("Previous", "&laquo;")
+                                            .replace("Next", "&raquo;"),
                                     }}
                                 />
                             ))}
