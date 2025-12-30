@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 @import "./style.css";
 
@@ -8,19 +8,42 @@
 @source '../**/*.js';
 @source '../**/*.jsx';
 
-/* Custom variants and theme configuration must come after imports but are handled by Tailwind v4 compiler */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-        "Noto Color Emoji";
+    --font-display: "Syne", sans-serif;
+    --font-body: "Space Grotesk", sans-serif;
+    --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 
-    --color-primary: #4a90e2;
-    --color-primary-dark: #357abd;
-    --color-light-blue: #d6eaf8;
-    --color-dark-blue: #043680;
-    --color-dark-blue-hover: #032a60;
+    --color-primary: #ffffff;
+    --color-surface-dark: #000000;
+    --color-surface-light: #09090b;
+    --color-accent: #bef264;
+    --color-accent-purple: #a855f7;
+    --color-text-main: #ffffff;
+    --color-text-muted: #a1a1aa;
+
+    --shadow-neon: 0 0 20px -5px rgba(190, 242, 100, 0.5);
+}
+
+@layer utilities {
+    .glass-panel {
+        @apply bg-zinc-900/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+    }
+    .text-display {
+        font-family: var(--font-display);
+    }
+    .noise-bg {
+        position: relative;
+    }
+    .noise-bg::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 50;
+    }
 }
 
 @keyframes float {
@@ -29,7 +52,7 @@
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-20px);
+        transform: translateY(-10px);
     }
 }
 

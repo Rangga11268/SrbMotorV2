@@ -16,7 +16,7 @@ export default function MainLayout({ children, title }) {
                 e.preventDefault();
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    const headerOffset = 80;
+                    const headerOffset = 100;
                     const elementPosition =
                         targetElement.getBoundingClientRect().top;
                     const offsetPosition =
@@ -29,32 +29,36 @@ export default function MainLayout({ children, title }) {
             }
         };
 
-        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-            anchor.addEventListener("click", handleAnchorClick);
-        });
+        const anchors = document.querySelectorAll('a[href^="#"]');
+        anchors.forEach((anchor) =>
+            anchor.addEventListener("click", handleAnchorClick)
+        );
 
         return () => {
-            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-                anchor.removeEventListener("click", handleAnchorClick);
-            });
+            anchors.forEach((anchor) =>
+                anchor.removeEventListener("click", handleAnchorClick)
+            );
         };
     }, []);
 
     return (
         <>
             <Head title={title} />
-
-            <div className="min-h-screen flex flex-col font-sans text-gray-900 bg-white">
+            <div className="min-h-screen flex flex-col font-sans text-text-main bg-surface-light selection:bg-primary selection:text-white">
                 <Navbar />
-
-                <main className="flex-grow">{children}</main>
-
+                <main className="flex-grow pt-24">{children}</main>
                 <Footer />
-
-                <Toaster position="top-right" />
-
+                <Toaster
+                    position="top-center"
+                    toastOptions={{
+                        className: "!rounded-2xl !font-medium !shadow-xl",
+                        style: {
+                            background: "#1e293b",
+                            color: "#fff",
+                        },
+                    }}
+                />
                 <FloatingWhatsApp />
-
                 <ComparisonFloatingBar />
             </div>
         </>

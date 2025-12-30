@@ -8,8 +8,8 @@ import {
     LayoutDashboard,
     List,
     UserCircle,
-    ChevronDown,
-    CreditCard,
+    ShoppingBag,
+    Sparkles,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,340 +20,259 @@ export default function Navbar() {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-    const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
-
-    const navLinkClasses = (isActive) =>
-        `relative px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
-            isActive || isScrolled
-                ? "text-gray-800 hover:bg-gray-100"
-                : "text-gray-800 hover:bg-white/20"
-        }`;
+    const navLinks = [
+        { href: "/#home", label: "Home" },
+        { href: "/about", label: "Studio" },
+        { href: "/motors", label: "Collection" },
+    ];
 
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
-                isScrolled
-                    ? "bg-white/80 backdrop-blur-xl shadow-lg py-3 border-b border-gray-100/50"
-                    : "bg-transparent py-4"
+            className={`fixed top-0 inset-x-0 z-50 flex justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                isScrolled ? "py-4" : "py-8"
             }`}
         >
-            <div className="container mx-auto px-6 max-w-7xl flex justify-between items-center">
-                {/* Logo */}
-                <Link
-                    href="/"
-                    className="flex items-center text-3xl font-extrabold text-dark-blue tracking-tight hover:scale-[1.02] transition-transform"
-                >
-                    <img
-                        src="/assets/icon/logo trans.png"
-                        alt="SRB Motors"
-                        className="h-10 mr-2 drop-shadow-md"
-                    />
-                    SRB<span className="text-primary italic">Motors</span>
-                </Link>
+            <div
+                className={`flex items-center justify-between transition-all duration-700 backdrop-blur-3xl border shadow-2xl relative overflow-hidden group ${
+                    isScrolled
+                        ? "w-[90%] md:w-[850px] h-16 rounded-full bg-black/80 border-white/10"
+                        : "w-[95%] md:w-[1200px] h-20 rounded-2xl bg-black/40 border-white/5"
+                }`}
+            >
+                {/* Noise Texture Overlay */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none noise-bg mix-blend-overlay"></div>
 
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-1 bg-white/50 backdrop-blur-md p-1.5 rounded-full border border-white/20 shadow-sm">
-                    <Link href="/#home" className={navLinkClasses(false)}>
-                        Home
+                {/* Grid Container */}
+                <div className="w-full h-full grid grid-cols-[auto_1fr_auto] md:grid-cols-3 items-center px-6">
+                    {/* Logo - Left Align */}
+                    <Link
+                        href="/"
+                        className="relative z-10 flex items-center gap-2 group/logo justify-self-start"
+                    >
+                        <div
+                            className={`flex items-center justify-center transition-all duration-500 ${
+                                isScrolled ? "scale-90" : "scale-100"
+                            }`}
+                        >
+                            <Sparkles
+                                size={isScrolled ? 18 : 22}
+                                className="text-accent animate-pulse"
+                            />
+                        </div>
+                        <span
+                            className={`font-display font-extrabold tracking-tight text-white transition-all duration-500 ${
+                                isScrolled ? "text-lg" : "text-2xl"
+                            }`}
+                        >
+                            SRB
+                        </span>
                     </Link>
-                    <Link href="/about" className={navLinkClasses(false)}>
-                        Tentang Kami
-                    </Link>
-                    <Link href="/motors" className={navLinkClasses(false)}>
-                        Katalog Motor
-                    </Link>
-                </nav>
 
-                {/* Auth Buttons / User Menu */}
-                <div className="hidden md:flex items-center gap-4">
-                    {auth.user ? (
-                        <div className="relative">
-                            <button
-                                onClick={toggleUserMenu}
-                                className={`flex items-center gap-2 px-1 pr-3 py-1 rounded-full transition-all border ${
-                                    isScrolled
-                                        ? "bg-gray-50 border-gray-200 hover:border-primary/50"
-                                        : "bg-white/80 border-white/50 hover:bg-white shadow-sm"
+                    {/* Desktop Nav - Center Align */}
+                    <nav className="hidden md:flex items-center justify-center gap-8 justify-self-center">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={`relative text-sm font-medium transition-colors hover:text-accent font-body tracking-wide ${
+                                    isScrolled ? "text-gray-400" : "text-white"
                                 }`}
                             >
-                                <div className="w-9 h-9 bg-gradient-to-br from-primary to-dark-blue rounded-full text-white flex items-center justify-center shadow-md">
-                                    <span className="font-bold text-sm">
+                                {link.label}
+                            </Link>
+                        ))}
+                    </nav>
+
+                    {/* Right Actions - Right Align */}
+                    <div className="relative z-10 flex items-center justify-end gap-3 justify-self-end">
+                        {auth.user ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() =>
+                                        setIsUserMenuOpen(!isUserMenuOpen)
+                                    }
+                                    className="flex items-center gap-2 pr-2 pl-2 py-1.5 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/5"
+                                >
+                                    <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-black font-bold text-xs">
                                         {auth.user.name.charAt(0)}
-                                    </span>
-                                </div>
-                                <span className="font-bold text-sm text-gray-700 max-w-[100px] truncate">
-                                    {auth.user.name.split(" ")[0]}
-                                </span>
-                                <ChevronDown
-                                    size={14}
-                                    className="text-gray-400"
-                                />
-                            </button>
-
-                            {/* Desktop Dropdown */}
-                            <AnimatePresence>
-                                {isUserMenuOpen && (
-                                    <motion.div
-                                        initial={{
-                                            opacity: 0,
-                                            y: 15,
-                                            scale: 0.95,
-                                        }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{
-                                            opacity: 0,
-                                            y: 10,
-                                            scale: 0.95,
-                                        }}
-                                        transition={{ duration: 0.2 }}
-                                        className="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl py-2 border border-white/50 overflow-hidden ring-1 ring-black/5"
+                                    </div>
+                                    <span
+                                        className={`text-xs font-bold text-white max-w-[80px] truncate ${
+                                            isScrolled
+                                                ? "hidden lg:block"
+                                                : "block"
+                                        }`}
                                     >
-                                        <div className="px-5 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
-                                            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">
-                                                Akun Saya
-                                            </p>
-                                            <p className="font-bold text-gray-900 truncate text-base">
-                                                {auth.user.name}
-                                            </p>
-                                            <p className="text-xs text-primary truncate">
-                                                {auth.user.email}
-                                            </p>
-                                        </div>
+                                        {auth.user.name.split(" ")[0]}
+                                    </span>
+                                </button>
 
-                                        <div className="p-2">
-                                            <Link
-                                                href={route("profile.show")}
-                                                className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-blue-50 hover:text-primary transition-all"
-                                            >
-                                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-gray-500 group-hover:text-primary">
-                                                    <UserCircle size={18} />
-                                                </div>
-                                                Profil Saya
-                                            </Link>
-                                            <Link
-                                                href={route(
-                                                    "motors.user-transactions"
-                                                )}
-                                                className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-blue-50 hover:text-primary transition-all"
-                                            >
-                                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-gray-500 group-hover:text-primary">
-                                                    <List size={18} />
-                                                </div>
-                                                Riwayat Pesanan
-                                            </Link>
-                                            <Link
-                                                href={route(
-                                                    "installments.index"
-                                                )}
-                                                className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-blue-50 hover:text-primary transition-all"
-                                            >
-                                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-gray-500 group-hover:text-primary">
-                                                    <CreditCard size={18} />
-                                                </div>
-                                                Cicilan Saya
-                                            </Link>
+                                <AnimatePresence>
+                                    {isUserMenuOpen && (
+                                        <motion.div
+                                            initial={{
+                                                opacity: 0,
+                                                y: 15,
+                                                scale: 0.9,
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                y: 0,
+                                                scale: 1,
+                                            }}
+                                            exit={{
+                                                opacity: 0,
+                                                y: 15,
+                                                scale: 0.9,
+                                            }}
+                                            className="absolute right-0 top-full mt-4 w-56 bg-zinc-900 border border-white/10 rounded-2xl shadow-neon overflow-hidden p-1.5"
+                                        >
+                                            <div className="px-3 py-2 border-b border-white/5 mb-2">
+                                                <p className="text-[10px] font-bold text-accent uppercase tracking-wider">
+                                                    Account
+                                                </p>
+                                                <p className="text-xs font-medium text-white truncate">
+                                                    {auth.user.email}
+                                                </p>
+                                            </div>
+                                            {[
+                                                {
+                                                    href: route("profile.show"),
+                                                    label: "Profile",
+                                                    icon: UserCircle,
+                                                },
+                                                {
+                                                    href: route(
+                                                        "motors.user-transactions"
+                                                    ),
+                                                    label: "Orders",
+                                                    icon: List,
+                                                },
+                                            ].map((item, idx) => (
+                                                <Link
+                                                    key={idx}
+                                                    href={item.href}
+                                                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium"
+                                                >
+                                                    <item.icon size={14} />{" "}
+                                                    {item.label}
+                                                </Link>
+                                            ))}
 
                                             {auth.user.role === "admin" && (
                                                 <Link
                                                     href={route(
                                                         "admin.dashboard"
                                                     )}
-                                                    className="group flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all"
+                                                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent/10 text-accent transition-colors text-xs font-medium mt-1"
                                                 >
-                                                    <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all text-orange-500">
-                                                        <LayoutDashboard
-                                                            size={18}
-                                                        />
-                                                    </div>
-                                                    Admin Panel
+                                                    <LayoutDashboard
+                                                        size={14}
+                                                    />{" "}
+                                                    Admin Dashboard
                                                 </Link>
                                             )}
-                                        </div>
 
-                                        <div className="border-t border-gray-100 mt-1 p-2">
+                                            <div className="h-px bg-white/5 my-1.5" />
                                             <Link
                                                 href={route("logout")}
                                                 method="post"
                                                 as="button"
-                                                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 rounded-xl hover:bg-red-50 transition-all"
+                                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 text-red-400 hover:text-red-500 transition-colors text-xs font-bold"
                                             >
-                                                <LogOut size={18} />
-                                                Keluar
+                                                <LogOut size={14} /> Sign Out
                                             </Link>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-3">
-                            <Link
-                                href={route("login")}
-                                className="px-6 py-2.5 rounded-full font-bold text-sm bg-white/80 backdrop-blur-sm border border-white/50 text-gray-800 hover:bg-white transition-all shadow-sm hover:shadow-md"
-                            >
-                                Masuk
-                            </Link>
-                            <Link
-                                href={route("register")}
-                                className="px-6 py-2.5 rounded-full font-bold text-sm bg-primary text-white hover:bg-dark-blue transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5"
-                            >
-                                Daftar
-                            </Link>
-                        </div>
-                    )}
-                </div>
-
-                {/* Mobile Menu Button */}
-                <div className="md:hidden">
-                    <button
-                        onClick={toggleMobileMenu}
-                        className={`p-2 rounded-xl transition-all ${
-                            isScrolled
-                                ? "bg-gray-100 text-gray-800"
-                                : "bg-white/20 text-gray-800 backdrop-blur-sm"
-                        }`}
-                    >
-                        {isMobileMenuOpen ? (
-                            <X size={24} />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         ) : (
-                            <Menu size={24} />
+                            <div className="flex items-center gap-3">
+                                <Link
+                                    href={route("login")}
+                                    className={`text-xs font-bold uppercase tracking-wider hover:text-accent transition-colors ${
+                                        isScrolled
+                                            ? "text-gray-400"
+                                            : "text-white"
+                                    }`}
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    href={route("register")}
+                                    className="px-4 py-1.5 bg-white text-black rounded-full text-xs font-bold hover:bg-accent transition-colors"
+                                >
+                                    Join
+                                </Link>
+                            </div>
                         )}
-                    </button>
+
+                        {/* Mobile Toggle */}
+                        <button
+                            onClick={() =>
+                                setIsMobileMenuOpen(!isMobileMenuOpen)
+                            }
+                            className="md:hidden p-1.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                        >
+                            {isMobileMenuOpen ? (
+                                <X size={18} />
+                            ) : (
+                                <Menu size={18} />
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
+            {/* Mobile Menu Fullscreen Overlay */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-xl overflow-hidden rounded-b-[2rem]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-40 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-center md:hidden"
                     >
-                        <div className="p-6 space-y-2">
-                            <Link
-                                href="/#home"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="block px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-800 font-bold"
-                            >
-                                Home
-                            </Link>
-                            <Link
-                                href="/about"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="block px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-800 font-bold"
-                            >
-                                Tentang Kami
-                            </Link>
-                            <Link
-                                href="/motors"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="block px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-800 font-bold"
-                            >
-                                Katalog Motor
-                            </Link>
+                        <nav className="flex flex-col gap-6 text-center">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="text-4xl font-display font-black text-white hover:text-accent transition-colors"
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+                            {!auth.user && (
+                                <div className="flex flex-col gap-4 mt-8">
+                                    <Link
+                                        href={route("login")}
+                                        className="text-xl font-body text-gray-400 hover:text-white"
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        href={route("register")}
+                                        className="px-8 py-3 bg-accent text-black rounded-full font-bold"
+                                    >
+                                        Start Now
+                                    </Link>
+                                </div>
+                            )}
+                        </nav>
 
-                            <div className="border-t border-gray-100 my-2 pt-2">
-                                {auth.user ? (
-                                    <>
-                                        <div className="px-4 py-2 flex items-center gap-3 mb-2">
-                                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
-                                                {auth.user.name.charAt(0)}
-                                            </div>
-                                            <div>
-                                                <p className="font-bold text-gray-900">
-                                                    {auth.user.name}
-                                                </p>
-                                                <p className="text-xs text-gray-500">
-                                                    {auth.user.email}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <Link
-                                            href={route("profile.show")}
-                                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-600 hover:text-primary font-medium"
-                                            onClick={() =>
-                                                setIsMobileMenuOpen(false)
-                                            }
-                                        >
-                                            <UserCircle size={18} /> Profil Saya
-                                        </Link>
-                                        <Link
-                                            href={route(
-                                                "motors.user-transactions"
-                                            )}
-                                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-600 hover:text-primary font-medium"
-                                            onClick={() =>
-                                                setIsMobileMenuOpen(false)
-                                            }
-                                        >
-                                            <List size={18} /> Riwayat Pesanan
-                                        </Link>
-                                        <Link
-                                            href={route("installments.index")}
-                                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-600 hover:text-primary font-medium"
-                                            onClick={() =>
-                                                setIsMobileMenuOpen(false)
-                                            }
-                                        >
-                                            <CreditCard size={18} /> Cicilan
-                                            Saya
-                                        </Link>
-                                        {auth.user.role === "admin" && (
-                                            <Link
-                                                href={route("admin.dashboard")}
-                                                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-orange-50 text-gray-600 hover:text-orange-500 font-medium"
-                                                onClick={() =>
-                                                    setIsMobileMenuOpen(false)
-                                                }
-                                            >
-                                                <LayoutDashboard size={18} />{" "}
-                                                Admin Panel
-                                            </Link>
-                                        )}
-                                        <Link
-                                            href={route("logout")}
-                                            method="post"
-                                            as="button"
-                                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 font-bold mt-2"
-                                        >
-                                            <LogOut size={18} /> Keluar
-                                        </Link>
-                                    </>
-                                ) : (
-                                    <div className="grid grid-cols-2 gap-4 mt-4">
-                                        <Link
-                                            href={route("login")}
-                                            onClick={() =>
-                                                setIsMobileMenuOpen(false)
-                                            }
-                                            className="py-3 text-center rounded-xl font-bold bg-gray-100 text-gray-800 hover:bg-gray-200"
-                                        >
-                                            Masuk
-                                        </Link>
-                                        <Link
-                                            href={route("register")}
-                                            onClick={() =>
-                                                setIsMobileMenuOpen(false)
-                                            }
-                                            className="py-3 text-center rounded-xl font-bold bg-primary text-white hover:bg-dark-blue shadow-lg"
-                                        >
-                                            Daftar
-                                        </Link>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        <button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="absolute bottom-10 p-4 rounded-full bg-white/10 text-white hover:bg-red-500/20 hover:text-red-500 transition-colors"
+                        >
+                            <X size={32} />
+                        </button>
                     </motion.div>
                 )}
             </AnimatePresence>

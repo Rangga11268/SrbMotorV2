@@ -7,116 +7,129 @@ import {
     Mail,
     MapPin,
     ArrowRight,
+    Sparkles,
 } from "lucide-react";
 
 export default function Footer() {
     return (
-        <section className="bg-gray-900 border-t border-gray-800 pt-16 pb-8 text-gray-300 font-sans">
-            <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {/* Logo Box */}
-                <div className="flex flex-col items-start">
-                    <div className="flex items-center gap-2 mb-4">
-                        <img
-                            src="/assets/icon/logo trans.png"
-                            alt="SRB Motors Logo"
-                            className="h-12"
-                        />
-                        <h3 className="text-2xl font-bold text-white">
-                            SRB <span className="text-primary">MOTORS</span>
-                        </h3>
+        <footer className="bg-black text-white pt-24 pb-12 overflow-hidden relative">
+            {/* Background Gradients */}
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+            <div className="container mx-auto px-6 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-24">
+                    {/* Left Brand Area */}
+                    <div className="md:col-span-5 space-y-8">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5">
+                            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                            <span className="text-xs font-bold tracking-widest uppercase text-gray-400">
+                                Trusted Dealer
+                            </span>
+                        </div>
+                        <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
+                            Find your dream ride <br />
+                            <span className="text-gray-500">starts here.</span>
+                        </h2>
+                        <div className="flex gap-4">
+                            <a
+                                href="#"
+                                className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-accent hover:text-black hover:border-accent transition-all duration-300"
+                            >
+                                <Instagram size={20} />
+                            </a>
+                            <a
+                                href="#"
+                                className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-accent hover:text-black hover:border-accent transition-all duration-300"
+                            >
+                                <Facebook size={20} />
+                            </a>
+                        </div>
                     </div>
-                    <p className="text-gray-400 text-sm leading-relaxed">
-                        Mitra terpercaya Anda dalam menemukan motor impian.
-                        Kualitas terjamin, harga kompetitif.
-                    </p>
+
+                    {/* Links */}
+                    <div className="md:col-span-3 md:col-start-7">
+                        <h4 className="font-body text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">
+                            Menu
+                        </h4>
+                        <ul className="space-y-4">
+                            <li>
+                                <Link
+                                    href="/#home"
+                                    className="text-lg font-display font-medium hover:text-accent transition-colors"
+                                >
+                                    Home
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/motors"
+                                    className="text-lg font-display font-medium hover:text-accent transition-colors"
+                                >
+                                    Collection
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/about"
+                                    className="text-lg font-display font-medium hover:text-accent transition-colors"
+                                >
+                                    Studio
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div className="md:col-span-3">
+                        <h4 className="font-body text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">
+                            Contact
+                        </h4>
+                        <ul className="space-y-4">
+                            <li className="flex flex-col gap-1">
+                                <span className="text-sm text-gray-400">
+                                    WhatsApp
+                                </span>
+                                <a
+                                    href="tel:08978638849"
+                                    className="text-lg font-display font-medium hover:text-accent transition-colors"
+                                >
+                                    089-7863-8849
+                                </a>
+                            </li>
+                            <li className="flex flex-col gap-1">
+                                <span className="text-sm text-gray-400">
+                                    Email
+                                </span>
+                                <a
+                                    href="mailto:darrelrangga@gmail.com"
+                                    className="text-lg font-display font-medium hover:text-accent transition-colors"
+                                >
+                                    hello@srbmotors.id
+                                </a>
+                            </li>
+                            <li className="flex flex-col gap-1">
+                                <span className="text-sm text-gray-400">
+                                    Location
+                                </span>
+                                <span className="text-sm text-gray-300 leading-relaxed">
+                                    Jl. Lori Sakti No. 22, Bekasi Utara,
+                                    <br /> Indonesia
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                {/* Branches */}
-                <div className="flex flex-col">
-                    <h3 className="text-xl font-bold text-white mb-6 uppercase tracking-wider">
-                        Cabang Kami
-                    </h3>
-                    <a
-                        href="#"
-                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
-                    >
-                        <MapPin size={18} className="text-primary" /> Bekasi
-                    </a>
-                </div>
-
-                {/* Quick Links */}
-                <div className="flex flex-col">
-                    <h3 className="text-xl font-bold text-white mb-6 uppercase tracking-wider">
-                        Quick Links
-                    </h3>
-                    {[
-                        { href: "/#home", label: "Home" },
-                        { href: "/#advantages", label: "Keunggulan" },
-                        { href: "/#popular-motors", label: "Motor Populer" },
-                        { href: "/about", label: "Tentang Kami" },
-                        { href: "/motors", label: "Galeri" },
-                        { href: "/#contact", label: "Kontak" },
-                    ].map((link, index) => (
-                        <Link
-                            key={index}
-                            href={link.href}
-                            className="flex items-center gap-2 hover:text-primary transition-colors mb-3 group"
-                        >
-                            <ArrowRight
-                                size={14}
-                                className="text-primary transition-transform group-hover:translate-x-1"
-                            />
-                            {link.label}
-                        </Link>
-                    ))}
-                </div>
-
-                {/* Contact Info */}
-                <div className="flex flex-col">
-                    <h3 className="text-xl font-bold text-white mb-6 uppercase tracking-wider">
-                        Contact Info
-                    </h3>
-                    <a
-                        href="tel:08978638849"
-                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
-                    >
-                        <Phone size={18} className="text-primary" /> 08978638849
-                    </a>
-                    <a
-                        href="tel:08978638973"
-                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
-                    >
-                        <Phone size={18} className="text-primary" /> 08978638973
-                    </a>
-                    <a
-                        href="mailto:darrelrangga@gmail.com"
-                        className="flex items-center gap-2 hover:text-primary transition-colors mb-3"
-                    >
-                        <Mail size={18} className="text-primary" />{" "}
-                        darrelrangga@gmail.com
-                    </a>
-                    <a
-                        href="https://maps.google.com/?q=Jl%20lori%20sakti%20Rt%2001%20Rw%2001%20No%2022%20Kaliabang%20tengah%20Bekasi%20utara"
-                        target="_blank"
-                        className="flex items-start gap-2 hover:text-primary transition-colors mb-3"
-                    >
-                        <MapPin
-                            size={18}
-                            className="text-primary mt-1 flex-shrink-0"
-                        />
-                        <span>
-                            Jl lori sakti Rt 01 Rw 01 No 22 Kaliabang tengah
-                            Bekasi utara
-                        </span>
-                    </a>
+                {/* Massive Footer Text */}
+                <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row items-end justify-between gap-8">
+                    <div className="text-xs text-gray-500 font-mono">
+                        &copy; {new Date().getFullYear()} SRB Motors Corp.{" "}
+                        <br /> Designed for the bold.
+                    </div>
+                    <h1 className="text-[12vw] leading-none font-display font-black tracking-tighter text-white opacity-20 select-none pointer-events-none mix-blend-overlay">
+                        SRBMOTORS
+                    </h1>
                 </div>
             </div>
-
-            <div className="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500 text-sm">
-                &copy; 2024 Created by{" "}
-                <span className="text-primary">SRB Team</span> | All Rights
-                Reserved
-            </div>
-        </section>
+        </footer>
     );
 }
