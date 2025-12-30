@@ -11,6 +11,9 @@ import {
     Calendar,
     ArrowLeft,
     CheckCircle,
+    Zap,
+    MessageSquare,
+    Wallet,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -34,115 +37,130 @@ export default function CashOrderForm({ motor }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         if (data.booking_fee >= motor.price) {
-            alert(
-                "Booking fee tidak boleh lebih besar atau sama dengan harga motor"
-            );
+            alert("Booking fee cannot differ from motor price.");
             return;
         }
-
         post(route("motors.process-cash-order", motor.id));
     };
 
     return (
-        <MainLayout title={`Pesanan Tunai - ${motor.name}`}>
-            <div className="bg-gray-50 min-h-screen pt-32 pb-10">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center mb-10"
+        <MainLayout title={`Cash Order - ${motor.name}`}>
+            <div className="bg-surface-dark min-h-screen text-white pt-20">
+                {/* Fixed Back Button */}
+                <div className="fixed top-24 left-4 z-50 lg:left-8">
+                    <Link
+                        href={route("motors.show", motor.id)}
+                        className="w-12 h-12 bg-black/50 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all duration-300 group"
                     >
-                        <h1 className="text-3xl font-bold text-gray-900">
-                            Pesanan <span className="text-primary">Tunai</span>
-                        </h1>
-                        <p className="text-gray-500 mt-2">
-                            Lengkapi data untuk memesan {motor.name}
-                        </p>
-                    </motion.div>
+                        <ArrowLeft
+                            size={20}
+                            className="group-hover:-translate-x-1 transition-transform"
+                        />
+                    </Link>
+                </div>
 
-                    <div className="max-w-4xl mx-auto">
-                        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-                            {/* Header */}
-                            <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-8 text-white relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full transform translate-x-1/2 -translate-y-1/2"></div>
-                                <h2 className="text-2xl font-bold relative z-10 flex items-center gap-3">
-                                    <CreditCard size={28} />
-                                    Formulir Pemesanan Tunai
-                                </h2>
-                            </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-80px)]">
+                    {/* LEFT: VISUAL SUMMARY */}
+                    <div className="relative hidden lg:flex flex-col justify-center items-center bg-zinc-900 overflow-hidden p-12">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-accent/5 to-transparent z-0"></div>
 
-                            <div className="p-8">
-                                {/* Motor Summary */}
-                                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-8 flex flex-col md:flex-row gap-6 items-center">
-                                    <img
-                                        src={`/storage/${motor.image_path}`}
-                                        alt={motor.name}
-                                        className="w-full md:w-48 h-32 object-contain bg-white rounded-xl shadow-sm p-2"
-                                    />
-                                    <div className="flex-1 text-center md:text-left">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-1">
-                                            {motor.name}
-                                        </h3>
-                                        <div className="flex items-center justify-center md:justify-start gap-4 text-sm text-gray-500 mb-2">
-                                            <span className="flex items-center gap-1">
-                                                <Calendar size={14} />{" "}
-                                                {motor.year}
-                                            </span>
-                                            <span className="capitalize">
-                                                • {motor.type}
-                                            </span>
-                                        </div>
-                                        <div className="text-2xl font-bold text-primary">
-                                            {formatCurrency(motor.price)}
-                                        </div>
-                                    </div>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8 }}
+                            className="relative z-10 w-full max-w-lg"
+                        >
+                            <h2 className="text-[10vw] font-display font-black text-white/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap select-none">
+                                CASH
+                            </h2>
+                            <img
+                                src={`/storage/${motor.image_path}`}
+                                alt={motor.name}
+                                className="w-full object-contain drop-shadow-2xl relative z-20"
+                            />
+                        </motion.div>
+
+                        <div className="relative z-10 mt-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 w-full max-w-md">
+                            <h3 className="text-2xl font-bold font-display uppercase tracking-wider mb-1">
+                                {motor.name}
+                            </h3>
+                            <p className="text-accent font-bold text-xl mb-6">
+                                {formatCurrency(motor.price)}
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-400">
+                                <div className="flex items-center gap-2">
+                                    <Calendar
+                                        size={14}
+                                        className="text-accent"
+                                    />{" "}
+                                    {motor.year}
                                 </div>
+                                <div className="flex items-center gap-2">
+                                    <Zap size={14} className="text-accent" />{" "}
+                                    {motor.type}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                <form onSubmit={submit}>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                        {/* Name */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Nama Lengkap
-                                            </label>
-                                            <div className="relative">
-                                                <User
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
-                                                <input
-                                                    type="text"
-                                                    value={data.customer_name}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "customer_name",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                                    placeholder="Nama Lengkap"
-                                                    required
-                                                />
-                                            </div>
-                                            {errors.customer_name && (
-                                                <p className="text-red-500 text-sm mt-1">
-                                                    {errors.customer_name}
-                                                </p>
-                                            )}
+                    {/* RIGHT: COMMAND CENTER FORM */}
+                    <div className="relative p-6 lg:p-12 xl:p-20 flex flex-col justify-center">
+                        <div className="max-w-xl mx-auto w-full">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mb-10"
+                            >
+                                <h1 className="text-4xl md:text-5xl font-display font-black mb-2">
+                                    SECURE{" "}
+                                    <span className="text-accent">ORDER</span>
+                                </h1>
+                                <p className="text-gray-400">
+                                    Complete your cash purchase details.
+                                </p>
+                            </motion.div>
+
+                            <form onSubmit={submit} className="space-y-6">
+                                {/* Personal Details */}
+                                <div className="space-y-6">
+                                    <div className="group">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
+                                            Full Name
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                value={data.customer_name}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "customer_name",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
+                                                placeholder="Enter full name"
+                                                required
+                                            />
+                                            <User
+                                                size={18}
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
+                                            />
                                         </div>
+                                        {errors.customer_name && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                {errors.customer_name}
+                                            </p>
+                                        )}
+                                    </div>
 
-                                        {/* Phone */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Nomor Telepon
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="group">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
+                                                Phone Number
                                             </label>
                                             <div className="relative">
-                                                <Phone
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
                                                 <input
                                                     type="tel"
                                                     value={data.customer_phone}
@@ -152,28 +170,27 @@ export default function CashOrderForm({ motor }) {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                                    placeholder="08xxxxxxxxxx"
+                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
+                                                    placeholder="08..."
                                                     required
+                                                />
+                                                <Phone
+                                                    size={18}
+                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
                                                 />
                                             </div>
                                             {errors.customer_phone && (
-                                                <p className="text-red-500 text-sm mt-1">
+                                                <p className="text-red-500 text-xs mt-1">
                                                     {errors.customer_phone}
                                                 </p>
                                             )}
                                         </div>
 
-                                        {/* Occupation */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Pekerjaan
+                                        <div className="group">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
+                                                Occupation
                                             </label>
                                             <div className="relative">
-                                                <Briefcase
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
                                                 <input
                                                     type="text"
                                                     value={
@@ -185,141 +202,140 @@ export default function CashOrderForm({ motor }) {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                                    placeholder="Pekerjaan saat ini"
+                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
+                                                    placeholder="Current job"
                                                     required
+                                                />
+                                                <Briefcase
+                                                    size={18}
+                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
                                                 />
                                             </div>
                                             {errors.customer_occupation && (
-                                                <p className="text-red-500 text-sm mt-1">
+                                                <p className="text-red-500 text-xs mt-1">
                                                     {errors.customer_occupation}
                                                 </p>
                                             )}
                                         </div>
-
-                                        {/* Booking Fee */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Uang Muka (Booking Fee)
-                                            </label>
-                                            <div className="relative">
-                                                <DollarSign
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
-                                                <input
-                                                    type="number"
-                                                    value={data.booking_fee}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "booking_fee",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                                    placeholder="0"
-                                                    min="0"
-                                                    step="1000"
-                                                />
-                                            </div>
-                                            <p className="text-xs text-gray-500 mt-1 ml-1">
-                                                Opsional. Maksimal:{" "}
-                                                {formatCurrency(
-                                                    motor.price - 1
-                                                )}
-                                            </p>
-                                            {errors.booking_fee && (
-                                                <p className="text-red-500 text-sm mt-1">
-                                                    {errors.booking_fee}
-                                                </p>
-                                            )}
-                                        </div>
                                     </div>
+                                </div>
 
-                                    {/* Notes */}
-                                    <div className="mb-6">
-                                        <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
-                                            Catatan Tambahan
+                                {/* Financials */}
+                                <div className="pt-8 border-t border-white/5 space-y-6">
+                                    <div className="group">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
+                                            Booking Fee (Optional)
                                         </label>
                                         <div className="relative">
-                                            <FileText
-                                                className="absolute left-4 top-4 text-gray-400"
-                                                size={18}
-                                            />
-                                            <textarea
-                                                value={data.notes}
+                                            <input
+                                                type="number"
+                                                value={data.booking_fee}
                                                 onChange={(e) =>
                                                     setData(
-                                                        "notes",
+                                                        "booking_fee",
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors min-h-[100px]"
-                                                placeholder="Catatan tambahan untuk pesanan Anda (Opsional)"
+                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
+                                                placeholder="0"
+                                                min="0"
+                                            />
+                                            <DollarSign
+                                                size={18}
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
                                             />
                                         </div>
-                                        {errors.notes && (
-                                            <p className="text-red-500 text-sm mt-1">
-                                                {errors.notes}
+                                        {errors.booking_fee && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                {errors.booking_fee}
                                             </p>
                                         )}
                                     </div>
 
-                                    {/* Payment Method */}
-                                    <div className="mb-8">
-                                        <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
-                                            Metode Pembayaran
+                                    <div className="group">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
+                                            Payment Method
                                         </label>
-                                        <select
-                                            value={data.payment_method}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "payment_method",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                            required
-                                        >
-                                            <option value="" disabled>
-                                                Pilih metode pembayaran
-                                            </option>
-                                            <option value="online">
-                                                Pembayaran Online (VA, E-Wallet,
-                                                QRIS)
-                                            </option>
-                                            <option value="cod_dealer">
-                                                Cash di Dealer / COD
-                                            </option>
-                                        </select>
+                                        <div className="relative">
+                                            <select
+                                                value={data.payment_method}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "payment_method",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8 appearance-none"
+                                                required
+                                            >
+                                                <option
+                                                    value=""
+                                                    disabled
+                                                    className="bg-zinc-900"
+                                                >
+                                                    Select Method
+                                                </option>
+                                                <option
+                                                    value="online"
+                                                    className="bg-zinc-900"
+                                                >
+                                                    Online Payment (VA, QRIS,
+                                                    E-Wallet)
+                                                </option>
+                                                <option
+                                                    value="cod_dealer"
+                                                    className="bg-zinc-900"
+                                                >
+                                                    Cash at Dealer / COD
+                                                </option>
+                                            </select>
+                                            <Wallet
+                                                size={18}
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
+                                            />
+                                        </div>
                                         {errors.payment_method && (
-                                            <p className="text-red-500 text-sm mt-1">
+                                            <p className="text-red-500 text-xs mt-1">
                                                 {errors.payment_method}
                                             </p>
                                         )}
                                     </div>
+                                </div>
 
-                                    <div className="flex flex-col-reverse md:flex-row gap-4 pt-4 border-t border-gray-100">
-                                        <Link
-                                            href={route(
-                                                "motors.show",
-                                                motor.id
-                                            )}
-                                            className="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-bold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-                                        >
-                                            <ArrowLeft size={20} /> Batal
-                                        </Link>
-                                        <button
-                                            type="submit"
-                                            disabled={processing}
-                                            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg hover:translate-y-[-2px] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                                        >
-                                            <CheckCircle size={20} /> Konfirmasi
-                                            Pesanan Tunai
-                                        </button>
+                                {/* Notes */}
+                                <div className="group">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
+                                        Additional Notes
+                                    </label>
+                                    <div className="relative">
+                                        <textarea
+                                            value={data.notes}
+                                            onChange={(e) =>
+                                                setData("notes", e.target.value)
+                                            }
+                                            className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8 min-h-[100px] resize-none"
+                                            placeholder="Any special requests?"
+                                        />
+                                        <MessageSquare
+                                            size={18}
+                                            className="absolute left-0 top-6 text-gray-600 group-focus-within:text-white transition-colors"
+                                        />
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+
+                                <div className="pt-8">
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="w-full py-5 bg-accent text-black font-display font-bold text-xl uppercase tracking-widest hover:bg-white transition-colors rounded-xl disabled:opacity-50 flex items-center justify-center gap-2"
+                                    >
+                                        <CheckCircle size={24} />
+                                        {processing
+                                            ? "Processing..."
+                                            : "Confirm Purchase"}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

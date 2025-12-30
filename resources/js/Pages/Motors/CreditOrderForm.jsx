@@ -14,6 +14,9 @@ import {
     Clock,
     AlertTriangle,
     Info,
+    Wallet,
+    MessageSquare,
+    Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -43,18 +46,11 @@ export default function CreditOrderForm({ motor }) {
         const dp = parseFloat(data.down_payment) || 0;
         const tenor = parseInt(data.tenor) || 0;
 
-        if (dp >= motor.price) {
-            // Logic handled in validation/submit, but visual feedback here
-        }
-
         if (tenor > 0) {
             const loanAmount = Math.max(0, motor.price - dp);
-            const monthly = loanAmount / tenor;
+            const monthly = loanAmount / tenor; // Simple calc, usually leasing has interest
             const roundedMonthly = Math.round(monthly);
             setCalculatedInstallment(roundedMonthly);
-            // We don't necessarily need to set data.monthly_installment if backend calculates it,
-            // but the blade form submitted it (though backend re-calculates).
-            // Let's keep it consistent visually.
         } else {
             setCalculatedInstallment(0);
         }
@@ -62,119 +58,133 @@ export default function CreditOrderForm({ motor }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         if (parseFloat(data.down_payment) >= motor.price) {
-            alert(
-                "Uang muka tidak boleh lebih besar atau sama dengan harga motor"
-            );
+            alert("Down Payment cannot exceed motor price.");
             return;
         }
-
         post(route("motors.process-credit-order", motor.id));
     };
 
     return (
-        <MainLayout title={`Pengajuan Kredit - ${motor.name}`}>
-            <div className="bg-gray-50 min-h-screen pt-32 pb-10">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center mb-10"
+        <MainLayout title={`Credit Application - ${motor.name}`}>
+            <div className="bg-surface-dark min-h-screen text-white pt-20">
+                {/* Fixed Back Button */}
+                <div className="fixed top-24 left-4 z-50 lg:left-8">
+                    <Link
+                        href={route("motors.show", motor.id)}
+                        className="w-12 h-12 bg-black/50 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all duration-300 group"
                     >
-                        <h1 className="text-3xl font-bold text-gray-900">
-                            Pengajuan{" "}
-                            <span className="text-primary">Kredit</span>
-                        </h1>
-                        <p className="text-gray-500 mt-2">
-                            Dapatkan motor impian Anda dengan cicilan ringan
-                        </p>
-                    </motion.div>
+                        <ArrowLeft
+                            size={20}
+                            className="group-hover:-translate-x-1 transition-transform"
+                        />
+                    </Link>
+                </div>
 
-                    <div className="max-w-4xl mx-auto">
-                        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-                            {/* Header */}
-                            <div className="bg-gradient-to-r from-blue-700 to-blue-900 p-8 text-white relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full transform translate-x-1/2 -translate-y-1/2"></div>
-                                <h2 className="text-2xl font-bold relative z-10 flex items-center gap-3">
-                                    <FileText size={28} />
-                                    Formulir Pengajuan Kredit
-                                </h2>
-                            </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-80px)]">
+                    {/* LEFT: VISUAL SUMMARY */}
+                    <div className="relative hidden lg:flex flex-col justify-center items-center bg-zinc-900 overflow-hidden p-12">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 to-transparent z-0"></div>
 
-                            <div className="p-8">
-                                {/* Motor Summary */}
-                                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-8 flex flex-col md:flex-row gap-6 items-center">
-                                    <img
-                                        src={`/storage/${motor.image_path}`}
-                                        alt={motor.name}
-                                        className="w-full md:w-48 h-32 object-contain bg-white rounded-xl shadow-sm p-2"
-                                    />
-                                    <div className="flex-1 text-center md:text-left">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-1">
-                                            {motor.name}
-                                        </h3>
-                                        <div className="flex items-center justify-center md:justify-start gap-4 text-sm text-gray-500 mb-2">
-                                            <span className="flex items-center gap-1">
-                                                <Calendar size={14} />{" "}
-                                                {motor.year}
-                                            </span>
-                                            <span className="capitalize">
-                                                • {motor.type}
-                                            </span>
-                                        </div>
-                                        <div className="text-2xl font-bold text-primary">
-                                            {formatCurrency(motor.price)}
-                                        </div>
-                                    </div>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8 }}
+                            className="relative z-10 w-full max-w-lg"
+                        >
+                            <h2 className="text-[10vw] font-display font-black text-white/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap select-none">
+                                CREDIT
+                            </h2>
+                            <img
+                                src={`/storage/${motor.image_path}`}
+                                alt={motor.name}
+                                className="w-full object-contain drop-shadow-2xl relative z-20"
+                            />
+                        </motion.div>
+
+                        <div className="relative z-10 mt-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 w-full max-w-md">
+                            <h3 className="text-2xl font-bold font-display uppercase tracking-wider mb-1">
+                                {motor.name}
+                            </h3>
+                            <p className="text-blue-500 font-bold text-xl mb-6">
+                                {formatCurrency(motor.price)}
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-400">
+                                <div className="flex items-center gap-2">
+                                    <Calendar
+                                        size={14}
+                                        className="text-blue-500"
+                                    />{" "}
+                                    {motor.year}
                                 </div>
+                                <div className="flex items-center gap-2">
+                                    <Zap size={14} className="text-blue-500" />{" "}
+                                    {motor.type}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                <form onSubmit={submit}>
-                                    <h3 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">
-                                        Data Diri
-                                    </h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                        {/* Name */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Nama Lengkap
-                                            </label>
-                                            <div className="relative">
-                                                <User
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
-                                                <input
-                                                    type="text"
-                                                    value={data.customer_name}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "customer_name",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                                    placeholder="Nama Lengkap"
-                                                    required
-                                                />
-                                            </div>
-                                            {errors.customer_name && (
-                                                <p className="text-red-500 text-sm mt-1">
-                                                    {errors.customer_name}
-                                                </p>
-                                            )}
+                    {/* RIGHT: COMMAND CENTER FORM */}
+                    <div className="relative p-6 lg:p-12 xl:p-20 flex flex-col justify-center">
+                        <div className="max-w-xl mx-auto w-full">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mb-10"
+                            >
+                                <h1 className="text-4xl md:text-5xl font-display font-black mb-2">
+                                    CREDIT{" "}
+                                    <span className="text-blue-500">
+                                        APPLICATION
+                                    </span>
+                                </h1>
+                                <p className="text-gray-400">
+                                    Get your dream ride with flexible
+                                    installments.
+                                </p>
+                            </motion.div>
+
+                            <form onSubmit={submit} className="space-y-6">
+                                {/* Personal Details */}
+                                <div className="space-y-6">
+                                    <div className="group">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
+                                            Full Name
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                value={data.customer_name}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "customer_name",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8"
+                                                placeholder="Enter full name"
+                                                required
+                                            />
+                                            <User
+                                                size={18}
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
+                                            />
                                         </div>
+                                        {errors.customer_name && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                {errors.customer_name}
+                                            </p>
+                                        )}
+                                    </div>
 
-                                        {/* Phone */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Nomor Telepon
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="group">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
+                                                Phone Number
                                             </label>
                                             <div className="relative">
-                                                <Phone
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
                                                 <input
                                                     type="tel"
                                                     value={data.customer_phone}
@@ -184,28 +194,27 @@ export default function CreditOrderForm({ motor }) {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                                    placeholder="08xxxxxxxxxx"
+                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8"
+                                                    placeholder="08..."
                                                     required
+                                                />
+                                                <Phone
+                                                    size={18}
+                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
                                                 />
                                             </div>
                                             {errors.customer_phone && (
-                                                <p className="text-red-500 text-sm mt-1">
+                                                <p className="text-red-500 text-xs mt-1">
                                                     {errors.customer_phone}
                                                 </p>
                                             )}
                                         </div>
 
-                                        {/* Occupation */}
-                                        <div className="md:col-span-2">
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Pekerjaan
+                                        <div className="group">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
+                                                Occupation
                                             </label>
                                             <div className="relative">
-                                                <Briefcase
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
                                                 <input
                                                     type="text"
                                                     value={
@@ -217,33 +226,40 @@ export default function CreditOrderForm({ motor }) {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                                    placeholder="Pekerjaan saat ini"
+                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8"
+                                                    placeholder="Current job"
                                                     required
+                                                />
+                                                <Briefcase
+                                                    size={18}
+                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
                                                 />
                                             </div>
                                             {errors.customer_occupation && (
-                                                <p className="text-red-500 text-sm mt-1">
+                                                <p className="text-red-500 text-xs mt-1">
                                                     {errors.customer_occupation}
                                                 </p>
                                             )}
                                         </div>
                                     </div>
+                                </div>
 
-                                    <h3 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">
-                                        Simulasi Kredit
+                                {/* Simulation */}
+                                <div className="pt-8 border-t border-white/5 space-y-6">
+                                    <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                        <Zap
+                                            size={16}
+                                            className="text-blue-500"
+                                        />{" "}
+                                        Simulation
                                     </h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                        {/* Down Payment */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Uang Muka (DP)
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="group">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
+                                                Down Payment
                                             </label>
                                             <div className="relative">
-                                                <Percent
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
                                                 <input
                                                     type="number"
                                                     value={data.down_payment}
@@ -253,29 +269,28 @@ export default function CreditOrderForm({ motor }) {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
+                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8"
                                                     placeholder="0"
                                                     min="0"
                                                     required
                                                 />
+                                                <Percent
+                                                    size={18}
+                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
+                                                />
                                             </div>
                                             {errors.down_payment && (
-                                                <p className="text-red-500 text-sm mt-1">
+                                                <p className="text-red-500 text-xs mt-1">
                                                     {errors.down_payment}
                                                 </p>
                                             )}
                                         </div>
 
-                                        {/* Tenor */}
-                                        <div>
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-primary">
-                                                Tenor (Bulan)
+                                        <div className="group">
+                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
+                                                Tenor (Months)
                                             </label>
                                             <div className="relative">
-                                                <Clock
-                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                                    size={18}
-                                                />
                                                 <select
                                                     value={data.tenor}
                                                     onChange={(e) =>
@@ -284,151 +299,153 @@ export default function CreditOrderForm({ motor }) {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors appearance-none"
+                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8 appearance-none"
                                                     required
                                                 >
-                                                    <option value="" disabled>
-                                                        Pilih tenor
+                                                    <option
+                                                        value=""
+                                                        disabled
+                                                        className="bg-zinc-900"
+                                                    >
+                                                        Select Tenor
                                                     </option>
-                                                    <option value="12">
-                                                        12 Bulan
+                                                    <option
+                                                        value="12"
+                                                        className="bg-zinc-900"
+                                                    >
+                                                        12 Months
                                                     </option>
-                                                    <option value="24">
-                                                        24 Bulan
+                                                    <option
+                                                        value="24"
+                                                        className="bg-zinc-900"
+                                                    >
+                                                        24 Months
                                                     </option>
-                                                    <option value="36">
-                                                        36 Bulan
+                                                    <option
+                                                        value="36"
+                                                        className="bg-zinc-900"
+                                                    >
+                                                        36 Months
                                                     </option>
-                                                    <option value="48">
-                                                        48 Bulan
-                                                    </option>
-                                                    <option value="60">
-                                                        60 Bulan
+                                                    <option
+                                                        value="48"
+                                                        className="bg-zinc-900"
+                                                    >
+                                                        48 Months
                                                     </option>
                                                 </select>
+                                                <Clock
+                                                    size={18}
+                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
+                                                />
                                             </div>
                                             {errors.tenor && (
-                                                <p className="text-red-500 text-sm mt-1">
+                                                <p className="text-red-500 text-xs mt-1">
                                                     {errors.tenor}
                                                 </p>
                                             )}
                                         </div>
-
-                                        {/* Estimated Installment */}
-                                        <div className="md:col-span-2">
-                                            <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-gray-400">
-                                                Estimasi Cicilan Per Bulan
-                                            </label>
-                                            <div className="relative">
-                                                <div className="w-full px-4 py-3 rounded-xl bg-gray-100 border border-gray-200 text-gray-700 font-bold">
-                                                    {formatCurrency(
-                                                        calculatedInstallment
-                                                    )}{" "}
-                                                    / bulan
-                                                </div>
-                                            </div>
-                                            <p className="text-xs text-gray-500 mt-1">
-                                                *Nilai ini adalah estimasi.
-                                                Angsuran final akan ditentukan
-                                                oleh pihak leasing.
-                                            </p>
-                                        </div>
                                     </div>
 
-                                    {/* Additional Info */}
-                                    <div className="mb-6">
-                                        <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
-                                            Metode Pembayaran
-                                        </label>
-                                        <select
-                                            value={data.payment_method}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "payment_method",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
-                                            required
+                                    {/* Estimation Display */}
+                                    {calculatedInstallment > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-6 text-center"
                                         >
-                                            <option value="" disabled>
-                                                Pilih metode pembayaran (DP &
-                                                Cicilan)
-                                            </option>
-                                            <option value="transfer">
-                                                Transfer Bank / Virtual Account
-                                                (Online)
-                                            </option>
-                                            <option value="cash">
-                                                Tunai di Dealer (Cash)
-                                            </option>
-                                        </select>
+                                            <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-1">
+                                                Estimated Monthly Installment
+                                            </p>
+                                            <p className="text-3xl font-display font-bold text-white">
+                                                {formatCurrency(
+                                                    calculatedInstallment
+                                                )}
+                                            </p>
+                                            <p className="text-xs text-gray-500 mt-2">
+                                                *Final installment determined by
+                                                leasing provider.
+                                            </p>
+                                        </motion.div>
+                                    )}
+                                </div>
+
+                                {/* Payment Method & Info */}
+                                <div className="space-y-6">
+                                    <div className="group">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
+                                            Payment Method
+                                        </label>
+                                        <div className="relative">
+                                            <select
+                                                value={data.payment_method}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "payment_method",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8 appearance-none"
+                                                required
+                                            >
+                                                <option
+                                                    value=""
+                                                    disabled
+                                                    className="bg-zinc-900"
+                                                >
+                                                    Select Method
+                                                </option>
+                                                <option
+                                                    value="transfer"
+                                                    className="bg-zinc-900"
+                                                >
+                                                    Bank Transfer (VA/Online)
+                                                </option>
+                                                <option
+                                                    value="cash"
+                                                    className="bg-zinc-900"
+                                                >
+                                                    Cash at Dealer
+                                                </option>
+                                            </select>
+                                            <Wallet
+                                                size={18}
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
+                                            />
+                                        </div>
                                         {errors.payment_method && (
-                                            <p className="text-red-500 text-sm mt-1">
+                                            <p className="text-red-500 text-xs mt-1">
                                                 {errors.payment_method}
                                             </p>
                                         )}
                                     </div>
 
-                                    <div className="mb-6">
-                                        <label className="block text-gray-700 font-bold mb-2 text-sm pl-3 border-l-4 border-blue-500">
-                                            Catatan Tambahan
-                                        </label>
-                                        <textarea
-                                            value={data.notes}
-                                            onChange={(e) =>
-                                                setData("notes", e.target.value)
-                                            }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors min-h-[100px]"
-                                            placeholder="Catatan tambahan (Opsional)"
+                                    <div className="bg-zinc-900 rounded-xl p-4 flex gap-3 text-sm text-gray-400">
+                                        <Info
+                                            className="shrink-0 text-blue-500"
+                                            size={20}
                                         />
-                                        {errors.notes && (
-                                            <p className="text-red-500 text-sm mt-1">
-                                                {errors.notes}
-                                            </p>
-                                        )}
+                                        <p>
+                                            You will be asked to upload
+                                            documents (KTP, KK) after this step.
+                                            Approval takes 1-3 working days.
+                                        </p>
                                     </div>
+                                </div>
 
-                                    <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 mb-8">
-                                        <h5 className="font-bold text-dark-blue flex items-center gap-2 mb-2">
-                                            <Info size={18} /> Informasi Penting
-                                        </h5>
-                                        <ul className="list-disc list-inside text-primary/80 text-sm space-y-1 pl-1">
-                                            <li>
-                                                Setelah ini, Anda diminta
-                                                mengunggah dokumen (KTP, KK,
-                                                dll).
-                                            </li>
-                                            <li>
-                                                Dokumen akan direview sebelum
-                                                diproses ke leasing.
-                                            </li>
-                                            <li>
-                                                Keputusan dalam 1-3 hari kerja.
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div className="flex flex-col-reverse md:flex-row gap-4 pt-4 border-t border-gray-100">
-                                        <Link
-                                            href={route(
-                                                "motors.show",
-                                                motor.id
-                                            )}
-                                            className="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-bold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-                                        >
-                                            <ArrowLeft size={20} /> Batal
-                                        </Link>
-                                        <button
-                                            type="submit"
-                                            disabled={processing}
-                                            className="flex-1 bg-gradient-to-r from-blue-700 to-blue-900 text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg hover:translate-y-[-2px] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                                        >
-                                            <Send size={20} /> Ajukan Kredit
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                                <div className="pt-8">
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="w-full py-5 bg-blue-600 text-white font-display font-bold text-xl uppercase tracking-widest hover:bg-blue-700 transition-colors rounded-xl disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
+                                    >
+                                        <Send size={24} />
+                                        {processing
+                                            ? "Processing..."
+                                            : "Submit Application"}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
