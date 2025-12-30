@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import { Eye, EyeOff, AlertCircle, LogIn, Mail, Lock } from "lucide-react";
+import {
+    Eye,
+    EyeOff,
+    AlertCircle,
+    LogIn,
+    Mail,
+    Lock,
+    ShieldCheck,
+    Terminal,
+    ArrowRight,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Login() {
@@ -19,167 +29,197 @@ export default function Login() {
     };
 
     return (
-        <MainLayout title="Login">
-            <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-white via-indigo-50 to-blue-50 flex items-center justify-center p-4 relative overflow-hidden">
-                {/* Background Decoration */}
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-gradient-to-b from-blue-100/40 to-transparent blur-3xl z-0 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-gradient-to-t from-indigo-100/40 to-transparent blur-3xl z-0 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
+        <MainLayout title="Access Terminal">
+            <div className="min-h-screen bg-surface-dark flex pt-24 pb-12 relative overflow-hidden">
+                {/* Background FX */}
+                <div className="absolute top-0 left-0 w-full h-full">
+                    <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-accent/5 rounded-full blur-[120px]" />
+                    <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[120px]" />
+                    <div className="absolute inset-0 bg-[url('/assets/img/grid.svg')] opacity-5"></div>
+                </div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden relative z-10 border border-white/50"
-                >
-                    {/* Header */}
-                    <div className="bg-gradient-to-br from-dark-blue to-blue-900 p-10 pt-16 text-center relative text-white overflow-hidden">
-                        <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30 pointer-events-none"></div>
-                        <div className="absolute top-0 right-0 p-20 bg-primary/20 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+                <div className="container mx-auto px-4 relative z-10 flex items-center justify-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full max-w-5xl bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2"
+                    >
+                        {/* Left Panel: Security Visual */}
+                        <div className="relative hidden md:flex flex-col justify-between p-12 bg-black/50 overflow-hidden group">
+                            <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)]"></div>
 
-                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md p-3 rounded-full shadow-lg z-20 border border-white/20">
-                            <div className="bg-white rounded-full p-2 w-20 h-20 flex items-center justify-center shadow-inner">
-                                <img
-                                    src="/assets/icon/logo trans.png"
-                                    alt="Logo"
-                                    className="w-14 h-14 object-contain"
-                                />
+                            <div className="relative z-10">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-8">
+                                    <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
+                                        Secure Connection
+                                    </span>
+                                </div>
+                                <h2 className="text-5xl font-display font-black text-white leading-tight mb-4">
+                                    WELCOME <br /> BACK
+                                </h2>
+                                <p className="text-white/40 max-w-xs font-sans">
+                                    Authenticate to access your dashboard and
+                                    manage your fleet.
+                                </p>
+                            </div>
+
+                            <div className="relative z-10 mt-12">
+                                <div className="w-full h-48 bg-black/40 rounded-xl border border-white/10 p-4 font-mono text-xs text-green-500 overflow-hidden opacity-70">
+                                    <p>$ initiating session...</p>
+                                    <p>$ checking protocols...</p>
+                                    <p className="blinking-cursor">
+                                        $ ready for input_
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        <h2 className="text-3xl font-extrabold mb-2 relative z-10 text-white tracking-tight">
-                            Selamat Datang
-                        </h2>
-                        <p className="text-blue-100 text-sm relative z-10 opacity-90 font-medium">
-                            Masuk untuk mengelola akun Anda
-                        </p>
-                    </div>
+                        {/* Right Panel: Login Form */}
+                        <div className="p-10 md:p-14 bg-surface-dark relative">
+                            <div className="flex items-center gap-3 mb-8">
+                                <Terminal className="text-white/20" size={32} />
+                                <h3 className="text-2xl font-display font-bold text-white tracking-wide">
+                                    LOGIN ACCESS
+                                </h3>
+                            </div>
 
-                    {/* Form */}
-                    <div className="p-8 md:p-10">
-                        <form onSubmit={submit}>
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 pl-1">
-                                    Alamat Email
-                                </label>
-                                <div className="relative group">
-                                    <Mail
-                                        size={20}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                                    />
-                                    <input
-                                        type="email"
-                                        value={data.email}
-                                        onChange={(e) =>
-                                            setData("email", e.target.value)
-                                        }
-                                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white"
-                                        placeholder="nama@email.com"
-                                        required
-                                    />
-                                </div>
-                                {errors.email && (
-                                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1 bg-red-50 p-2 rounded-lg border border-red-100">
-                                        <AlertCircle size={12} /> {errors.email}
+                            <form onSubmit={submit} className="space-y-6">
+                                <div>
+                                    <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
+                                        Email Identifier
+                                    </label>
+                                    <div className="relative group">
+                                        <Mail
+                                            size={18}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-accent transition-colors"
+                                        />
+                                        <input
+                                            type="email"
+                                            value={data.email}
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
+                                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-accent focus:bg-white/10 outline-none transition-all font-sans"
+                                            placeholder="user@srbmotors.id"
+                                            required
+                                        />
                                     </div>
-                                )}
-                            </div>
-
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 pl-1">
-                                    Kata Sandi
-                                </label>
-                                <div className="relative group">
-                                    <Lock
-                                        size={20}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                                    />
-                                    <input
-                                        type={
-                                            showPassword ? "text" : "password"
-                                        }
-                                        value={data.password}
-                                        onChange={(e) =>
-                                            setData("password", e.target.value)
-                                        }
-                                        className="w-full pl-12 pr-12 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white"
-                                        placeholder="········"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition-colors p-1"
-                                    >
-                                        {showPassword ? (
-                                            <EyeOff size={18} />
-                                        ) : (
-                                            <Eye size={18} />
-                                        )}
-                                    </button>
+                                    {errors.email && (
+                                        <div className="mt-2 text-red-500 text-xs flex items-center gap-1">
+                                            <AlertCircle size={12} />{" "}
+                                            {errors.email}
+                                        </div>
+                                    )}
                                 </div>
-                                {errors.password && (
-                                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1 bg-red-50 p-2 rounded-lg border border-red-100">
-                                        <AlertCircle size={12} />{" "}
-                                        {errors.password}
+
+                                <div>
+                                    <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
+                                        Passcode
+                                    </label>
+                                    <div className="relative group">
+                                        <Lock
+                                            size={18}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-accent transition-colors"
+                                        />
+                                        <input
+                                            type={
+                                                showPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
+                                            value={data.password}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "password",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="w-full pl-12 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-accent focus:bg-white/10 outline-none transition-all font-sans"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white transition-colors"
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff size={18} />
+                                            ) : (
+                                                <Eye size={18} />
+                                            )}
+                                        </button>
                                     </div>
-                                )}
-                            </div>
+                                    {errors.password && (
+                                        <div className="mt-2 text-red-500 text-xs flex items-center gap-1">
+                                            <AlertCircle size={12} />{" "}
+                                            {errors.password}
+                                        </div>
+                                    )}
+                                </div>
 
-                            <div className="flex items-center justify-between mb-8">
-                                <label className="flex items-center cursor-pointer group">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.remember}
-                                        onChange={(e) =>
-                                            setData(
-                                                "remember",
-                                                e.target.checked
-                                            )
-                                        }
-                                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary transition duration-150 ease-in-out cursor-pointer"
-                                    />
-                                    <span className="ml-2 text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
-                                        Ingat Saya
-                                    </span>
-                                </label>
-                                <Link
-                                    href="#"
-                                    className="text-sm font-bold text-primary hover:text-dark-blue hover:underline transition-colors"
-                                >
-                                    Lupa Password?
-                                </Link>
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="w-full bg-dark-blue text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
-                            >
-                                {processing ? (
-                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    <>
-                                        <LogIn size={20} /> Masuk Sekarang
-                                    </>
-                                )}
-                            </button>
-
-                            <div className="mt-8 text-center">
-                                <p className="text-gray-500 text-sm">
-                                    Belum memiliki akun?{" "}
+                                <div className="flex items-center justify-between pt-2">
+                                    <label className="flex items-center cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            checked={data.remember}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "remember",
+                                                    e.target.checked
+                                                )
+                                            }
+                                            className="w-4 h-4 rounded border-white/20 bg-white/5 text-accent focus:ring-accent focus:ring-offset-0 transition-all cursor-pointer"
+                                        />
+                                        <span className="ml-2 text-sm text-white/60 group-hover:text-white transition-colors">
+                                            Keep Session Active
+                                        </span>
+                                    </label>
                                     <Link
-                                        href={route("register")}
-                                        className="text-primary font-bold hover:text-dark-blue hover:underline transition-colors"
+                                        href="#"
+                                        className="text-sm font-bold text-accent hover:text-white transition-colors"
                                     >
-                                        Daftar Gratis
+                                        Recover Key?
                                     </Link>
-                                </p>
-                            </div>
-                        </form>
-                    </div>
-                </motion.div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full bg-white text-black font-display font-bold text-xl py-4 rounded-xl hover:bg-accent transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                                >
+                                    {processing ? (
+                                        <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                                    ) : (
+                                        <>
+                                            INITIATE LOGIN{" "}
+                                            <ArrowRight
+                                                size={20}
+                                                className="group-hover:translate-x-1 transition-transform"
+                                            />
+                                        </>
+                                    )}
+                                </button>
+
+                                <div className="mt-8 text-center border-t border-white/5 pt-6">
+                                    <p className="text-white/40 text-sm">
+                                        New to the system?{" "}
+                                        <Link
+                                            href={route("register")}
+                                            className="text-white font-bold hover:text-accent transition-colors ml-1"
+                                        >
+                                            Create Identity
+                                        </Link>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </motion.div>
+                </div>
             </div>
         </MainLayout>
     );

@@ -9,6 +9,9 @@ import {
     User,
     Mail,
     Lock,
+    ShieldCheck,
+    Cpu,
+    ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -29,217 +32,260 @@ export default function Register() {
     };
 
     return (
-        <MainLayout title="Daftar">
-            <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-white via-indigo-50 to-blue-50 flex items-center justify-center p-4 relative overflow-hidden pt-28 pb-10">
-                {/* Background Decoration */}
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-gradient-to-b from-blue-100/40 to-transparent blur-3xl z-0 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-gradient-to-t from-indigo-100/40 to-transparent blur-3xl z-0 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
+        <MainLayout title="Create Identity">
+            <div className="min-h-screen bg-surface-dark flex pt-24 pb-12 relative overflow-hidden">
+                {/* Background FX */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                    <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-accent/5 rounded-full blur-[120px]" />
+                    <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[120px]" />
+                    <div className="absolute inset-0 bg-[url('/assets/img/grid.svg')] opacity-5"></div>
+                </div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden relative z-10 border border-white/50"
-                >
-                    {/* Header */}
-                    <div className="bg-gradient-to-br from-dark-blue to-blue-900 p-10 pt-16 text-center relative text-white overflow-hidden">
-                        <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30 pointer-events-none"></div>
-                        <div className="absolute top-0 right-0 p-20 bg-primary/20 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+                <div className="container mx-auto px-4 relative z-10 flex items-center justify-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full max-w-5xl bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2"
+                    >
+                        {/* Left Panel: Register Visual */}
+                        <div className="relative hidden md:flex flex-col justify-between p-12 bg-black/50 overflow-hidden group order-2 md:order-1">
+                            {/* Animated Grid Background */}
+                            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
 
-                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md p-3 rounded-full shadow-lg z-20 border border-white/20">
-                            <div className="bg-white rounded-full p-2 w-20 h-20 flex items-center justify-center shadow-inner">
-                                <img
-                                    src="/assets/icon/logo trans.png"
-                                    alt="Logo"
-                                    className="w-14 h-14 object-contain"
-                                />
+                            <div className="relative z-10">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 mb-8">
+                                    <ShieldCheck
+                                        size={12}
+                                        className="text-blue-400"
+                                    />
+                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">
+                                        New User Protocol
+                                    </span>
+                                </div>
+                                <h2 className="text-5xl font-display font-black text-white leading-tight mb-4">
+                                    JOIN THE <br />{" "}
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
+                                        NETWORK
+                                    </span>
+                                </h2>
+                                <p className="text-white/40 max-w-xs font-sans">
+                                    Create your secure identity to access
+                                    exclusive deals and manage transactions.
+                                </p>
+                            </div>
+
+                            <div className="relative z-10 mt-12 flex justify-center">
+                                <div className="w-48 h-48 rounded-full border border-white/10 flex items-center justify-center relative">
+                                    <div className="absolute inset-0 border border-white/5 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                                    <div className="absolute inset-4 border border-blue-500/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                                    <Cpu size={64} className="text-white/20" />
+                                </div>
                             </div>
                         </div>
 
-                        <h2 className="text-3xl font-extrabold mb-2 relative z-10 text-white tracking-tight">
-                            Buat Akun
-                        </h2>
-                        <p className="text-blue-100 text-sm relative z-10 opacity-90 font-medium">
-                            Bergabunglah untuk pengalaman terbaik
-                        </p>
-                    </div>
-
-                    <div className="p-8 md:p-10">
-                        <form onSubmit={submit}>
-                            {/* Name */}
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 pl-1">
-                                    Nama Lengkap
-                                </label>
-                                <div className="relative group">
-                                    <User
-                                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                                        size={20}
-                                    />
-                                    <input
-                                        type="text"
-                                        value={data.name}
-                                        onChange={(e) =>
-                                            setData("name", e.target.value)
-                                        }
-                                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white"
-                                        placeholder="Masukkan nama lengkap"
-                                        required
-                                        autoFocus
-                                    />
-                                </div>
-                                {errors.name && (
-                                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1 bg-red-50 p-2 rounded-lg border border-red-100">
-                                        <AlertCircle size={12} /> {errors.name}
-                                    </div>
-                                )}
+                        {/* Right Panel: Register Form */}
+                        <div className="p-10 md:p-14 bg-surface-dark relative order-1 md:order-2 border-l border-white/5">
+                            <div className="flex items-center gap-3 mb-8">
+                                <UserPlus className="text-white/20" size={32} />
+                                <h3 className="text-2xl font-display font-bold text-white tracking-wide">
+                                    REGISTER IDENTITY
+                                </h3>
                             </div>
 
-                            {/* Email */}
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 pl-1">
-                                    Alamat Email
-                                </label>
-                                <div className="relative group">
-                                    <Mail
-                                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                                        size={20}
-                                    />
-                                    <input
-                                        type="email"
-                                        value={data.email}
-                                        onChange={(e) =>
-                                            setData("email", e.target.value)
-                                        }
-                                        className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white"
-                                        placeholder="Masukkan email"
-                                        required
-                                    />
-                                </div>
-                                {errors.email && (
-                                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1 bg-red-50 p-2 rounded-lg border border-red-100">
-                                        <AlertCircle size={12} /> {errors.email}
+                            <form onSubmit={submit} className="space-y-5">
+                                {/* Name */}
+                                <div>
+                                    <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
+                                        Full Name
+                                    </label>
+                                    <div className="relative group">
+                                        <User
+                                            size={18}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={data.name}
+                                            onChange={(e) =>
+                                                setData("name", e.target.value)
+                                            }
+                                            className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-blue-400 focus:bg-white/10 outline-none transition-all font-sans"
+                                            placeholder="John Doe"
+                                            required
+                                            autoFocus
+                                        />
                                     </div>
-                                )}
-                            </div>
-
-                            {/* Password */}
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 pl-1">
-                                    Kata Sandi
-                                </label>
-                                <div className="relative group">
-                                    <Lock
-                                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                                        size={20}
-                                    />
-                                    <input
-                                        type={
-                                            showPassword ? "text" : "password"
-                                        }
-                                        value={data.password}
-                                        onChange={(e) =>
-                                            setData("password", e.target.value)
-                                        }
-                                        className="w-full pl-12 pr-12 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white"
-                                        placeholder="Buat kata sandi"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition-colors p-1"
-                                    >
-                                        {showPassword ? (
-                                            <EyeOff size={18} />
-                                        ) : (
-                                            <Eye size={18} />
-                                        )}
-                                    </button>
+                                    {errors.name && (
+                                        <div className="mt-2 text-red-500 text-xs flex items-center gap-1">
+                                            <AlertCircle size={12} />{" "}
+                                            {errors.name}
+                                        </div>
+                                    )}
                                 </div>
-                                {errors.password && (
-                                    <div className="mt-2 text-red-500 text-xs font-semibold flex items-center gap-1 bg-red-50 p-2 rounded-lg border border-red-100">
+
+                                {/* Email */}
+                                <div>
+                                    <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
+                                        Email Address
+                                    </label>
+                                    <div className="relative group">
+                                        <Mail
+                                            size={18}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors"
+                                        />
+                                        <input
+                                            type="email"
+                                            value={data.email}
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
+                                            className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-blue-400 focus:bg-white/10 outline-none transition-all font-sans"
+                                            placeholder="user@example.com"
+                                            required
+                                        />
+                                    </div>
+                                    {errors.email && (
+                                        <div className="mt-2 text-red-500 text-xs flex items-center gap-1">
+                                            <AlertCircle size={12} />{" "}
+                                            {errors.email}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Password */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
+                                            Password
+                                        </label>
+                                        <div className="relative group">
+                                            <Lock
+                                                size={18}
+                                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors"
+                                            />
+                                            <input
+                                                type={
+                                                    showPassword
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                value={data.password}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "password",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full pl-12 pr-10 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-blue-400 focus:bg-white/10 outline-none transition-all font-sans"
+                                                placeholder="••••••••"
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword
+                                                    )
+                                                }
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white transition-colors"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff size={16} />
+                                                ) : (
+                                                    <Eye size={16} />
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
+                                            Confirm
+                                        </label>
+                                        <div className="relative group">
+                                            <Lock
+                                                size={18}
+                                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors"
+                                            />
+                                            <input
+                                                type={
+                                                    showConfirmPassword
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                value={
+                                                    data.password_confirmation
+                                                }
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "password_confirmation",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full pl-12 pr-10 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-blue-400 focus:bg-white/10 outline-none transition-all font-sans"
+                                                placeholder="••••••••"
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setShowConfirmPassword(
+                                                        !showConfirmPassword
+                                                    )
+                                                }
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white transition-colors"
+                                            >
+                                                {showConfirmPassword ? (
+                                                    <EyeOff size={16} />
+                                                ) : (
+                                                    <Eye size={16} />
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {(errors.password ||
+                                    errors.password_confirmation) && (
+                                    <div className="mt-2 text-red-500 text-xs flex items-center gap-1">
                                         <AlertCircle size={12} />{" "}
-                                        {errors.password}
+                                        {errors.password ||
+                                            errors.password_confirmation}
                                     </div>
                                 )}
-                            </div>
 
-                            {/* Password Confirm */}
-                            <div className="mb-8">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 pl-1">
-                                    Konfirmasi Kata Sandi
-                                </label>
-                                <div className="relative group">
-                                    <Lock
-                                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                                        size={20}
-                                    />
-                                    <input
-                                        type={
-                                            showConfirmPassword
-                                                ? "text"
-                                                : "password"
-                                        }
-                                        value={data.password_confirmation}
-                                        onChange={(e) =>
-                                            setData(
-                                                "password_confirmation",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="w-full pl-12 pr-12 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-gray-50 focus:bg-white"
-                                        placeholder="Ulangi kata sandi"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setShowConfirmPassword(
-                                                !showConfirmPassword
-                                            )
-                                        }
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition-colors p-1"
-                                    >
-                                        {showConfirmPassword ? (
-                                            <EyeOff size={18} />
-                                        ) : (
-                                            <Eye size={18} />
-                                        )}
-                                    </button>
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-display font-bold text-xl py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed mt-4 shadow-lg shadow-blue-900/20"
+                                >
+                                    {processing ? (
+                                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        <>
+                                            CREATE ACCOUNT{" "}
+                                            <ArrowRight
+                                                size={20}
+                                                className="group-hover:translate-x-1 transition-transform"
+                                            />
+                                        </>
+                                    )}
+                                </button>
+
+                                <div className="mt-8 text-center border-t border-white/5 pt-6">
+                                    <p className="text-white/40 text-sm">
+                                        Already registered?{" "}
+                                        <Link
+                                            href={route("login")}
+                                            className="text-blue-400 font-bold hover:text-white transition-colors ml-1"
+                                        >
+                                            Access Terminal
+                                        </Link>
+                                    </p>
                                 </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="w-full bg-dark-blue text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
-                            >
-                                {processing ? (
-                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    <>
-                                        <UserPlus size={20} /> Buat Akun
-                                    </>
-                                )}
-                            </button>
-
-                            <div className="mt-8 text-center">
-                                <p className="text-gray-500 text-sm">
-                                    Sudah memiliki akun?{" "}
-                                    <Link
-                                        href={route("login")}
-                                        className="text-primary font-bold hover:text-dark-blue hover:underline transition-colors"
-                                    >
-                                        Masuk
-                                    </Link>
-                                </p>
-                            </div>
-                        </form>
-                    </div>
-                </motion.div>
+                            </form>
+                        </div>
+                    </motion.div>
+                </div>
             </div>
         </MainLayout>
     );
