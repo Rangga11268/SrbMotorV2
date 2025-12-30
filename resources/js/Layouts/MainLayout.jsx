@@ -44,18 +44,18 @@ export default function MainLayout({ children, title }) {
     return (
         <>
             <Head title={title} />
-            <div className="min-h-screen flex flex-col font-sans text-text-main bg-surface-light selection:bg-primary selection:text-white overflow-x-hidden">
+            <div className="min-h-screen flex flex-col font-sans text-white bg-surface-dark selection:bg-accent selection:text-black overflow-x-hidden">
                 <Navbar />
-                <main className="flex-grow pt-24">{children}</main>
+                {/* Removed automatic pt-24 to prevent gaps. Pages must handle their own spacing if needed, or use a wrapper. 
+                    However, for standard pages, we might need it. But since we want 'immersive' headers, we remove it.
+                */}
+                <main className="flex-grow">{children}</main>
                 <Footer />
                 <Toaster
                     position="top-center"
                     toastOptions={{
-                        className: "!rounded-2xl !font-medium !shadow-xl",
-                        style: {
-                            background: "#1e293b",
-                            color: "#fff",
-                        },
+                        className:
+                            "!rounded-2xl !font-medium !shadow-xl !bg-zinc-900 !text-white !border !border-white/10",
                     }}
                 />
                 <FloatingWhatsApp />

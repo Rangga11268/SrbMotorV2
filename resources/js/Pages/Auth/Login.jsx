@@ -30,7 +30,7 @@ export default function Login() {
 
     return (
         <MainLayout title="Access Terminal">
-            <div className="min-h-screen bg-surface-dark flex pt-24 pb-12 relative overflow-hidden">
+            <div className="min-h-screen bg-surface-dark flex pt-32 pb-12 relative overflow-hidden">
                 {/* Background FX */}
                 <div className="absolute top-0 left-0 w-full h-full">
                     <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-accent/5 rounded-full blur-[120px]" />

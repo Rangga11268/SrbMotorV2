@@ -65,7 +65,7 @@ export default function Index({ motors, filters, brands, types, years }) {
 
     return (
         <MainLayout title="The Collection">
-            <div className="min-h-screen bg-surface-dark pt-24 pb-20">
+            <div className="min-h-screen bg-surface-dark pt-32 pb-20">
                 {/* HEADLINE */}
                 <div className="container mx-auto px-4 mb-12">
                     <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/10 pb-8">

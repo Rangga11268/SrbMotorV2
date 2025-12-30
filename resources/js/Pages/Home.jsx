@@ -70,7 +70,7 @@ export default function Home({ popularMotors }) {
             {/* HERO SECTION - HYPER MODERN */}
             <section
                 ref={targetRef}
-                className="relative min-h-screen flex flex-col justify-start items-center overflow-hidden pt-40"
+                className="relative min-h-screen flex flex-col justify-start items-center overflow-hidden pt-20"
             >
                 {/* Background Noise & Gradients */}
                 <div className="absolute inset-0 bg-surface-dark z-0">

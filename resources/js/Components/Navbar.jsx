@@ -38,17 +38,23 @@ export default function Navbar() {
             }`}
         >
             <div
-                className={`flex items-center justify-between transition-all duration-700 backdrop-blur-3xl border shadow-2xl relative overflow-hidden group ${
+                className={`transition-all duration-700 backdrop-blur-3xl border shadow-2xl relative group ${
                     isScrolled
-                        ? "w-[90%] md:w-[850px] h-16 rounded-full bg-black/80 border-white/10"
-                        : "w-[95%] md:w-[1200px] h-20 rounded-2xl bg-black/40 border-white/5"
+                        ? "w-[90%] md:w-[850px] h-16 rounded-full border-white/10"
+                        : "w-[95%] md:w-[1200px] h-20 rounded-2xl border-white/5"
                 }`}
             >
-                {/* Noise Texture Overlay */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none noise-bg mix-blend-overlay"></div>
+                {/* Clipped Background Layer */}
+                <div
+                    className={`absolute inset-0 overflow-hidden rounded-[inherit] ${
+                        isScrolled ? "bg-black/80" : "bg-black/40"
+                    }`}
+                >
+                    <div className="absolute inset-0 opacity-10 pointer-events-none noise-bg mix-blend-overlay"></div>
+                </div>
 
-                {/* Grid Container */}
-                <div className="w-full h-full grid grid-cols-[auto_1fr_auto] md:grid-cols-3 items-center px-6">
+                {/* Content Container (Allows Overflow) */}
+                <div className="w-full h-full grid grid-cols-[auto_1fr_auto] md:grid-cols-3 items-center px-6 relative z-10">
                     {/* Logo - Left Align */}
                     <Link
                         href="/"
