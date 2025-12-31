@@ -40,13 +40,13 @@ export default function Home({ popularMotors }) {
             onSuccess: () => {
                 toast.success("Pesan berhasil dikirim!", {
                     style: {
-                        background: "#bef264",
-                        color: "#000",
+                        background: "#e11d48",
+                        color: "#fff",
                         fontWeight: "bold",
                     },
                     iconTheme: {
-                        primary: "#000",
-                        secondary: "#bef264",
+                        primary: "#fff",
+                        secondary: "#e11d48",
                     },
                 });
                 reset();

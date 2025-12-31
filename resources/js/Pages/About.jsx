@@ -141,12 +141,14 @@ export default function About() {
                             </p>
                         </div>
 
-                        {/* Decoration */}
-                        <div className="lg:col-span-4 bg-white/5 rounded-[2rem] p-12 border border-white/5 flex items-center justify-center">
-                            <Zap
-                                size={80}
-                                className="text-accent animate-pulse"
+                        {/* Decoration / Image */}
+                        <div className="lg:col-span-4 bg-zinc-900 rounded-[2rem] border border-white/5 overflow-hidden relative group">
+                            <img
+                                src="/assets/img/about us.jpeg"
+                                alt="About Us"
+                                className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                             />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
                         </div>
 
                         {/* Mission */}

@@ -83,7 +83,7 @@ export default function InstallmentIndex({ transactions }) {
                         icon: "success",
                         background: "#18181b",
                         color: "#fff",
-                        confirmButtonColor: "#bef264",
+                        confirmButtonColor: "#e11d48",
                     });
                     router.reload();
                 },
@@ -94,7 +94,7 @@ export default function InstallmentIndex({ transactions }) {
                         icon: "info",
                         background: "#18181b",
                         color: "#fff",
-                        confirmButtonColor: "#bef264",
+                        confirmButtonColor: "#e11d48",
                     });
                     router.reload();
                 },
@@ -105,7 +105,7 @@ export default function InstallmentIndex({ transactions }) {
                         icon: "error",
                         background: "#18181b",
                         color: "#fff",
-                        confirmButtonColor: "#bef264",
+                        confirmButtonColor: "#e11d48",
                     });
                 },
                 onClose: function () {},
@@ -400,7 +400,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                 disabled={
                                                                                     isLoadingPay
                                                                                 }
-                                                                                className="bg-accent text-black px-4 py-2 rounded-lg text-xs font-bold font-sans hover:bg-white transition-colors flex items-center gap-2 shadow-[0_0_10px_rgba(190,242,100,0.2)]"
+                                                                                className="bg-accent text-black px-4 py-2 rounded-lg text-xs font-bold font-sans hover:bg-white transition-colors flex items-center gap-2 shadow-[0_0_10px_rgba(225,29,72,0.2)]"
                                                                             >
                                                                                 <Zap
                                                                                     size={

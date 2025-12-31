@@ -18,12 +18,12 @@
     --color-primary: #ffffff;
     --color-surface-dark: #000000;
     --color-surface-light: #09090b;
-    --color-accent: #bef264;
+    --color-accent: #e11d48;
     --color-accent-purple: #a855f7;
     --color-text-main: #ffffff;
     --color-text-muted: #a1a1aa;
 
-    --shadow-neon: 0 0 20px -5px rgba(190, 242, 100, 0.5);
+    --shadow-neon: 0 0 20px -5px rgba(225, 29, 72, 0.5);
 }
 
 @layer utilities {
@@ -45,7 +45,7 @@
         z-index: 50;
     }
     .text-glow {
-        text-shadow: 0 0 20px rgba(190, 242, 100, 0.5);
+        text-shadow: 0 0 20px rgba(225, 29, 72, 0.5);
     }
     .stroke-text-white {
         -webkit-text-stroke: 2px white;
