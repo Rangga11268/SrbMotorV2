@@ -28,7 +28,7 @@ export default function Show({ user }) {
     };
 
     return (
-        <MainLayout title="Identity Card">
+        <MainLayout title="Identitas Digital">
             <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
                 {/* Background FX */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"></div>
@@ -41,18 +41,17 @@ export default function Show({ user }) {
                         transition={{ duration: 0.5 }}
                         className="max-w-2xl mx-auto"
                     >
-                        {/* Security Header */}
                         <div className="flex items-center justify-between mb-8 opacity-50">
                             <div className="flex items-center gap-2">
                                 <Shield size={14} className="text-white" />
                                 <span className="text-[10px] uppercase tracking-[0.3em] text-white font-bold">
-                                    Secure Connection
+                                    KONEKSI AMAN
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                                 <span className="text-[10px] uppercase tracking-[0.3em] text-white font-bold">
-                                    Live
+                                    LIVE
                                 </span>
                             </div>
                         </div>
@@ -77,7 +76,7 @@ export default function Show({ user }) {
                                             </div>
                                         </div>
                                         <div className="absolute bottom-2 right-2 bg-black border border-accent text-accent text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                                            User
+                                            Pengguna
                                         </div>
                                     </div>
 
@@ -110,12 +109,12 @@ export default function Show({ user }) {
                                         </div>
                                         <div>
                                             <div className="text-[10px] uppercase font-bold text-white/30 tracking-widest">
-                                                Access Level
+                                                Level Akses
                                             </div>
                                             <div className="text-white font-bold font-mono">
                                                 {user.role === "admin"
                                                     ? "ADMINISTRATOR"
-                                                    : "STANDARD OPERATOR"}
+                                                    : "OPERATOR STANDAR"}
                                             </div>
                                         </div>
                                     </div>
@@ -126,7 +125,7 @@ export default function Show({ user }) {
                                         </div>
                                         <div>
                                             <div className="text-[10px] uppercase font-bold text-white/30 tracking-widest">
-                                                Member Since
+                                                Bergabung Sejak
                                             </div>
                                             <div className="text-white font-bold font-mono">
                                                 {formatDate(user.created_at)}
@@ -150,12 +149,12 @@ export default function Show({ user }) {
                                         </div>
                                         <div>
                                             <div className="text-[10px] uppercase font-bold text-white/30 tracking-widest">
-                                                Verification Status
+                                                Status Verifikasi
                                             </div>
                                             <div className="text-white font-bold font-mono flex items-center gap-2">
                                                 {user.email_verified_at
-                                                    ? "VERIFIED IDENTITY"
-                                                    : "UNVERIFIED IDENTITY"}
+                                                    ? "IDENTITAS TERVERIFIKASI"
+                                                    : "IDENTITAS BELUM TERVERIFIKASI"}
                                                 {user.email_verified_at && (
                                                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
                                                 )}
@@ -171,7 +170,7 @@ export default function Show({ user }) {
                                             className="w-full md:w-auto px-8 py-3 bg-white text-black rounded-xl font-bold hover:bg-accent transition-colors flex items-center justify-center gap-2 text-sm tracking-wide group"
                                         >
                                             <Edit2 size={16} />
-                                            CONFIGURE PROTOCOLS
+                                            KONFIGURASI PROTOKOL
                                         </Link>
                                     </div>
                                 )}
@@ -186,7 +185,7 @@ export default function Show({ user }) {
                                 as="button"
                                 className="text-xs font-mono text-red-400 flex items-center justify-center gap-2 hover:text-red-300 transition-colors"
                             >
-                                <LogOut size={12} /> TERMINATE SESSION
+                                <LogOut size={12} /> AKHIRI SESI
                             </Link>
                         </div>
                     </motion.div>

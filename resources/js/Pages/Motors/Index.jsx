@@ -64,14 +64,14 @@ export default function Index({ motors, filters, brands, types, years }) {
     };
 
     return (
-        <MainLayout title="The Collection">
+        <MainLayout title="Koleksi">
             <div className="min-h-screen bg-surface-dark pt-32 pb-20">
                 {/* HEADLINE */}
                 <div className="container mx-auto px-4 mb-12">
                     <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/10 pb-8">
                         <div>
                             <span className="text-accent font-bold tracking-[0.2em] uppercase text-sm mb-2 block animate-pulse">
-                                Premium Inventory
+                                Inventaris Premium
                             </span>
                             <h1 className="text-5xl md:text-8xl font-display font-black text-white tracking-tighter leading-none">
                                 THE{" "}
@@ -81,9 +81,9 @@ export default function Index({ motors, filters, brands, types, years }) {
                             </h1>
                         </div>
                         <p className="text-gray-400 max-w-md text-right md:text-left">
-                            Curated for performance, inspected for perfection.{" "}
-                            <br />
-                            Find your next machine below.
+                            Dihadirkan untuk performa, diinspeksi untuk
+                            kesempurnaan. <br />
+                            Temukan mesin masa depanmu di bawah.
                         </p>
                     </div>
                 </div>
@@ -98,14 +98,14 @@ export default function Index({ motors, filters, brands, types, years }) {
                                 className="md:hidden w-full flex items-center justify-between px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-bold"
                             >
                                 <span className="flex items-center gap-2">
-                                    <SlidersHorizontal size={18} /> Filters
+                                    <SlidersHorizontal size={18} /> Filter
                                 </span>
                                 <span className="text-xs bg-accent text-black px-2 py-1 rounded-md">
                                     {
                                         Object.values(values).filter(Boolean)
                                             .length
                                     }{" "}
-                                    Active
+                                    Aktif
                                 </span>
                             </button>
 
@@ -125,7 +125,7 @@ export default function Index({ motors, filters, brands, types, years }) {
                                         name="search"
                                         value={values.search}
                                         onChange={handleChange}
-                                        placeholder="Search model..."
+                                        placeholder="Cari model..."
                                         className="w-full bg-black/20 border border-white/10 rounded-full pl-12 pr-4 py-2.5 text-white placeholder-gray-600 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"
                                     />
                                 </div>
@@ -137,7 +137,7 @@ export default function Index({ motors, filters, brands, types, years }) {
                                         onChange={handleChange}
                                         className="bg-black/20 border border-white/10 text-white text-sm rounded-full px-4 py-2.5 focus:border-accent outline-none cursor-pointer hover:bg-white/5 transition-colors appearance-none min-w-[120px]"
                                     >
-                                        <option value="">All Brands</option>
+                                        <option value="">Semua Merek</option>
                                         {brands.map((b) => (
                                             <option key={b} value={b}>
                                                 {b}
@@ -151,7 +151,7 @@ export default function Index({ motors, filters, brands, types, years }) {
                                         onChange={handleChange}
                                         className="bg-black/20 border border-white/10 text-white text-sm rounded-full px-4 py-2.5 focus:border-accent outline-none cursor-pointer hover:bg-white/5 transition-colors appearance-none min-w-[120px]"
                                     >
-                                        <option value="">All Types</option>
+                                        <option value="">Semua Tipe</option>
                                         {types.map((t) => (
                                             <option key={t} value={t}>
                                                 {t}
@@ -220,7 +220,7 @@ export default function Index({ motors, filters, brands, types, years }) {
                                             {!motor.tersedia && (
                                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                     <span className="text-3xl font-display font-black text-red-500 border-4 border-red-500 px-6 py-2 -rotate-12 uppercase tracking-tight">
-                                                        SOLD OUT
+                                                        TERJUAL
                                                     </span>
                                                 </div>
                                             )}
@@ -271,13 +271,14 @@ export default function Index({ motors, filters, brands, types, years }) {
                                 No Motors Found
                             </h3>
                             <p className="text-gray-500 mb-8">
-                                Try adjusting your filters or search terms.
+                                Coba sesuaikan filter atau kata kunci pencarian
+                                anda.
                             </p>
                             <button
                                 onClick={resetFilters}
                                 className="px-8 py-3 bg-accent text-black font-bold rounded-full hover:bg-white transition-colors"
                             >
-                                Clear All Filters
+                                Hapus Filter
                             </button>
                         </div>
                     )}

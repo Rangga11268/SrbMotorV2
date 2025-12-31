@@ -29,7 +29,7 @@ export default function Login() {
     };
 
     return (
-        <MainLayout title="Access Terminal">
+        <MainLayout title="Terminal Akses">
             <div className="min-h-screen bg-surface-dark flex pt-32 pb-12 relative overflow-hidden">
                 {/* Background FX */}
                 <div className="absolute top-0 left-0 w-full h-full">
@@ -53,15 +53,15 @@ export default function Login() {
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-8">
                                     <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                                     <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
-                                        Secure Connection
+                                        Koneksi Aman
                                     </span>
                                 </div>
                                 <h2 className="text-5xl font-display font-black text-white leading-tight mb-4">
                                     WELCOME <br /> BACK
                                 </h2>
                                 <p className="text-white/40 max-w-xs font-sans">
-                                    Authenticate to access your dashboard and
-                                    manage your fleet.
+                                    Otentikasi untuk mengakses dashboard anda
+                                    dan kelola armada anda.
                                 </p>
                             </div>
 
@@ -70,7 +70,7 @@ export default function Login() {
                                     <p>$ initiating session...</p>
                                     <p>$ checking protocols...</p>
                                     <p className="blinking-cursor">
-                                        $ ready for input_
+                                        $ siap untuk input_
                                     </p>
                                 </div>
                             </div>
@@ -81,14 +81,14 @@ export default function Login() {
                             <div className="flex items-center gap-3 mb-8">
                                 <Terminal className="text-white/20" size={32} />
                                 <h3 className="text-2xl font-display font-bold text-white tracking-wide">
-                                    LOGIN ACCESS
+                                    AKSES LOGIN
                                 </h3>
                             </div>
 
                             <form onSubmit={submit} className="space-y-6">
                                 <div>
                                     <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                        Email Identifier
+                                        Email Identitas
                                     </label>
                                     <div className="relative group">
                                         <Mail
@@ -116,7 +116,7 @@ export default function Login() {
 
                                 <div>
                                     <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                        Passcode
+                                        Kata Sandi
                                     </label>
                                     <div className="relative group">
                                         <Lock
@@ -176,14 +176,14 @@ export default function Login() {
                                             className="w-4 h-4 rounded border-white/20 bg-white/5 text-accent focus:ring-accent focus:ring-offset-0 transition-all cursor-pointer"
                                         />
                                         <span className="ml-2 text-sm text-white/60 group-hover:text-white transition-colors">
-                                            Keep Session Active
+                                            Ingat Sesi Ini
                                         </span>
                                     </label>
                                     <Link
                                         href="#"
                                         className="text-sm font-bold text-accent hover:text-white transition-colors"
                                     >
-                                        Recover Key?
+                                        Lupa Sandi?
                                     </Link>
                                 </div>
 
@@ -196,7 +196,7 @@ export default function Login() {
                                         <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                                     ) : (
                                         <>
-                                            INITIATE LOGIN{" "}
+                                            MULAI SESI{" "}
                                             <ArrowRight
                                                 size={20}
                                                 className="group-hover:translate-x-1 transition-transform"
@@ -207,12 +207,12 @@ export default function Login() {
 
                                 <div className="mt-8 text-center border-t border-white/5 pt-6">
                                     <p className="text-white/40 text-sm">
-                                        New to the system?{" "}
+                                        Baru di sistem ini?{" "}
                                         <Link
                                             href={route("register")}
                                             className="text-white font-bold hover:text-accent transition-colors ml-1"
                                         >
-                                            Create Identity
+                                            Buat Identitas
                                         </Link>
                                     </p>
                                 </div>

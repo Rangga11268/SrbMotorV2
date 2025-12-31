@@ -25,7 +25,7 @@ export default function About() {
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <MainLayout title="Who We Are">
+        <MainLayout title="Tentang Kami">
             {/* HERO SECTION - VERTICAL MASSIVE TYPE */}
             <section
                 ref={targetRef}
@@ -40,12 +40,12 @@ export default function About() {
                     style={{ opacity }}
                     className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center"
                 >
-                    <h1 className="flex flex-col text-[18vw] leading-[0.85] font-display font-black text-white tracking-tighter mix-blend-difference">
-                        <span className="self-start ml-4 md:ml-20">WHO</span>
+                    <h1 className="flex flex-col text-[13vw] leading-[0.85] font-display font-black text-white tracking-tighter mix-blend-difference">
+                        <span className="self-start ml-4 md:ml-20">JATI</span>
                         <span className="self-center text-accent/20 stroke-text-white backdrop-blur-sm">
-                            WE
+                            DIRI
                         </span>
-                        <span className="self-end mr-4 md:mr-20">ARE</span>
+                        <span className="self-end mr-4 md:mr-20">KAMI</span>
                     </h1>
                 </motion.div>
 
@@ -71,23 +71,22 @@ export default function About() {
                                 Est. 2020
                             </span>
                             <h2 className="text-5xl md:text-7xl font-display font-black text-white leading-[0.9] tracking-tighter mb-10">
-                                REFINING <br />
-                                THE RIDE <br />
-                                CULTURE.
+                                REVOLUSI <br />
+                                KULTUR
                             </h2>
                         </div>
                         <div className="space-y-8">
                             <p className="text-xl md:text-2xl text-gray-300 font-medium leading-relaxed">
-                                We are not your average dealership. We are a
-                                collective of enthusiasts, engineers, and
-                                perfectionists obsessed with the art of motion.
+                                Kami bukan dealer biasa. Kami adalah kolektif
+                                penggemar, insinyur, dan perfeksionis yang
+                                terobsesi dengan seni gerak.
                             </p>
                             <p className="text-gray-500 text-lg leading-relaxed">
-                                Founded on the belief that buying a used
-                                motorcycle shouldn't feel like a gamble. It
-                                should feel like an upgrade. We curate, we
-                                inspect, and we guarantee quality that rivals
-                                factory fresh.
+                                Didirikan atas keyakinan bahwa membeli motor
+                                bekas seharusnya tidak terasa seperti perjudian.
+                                Seharusnya terasa seperti upgrade. Kami kurasi,
+                                kami inspeksi, dan kami jamin kualitas yang
+                                menyaingi pabrikan.
                             </p>
                             <div className="pt-8">
                                 <span className="font-handwriting text-4xl text-white opacity-80 rotate-[-5deg] block">
@@ -104,15 +103,15 @@ export default function About() {
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 divide-y-2 md:divide-y-0 md:divide-x-2 divide-black/10">
                         {[
-                            { label: "BIKES SOLD", value: "500+" },
-                            { label: "SATISFACTION", value: "99%" },
-                            { label: "YEARS EST.", value: "05" },
+                            { label: "UNIT TERJUAL", value: "500+" },
+                            { label: "KEPUASAN", value: "99%" },
+                            { label: "TAHUN BERDIRI", value: "05" },
                         ].map((stat, i) => (
                             <div
                                 key={i}
                                 className="py-8 md:py-0 md:px-12 text-center group cursor-default"
                             >
-                                <h3 className="text-7xl md:text-9xl font-display font-black tracking-tighter mb-2 group-hover:scale-110 transition-transform duration-300">
+                                <h3 className="text-5xl md:text-7xl font-display font-black tracking-tighter mb-2 group-hover:scale-110 transition-transform duration-300">
                                     {stat.value}
                                 </h3>
                                 <p className="text-sm font-bold tracking-[0.3em] uppercase">
@@ -134,11 +133,11 @@ export default function About() {
                                 <Target size={200} className="text-white" />
                             </div>
                             <h3 className="text-2xl text-accent font-bold mb-4 uppercase tracking-widest">
-                                Vision
+                                Visi
                             </h3>
                             <p className="text-4xl md:text-5xl font-display font-bold text-white leading-tight max-w-2xl relative z-10">
-                                To redefine the pre-owned motorcycle market
-                                through radical transparency and quality.
+                                Mendefinisikan ulang pasar motor bekas melalui
+                                transparansi radikal dan kualitas.
                             </p>
                         </div>
 
@@ -155,29 +154,29 @@ export default function About() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                                 <div className="md:col-span-1">
                                     <h3 className="text-2xl text-accent font-bold mb-4 uppercase tracking-widest">
-                                        Mission
+                                        Misi
                                     </h3>
                                     <h4 className="text-4xl font-display font-bold text-white">
-                                        Three Pillars of SRB.
+                                        Tiga Pilar SRB.
                                     </h4>
                                 </div>
                                 <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8">
                                     {[
                                         {
-                                            title: "Curated Selection",
-                                            desc: "Only the top 1% of bikes make it to our showroom floor.",
+                                            title: "Seleksi Terkurasi",
+                                            desc: "Hanya 1% motor terbaik yang masuk ke showroom kami.",
                                         },
                                         {
-                                            title: "Rigorous Testing",
-                                            desc: "150-point technical inspection by certified master mechanics.",
+                                            title: "Pengujian Ketat",
+                                            desc: "150-poin inspeksi teknis oleh mekanik bersertifikat.",
                                         },
                                         {
-                                            title: "Radical Honesty",
-                                            desc: "Full history reports and transparent pricing. No secrets.",
+                                            title: "Kejujuran Radikal",
+                                            desc: "Laporan riwayat lengkap dan harga transparan. Tanpa rahasia.",
                                         },
                                         {
-                                            title: "Community First",
-                                            desc: "Building a culture of riders, not just a customer list.",
+                                            title: "Komunitas Utama",
+                                            desc: "Membangun budaya pengendara, bukan sekadar daftar pelanggan.",
                                         },
                                     ].map((item, i) => (
                                         <div
@@ -204,18 +203,19 @@ export default function About() {
             <section className="py-32 bg-black text-white text-center border-t border-white/10">
                 <div className="container mx-auto px-4">
                     <h2 className="text-4xl md:text-6xl font-display font-black tracking-tighter mb-8">
-                        JOIN THE <span className="text-accent">MOVEMENT.</span>
+                        GABUNG{" "}
+                        <span className="text-accent">GERAKAN KAMI.</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl mx-auto mb-12 text-lg">
-                        Follow us on social media for the latest drops, riding
-                        tips, and community events.
+                        Ikuti sosial media kami untuk info terbaru, tips
+                        berkendara, dan event komunitas.
                     </p>
                     <div className="flex justify-center gap-6">
                         <Link
                             href="/motors"
                             className="px-10 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-accent transition-colors rounded-full"
                         >
-                            Browser Fleet
+                            Lihat Unit
                         </Link>
                         <a
                             href="https://instagram.com"

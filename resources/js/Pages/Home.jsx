@@ -38,7 +38,7 @@ export default function Home({ popularMotors }) {
         e.preventDefault();
         post(route("contact.submit"), {
             onSuccess: () => {
-                toast.success("Message sent successfully!", {
+                toast.success("Pesan berhasil dikirim!", {
                     style: {
                         background: "#bef264",
                         color: "#000",
@@ -51,7 +51,7 @@ export default function Home({ popularMotors }) {
                 });
                 reset();
             },
-            onError: () => toast.error("Failed to send message."),
+            onError: () => toast.error("Gagal mengirim pesan."),
         });
     };
 
@@ -66,7 +66,7 @@ export default function Home({ popularMotors }) {
     const texty = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
     return (
-        <MainLayout title="The Future of Riding">
+        <MainLayout title="Masa Depan Berkendara">
             {/* HERO SECTION - HYPER MODERN */}
             <section
                 ref={targetRef}
@@ -82,14 +82,14 @@ export default function Home({ popularMotors }) {
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-8 backdrop-blur-md">
                             <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                             <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/70">
-                                Premium Reseller
+                                Reseller Premium
                             </span>
                         </div>
-                        <h1 className="text-[15vw] leading-[0.8] font-display font-black text-white tracking-tighter mix-blend-difference">
-                            THE DREAM
+                        <h1 className="text-[11vw] leading-[0.85] font-display font-black text-white tracking-tighter mix-blend-difference">
+                            MOTOR
                         </h1>
-                        <h1 className="text-[15vw] leading-[0.8] font-display font-black text-transparent stroke-text tracking-tighter opacity-50">
-                            RIDE
+                        <h1 className="text-[11vw] leading-[0.85] font-display font-black stroke-text-white tracking-tighter">
+                            IMPIAN
                         </h1>
                     </motion.div>
 
@@ -114,7 +114,7 @@ export default function Home({ popularMotors }) {
                             className="group relative px-8 py-4 bg-accent text-black font-display font-bold text-xl tracking-tight rounded-full overflow-hidden transition-transform hover:scale-105"
                         >
                             <span className="relative z-10 flex items-center gap-2">
-                                EXPLORE FLEET <ArrowUpRight size={24} />
+                                LIHAT KOLEKSI <ArrowUpRight size={24} />
                             </span>
                             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 mix-blend-overlay"></div>
                         </Link>
@@ -122,7 +122,7 @@ export default function Home({ popularMotors }) {
                             href="#contact"
                             className="px-8 py-4 text-white font-display font-bold text-xl border border-white/20 rounded-full hover:bg-white/5 transition-colors"
                         >
-                            BOOK APPOINTMENT
+                            BUAT JANJI TEMU
                         </a>
                     </div>
                 </div>
@@ -136,7 +136,7 @@ export default function Home({ popularMotors }) {
                             key={i}
                             className="text-4xl font-display font-black text-black uppercase tracking-tighter"
                         >
-                            PREMIUM QUALITY • 100% WARRANTY • FAST DELIVERY •
+                            KUALITAS PREMIUM • GARANSI 100% • PENGIRIMAN CEPAT •
                         </span>
                     ))}
                 </div>
@@ -148,12 +148,14 @@ export default function Home({ popularMotors }) {
                     <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                         <div>
                             <h2 className="text-6xl md:text-8xl font-display font-black text-white leading-none tracking-tighter">
-                                WHY <span className="text-gray-700">US?</span>
+                                KENAPA{" "}
+                                <span className="text-gray-700">KAMI?</span>
                             </h2>
                         </div>
                         <p className="text-gray-400 max-w-md text-lg leading-relaxed text-right md:text-left">
-                            We don't just sell motorcycles. We curate
-                            experiences. Certified quality driven by passion.
+                            Kami tidak sekadar menjual motor. Kami mengkurasi
+                            pengalaman. Kualitas bersertifikat didorong oleh
+                            hasrat.
                         </p>
                     </div>
 
@@ -164,19 +166,18 @@ export default function Home({ popularMotors }) {
                                 <Zap size={120} className="text-accent" />
                             </div>
                             <h3 className="text-4xl font-display font-bold text-white mb-6">
-                                Certified Quality
+                                Kualitas Terjamin
                             </h3>
                             <p className="text-gray-400 text-xl max-w-lg mb-8">
-                                Every unit undergoes a rigorous 360-point
-                                inspection by our master mechanics. We don't
-                                compromise.
+                                Setiap unit melalui inspeksi 360-poin yang ketat
+                                oleh mekanik ahli kami. Tanpa kompromi.
                             </p>
                             <div className="flex gap-2">
                                 <span className="px-4 py-2 rounded-full border border-white/10 text-xs font-bold text-white uppercase bg-white/5">
-                                    Engine Check
+                                    Cek Mesin
                                 </span>
                                 <span className="px-4 py-2 rounded-full border border-white/10 text-xs font-bold text-white uppercase bg-white/5">
-                                    Bodywork
+                                    Bodi
                                 </span>
                                 <span className="px-4 py-2 rounded-full border border-white/10 text-xs font-bold text-white uppercase bg-white/5">
                                     Legal
@@ -191,10 +192,11 @@ export default function Home({ popularMotors }) {
                             </div>
                             <div>
                                 <h3 className="text-3xl font-display font-bold mb-2">
-                                    Instant Approval
+                                    Persetujuan Instan
                                 </h3>
                                 <p className="font-medium opacity-80">
-                                    Get on the road in less than 24 hours.
+                                    Bawa pulang motor impian dalam kurang dari
+                                    24 jam.
                                 </p>
                             </div>
                         </div>
@@ -206,10 +208,10 @@ export default function Home({ popularMotors }) {
                                 className="text-white mb-6 group-hover:scale-110 transition-transform"
                             />
                             <h3 className="text-2xl font-display font-bold text-white mb-2">
-                                6 Month Warranty
+                                Garansi 6 Bulan
                             </h3>
                             <p className="text-gray-400">
-                                Peace of mind included.
+                                Ketenangan pikiran sudah termasuk.
                             </p>
                         </div>
 
@@ -217,10 +219,10 @@ export default function Home({ popularMotors }) {
                         <div className="md:col-span-2 bg-gradient-to-r from-zinc-900 to-black border border-white/10 rounded-[2rem] p-10 flex items-center justify-between group hover:border-accent/30 transition-colors">
                             <div>
                                 <h3 className="text-2xl font-display font-bold text-white mb-2">
-                                    Legal Guarantee
+                                    Jaminan Legalitas
                                 </h3>
                                 <p className="text-gray-400">
-                                    100% Valid Documents or Money Back.
+                                    100% Dokumen Valid atau Uang Kembali.
                                 </p>
                             </div>
                             <div className="w-16 h-16 rounded-full border border-dashed border-white/30 flex items-center justify-center group-hover:border-accent group-hover:text-accent text-white transition-all">
@@ -236,13 +238,13 @@ export default function Home({ popularMotors }) {
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
                         <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter">
-                            TRENDING <span className="text-accent">NOW</span>
+                            SEDANG <span className="text-accent">TREN</span>
                         </h2>
                         <Link
                             href={route("motors.index")}
                             className="text-white border-b border-accent pb-1 hover:text-accent transition-colors font-display text-xl uppercase tracking-widest"
                         >
-                            View All Collection
+                            LIHAT SEMUA KOLEKSI
                         </Link>
                     </div>
 
@@ -273,7 +275,7 @@ export default function Home({ popularMotors }) {
                                             {!motor.tersedia && (
                                                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
                                                     <span className="text-2xl font-display font-black text-red-500 uppercase -rotate-12 border-4 border-red-500 px-4 py-2">
-                                                        SOLD OUT
+                                                        TERJUAL
                                                     </span>
                                                 </div>
                                             )}
@@ -313,7 +315,7 @@ export default function Home({ popularMotors }) {
                     ) : (
                         <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl">
                             <p className="text-gray-500">
-                                No trending motors available.
+                                Tidak ada motor yang sedang tren.
                             </p>
                         </div>
                     )}
@@ -331,11 +333,11 @@ export default function Home({ popularMotors }) {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
                         <div>
                             <h2 className="text-6xl md:text-8xl font-display font-black leading-none tracking-tighter mb-8">
-                                LET'S TALK <br /> BUSINESS.
+                                HUBUNGI <br /> KAMI.
                             </h2>
                             <p className="text-xl font-medium max-w-md mb-12">
-                                Ready to upgrade your ride? Our team is waiting
-                                to get you on the road.
+                                Siap untuk upgrade kendaraanmu? Tim kami siap
+                                membantu kamu segera mengaspal.
                             </p>
                             <div className="space-y-6 text-xl font-bold">
                                 <a
@@ -373,7 +375,7 @@ export default function Home({ popularMotors }) {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-sm font-bold uppercase tracking-wide opacity-50">
-                                            Name
+                                            Nama
                                         </label>
                                         <input
                                             type="text"
@@ -382,13 +384,13 @@ export default function Home({ popularMotors }) {
                                                 setData("name", e.target.value)
                                             }
                                             className="w-full bg-transparent border-b-2 border-black/20 py-3 text-xl font-bold focus:border-black focus:ring-0 placeholder-black/30 outline-none transition-colors"
-                                            placeholder="Your Name"
+                                            placeholder="Nama Anda"
                                             required
                                         />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-bold uppercase tracking-wide opacity-50">
-                                            Email / Phone
+                                            Email / Telepon
                                         </label>
                                         <input
                                             type="text"
@@ -397,14 +399,14 @@ export default function Home({ popularMotors }) {
                                                 setData("email", e.target.value)
                                             }
                                             className="w-full bg-transparent border-b-2 border-black/20 py-3 text-xl font-bold focus:border-black focus:ring-0 placeholder-black/30 outline-none transition-colors"
-                                            placeholder="Contact Info"
+                                            placeholder="Info Kontak"
                                             required
                                         />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold uppercase tracking-wide opacity-50">
-                                        Message
+                                        Pesan
                                     </label>
                                     <textarea
                                         value={data.message}
@@ -412,7 +414,7 @@ export default function Home({ popularMotors }) {
                                             setData("message", e.target.value)
                                         }
                                         className="w-full bg-transparent border-b-2 border-black/20 py-3 text-xl font-bold focus:border-black focus:ring-0 placeholder-black/30 outline-none transition-colors resize-none h-32"
-                                        placeholder="I'm interested in..."
+                                        placeholder="Saya tertarik dengan..."
                                         required
                                     />
                                 </div>
@@ -421,7 +423,7 @@ export default function Home({ popularMotors }) {
                                     disabled={processing}
                                     className="w-full py-5 bg-black text-white font-display font-bold text-xl uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-xl disabled:opacity-50"
                                 >
-                                    {processing ? "Sending..." : "Send Message"}
+                                    {processing ? "Mengirim..." : "Kirim Pesan"}
                                 </button>
                             </form>
                         </div>

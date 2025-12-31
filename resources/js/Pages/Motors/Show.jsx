@@ -107,11 +107,11 @@ export default function Show({ motor, relatedMotors }) {
                             {motor.tersedia ? (
                                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/20 text-accent rounded-full font-bold uppercase tracking-wider text-sm">
                                     <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>{" "}
-                                    Available
+                                    Tersedia
                                 </span>
                             ) : (
                                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-full font-bold uppercase tracking-wider text-sm">
-                                    <XCircle size={16} /> Sold Out
+                                    <XCircle size={16} /> Terjual
                                 </span>
                             )}
                         </div>
@@ -127,7 +127,7 @@ export default function Show({ motor, relatedMotors }) {
                                 className="flex items-center gap-4 mb-6"
                             >
                                 <span className="text-gray-400 font-bold tracking-widest uppercase">
-                                    {motor.year} Model
+                                    Model Tahun {motor.year}
                                 </span>
                                 <div className="h-px flex-grow bg-white/10"></div>
                             </motion.div>
@@ -167,13 +167,12 @@ export default function Show({ motor, relatedMotors }) {
                         {/* Specs Grid */}
                         <div className="mb-16">
                             <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                <Activity className="text-accent" />{" "}
-                                Specifications
+                                <Activity className="text-accent" /> Spesifikasi
                             </h3>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
                                     <p className="text-gray-500 text-xs uppercase font-bold tracking-wider mb-2">
-                                        Type
+                                        Tipe
                                     </p>
                                     <p
                                         className="text-lg font-bold text-white max-w-full truncate"
@@ -219,12 +218,12 @@ export default function Show({ motor, relatedMotors }) {
                         {/* Description */}
                         <div className="mb-20">
                             <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                <FileText className="text-accent" /> Details
+                                <FileText className="text-accent" /> Detail
                             </h3>
                             <div className="prose prose-invert prose-lg text-gray-400">
                                 <p>
                                     {motor.details ||
-                                        "No detailed description available for this unit."}
+                                        "Belum ada deskripsi detail untuk unit ini."}
                                 </p>
                             </div>
                         </div>
@@ -233,7 +232,7 @@ export default function Show({ motor, relatedMotors }) {
                         {relatedMotors.length > 0 && (
                             <div className="border-t border-white/10 pt-12">
                                 <h3 className="text-2xl font-display font-bold text-white mb-8">
-                                    Related Units
+                                    Unit Terkait
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {relatedMotors.map((related) => (
@@ -282,7 +281,7 @@ export default function Show({ motor, relatedMotors }) {
                     <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="hidden md:block">
                             <p className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">
-                                Total Price
+                                Harga Total
                             </p>
                             <p className="text-3xl font-display font-bold text-white">
                                 Rp{" "}
@@ -321,7 +320,7 @@ export default function Show({ motor, relatedMotors }) {
                                         )}
                                         className="flex-[2] md:flex-none px-10 py-4 bg-accent text-black font-bold rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(190,242,100,0.3)] hover:shadow-[0_0_30px_rgba(190,242,100,0.5)]"
                                     >
-                                        <ShoppingCart size={20} /> Buy Cash
+                                        <ShoppingCart size={20} /> Beli Tunai
                                     </Link>
                                 </>
                             ) : (
@@ -329,7 +328,7 @@ export default function Show({ motor, relatedMotors }) {
                                     href={route("login")}
                                     className="flex-[2] md:flex-none px-12 py-4 bg-accent text-black font-bold rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(190,242,100,0.3)]"
                                 >
-                                    Login to Buy
+                                    Masuk untuk Membeli
                                 </Link>
                             )}
                         </div>

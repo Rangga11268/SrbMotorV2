@@ -165,7 +165,7 @@ export default function OrderConfirmation({ transaction }) {
     };
 
     return (
-        <MainLayout title="Order Confirmation">
+        <MainLayout title="Konfirmasi Pesanan">
             <div className="min-h-screen bg-surface-dark text-white pt-32 pb-24 relative overflow-hidden">
                 {/* Background FX */}
                 <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -206,9 +206,9 @@ export default function OrderConfirmation({ transaction }) {
                             </div>
 
                             <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter mb-4">
-                                ORDER{" "}
+                                PESANAN{" "}
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">
-                                    CONFIRMED
+                                    DIKONFIRMASI
                                 </span>
                             </h1>
                             <p className="text-lg text-white/60 font-sans max-w-xl mx-auto">
@@ -237,7 +237,7 @@ export default function OrderConfirmation({ transaction }) {
                                         </div>
                                         <div>
                                             <div className="text-xs text-white/40 font-bold tracking-widest uppercase">
-                                                Transaction ID
+                                                ID Transaksi
                                             </div>
                                             <div className="font-mono text-xl text-white font-bold tracking-wider">
                                                 {transaction.id}
@@ -247,7 +247,7 @@ export default function OrderConfirmation({ transaction }) {
                                     <div className="flex items-center gap-4">
                                         <div className="text-right hidden md:block">
                                             <div className="text-xs text-white/40 font-bold tracking-widest uppercase">
-                                                Date
+                                                Tanggal
                                             </div>
                                             <div className="text-white font-bold">
                                                 {new Date(
@@ -274,7 +274,7 @@ export default function OrderConfirmation({ transaction }) {
                                     <div className="lg:col-span-5 relative bg-gradient-to-b from-white/5 to-transparent p-8 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-white/5">
                                         <div className="absolute top-4 left-4">
                                             <span className="px-3 py-1 rounded-full border border-white/10 text-xs font-bold text-white/60 uppercase tracking-wider bg-black/20 backdrop-blur-md">
-                                                Selected Unit
+                                                Unit Terpilih
                                             </span>
                                         </div>
 
@@ -315,8 +315,8 @@ export default function OrderConfirmation({ transaction }) {
                                             {/* Customer Info */}
                                             <div>
                                                 <h4 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                                    <User size={14} /> Customer
-                                                    Details
+                                                    <User size={14} /> Detail
+                                                    Pelanggan
                                                 </h4>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <InfoBox
@@ -357,11 +357,11 @@ export default function OrderConfirmation({ transaction }) {
                                                             <CreditCard
                                                                 size={14}
                                                             />{" "}
-                                                            Credit Simulation
+                                                            Simulasi Kredit
                                                         </h4>
                                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                                             <InfoBox
-                                                                label="Down Payment"
+                                                                label="Uang Muka"
                                                                 value={formatCurrency(
                                                                     transaction
                                                                         .credit_detail
@@ -560,7 +560,7 @@ function CashPaymentModule({
             <div>
                 {isPaid ? (
                     <span className="px-4 py-2 bg-green-500/20 border border-green-500/30 text-green-400 font-bold rounded-lg flex items-center gap-2">
-                        PAID{" "}
+                        LUNAS{" "}
                         <CheckCircle
                             size={16}
                             fill="currentColor"
@@ -576,7 +576,7 @@ function CashPaymentModule({
                         {isLoading ? (
                             <span className="flex items-center gap-2">
                                 <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
-                                Processing...
+                                Memproses...
                             </span>
                         ) : (
                             <>

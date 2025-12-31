@@ -32,7 +32,7 @@ export default function Register() {
     };
 
     return (
-        <MainLayout title="Create Identity">
+        <MainLayout title="Buat Identitas">
             <div className="min-h-screen bg-surface-dark flex pt-32 pb-12 relative overflow-hidden">
                 {/* Background FX */}
                 <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
@@ -60,18 +60,18 @@ export default function Register() {
                                         className="text-blue-400"
                                     />
                                     <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">
-                                        New User Protocol
+                                        Protokol User Baru
                                     </span>
                                 </div>
                                 <h2 className="text-5xl font-display font-black text-white leading-tight mb-4">
-                                    JOIN THE <br />{" "}
+                                    GABUNG <br />{" "}
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
-                                        NETWORK
+                                        JARINGAN
                                     </span>
                                 </h2>
                                 <p className="text-white/40 max-w-xs font-sans">
-                                    Create your secure identity to access
-                                    exclusive deals and manage transactions.
+                                    Buat identitas aman anda untuk mengakses
+                                    penawaran eksklusif dan kelola transaksi.
                                 </p>
                             </div>
 
@@ -89,7 +89,7 @@ export default function Register() {
                             <div className="flex items-center gap-3 mb-8">
                                 <UserPlus className="text-white/20" size={32} />
                                 <h3 className="text-2xl font-display font-bold text-white tracking-wide">
-                                    REGISTER IDENTITY
+                                    DAFTAR IDENTITAS
                                 </h3>
                             </div>
 
@@ -97,7 +97,7 @@ export default function Register() {
                                 {/* Name */}
                                 <div>
                                     <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                        Full Name
+                                        Nama Lengkap
                                     </label>
                                     <div className="relative group">
                                         <User
@@ -127,7 +127,7 @@ export default function Register() {
                                 {/* Email */}
                                 <div>
                                     <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                        Email Address
+                                        Alamat Email
                                     </label>
                                     <div className="relative group">
                                         <Mail
@@ -157,7 +157,7 @@ export default function Register() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                            Password
+                                            Kata Sandi
                                         </label>
                                         <div className="relative group">
                                             <Lock
@@ -200,7 +200,7 @@ export default function Register() {
                                     </div>
                                     <div>
                                         <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                            Confirm
+                                            Konfirmasi
                                         </label>
                                         <div className="relative group">
                                             <Lock
@@ -262,7 +262,7 @@ export default function Register() {
                                         <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                     ) : (
                                         <>
-                                            CREATE ACCOUNT{" "}
+                                            BUAT AKUN{" "}
                                             <ArrowRight
                                                 size={20}
                                                 className="group-hover:translate-x-1 transition-transform"
@@ -273,12 +273,12 @@ export default function Register() {
 
                                 <div className="mt-8 text-center border-t border-white/5 pt-6">
                                     <p className="text-white/40 text-sm">
-                                        Already registered?{" "}
+                                        Sudah terdaftar?{" "}
                                         <Link
                                             href={route("login")}
                                             className="text-blue-400 font-bold hover:text-white transition-colors ml-1"
                                         >
-                                            Access Terminal
+                                            Akses Terminal
                                         </Link>
                                     </p>
                                 </div>

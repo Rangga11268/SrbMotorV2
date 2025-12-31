@@ -22,7 +22,7 @@ export default function Edit({ user }) {
     const [activeTab, setActiveTab] = useState("profile");
 
     return (
-        <MainLayout title="Command Center">
+        <MainLayout title="Pusat Komando">
             <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
                 {/* Background FX */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20 pointer-events-none"></div>
@@ -40,18 +40,18 @@ export default function Edit({ user }) {
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-4 backdrop-blur-md">
                                     <Cpu size={12} className="text-accent" />
                                     <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
-                                        System Access Authorized
+                                        Akses Sistem Diizinkan
                                     </span>
                                 </div>
                                 <h1 className="text-4xl md:text-5xl font-display font-black text-white leading-none">
-                                    COMMAND{" "}
+                                    PUSAT{" "}
                                     <span className="text-accent text-glow">
-                                        CENTER
+                                        KOMANDO
                                     </span>
                                 </h1>
                                 <p className="text-white/40 mt-2 font-mono text-sm max-w-md">
-                                    Manage identity protocols and security
-                                    clearance keys.
+                                    Kelola protokol identitas dan kunci keamanan
+                                    akun Anda.
                                 </p>
                             </div>
 
@@ -106,15 +106,15 @@ export default function Edit({ user }) {
                                     active={activeTab === "profile"}
                                     onClick={() => setActiveTab("profile")}
                                     icon={ScanFace}
-                                    label="IDENTITY PROTOCOL"
-                                    desc="Personal Info & Contact"
+                                    label="PROTOKOL IDENTITAS"
+                                    desc="Info Personal & Kontak"
                                 />
                                 <TabButton
                                     active={activeTab === "password"}
                                     onClick={() => setActiveTab("password")}
                                     icon={Fingerprint}
-                                    label="SECURITY KEY"
-                                    desc="Password Management"
+                                    label="KUNCI KEAMANAN"
+                                    desc="Manajemen Password"
                                 />
 
                                 <div className="pt-8 mt-8 border-t border-white/5">
@@ -127,7 +127,7 @@ export default function Edit({ user }) {
                                             className="group-hover:-translate-x-1 transition-transform"
                                         />
                                         <span className="font-bold text-xs tracking-widest uppercase">
-                                            Terminate Session
+                                            Akhiri Sesi
                                         </span>
                                     </Link>
                                 </div>
@@ -153,7 +153,7 @@ export default function Edit({ user }) {
                                                         size={18}
                                                         className="text-accent"
                                                     />
-                                                    IDENTITY CONFIGURATION
+                                                    KONFIGURASI IDENTITAS
                                                 </h2>
                                                 <UpdateProfileForm
                                                     user={user}
@@ -172,7 +172,7 @@ export default function Edit({ user }) {
                                                         size={18}
                                                         className="text-accent"
                                                     />
-                                                    SECURITY UPDATE
+                                                    PEMBARUAN KEAMANAN
                                                 </h2>
                                                 <UpdatePasswordForm />
                                             </motion.div>
@@ -245,7 +245,7 @@ function UpdateProfileForm({ user }) {
         <form onSubmit={submit} className="space-y-6">
             <div className="space-y-2">
                 <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest ml-1">
-                    Display Name
+                    Nama Tampilan
                 </label>
                 <div className="relative group">
                     <User
@@ -257,7 +257,7 @@ function UpdateProfileForm({ user }) {
                         value={data.name}
                         onChange={(e) => setData("name", e.target.value)}
                         className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-mono text-sm"
-                        placeholder="ENTER FULL NAME"
+                        placeholder="MASUKKAN NAMA LENGKAP"
                     />
                 </div>
                 {errors.name && (
@@ -270,7 +270,7 @@ function UpdateProfileForm({ user }) {
 
             <div className="space-y-2">
                 <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest ml-1">
-                    Comms Address
+                    Alamat Komunikasi
                 </label>
                 <div className="relative group">
                     <Mail
@@ -282,7 +282,7 @@ function UpdateProfileForm({ user }) {
                         value={data.email}
                         onChange={(e) => setData("email", e.target.value)}
                         className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-mono text-sm"
-                        placeholder="ENTER EMAIL ADDRESS"
+                        placeholder="MASUKKAN ALAMAT EMAIL"
                     />
                 </div>
                 {errors.email && (
@@ -304,7 +304,7 @@ function UpdateProfileForm({ user }) {
                     ) : (
                         <Save size={18} />
                     )}
-                    SAVE CONFIGURATION
+                    SIMPAN KONFIGURASI
                 </button>
             </div>
         </form>
@@ -329,7 +329,7 @@ function UpdatePasswordForm() {
         <form onSubmit={submit} className="space-y-6">
             <div className="space-y-2">
                 <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest ml-1">
-                    Current Protocol Key
+                    Kunci Protokol Saat Ini
                 </label>
                 <div className="relative group">
                     <Lock
@@ -356,7 +356,7 @@ function UpdatePasswordForm() {
 
             <div className="space-y-2">
                 <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest ml-1">
-                    New Protocol Key
+                    Kunci Protokol Baru
                 </label>
                 <div className="relative group">
                     <Lock
@@ -368,7 +368,7 @@ function UpdatePasswordForm() {
                         value={data.password}
                         onChange={(e) => setData("password", e.target.value)}
                         className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-mono text-sm"
-                        placeholder="MIN 8 CHARACTERS"
+                        placeholder="MIN 8 KARAKTER"
                     />
                 </div>
                 {errors.password && (
@@ -381,7 +381,7 @@ function UpdatePasswordForm() {
 
             <div className="space-y-2">
                 <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest ml-1">
-                    Confirm Protocol Key
+                    Konfirmasi Kunci Protokol
                 </label>
                 <div className="relative group">
                     <Lock
@@ -395,7 +395,7 @@ function UpdatePasswordForm() {
                             setData("password_confirmation", e.target.value)
                         }
                         className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-mono text-sm"
-                        placeholder="REPEAT NEW PASSWORD"
+                        placeholder="ULANGI PASSWORD BARU"
                     />
                 </div>
             </div>
@@ -411,7 +411,7 @@ function UpdatePasswordForm() {
                     ) : (
                         <Save size={18} />
                     )}
-                    UPDATE SECURITY
+                    PERBARUI KEAMANAN
                 </button>
             </div>
         </form>

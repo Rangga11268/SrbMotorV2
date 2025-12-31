@@ -23,12 +23,14 @@ export default function Footer() {
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5">
                             <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                             <span className="text-xs font-bold tracking-widest uppercase text-gray-400">
-                                Trusted Dealer
+                                Dealer Terpercaya
                             </span>
                         </div>
                         <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
-                            Find your dream ride <br />
-                            <span className="text-gray-500">starts here.</span>
+                            Temukan motor impianmu <br />
+                            <span className="text-gray-500">
+                                dimulai di sini.
+                            </span>
                         </h2>
                         <div className="flex gap-4">
                             <a
@@ -57,7 +59,7 @@ export default function Footer() {
                                     href="/#home"
                                     className="text-lg font-display font-medium hover:text-accent transition-colors"
                                 >
-                                    Home
+                                    Beranda
                                 </Link>
                             </li>
                             <li>
@@ -65,7 +67,7 @@ export default function Footer() {
                                     href="/motors"
                                     className="text-lg font-display font-medium hover:text-accent transition-colors"
                                 >
-                                    Collection
+                                    Koleksi
                                 </Link>
                             </li>
                             <li>
@@ -73,7 +75,7 @@ export default function Footer() {
                                     href="/about"
                                     className="text-lg font-display font-medium hover:text-accent transition-colors"
                                 >
-                                    Studio
+                                    Tentang
                                 </Link>
                             </li>
                         </ul>
@@ -81,7 +83,7 @@ export default function Footer() {
 
                     <div className="md:col-span-3">
                         <h4 className="font-body text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">
-                            Contact
+                            Kontak
                         </h4>
                         <ul className="space-y-4">
                             <li className="flex flex-col gap-1">
@@ -108,7 +110,7 @@ export default function Footer() {
                             </li>
                             <li className="flex flex-col gap-1">
                                 <span className="text-sm text-gray-400">
-                                    Location
+                                    Lokasi
                                 </span>
                                 <span className="text-sm text-gray-300 leading-relaxed">
                                     Jl. Lori Sakti No. 22, Bekasi Utara,
@@ -123,7 +125,7 @@ export default function Footer() {
                 <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row items-end justify-between gap-8">
                     <div className="text-xs text-gray-500 font-mono">
                         &copy; {new Date().getFullYear()} SRB Motors Corp.{" "}
-                        <br /> Designed for the bold.
+                        <br /> Didesain untuk para pemberani.
                     </div>
                     <h1 className="text-[12vw] leading-none font-display font-black tracking-tighter text-white opacity-20 select-none pointer-events-none mix-blend-overlay">
                         SRBMOTORS

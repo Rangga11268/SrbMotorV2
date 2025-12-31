@@ -38,7 +38,7 @@ export default function DocumentManagement({ transaction }) {
             case "disetujui":
             case "ready_for_delivery":
                 return {
-                    label: "APPROVED",
+                    label: "DISETUJUI",
                     color: "bg-green-500/10 text-green-400 border-green-500/20",
                     icon: CheckCircle,
                 };
@@ -48,14 +48,14 @@ export default function DocumentManagement({ transaction }) {
             case "SUBMITTED_TO_SURVEYOR":
             case "SURVEY_SCHEDULED":
                 return {
-                    label: "ANALYZING",
+                    label: "DIPROSES",
                     color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
                     icon: Activity,
                 };
             case "ditolak":
             case "REJECTED":
                 return {
-                    label: "REJECTED",
+                    label: "DITOLAK",
                     color: "bg-red-500/10 text-red-400 border-red-500/20",
                     icon: XCircle,
                 };
@@ -124,7 +124,7 @@ export default function DocumentManagement({ transaction }) {
         );
 
     return (
-        <MainLayout title="Document Vault">
+        <MainLayout title="Brankas Dokumen">
             <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
                 {/* Background FX */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-surface-dark to-surface-dark pointer-events-none"></div>
@@ -138,16 +138,18 @@ export default function DocumentManagement({ transaction }) {
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-6 backdrop-blur-md">
                             <Database size={12} className="text-blue-400" />
                             <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">
-                                DATABASE ACCESS
+                                AKSES DATABASE
                             </span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-display font-black text-white mb-4">
-                            DOCUMENT{" "}
-                            <span className="text-accent text-glow">VAULT</span>
+                            BRANKAS{" "}
+                            <span className="text-accent text-glow">
+                                DOKUMEN
+                            </span>
                         </h1>
                         <p className="text-white/40 font-mono text-sm">
-                            Manage and update verification assets for
-                            Transaction ID: #{transaction.id}
+                            Kelola dan perbarui aset verifikasi untuk ID
+                            Transaksi: #{transaction.id}
                         </p>
                     </motion.div>
 
@@ -174,7 +176,7 @@ export default function DocumentManagement({ transaction }) {
                                                     transaction.credit_detail
                                                         .tenor
                                                 }{" "}
-                                                MO
+                                                BLN
                                             </span>
                                             <span>•</span>
                                             <span>
@@ -207,7 +209,7 @@ export default function DocumentManagement({ transaction }) {
                                         size={18}
                                         className="text-green-400"
                                     />
-                                    STORED ASSETS
+                                    ASET TERSIMPAN
                                 </h3>
 
                                 {Object.keys(groupedDocuments).length > 0 ? (
@@ -252,7 +254,7 @@ export default function DocumentManagement({ transaction }) {
                                                                 <Eye
                                                                     size={12}
                                                                 />{" "}
-                                                                VIEW
+                                                                LIHAT
                                                             </a>
                                                         </div>
                                                     ))}
@@ -263,7 +265,7 @@ export default function DocumentManagement({ transaction }) {
                                 ) : (
                                     <div className="text-center py-10">
                                         <p className="text-white/30 font-mono text-sm">
-                                            VAULT EMPTY
+                                            BRANKAS KOSONG
                                         </p>
                                     </div>
                                 )}
@@ -282,8 +284,8 @@ export default function DocumentManagement({ transaction }) {
                                     )}
                                     <span className="text-xs font-bold font-mono">
                                         {hasRequiredDocs
-                                            ? "ALL PROTOCOLS VERIFIED"
-                                            : "INCOMPLETE DATA DETECTED"}
+                                            ? "SEMUA PROTOKOL TERVERIFIKASI"
+                                            : "DATA TIDAK LENGKAP TERDETEKSI"}
                                     </span>
                                 </div>
                             </div>
@@ -292,7 +294,7 @@ export default function DocumentManagement({ transaction }) {
                             <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
                                 <h3 className="text-white font-bold flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
                                     <Upload size={18} className="text-accent" />
-                                    UPLOAD PATCH
+                                    UNGGAH DATA BARU
                                 </h3>
 
                                 <form onSubmit={submit} className="space-y-4">
@@ -336,7 +338,7 @@ export default function DocumentManagement({ transaction }) {
                                         files={data.documents.SLIP_GAJI}
                                     />
                                     <FileUploadFieldMin
-                                        label="ADDITIONAL"
+                                        label="DOKUMEN TAMBAHAN"
                                         id="document_lainnya"
                                         accept="image/*,application/pdf"
                                         onChange={(e) =>
@@ -375,7 +377,7 @@ export default function DocumentManagement({ transaction }) {
                                             disabled={processing}
                                             className="flex-1 bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-accent transition-colors flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
                                         >
-                                            <Upload size={16} /> UPLOAD PATCH
+                                            <Upload size={16} /> UNGGAH
                                         </button>
                                     </div>
                                 </form>

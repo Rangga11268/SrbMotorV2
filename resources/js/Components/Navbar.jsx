@@ -27,9 +27,9 @@ export default function Navbar() {
     }, []);
 
     const navLinks = [
-        { href: "/#home", label: "Home" },
-        { href: "/about", label: "Studio" },
-        { href: "/motors", label: "Collection" },
+        { href: "/#home", label: "Beranda" },
+        { href: "/about", label: "Tentang" },
+        { href: "/motors", label: "Koleksi" },
     ];
 
     return (
@@ -141,7 +141,7 @@ export default function Navbar() {
                                         >
                                             <div className="px-3 py-2 border-b border-white/5 mb-2">
                                                 <p className="text-[10px] font-bold text-accent uppercase tracking-wider">
-                                                    Account
+                                                    Akun
                                                 </p>
                                                 <p className="text-xs font-medium text-white truncate">
                                                     {auth.user.email}
@@ -150,21 +150,21 @@ export default function Navbar() {
                                             {[
                                                 {
                                                     href: route("profile.show"),
-                                                    label: "Profile",
+                                                    label: "Profil",
                                                     icon: UserCircle,
                                                 },
                                                 {
                                                     href: route(
                                                         "motors.user-transactions"
                                                     ),
-                                                    label: "Orders",
+                                                    label: "Pesanan",
                                                     icon: List,
                                                 },
                                                 {
                                                     href: route(
                                                         "installments.index"
                                                     ),
-                                                    label: "Installments",
+                                                    label: "Cicilan",
                                                     icon: CreditCard,
                                                 },
                                             ].map((item, idx) => (
@@ -199,7 +199,7 @@ export default function Navbar() {
                                                 as="button"
                                                 className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 text-red-400 hover:text-red-500 transition-colors text-xs font-bold"
                                             >
-                                                <LogOut size={14} /> Sign Out
+                                                <LogOut size={14} /> Keluar
                                             </Link>
                                         </motion.div>
                                     )}
@@ -215,13 +215,13 @@ export default function Navbar() {
                                             : "text-white"
                                     }`}
                                 >
-                                    Login
+                                    Masuk
                                 </Link>
                                 <Link
                                     href={route("register")}
                                     className="px-4 py-1.5 bg-white text-black rounded-full text-xs font-bold hover:bg-accent transition-colors"
                                 >
-                                    Join
+                                    Daftar
                                 </Link>
                             </div>
                         )}
@@ -269,13 +269,13 @@ export default function Navbar() {
                                         href={route("login")}
                                         className="text-xl font-body text-gray-400 hover:text-white"
                                     >
-                                        Login
+                                        Masuk
                                     </Link>
                                     <Link
                                         href={route("register")}
                                         className="px-8 py-3 bg-accent text-black rounded-full font-bold"
                                     >
-                                        Start Now
+                                        Mulai Sekarang
                                     </Link>
                                 </div>
                             )}

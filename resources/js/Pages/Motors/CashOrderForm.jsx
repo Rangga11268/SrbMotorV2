@@ -38,14 +38,14 @@ export default function CashOrderForm({ motor }) {
     const submit = (e) => {
         e.preventDefault();
         if (data.booking_fee >= motor.price) {
-            alert("Booking fee cannot differ from motor price.");
+            alert("Booking fee tidak boleh berbeda dari harga motor.");
             return;
         }
         post(route("motors.process-cash-order", motor.id));
     };
 
     return (
-        <MainLayout title={`Cash Order - ${motor.name}`}>
+        <MainLayout title={`Order Tunai - ${motor.name}`}>
             <div className="bg-surface-dark min-h-screen text-white pt-20">
                 {/* Fixed Back Button */}
                 <div className="fixed top-24 left-4 z-50 lg:left-8">
@@ -72,7 +72,7 @@ export default function CashOrderForm({ motor }) {
                             className="relative z-10 w-full max-w-lg"
                         >
                             <h2 className="text-[10vw] font-display font-black text-white/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap select-none">
-                                CASH
+                                TUNAI
                             </h2>
                             <img
                                 src={`/storage/${motor.image_path}`}
@@ -114,11 +114,11 @@ export default function CashOrderForm({ motor }) {
                                 className="mb-10"
                             >
                                 <h1 className="text-4xl md:text-5xl font-display font-black mb-2">
-                                    SECURE{" "}
-                                    <span className="text-accent">ORDER</span>
+                                    ORDER{" "}
+                                    <span className="text-accent">AMAN</span>
                                 </h1>
                                 <p className="text-gray-400">
-                                    Complete your cash purchase details.
+                                    Lengkapi detail pembelian tunai Anda.
                                 </p>
                             </motion.div>
 
@@ -127,7 +127,7 @@ export default function CashOrderForm({ motor }) {
                                 <div className="space-y-6">
                                     <div className="group">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                            Full Name
+                                            Nama Lengkap
                                         </label>
                                         <div className="relative">
                                             <input
@@ -140,7 +140,7 @@ export default function CashOrderForm({ motor }) {
                                                     )
                                                 }
                                                 className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
-                                                placeholder="Enter full name"
+                                                placeholder="Masukkan nama lengkap"
                                                 required
                                             />
                                             <User
@@ -158,7 +158,7 @@ export default function CashOrderForm({ motor }) {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="group">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                                Phone Number
+                                                Nomor Telepon
                                             </label>
                                             <div className="relative">
                                                 <input
@@ -188,7 +188,7 @@ export default function CashOrderForm({ motor }) {
 
                                         <div className="group">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                                Occupation
+                                                Pekerjaan
                                             </label>
                                             <div className="relative">
                                                 <input
@@ -203,7 +203,7 @@ export default function CashOrderForm({ motor }) {
                                                         )
                                                     }
                                                     className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
-                                                    placeholder="Current job"
+                                                    placeholder="Pekerjaan saat ini"
                                                     required
                                                 />
                                                 <Briefcase
@@ -224,7 +224,7 @@ export default function CashOrderForm({ motor }) {
                                 <div className="pt-8 border-t border-white/5 space-y-6">
                                     <div className="group">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                            Booking Fee (Optional)
+                                            Booking Fee (Opsional)
                                         </label>
                                         <div className="relative">
                                             <input
@@ -254,7 +254,7 @@ export default function CashOrderForm({ motor }) {
 
                                     <div className="group">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                            Payment Method
+                                            Metode Pembayaran
                                         </label>
                                         <div className="relative">
                                             <select
@@ -273,20 +273,20 @@ export default function CashOrderForm({ motor }) {
                                                     disabled
                                                     className="bg-zinc-900"
                                                 >
-                                                    Select Method
+                                                    Pilih Metode
                                                 </option>
                                                 <option
                                                     value="online"
                                                     className="bg-zinc-900"
                                                 >
-                                                    Online Payment (VA, QRIS,
+                                                    Pembayaran Online (VA, QRIS,
                                                     E-Wallet)
                                                 </option>
                                                 <option
                                                     value="cod_dealer"
                                                     className="bg-zinc-900"
                                                 >
-                                                    Cash at Dealer / COD
+                                                    Tunai di Dealer / COD
                                                 </option>
                                             </select>
                                             <Wallet
@@ -305,7 +305,7 @@ export default function CashOrderForm({ motor }) {
                                 {/* Notes */}
                                 <div className="group">
                                     <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                        Additional Notes
+                                        Catatan Tambahan
                                     </label>
                                     <div className="relative">
                                         <textarea
@@ -314,7 +314,7 @@ export default function CashOrderForm({ motor }) {
                                                 setData("notes", e.target.value)
                                             }
                                             className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8 min-h-[100px] resize-none"
-                                            placeholder="Any special requests?"
+                                            placeholder="Ada permintaan khusus?"
                                         />
                                         <MessageSquare
                                             size={18}
@@ -331,8 +331,8 @@ export default function CashOrderForm({ motor }) {
                                     >
                                         <CheckCircle size={24} />
                                         {processing
-                                            ? "Processing..."
-                                            : "Confirm Purchase"}
+                                            ? "Memproses..."
+                                            : "Konfirmasi Pembelian"}
                                     </button>
                                 </div>
                             </form>

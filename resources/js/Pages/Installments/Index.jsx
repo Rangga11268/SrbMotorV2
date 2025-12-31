@@ -78,8 +78,8 @@ export default function InstallmentIndex({ transactions }) {
             window.snap.pay(token, {
                 onSuccess: function (result) {
                     Swal.fire({
-                        title: "PAYMENT SUCCESSFUL",
-                        text: "Transaction verified.",
+                        title: "PEMBAYARAN BERHASIL",
+                        text: "Transaksi terverifikasi.",
                         icon: "success",
                         background: "#18181b",
                         color: "#fff",
@@ -89,8 +89,8 @@ export default function InstallmentIndex({ transactions }) {
                 },
                 onPending: function (result) {
                     Swal.fire({
-                        title: "PAYMENT PENDING",
-                        text: "Waiting for completion.",
+                        title: "PEMBAYARAN TERTUNDA",
+                        text: "Menunggu penyelesaian.",
                         icon: "info",
                         background: "#18181b",
                         color: "#fff",
@@ -100,8 +100,8 @@ export default function InstallmentIndex({ transactions }) {
                 },
                 onError: function (result) {
                     Swal.fire({
-                        title: "PAYMENT FAILED",
-                        text: "Transaction declined.",
+                        title: "PEMBAYARAN GAGAL",
+                        text: "Transaksi ditolak.",
                         icon: "error",
                         background: "#18181b",
                         color: "#fff",
@@ -113,8 +113,8 @@ export default function InstallmentIndex({ transactions }) {
         } catch (error) {
             console.error(error);
             Swal.fire({
-                title: "SYSTEM ERROR",
-                text: "Gateway unreachable.",
+                title: "KESALAHAN SISTEM",
+                text: "Gateway tidak dapat dijangkau.",
                 icon: "error",
                 background: "#18181b",
                 color: "#fff",
@@ -132,7 +132,7 @@ export default function InstallmentIndex({ transactions }) {
                 route("installments.check-status", installment.id)
             );
             Swal.fire({
-                title: "STATUS UPDATE",
+                title: "PEMBARUAN STATUS",
                 text: response.data.message,
                 icon: "info",
                 background: "#18181b",
@@ -162,8 +162,8 @@ export default function InstallmentIndex({ transactions }) {
                 closeUploadModal();
                 Swal.fire({
                     icon: "success",
-                    title: "UPLINK SUCCESSFUL",
-                    text: "Proof submitted for verification.",
+                    title: "UPLINK BERHASIL",
+                    text: "Bukti diserahkan untuk verifikasi.",
                     background: "#18181b",
                     color: "#fff",
                     confirmButtonColor: "#bef264",
@@ -181,10 +181,10 @@ export default function InstallmentIndex({ transactions }) {
             overdue: "bg-red-500/10 text-red-500 border-red-500/20",
         };
         const labels = {
-            pending: "PENDING",
-            waiting_approval: "VERIFYING",
-            paid: "PAID",
-            overdue: "OVERDUE",
+            pending: "TERTUNDA",
+            waiting_approval: "VERIFIKASI",
+            paid: "LUNAS",
+            overdue: "TERLAMBAT",
         };
 
         const Icon =
@@ -223,7 +223,7 @@ export default function InstallmentIndex({ transactions }) {
         });
 
     return (
-        <MainLayout title="Financial Control">
+        <MainLayout title="Kontrol Finansial">
             <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
                 {/* Background FX */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-surface-dark to-surface-dark pointer-events-none"></div>
@@ -238,20 +238,20 @@ export default function InstallmentIndex({ transactions }) {
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-4 backdrop-blur-md">
                                 <Landmark size={12} className="text-blue-400" />
                                 <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">
-                                    Financial Control
+                                    Kontrol Finansial
                                 </span>
                             </div>
                             <h1 className="text-4xl md:text-5xl font-display font-black text-white leading-none">
-                                INSTALLMENT{" "}
+                                RENCANA{" "}
                                 <span className="text-accent text-glow">
-                                    PLAN
+                                    CICILAN
                                 </span>
                             </h1>
                         </div>
                         <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl flex items-center gap-3">
                             <Shield className="text-green-400" size={18} />
                             <span className="text-xs font-mono text-white/50">
-                                SECURE GATEWAY ACTIVE
+                                GATEWAY AMAN AKTIF
                             </span>
                         </div>
                     </motion.div>
@@ -297,7 +297,7 @@ export default function InstallmentIndex({ transactions }) {
                                         </div>
                                         <div className="text-right">
                                             <div className="text-[10px] text-white/30 uppercase font-bold tracking-widest mb-1">
-                                                Total Obligation
+                                                Total Kewajiban
                                             </div>
                                             <div className="text-3xl font-mono font-bold text-white text-glow">
                                                 {formatCurrency(
@@ -313,19 +313,19 @@ export default function InstallmentIndex({ transactions }) {
                                             <thead>
                                                 <tr className="border-b border-white/5 text-left text-[10px] uppercase text-white/30 font-bold tracking-widest bg-white/[0.02]">
                                                     <th className="py-4 pl-8">
-                                                        Term
+                                                        Termin
                                                     </th>
                                                     <th className="py-4">
-                                                        Due Date
+                                                        Jatuh Tempo
                                                     </th>
                                                     <th className="py-4">
-                                                        Amount
+                                                        Jumlah
                                                     </th>
                                                     <th className="py-4">
                                                         Status
                                                     </th>
                                                     <th className="py-4 pr-8 text-center">
-                                                        Action
+                                                        Aksi
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -341,11 +341,11 @@ export default function InstallmentIndex({ transactions }) {
                                                                     {inst.installment_number ===
                                                                     0 ? (
                                                                         <span className="text-accent font-bold">
-                                                                            DOWN
-                                                                            PAYMENT
+                                                                            UANG
+                                                                            MUKA
                                                                         </span>
                                                                     ) : (
-                                                                        `TERM #${String(
+                                                                        `TERMIN #${String(
                                                                             inst.installment_number
                                                                         ).padStart(
                                                                             2,
@@ -373,7 +373,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                     ) > 0 && (
                                                                         <div className="text-[10px] text-red-500 mt-1">
                                                                             +
-                                                                            PENALTY:{" "}
+                                                                            DENDA:{" "}
                                                                             {formatCurrency(
                                                                                 inst.penalty_amount
                                                                             )}
@@ -408,8 +408,8 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     }
                                                                                 />
                                                                                 {isLoadingPay
-                                                                                    ? "PROCESSING..."
-                                                                                    : "PAY ONLINE"}
+                                                                                    ? "MEMPROSES..."
+                                                                                    : "BAYAR ONLINE"}
                                                                             </button>
                                                                             <button
                                                                                 onClick={() =>
@@ -418,7 +418,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     )
                                                                                 }
                                                                                 className="bg-white/10 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-white/20 transition-colors"
-                                                                                title="Manual Transfer Upload"
+                                                                                title="Upload Bukti Transfer Manual"
                                                                             >
                                                                                 <Upload
                                                                                     size={
@@ -436,7 +436,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     isLoadingCheck
                                                                                 }
                                                                                 className="bg-transparent border border-white/20 text-white/50 px-3 py-2 rounded-lg hover:text-white hover:border-white transition-colors"
-                                                                                title="Check Status"
+                                                                                title="Cek Status"
                                                                             >
                                                                                 <Activity
                                                                                     size={
@@ -470,8 +470,8 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         14
                                                                                     }
                                                                                 />{" "}
-                                                                                GET
-                                                                                RECEIPT
+                                                                                UNDUH
+                                                                                KWITANSI
                                                                             </a>
                                                                         </div>
                                                                     )}
@@ -487,8 +487,8 @@ export default function InstallmentIndex({ transactions }) {
                                                             colSpan="5"
                                                             className="py-8 text-center text-white/30 italic"
                                                         >
-                                                            No installment data
-                                                            generated.
+                                                            Tidak ada data
+                                                            cicilan dibuat.
                                                         </td>
                                                     </tr>
                                                 )}
@@ -507,11 +507,11 @@ export default function InstallmentIndex({ transactions }) {
                                 />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2 font-display">
-                                NO ACTIVE FINANCING
+                                TIDAK ADA PEMBIAYAAN AKTIF
                             </h3>
                             <p className="text-white/30 max-w-md text-center text-sm font-mono">
-                                You have no active credit agreements. Apply for
-                                financing to see data here.
+                                Anda tidak memiliki perjanjian kredit aktif.
+                                Ajukan pembiayaan untuk melihat data di sini.
                             </p>
                         </div>
                     )}
@@ -539,7 +539,7 @@ export default function InstallmentIndex({ transactions }) {
                                                 size={18}
                                                 className="text-accent"
                                             />{" "}
-                                            MANUAL UPLINK
+                                            UPLINK MANUAL
                                         </h3>
                                         <button
                                             onClick={closeUploadModal}
@@ -556,7 +556,7 @@ export default function InstallmentIndex({ transactions }) {
                                         <div className="bg-accent/5 border border-accent/20 rounded-xl p-4">
                                             <div className="flex justify-between text-xs mb-2">
                                                 <span className="text-white/50 font-bold uppercase tracking-wider">
-                                                    Target Installment
+                                                    Target Cicilan
                                                 </span>
                                                 <span className="font-mono text-white">
                                                     #
@@ -567,7 +567,7 @@ export default function InstallmentIndex({ transactions }) {
                                             </div>
                                             <div className="flex justify-between items-end">
                                                 <span className="text-white/50 text-xs">
-                                                    Total Amount
+                                                    Jumlah Total
                                                 </span>
                                                 <span className="text-2xl font-bold text-white text-glow">
                                                     {formatCurrency(
@@ -582,7 +582,7 @@ export default function InstallmentIndex({ transactions }) {
                                                 </span>
                                             </div>
                                             <div className="mt-4 text-[10px] text-blue-300 bg-blue-500/10 p-3 rounded-lg border border-blue-500/20 font-mono">
-                                                TRANSFER TARGET:{" "}
+                                                TUJUAN TRANSFER:{" "}
                                                 <span className="text-white font-bold select-all">
                                                     123-456-7890
                                                 </span>{" "}
@@ -593,7 +593,7 @@ export default function InstallmentIndex({ transactions }) {
                                         <div className="space-y-4">
                                             <div>
                                                 <label className="block text-[10px] font-bold text-white/50 uppercase tracking-widest mb-2">
-                                                    Payment Method
+                                                    Metode Pembayaran
                                                 </label>
                                                 <select
                                                     value={data.payment_method}
@@ -606,17 +606,17 @@ export default function InstallmentIndex({ transactions }) {
                                                     className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent/50 outline-none text-sm font-mono appearance-none"
                                                 >
                                                     <option value="transfer">
-                                                        MANUAL BANK TRANSFER
+                                                        TRANSFER BANK MANUAL
                                                     </option>
                                                     <option value="cash">
-                                                        CASH AT DEALERSHIP
+                                                        TUNAI DI DEALER
                                                     </option>
                                                 </select>
                                             </div>
 
                                             <div>
                                                 <label className="block text-[10px] font-bold text-white/50 uppercase tracking-widest mb-2">
-                                                    Proof of Transfer
+                                                    Bukti Transfer
                                                 </label>
                                                 <div className="border border-dashed border-white/10 rounded-xl p-8 hover:bg-white/5 transition-colors relative group text-center">
                                                     <input
@@ -649,8 +649,8 @@ export default function InstallmentIndex({ transactions }) {
                                                             </span>
                                                         ) : (
                                                             <span className="text-xs text-white/30">
-                                                                Click to upload
-                                                                image
+                                                                Klik untuk
+                                                                unggah gambar
                                                             </span>
                                                         )}
                                                     </div>
@@ -676,7 +676,7 @@ export default function InstallmentIndex({ transactions }) {
                                             ) : (
                                                 <>
                                                     <CheckCircle size={16} />{" "}
-                                                    CONFIRM TRANSACTION
+                                                    KONFIRMASI TRANSAKSI
                                                 </>
                                             )}
                                         </button>

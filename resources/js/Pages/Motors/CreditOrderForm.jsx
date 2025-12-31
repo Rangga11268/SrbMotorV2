@@ -59,14 +59,14 @@ export default function CreditOrderForm({ motor }) {
     const submit = (e) => {
         e.preventDefault();
         if (parseFloat(data.down_payment) >= motor.price) {
-            alert("Down Payment cannot exceed motor price.");
+            alert("Uang Muka tidak boleh melebihi harga motor.");
             return;
         }
         post(route("motors.process-credit-order", motor.id));
     };
 
     return (
-        <MainLayout title={`Credit Application - ${motor.name}`}>
+        <MainLayout title={`Pengajuan Kredit - ${motor.name}`}>
             <div className="bg-surface-dark min-h-screen text-white pt-20">
                 {/* Fixed Back Button */}
                 <div className="fixed top-24 left-4 z-50 lg:left-8">
@@ -93,7 +93,7 @@ export default function CreditOrderForm({ motor }) {
                             className="relative z-10 w-full max-w-lg"
                         >
                             <h2 className="text-[10vw] font-display font-black text-white/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap select-none">
-                                CREDIT
+                                KREDIT
                             </h2>
                             <img
                                 src={`/storage/${motor.image_path}`}
@@ -135,14 +135,14 @@ export default function CreditOrderForm({ motor }) {
                                 className="mb-10"
                             >
                                 <h1 className="text-4xl md:text-5xl font-display font-black mb-2">
-                                    CREDIT{" "}
+                                    PENGAJUAN{" "}
                                     <span className="text-blue-500">
-                                        APPLICATION
+                                        KREDIT
                                     </span>
                                 </h1>
                                 <p className="text-gray-400">
-                                    Get your dream ride with flexible
-                                    installments.
+                                    Dapatkan motor impianmu dengan cicilan
+                                    fleksibel.
                                 </p>
                             </motion.div>
 
@@ -151,7 +151,7 @@ export default function CreditOrderForm({ motor }) {
                                 <div className="space-y-6">
                                     <div className="group">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
-                                            Full Name
+                                            Nama Lengkap
                                         </label>
                                         <div className="relative">
                                             <input
@@ -164,7 +164,7 @@ export default function CreditOrderForm({ motor }) {
                                                     )
                                                 }
                                                 className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8"
-                                                placeholder="Enter full name"
+                                                placeholder="Masukkan nama lengkap"
                                                 required
                                             />
                                             <User
@@ -182,7 +182,7 @@ export default function CreditOrderForm({ motor }) {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="group">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
-                                                Phone Number
+                                                Nomor Telepon
                                             </label>
                                             <div className="relative">
                                                 <input
@@ -212,7 +212,7 @@ export default function CreditOrderForm({ motor }) {
 
                                         <div className="group">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
-                                                Occupation
+                                                Pekerjaan
                                             </label>
                                             <div className="relative">
                                                 <input
@@ -227,7 +227,7 @@ export default function CreditOrderForm({ motor }) {
                                                         )
                                                     }
                                                     className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-blue-500 focus:outline-none transition-colors pl-8"
-                                                    placeholder="Current job"
+                                                    placeholder="Pekerjaan saat ini"
                                                     required
                                                 />
                                                 <Briefcase
@@ -251,13 +251,13 @@ export default function CreditOrderForm({ motor }) {
                                             size={16}
                                             className="text-blue-500"
                                         />{" "}
-                                        Simulation
+                                        Simulasi
                                     </h3>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="group">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
-                                                Down Payment
+                                                Uang Muka (DP)
                                             </label>
                                             <div className="relative">
                                                 <input
@@ -288,7 +288,7 @@ export default function CreditOrderForm({ motor }) {
 
                                         <div className="group">
                                             <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
-                                                Tenor (Months)
+                                                Tenor (Bulan)
                                             </label>
                                             <div className="relative">
                                                 <select
@@ -307,31 +307,31 @@ export default function CreditOrderForm({ motor }) {
                                                         disabled
                                                         className="bg-zinc-900"
                                                     >
-                                                        Select Tenor
+                                                        Pilih Tenor
                                                     </option>
                                                     <option
                                                         value="12"
                                                         className="bg-zinc-900"
                                                     >
-                                                        12 Months
+                                                        12 Bulan
                                                     </option>
                                                     <option
                                                         value="24"
                                                         className="bg-zinc-900"
                                                     >
-                                                        24 Months
+                                                        24 Bulan
                                                     </option>
                                                     <option
                                                         value="36"
                                                         className="bg-zinc-900"
                                                     >
-                                                        36 Months
+                                                        36 Bulan
                                                     </option>
                                                     <option
                                                         value="48"
                                                         className="bg-zinc-900"
                                                     >
-                                                        48 Months
+                                                        48 Bulan
                                                     </option>
                                                 </select>
                                                 <Clock
@@ -355,7 +355,7 @@ export default function CreditOrderForm({ motor }) {
                                             className="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-6 text-center"
                                         >
                                             <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-1">
-                                                Estimated Monthly Installment
+                                                Estimasi Angsuran Bulanan
                                             </p>
                                             <p className="text-3xl font-display font-bold text-white">
                                                 {formatCurrency(
@@ -363,8 +363,8 @@ export default function CreditOrderForm({ motor }) {
                                                 )}
                                             </p>
                                             <p className="text-xs text-gray-500 mt-2">
-                                                *Final installment determined by
-                                                leasing provider.
+                                                *Angsuran final ditentukan oleh
+                                                pihak leasing.
                                             </p>
                                         </motion.div>
                                     )}
@@ -374,7 +374,7 @@ export default function CreditOrderForm({ motor }) {
                                 <div className="space-y-6">
                                     <div className="group">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-blue-500 transition-colors">
-                                            Payment Method
+                                            Metode Pembayaran
                                         </label>
                                         <div className="relative">
                                             <select
@@ -393,19 +393,19 @@ export default function CreditOrderForm({ motor }) {
                                                     disabled
                                                     className="bg-zinc-900"
                                                 >
-                                                    Select Method
+                                                    Pilih Metode
                                                 </option>
                                                 <option
                                                     value="transfer"
                                                     className="bg-zinc-900"
                                                 >
-                                                    Bank Transfer (VA/Online)
+                                                    Transfer Bank (VA/Online)
                                                 </option>
                                                 <option
                                                     value="cash"
                                                     className="bg-zinc-900"
                                                 >
-                                                    Cash at Dealer
+                                                    Tunai di Dealer
                                                 </option>
                                             </select>
                                             <Wallet
@@ -426,9 +426,10 @@ export default function CreditOrderForm({ motor }) {
                                             size={20}
                                         />
                                         <p>
-                                            You will be asked to upload
-                                            documents (KTP, KK) after this step.
-                                            Approval takes 1-3 working days.
+                                            Anda akan diminta mengunggah dokumen
+                                            (KTP, KK) setelah langkah ini.
+                                            Persetujuan memakan waktu 1-3 hari
+                                            kerja.
                                         </p>
                                     </div>
                                 </div>
@@ -441,8 +442,8 @@ export default function CreditOrderForm({ motor }) {
                                     >
                                         <Send size={24} />
                                         {processing
-                                            ? "Processing..."
-                                            : "Submit Application"}
+                                            ? "Memproses..."
+                                            : "Kirim Pengajuan"}
                                     </button>
                                 </div>
                             </form>

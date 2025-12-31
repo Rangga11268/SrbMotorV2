@@ -59,7 +59,7 @@ export default function UploadCreditDocuments({ transaction }) {
     };
 
     return (
-        <MainLayout title="Secure Data Uplink">
+        <MainLayout title="Uplink Data Aman">
             <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
                 {/* Background Cyber-Grid */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20 pointer-events-none"></div>
@@ -76,7 +76,7 @@ export default function UploadCreditDocuments({ transaction }) {
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-6 backdrop-blur-md">
                                 <Lock size={12} className="text-accent" />
                                 <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
-                                    Encrypted Connection
+                                    Koneksi Terenkripsi
                                 </span>
                             </div>
                             <h1 className="text-5xl md:text-6xl font-display font-black text-white px-4 leading-none mb-4">
@@ -86,8 +86,8 @@ export default function UploadCreditDocuments({ transaction }) {
                                 </span>
                             </h1>
                             <p className="text-white/40 max-w-lg mx-auto font-sans">
-                                Upload required verification documents to the
-                                secure vault for processing.
+                                Unggah dokumen verifikasi yang diperlukan ke
+                                database aman untuk diproses.
                             </p>
                         </div>
 
@@ -102,7 +102,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                             size={18}
                                             className="text-accent"
                                         />{" "}
-                                        Target Asset
+                                        Aset Target
                                     </h3>
 
                                     <div className="aspect-video rounded-xl bg-black/50 border border-white/5 mb-4 overflow-hidden p-4 flex items-center justify-center relative">
@@ -121,7 +121,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                     <div className="space-y-4 font-mono text-sm">
                                         <div className="flex justify-between items-center border-b border-white/5 pb-2">
                                             <span className="text-white/40">
-                                                Down Payment
+                                                Uang Muka
                                             </span>
                                             <span className="text-accent">
                                                 {formatCurrency(
@@ -132,7 +132,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                         </div>
                                         <div className="flex justify-between items-center border-b border-white/5 pb-2">
                                             <span className="text-white/40">
-                                                Monthly
+                                                Cicilan/Bulan
                                             </span>
                                             <span className="text-white font-bold">
                                                 {formatCurrency(
@@ -150,7 +150,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                                     transaction.credit_detail
                                                         .tenor
                                                 }{" "}
-                                                Months
+                                                Bulan
                                             </span>
                                         </div>
                                     </div>
@@ -158,8 +158,7 @@ export default function UploadCreditDocuments({ transaction }) {
 
                                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 backdrop-blur-sm">
                                     <h4 className="text-blue-400 font-bold mb-3 flex items-center gap-2">
-                                        <ShieldCheck size={18} /> Required
-                                        Protocols
+                                        <ShieldCheck size={18} /> Protokol Wajib
                                     </h4>
                                     <ul className="space-y-2 text-xs text-blue-200/70 font-mono">
                                         <li className="flex gap-2">
@@ -178,7 +177,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                             <span className="text-blue-400">
                                                 [3]
                                             </span>{" "}
-                                            Income Proof (Slip Gaji)
+                                            Bukti Penghasilan (Slip Gaji)
                                         </li>
                                     </ul>
                                 </div>
@@ -192,7 +191,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                 >
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                                         <FileUploadField
-                                            label="IDENTITY CARD (KTP)"
+                                            label="KARTU IDENTITAS (KTP)"
                                             id="document_ktp"
                                             accept="image/*,application/pdf"
                                             onChange={(e) =>
@@ -204,11 +203,11 @@ export default function UploadCreditDocuments({ transaction }) {
                                             error={errors["documents.KTP"]}
                                             files={data.documents.KTP}
                                             required
-                                            description="Front & Back Scanning"
+                                            description="Pindai Depan & Belakang"
                                         />
 
                                         <FileUploadField
-                                            label="FAMILY CARD (KK)"
+                                            label="KARTU KELUARGA (KK)"
                                             id="document_kk"
                                             accept="image/*,application/pdf"
                                             onChange={(e) =>
@@ -220,11 +219,11 @@ export default function UploadCreditDocuments({ transaction }) {
                                             error={errors["documents.KK"]}
                                             files={data.documents.KK}
                                             required
-                                            description="Full Document Scan"
+                                            description="Pindai Dokumen Lengkap"
                                         />
 
                                         <FileUploadField
-                                            label="INCOME PROOF"
+                                            label="BUKTI PENGHASILAN"
                                             id="document_slip_gaji"
                                             accept="image/*,application/pdf"
                                             onChange={(e) =>
@@ -241,11 +240,11 @@ export default function UploadCreditDocuments({ transaction }) {
                                             }
                                             files={data.documents.SLIP_GAJI}
                                             required
-                                            description="Last 3 Months"
+                                            description="3 Bulan Terakhir"
                                         />
 
                                         <FileUploadField
-                                            label="SUPPLEMENTARY DATA"
+                                            label="DATA TAMBAHAN"
                                             id="document_lainnya"
                                             accept="image/*,application/pdf"
                                             onChange={(e) =>
@@ -256,7 +255,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                             }
                                             error={errors["documents.LAINNYA"]}
                                             files={data.documents.LAINNYA}
-                                            description="Optional Supporting Docs"
+                                            description="Dokumen Pendukung Opsional"
                                         />
                                     </div>
 
@@ -282,14 +281,14 @@ export default function UploadCreditDocuments({ transaction }) {
                                             )}
                                             className="px-6 py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
                                         >
-                                            <ArrowLeft size={20} /> ABORT
+                                            <ArrowLeft size={20} /> BATALKAN
                                         </Link>
                                         <button
                                             type="submit"
                                             disabled={processing}
                                             className="flex-1 bg-accent text-black px-6 py-4 rounded-xl font-bold font-display text-lg hover:bg-lime-300 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(190,242,100,0.3)] hover:shadow-[0_0_30px_rgba(190,242,100,0.5)] transform hover:-translate-y-1"
                                         >
-                                            <Upload size={20} /> INITIATE UPLOAD
+                                            <Upload size={20} /> MULAI UPLOAD
                                         </button>
                                     </div>
                                 </form>
@@ -410,7 +409,7 @@ function FileUploadField({
                                                 <div className="h-full w-full bg-green-500 animate-[pulse_2s_infinite]"></div>
                                             </div>
                                             <span className="text-[10px] text-green-400 font-mono">
-                                                READY
+                                                SIAP
                                             </span>
                                         </div>
                                     </div>

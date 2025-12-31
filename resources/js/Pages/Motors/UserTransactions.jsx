@@ -29,7 +29,7 @@ export default function UserTransactions({ transactions }) {
             case "disetujui":
             case "ready_for_delivery":
                 return {
-                    label: "FULFILLED",
+                    label: "DITERIMA",
                     color: "text-green-400 border-green-500/30 bg-green-500/10",
                     icon: CheckCircle,
                 };
@@ -37,14 +37,14 @@ export default function UserTransactions({ transactions }) {
             case "new_order":
             case "waiting_payment":
                 return {
-                    label: "PROCESSING",
+                    label: "DIPROSES",
                     color: "text-yellow-400 border-yellow-500/30 bg-yellow-500/10",
                     icon: Activity,
                 };
             case "ditolak":
             case "data_tidak_valid":
                 return {
-                    label: "DECLINED",
+                    label: "DITOLAK",
                     color: "text-red-400 border-red-500/30 bg-red-500/10",
                     icon: XCircle,
                 };
@@ -67,7 +67,7 @@ export default function UserTransactions({ transactions }) {
     };
 
     return (
-        <MainLayout title="Transaction Log">
+        <MainLayout title="Log Transaksi">
             <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
                 {/* Background FX */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px] opacity-10 pointer-events-none"></div>
@@ -82,19 +82,19 @@ export default function UserTransactions({ transactions }) {
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-4 backdrop-blur-md">
                                 <Hash size={12} className="text-accent" />
                                 <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
-                                    System Log
+                                    Sistem Log
                                 </span>
                             </div>
                             <h1 className="text-4xl md:text-5xl font-display font-black text-white leading-none">
-                                TRANSACTION{" "}
+                                ALIRAN{" "}
                                 <span className="text-accent text-glow">
-                                    STREAM
+                                    TRANSAKSI
                                 </span>
                             </h1>
                         </div>
                         <div className="text-right hidden md:block">
                             <p className="text-white/30 font-mono text-sm">
-                                TOTAL ENTRIES:{" "}
+                                TOTAL ENTRI:{" "}
                                 <span className="text-accent">
                                     {transactions.data.length}
                                 </span>
@@ -200,7 +200,7 @@ export default function UserTransactions({ transactions }) {
 
                                                     <div className="text-right">
                                                         <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold">
-                                                            Total Value
+                                                            Nilai Total
                                                         </p>
                                                         <p className="text-2xl font-mono font-bold text-white">
                                                             {formatCurrency(
@@ -224,7 +224,7 @@ export default function UserTransactions({ transactions }) {
                                                                 size={14}
                                                                 className="group-hover/btn:scale-110 transition-transform"
                                                             />
-                                                            MANAGE DOCS
+                                                            KELOLA DOKUMEN
                                                         </Link>
                                                     )}
                                                     <Link
@@ -234,7 +234,7 @@ export default function UserTransactions({ transactions }) {
                                                         )}
                                                         className="w-full sm:w-auto flex-1 px-6 py-3 rounded-xl bg-white text-black hover:bg-accent font-bold text-xs tracking-wider transition-colors flex items-center justify-center gap-2 group/btn"
                                                     >
-                                                        VIEW DETAILS
+                                                        LIHAT DETAIL
                                                         <ArrowRight
                                                             size={14}
                                                             className="group-hover/btn:translate-x-1 transition-transform"
@@ -253,16 +253,16 @@ export default function UserTransactions({ transactions }) {
                                 <Package size={32} className="text-white/20" />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2 font-display">
-                                NO ENTRIES FOUND
+                                TIDAK ADA ENTRI DITEMUKAN
                             </h3>
                             <p className="text-white/30 font-mono text-sm mb-8">
-                                Transaction log is currently empty.
+                                Log transaksi saat ini kosong.
                             </p>
                             <Link
                                 href={route("motors.index")}
                                 className="bg-accent text-black px-8 py-3 rounded-xl font-bold hover:bg-white transition-colors shadow-[0_0_20px_rgba(190,242,100,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
                             >
-                                INITIATE ORDER
+                                MULAI PESANAN
                             </Link>
                         </div>
                     )}

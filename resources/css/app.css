@@ -47,6 +47,14 @@
     .text-glow {
         text-shadow: 0 0 20px rgba(190, 242, 100, 0.5);
     }
+    .stroke-text-white {
+        -webkit-text-stroke: 2px white;
+        color: transparent;
+    }
+    .stroke-text-black {
+        -webkit-text-stroke: 2px black;
+        color: transparent;
+    }
 }
 
 @keyframes float {
