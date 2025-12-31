@@ -10,6 +10,7 @@ import {
     UserCircle,
     ShoppingBag,
     Sparkles,
+    CreditCard,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -158,6 +159,13 @@ export default function Navbar() {
                                                     ),
                                                     label: "Orders",
                                                     icon: List,
+                                                },
+                                                {
+                                                    href: route(
+                                                        "installments.index"
+                                                    ),
+                                                    label: "Installments",
+                                                    icon: CreditCard,
                                                 },
                                             ].map((item, idx) => (
                                                 <Link
