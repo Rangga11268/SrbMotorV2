@@ -44,6 +44,9 @@
         pointer-events: none;
         z-index: 50;
     }
+    .text-glow {
+        text-shadow: 0 0 20px rgba(190, 242, 100, 0.5);
+    }
 }
 
 @keyframes float {
