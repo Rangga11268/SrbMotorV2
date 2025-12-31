@@ -70,7 +70,7 @@ export default function Home({ popularMotors }) {
             {/* HERO SECTION - HYPER MODERN */}
             <section
                 ref={targetRef}
-                className="relative min-h-screen flex flex-col justify-start items-center overflow-hidden pt-20"
+                className="relative h-auto md:min-h-screen flex flex-col justify-start items-center overflow-hidden pt-32 pb-20 md:pt-20 md:pb-0"
             >
                 {/* Background Noise & Gradients */}
                 <div className="absolute inset-0 bg-surface-dark z-0">
@@ -96,7 +96,7 @@ export default function Home({ popularMotors }) {
                     {/* Floating Hero Image */}
                     <motion.div
                         style={{ y: heroy }}
-                        className="relative z-10 -mt-[10vw] mb-12 pointer-events-none"
+                        className="relative z-10 -mt-[15vw] md:-mt-[10vw] mb-2 md:mb-12 pointer-events-none"
                     >
                         <img
                             src="/assets/img/home.svg"
@@ -108,7 +108,7 @@ export default function Home({ popularMotors }) {
                         />
                     </motion.div>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-20">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-20 -mt-8 md:mt-0">
                         <Link
                             href={route("motors.index")}
                             className="group relative px-8 py-4 bg-accent text-black font-display font-bold text-xl tracking-tight rounded-full overflow-hidden transition-transform hover:scale-105"
