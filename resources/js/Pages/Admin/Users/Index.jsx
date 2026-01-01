@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Modal from "@/Components/Modal";
@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast";
 
 export default function Index({ users, filters }) {
     const [search, setSearch] = useState(filters.search || "");
+    const [isFirstRender, setIsFirstRender] = useState(true);
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         type: "danger",
@@ -31,18 +32,32 @@ export default function Index({ users, filters }) {
     });
     const [processing, setProcessing] = useState(false);
 
+    // Live Search Implementation
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        const delayDebounceFn = setTimeout(() => {
+            router.get(
+                route("admin.users.index"),
+                { search },
+                { preserveState: true, replace: true }
+            );
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search]);
+
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get(
-            route("admin.users.index"),
-            { search },
-            { preserveState: true, replace: true }
-        );
+        // Triggered by effect
     };
 
     const resetFilters = () => {
         setSearch("");
-        router.get(route("admin.users.index"));
+        // Effect will handle the fetch
     };
 
     const confirmDelete = (user) => {

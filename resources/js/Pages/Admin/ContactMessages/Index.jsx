@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Modal from "@/Components/Modal";
@@ -17,6 +17,7 @@ import { toast } from "react-hot-toast";
 
 export default function Index({ contactMessages, filters }) {
     const [search, setSearch] = useState(filters.search || "");
+    const [isFirstRender, setIsFirstRender] = useState(true);
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         type: "danger",
@@ -25,13 +26,27 @@ export default function Index({ contactMessages, filters }) {
         onConfirm: () => {},
     });
 
+    // Live Search Implementation
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        const delayDebounceFn = setTimeout(() => {
+            router.get(
+                route("admin.contact.index"),
+                { search },
+                { preserveState: true }
+            );
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search]);
+
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get(
-            route("admin.contact.index"),
-            { search },
-            { preserveState: true }
-        );
+        // Triggered by effect
     };
 
     const confirmDelete = (id) => {

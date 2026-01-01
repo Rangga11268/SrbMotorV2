@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
@@ -23,36 +23,42 @@ export default function Index({ motors, filters }) {
     const [search, setSearch] = useState(filters.search || "");
     const [brand, setBrand] = useState(filters.brand || "");
     const [status, setStatus] = useState(filters.status || "");
+    const [isFirstRender, setIsFirstRender] = useState(true);
+
+    // Live Search Implementation
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        const delayDebounceFn = setTimeout(() => {
+            router.get(
+                route("admin.motors.index"),
+                { search, brand, status },
+                { preserveState: true, replace: true }
+            );
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search, brand, status]);
 
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get(
-            route("admin.motors.index"),
-            { search, brand, status },
-            { preserveState: true, replace: true }
-        );
+        // Triggered by effect
     };
 
     const handleFilterChange = (key, value) => {
         if (key === "brand") setBrand(value);
         if (key === "status") setStatus(value);
-
-        router.get(
-            route("admin.motors.index"),
-            {
-                search,
-                brand: key === "brand" ? value : brand,
-                status: key === "status" ? value : status,
-            },
-            { preserveState: true, replace: true }
-        );
+        // Effect will handle the fetch
     };
 
     const resetFilters = () => {
         setSearch("");
         setBrand("");
         setStatus("");
-        router.get(route("admin.motors.index"));
+        // Effect will handle the fetch
     };
 
     const confirmDelete = (motor) => {

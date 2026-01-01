@@ -25,7 +25,9 @@ export default function Edit({ transaction, motors, users }) {
         motor_id: transaction.motor_id || "",
         transaction_type: transaction.transaction_type || "CASH",
         notes: transaction.notes || "",
-        // Simple edit only allows basic changes, complex logic usually handled in show
+        // Credit fields
+        tenor: transaction.credit_detail?.tenor || 12,
+        down_payment: transaction.credit_detail?.down_payment || "",
     });
 
     const [selectedMotor, setSelectedMotor] = useState(null);
@@ -165,6 +167,51 @@ export default function Edit({ transaction, motors, users }) {
                                         </div>
                                     </div>
 
+                                    {/* Transaction Type */}
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            TIPE TRANSAKSI
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setData(
+                                                        "transaction_type",
+                                                        "CASH"
+                                                    )
+                                                }
+                                                className={`py-4 rounded-xl text-sm font-bold font-display uppercase tracking-wider transition-all border flex items-center justify-center gap-2 ${
+                                                    data.transaction_type ===
+                                                    "CASH"
+                                                        ? "bg-green-500/10 text-green-400 border-green-500/50"
+                                                        : "bg-black/30 text-white/30 border-white/5 hover:border-white/20"
+                                                }`}
+                                            >
+                                                <DollarSign size={18} />
+                                                TUNAI (CASH)
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setData(
+                                                        "transaction_type",
+                                                        "CREDIT"
+                                                    )
+                                                }
+                                                className={`py-4 rounded-xl text-sm font-bold font-display uppercase tracking-wider transition-all border flex items-center justify-center gap-2 ${
+                                                    data.transaction_type ===
+                                                    "CREDIT"
+                                                        ? "bg-blue-500/10 text-blue-400 border-blue-500/50"
+                                                        : "bg-black/30 text-white/30 border-white/5 hover:border-white/20"
+                                                }`}
+                                            >
+                                                <CreditCard size={18} />
+                                                ANGSURAN (CREDIT)
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     {/* Notes */}
                                     <div>
                                         <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
@@ -182,6 +229,78 @@ export default function Edit({ transaction, motors, users }) {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Credit Configuration Module */}
+                            {data.transaction_type === "CREDIT" && (
+                                <div className="bg-blue-900/10 backdrop-blur-md p-8 rounded-3xl border border-blue-500/20 relative overflow-hidden">
+                                    <h3 className="text-xl font-bold text-blue-400 mb-8 font-display uppercase tracking-wider flex items-center gap-3">
+                                        <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
+                                        KONFIGURASI DATA KREDIT
+                                    </h3>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div>
+                                            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                                TENOR (BULAN)
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    value={data.tenor}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "tenor",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white font-mono appearance-none cursor-pointer"
+                                                >
+                                                    {[12, 24, 36, 48].map(
+                                                        (m) => (
+                                                            <option
+                                                                key={m}
+                                                                value={m}
+                                                            >
+                                                                {m} BULAN
+                                                            </option>
+                                                        )
+                                                    )}
+                                                </select>
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">
+                                                    <ChevronDown size={16} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                                UANG MUKA (DP)
+                                            </label>
+                                            <div className="relative">
+                                                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-blue-500 font-mono font-bold">
+                                                    Rp
+                                                </span>
+                                                <input
+                                                    type="number"
+                                                    value={data.down_payment}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "down_payment",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full pl-12 pr-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white placeholder-white/20 font-mono text-lg font-bold transition-all"
+                                                    placeholder="0"
+                                                />
+                                            </div>
+                                            {errors.down_payment && (
+                                                <div className="text-red-500 text-xs font-mono mt-2">
+                                                    {errors.down_payment}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="pt-4">
                                 <button
@@ -246,6 +365,13 @@ export default function Edit({ transaction, motors, users }) {
                                                 ? selectedMotor.name
                                                 : "BELUM DIPILIH"}
                                         </div>
+                                        {selectedMotor && (
+                                            <div className="text-accent font-mono font-bold mt-1">
+                                                {formatRupiah(
+                                                    selectedMotor.price
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
@@ -269,6 +395,28 @@ export default function Edit({ transaction, motors, users }) {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {data.transaction_type === "CREDIT" &&
+                                        selectedMotor &&
+                                        data.down_payment && (
+                                            <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                                                <label className="text-[10px] text-blue-400 font-bold uppercase tracking-wider block mb-1">
+                                                    ESTIMASI KREDIT
+                                                </label>
+                                                <div className="flex justify-between items-center text-sm font-mono text-white mb-1">
+                                                    <span>POKOK HUTANG</span>
+                                                    <span className="font-bold">
+                                                        {formatRupiah(
+                                                            selectedMotor.price -
+                                                                data.down_payment
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                <div className="text-[10px] text-white/40 text-right">
+                                                    + BUNGA & BIAYA ADMIN
+                                                </div>
+                                            </div>
+                                        )}
                                 </div>
                             </div>
                         </div>

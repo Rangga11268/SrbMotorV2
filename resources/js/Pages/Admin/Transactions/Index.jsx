@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
@@ -17,6 +17,7 @@ import {
     FileText,
     Eye,
     Edit,
+    Settings,
 } from "lucide-react";
 
 export default function Index({
@@ -28,62 +29,51 @@ export default function Index({
     const [search, setSearch] = useState(filters.search || "");
     const [type, setType] = useState(filters.type || "");
     const [status, setStatus] = useState(filters.status || "");
+    const [isFirstRender, setIsFirstRender] = useState(true);
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        applyFilters(search, type, status);
-    };
-
-    const handleFilterChange = (key, value) => {
-        let newSearch = search;
-        let newType = type;
-        let newStatus = status;
-
-        if (key === "search") {
-            setSearch(value); // Update local state
-            newSearch = value;
-        }
-        if (key === "type") {
-            setType(value);
-            newType = value;
-        }
-        if (key === "status") {
-            setStatus(value);
-            newStatus = value;
+    // Live Search Implementation
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
         }
 
-        // Only trigger router visit if not search (search is handled by form submit or blur)
-        if (key !== "search") {
+        const delayDebounceFn = setTimeout(() => {
             router.get(
                 route("admin.transactions.index"),
                 {
-                    search: newSearch,
-                    type: newType,
-                    status: newStatus,
+                    search: search,
+                    type: type,
+                    status: status,
                 },
                 { preserveState: true, replace: true }
             );
-        }
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search, type, status]);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        // Triggered by effect
     };
 
-    // Explicit filter application for search blur
-    const applySearch = () => {
-        router.get(
-            route("admin.transactions.index"),
-            {
-                search: search,
-                type: type,
-                status: status,
-            },
-            { preserveState: true, replace: true }
-        );
+    const handleFilterChange = (key, value) => {
+        if (key === "type") setType(value);
+        if (key === "status") setStatus(value);
+        // Effect will handle the fetch
     };
 
     const resetFilters = () => {
         setSearch("");
         setType("");
         setStatus("");
-        router.get(route("admin.transactions.index"));
+        // Effect will handle the fetch
+    };
+
+    // Explicit filter application (optional, as effect handles it)
+    const applySearch = () => {
+        // No-op or force immediate
     };
 
     const getStatusStyle = (status) => {
@@ -168,7 +158,6 @@ export default function Index({
                             placeholder="CARI ID JEJAK / KLIEN..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            onBlur={applySearch}
                             className="w-full pl-12 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono text-sm transition-all"
                         />
                         <Search
@@ -469,13 +458,30 @@ export default function Index({
                                                         >
                                                             <Eye size={16} />
                                                         </Link>
+
+                                                        {transaction.transaction_type ===
+                                                            "CREDIT" && (
+                                                            <Link
+                                                                href={route(
+                                                                    "admin.transactions.edit",
+                                                                    transaction.id
+                                                                )}
+                                                                className="p-2 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500 hover:text-white transition-all inline-flex group/btn"
+                                                                title="Edit Detail Kredit"
+                                                            >
+                                                                <CreditCard
+                                                                    size={16}
+                                                                />
+                                                            </Link>
+                                                        )}
+
                                                         <Link
                                                             href={route(
                                                                 "admin.transactions.edit",
                                                                 transaction.id
                                                             )}
                                                             className="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500 hover:text-black transition-all inline-flex group/btn"
-                                                            title="Edit Data"
+                                                            title="Edit Transaksi"
                                                         >
                                                             <Edit size={16} />
                                                         </Link>
