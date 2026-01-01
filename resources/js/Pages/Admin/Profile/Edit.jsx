@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Save, User, Lock, Key } from "lucide-react";
+import { Save, User, Lock, Key, Shield, ShieldCheck } from "lucide-react";
 
 export default function Edit({ user }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -35,110 +35,149 @@ export default function Edit({ user }) {
     };
 
     return (
-        <AdminLayout title="Profil Saya">
-            <div className="max-w-4xl mx-auto space-y-8">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
-                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
-                        <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 text-primary flex items-center justify-center text-2xl font-bold">
-                            {user.name.charAt(0)}
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                                Informasi Profil
-                            </h2>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">
-                                Update informasi akun anda dan alamat email.
-                            </p>
-                        </div>
+        <AdminLayout title="KONFIGURASI PROFIL">
+            <div className="max-w-5xl mx-auto space-y-8">
+                {/* Header Control Panel */}
+                <div className="flex flex-col xl:flex-row justify-between items-end gap-6">
+                    <div>
+                        <h2 className="text-white/50 font-mono uppercase tracking-widest text-xs mb-2">
+                            MODUL KEAMANAN & PERSONALISASI
+                        </h2>
+                        <h1 className="text-3xl font-display font-bold text-white uppercase tracking-wide flex items-center gap-3">
+                            <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
+                            PROFIL ADMIN
+                        </h1>
                     </div>
+                </div>
 
-                    <form onSubmit={submitProfile} className="max-w-xl">
-                        <div className="space-y-4 mb-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Profile Information Section */}
+                    <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden relative group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[60px] -z-10 group-hover:bg-blue-500/20 transition-colors"></div>
+
+                        <div className="p-6 border-b border-white/5 flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-2xl">
+                                {user.name.charAt(0)}
+                            </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                                    Nama Lengkap
+                                <h2 className="text-lg font-bold text-white font-display tracking-wide flex items-center gap-2">
+                                    INFORMASI DASAR
+                                    <ShieldCheck
+                                        size={16}
+                                        className="text-blue-500"
+                                    />
+                                </h2>
+                                <p className="text-white/40 text-xs font-mono">
+                                    DATA IDENTITAS SISTEM
+                                </p>
+                            </div>
+                        </div>
+
+                        <form
+                            onSubmit={submitProfile}
+                            className="p-6 space-y-6"
+                        >
+                            <div>
+                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                                    NAMA LENGKAP
                                 </label>
-                                <div className="relative">
+                                <div className="relative group/input">
+                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-blue-500 transition-colors">
+                                        <User size={18} />
+                                    </div>
                                     <input
                                         type="text"
                                         value={data.name}
                                         onChange={(e) =>
                                             setData("name", e.target.value)
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                    />
-                                    <User
-                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
-                                        size={18}
+                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono text-white placeholder-white/20 transition-all"
                                     />
                                 </div>
                                 {errors.name && (
-                                    <p className="text-red-500 text-xs mt-1">
+                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
+                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                                         {errors.name}
                                     </p>
                                 )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                                    Email
+                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                                    ALAMAT EMAIL
                                 </label>
-                                <div className="relative">
+                                <div className="relative group/input">
+                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-blue-500 transition-colors">
+                                        <span className="text-lg font-mono">
+                                            @
+                                        </span>
+                                    </div>
                                     <input
                                         type="email"
                                         value={data.email}
                                         onChange={(e) =>
                                             setData("email", e.target.value)
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono text-white placeholder-white/20 transition-all"
                                     />
-                                    <div className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500">
-                                        @
-                                    </div>
                                 </div>
                                 {errors.email && (
-                                    <p className="text-red-500 text-xs mt-1">
+                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
+                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                                         {errors.email}
                                     </p>
                                 )}
                             </div>
-                        </div>
 
-                        <div className="flex justify-end">
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-dark-blue dark:hover:bg-blue-700 transition-colors disabled:opacity-50"
-                            >
-                                <Save size={18} /> Simpan Perubahan
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
-                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
-                        <div className="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-500 dark:text-orange-400 flex items-center justify-center font-bold">
-                            <Lock size={24} />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                                Update Password
-                            </h2>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">
-                                Pastikan akun anda aman dengan password yang
-                                kuat.
-                            </p>
-                        </div>
+                            <div className="pt-4 border-t border-white/5 flex justify-end">
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold font-display uppercase tracking-wide transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Save size={18} />
+                                    {processing
+                                        ? "MENYIMPAN..."
+                                        : "SIMPAN PERUBAHAN"}
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
-                    <form onSubmit={submitPassword} className="max-w-xl">
-                        <div className="space-y-4 mb-6">
+                    {/* Security Section */}
+                    <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden relative group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[60px] -z-10 group-hover:bg-red-500/20 transition-colors"></div>
+
+                        <div className="p-6 border-b border-white/5 flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold text-2xl">
+                                <Lock size={24} />
+                            </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                                    Password Saat Ini
+                                <h2 className="text-lg font-bold text-white font-display tracking-wide flex items-center gap-2">
+                                    KEAMANAN AKUN
+                                    <Shield
+                                        size={16}
+                                        className="text-red-500"
+                                    />
+                                </h2>
+                                <p className="text-white/40 text-xs font-mono">
+                                    ENKRIPSI DATA KATA SANDI
+                                </p>
+                            </div>
+                        </div>
+
+                        <form
+                            onSubmit={submitPassword}
+                            className="p-6 space-y-6"
+                        >
+                            <div>
+                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                                    PASSWORD SAAT INI
                                 </label>
-                                <div className="relative">
+                                <div className="relative group/input">
+                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-red-500 transition-colors">
+                                        <Key size={18} />
+                                    </div>
                                     <input
                                         type="password"
                                         value={passwordData.current_password}
@@ -148,25 +187,25 @@ export default function Edit({ user }) {
                                                 e.target.value
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                    />
-                                    <Key
-                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
-                                        size={18}
+                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm font-mono text-white placeholder-white/20 transition-all"
                                     />
                                 </div>
                                 {passwordErrors.current_password && (
-                                    <p className="text-red-500 text-xs mt-1">
+                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
+                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                                         {passwordErrors.current_password}
                                     </p>
                                 )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                                    Password Baru
+                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                                    PASSWORD BARU
                                 </label>
-                                <div className="relative">
+                                <div className="relative group/input">
+                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-red-500 transition-colors">
+                                        <Lock size={18} />
+                                    </div>
                                     <input
                                         type="password"
                                         value={passwordData.password}
@@ -176,25 +215,25 @@ export default function Edit({ user }) {
                                                 e.target.value
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                    />
-                                    <Lock
-                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
-                                        size={18}
+                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm font-mono text-white placeholder-white/20 transition-all"
                                     />
                                 </div>
                                 {passwordErrors.password && (
-                                    <p className="text-red-500 text-xs mt-1">
+                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
+                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                                         {passwordErrors.password}
                                     </p>
                                 )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                                    Konfirmasi Password Baru
+                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                                    KONFIRMASI PASSWORD BARU
                                 </label>
-                                <div className="relative">
+                                <div className="relative group/input">
+                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-red-500 transition-colors">
+                                        <Lock size={18} />
+                                    </div>
                                     <input
                                         type="password"
                                         value={
@@ -206,26 +245,25 @@ export default function Edit({ user }) {
                                                 e.target.value
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                    />
-                                    <Lock
-                                        className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500"
-                                        size={18}
+                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm font-mono text-white placeholder-white/20 transition-all"
                                     />
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="flex justify-end">
-                            <button
-                                type="submit"
-                                disabled={passwordProcessing}
-                                className="flex items-center gap-2 px-6 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-xl font-bold hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
-                            >
-                                <Save size={18} /> Update Password
-                            </button>
-                        </div>
-                    </form>
+                            <div className="pt-4 border-t border-white/5 flex justify-end">
+                                <button
+                                    type="submit"
+                                    disabled={passwordProcessing}
+                                    className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-red-500 hover:text-white text-white rounded-xl font-bold font-display uppercase tracking-wide transition-all border border-white/10 hover:border-red-500 hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Save size={18} />
+                                    {passwordProcessing
+                                        ? "MEMPROSES..."
+                                        : "UPDATE SECURITY"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </AdminLayout>

@@ -12,6 +12,10 @@ import {
     MoreHorizontal,
     Mail,
     Calendar,
+    Users,
+    BadgeCheck,
+    RotateCcw,
+    XCircle,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -22,7 +26,7 @@ export default function Index({ users, filters }) {
         type: "danger",
         title: "",
         message: "",
-        confirmText: "Confirm",
+        confirmText: "KONFIRMASI",
         onConfirm: () => {},
     });
     const [processing, setProcessing] = useState(false);
@@ -36,18 +40,23 @@ export default function Index({ users, filters }) {
         );
     };
 
+    const resetFilters = () => {
+        setSearch("");
+        router.get(route("admin.users.index"));
+    };
+
     const confirmDelete = (user) => {
         if (user.id === filters.current_user_id) {
-            toast.error("Anda tidak dapat menghapus akun sendiri!");
+            toast.error("TIDAK IZIN: ANDA TIDAK DAPAT MENGHAPUS AKUN SENDIRI");
             return;
         }
 
         setModalConfig({
             isOpen: true,
             type: "danger",
-            title: "Hapus Pengguna?",
-            message: `Anda akan menghapus pengguna "${user.name}". Tindakan ini tidak dapat dibatalkan.`,
-            confirmText: "Hapus Permanen",
+            title: "ELIMINASI PERSONALIA",
+            message: `PERINGATAN: Akun "${user.name}" akan dihapus permanen dari database. Lanjutkan eksekusi?`,
+            confirmText: "MUSNAHKAN",
             onConfirm: () => handleDelete(user.id),
         });
     };
@@ -58,26 +67,25 @@ export default function Index({ users, filters }) {
             onSuccess: () => {
                 setModalConfig((prev) => ({ ...prev, isOpen: false }));
                 setProcessing(false);
-                toast.success("Pengguna berhasil dihapus.");
+                toast.success("PERSONALIA DIHAPUS DARI DATABASE");
             },
             onError: () => {
                 setProcessing(false);
-                toast.error("Gagal menghapus pengguna.");
+                toast.error("GAGAL MENGEKSEKUSI PERINTAH");
             },
         });
     };
 
     const confirmRoleChange = (user, newRole) => {
+        const isPromoting = newRole === "admin";
         setModalConfig({
             isOpen: true,
-            type: "warning",
-            title: "Ubah Role Pengguna?",
-            message: `Apakah anda yakin ingin mengubah akses "${
-                user.name
-            }" menjadi ${
-                newRole === "admin" ? "ADMINISTRATOR" : "USER BIASA"
-            }?`,
-            confirmText: "Ya, Ubah Role",
+            type: isPromoting ? "info" : "warning",
+            title: isPromoting ? "ESKALASI HAK AKSES" : "DE-ESKALASI HAK AKSES",
+            message: isPromoting
+                ? `Berikan akses ADMINISTRATOR penuh kepada "${user.name}"?`
+                : `Cabut akses Administrator dari "${user.name}" dan jadikan USER BIASA?`,
+            confirmText: isPromoting ? "BERIKAN AKSES" : "CABUT AKSES",
             onConfirm: () => handleRoleChange(user.id, newRole),
         });
     };
@@ -91,11 +99,13 @@ export default function Index({ users, filters }) {
                 onSuccess: () => {
                     setModalConfig((prev) => ({ ...prev, isOpen: false }));
                     setProcessing(false);
-                    toast.success(`Role berhasil diubah menjadi ${newRole}`);
+                    toast.success(
+                        `HAK AKSES DIPERBARUI: ${newRole.toUpperCase()}`
+                    );
                 },
                 onError: () => {
                     setProcessing(false);
-                    toast.error("Gagal mengubah role.");
+                    toast.error("GAGAL MENGUBAH AKSES");
                 },
             }
         );
@@ -103,27 +113,30 @@ export default function Index({ users, filters }) {
 
     const getInitials = (name) => {
         return name
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .substring(0, 2)
-            .toUpperCase();
+            ? name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .substring(0, 2)
+                  .toUpperCase()
+            : "??";
     };
 
     const getGradient = (name) => {
-        const colors = [
-            "from-blue-400 to-indigo-500",
-            "from-emerald-400 to-teal-500",
-            "from-orange-400 to-rose-500",
-            "from-purple-400 to-fuchsia-500",
-            "from-pink-400 to-rose-500",
-        ];
-        const index = name.length % colors.length;
-        return colors[index];
+        const charCode = name.charCodeAt(0);
+        if (charCode % 5 === 0)
+            return "bg-gradient-to-br from-blue-500 to-indigo-600";
+        if (charCode % 5 === 1)
+            return "bg-gradient-to-br from-emerald-500 to-teal-600";
+        if (charCode % 5 === 2)
+            return "bg-gradient-to-br from-indigo-500 to-purple-600";
+        if (charCode % 5 === 3)
+            return "bg-gradient-to-br from-rose-500 to-red-600";
+        return "bg-gradient-to-br from-amber-500 to-orange-600";
     };
 
     return (
-        <AdminLayout title="Manajemen User">
+        <AdminLayout title="MANAJEMEN PERSONALIA">
             <Modal
                 isOpen={modalConfig.isOpen}
                 onClose={() =>
@@ -137,167 +150,197 @@ export default function Index({ users, filters }) {
                 processing={processing}
             />
 
-            <div className="max-w-7xl mx-auto space-y-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+            <div className="space-y-8">
+                {/* Header Control Panel */}
+                <div className="flex flex-col xl:flex-row justify-between items-end gap-6">
                     <div>
-                        <h2 className="text-xl font-black text-gray-900 dark:text-white">
-                            Daftar Pengguna
+                        <h2 className="text-white/50 font-mono uppercase tracking-widest text-xs mb-2">
+                            DATABASE SISTEM
                         </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Kelola akses dan data pengguna aplikasi
-                        </p>
+                        <h1 className="text-3xl font-display font-bold text-white uppercase tracking-wide flex items-center gap-3">
+                            <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
+                            DIREKTORI PENGGUNA
+                        </h1>
                     </div>
 
+                    <div className="flex items-center gap-4">
+                        <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 flex items-center gap-3">
+                            <Users size={16} className="text-blue-400" />
+                            <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+                                TOTAL ENTITAS:
+                            </span>
+                            <span className="text-lg font-bold text-white font-mono">
+                                {users.total}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Glassmorphic Filter Bar */}
+                <div className="bg-zinc-900/50 backdrop-blur-md p-4 rounded-3xl border border-white/5 flex flex-col md:flex-row gap-4 items-center justify-between">
                     <form
                         onSubmit={handleSearch}
-                        className="relative w-full md:w-80 group"
+                        className="relative w-full md:w-96 group"
                     >
                         <input
                             type="text"
-                            placeholder="Cari nama atau email..."
+                            placeholder="CARI ID / NAMA / EMAIL..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-gray-600 transition-all font-medium text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 group-hover:bg-gray-50/80 dark:group-hover:bg-gray-700/80"
+                            className="w-full pl-12 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white placeholder-white/20 font-mono text-sm transition-all"
                         />
                         <Search
-                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors"
-                            size={20}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-hover:text-blue-400 transition-colors"
+                            size={18}
                         />
                     </form>
+
+                    {search && (
+                        <button
+                            onClick={resetFilters}
+                            className="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold font-mono text-xs uppercase flex items-center gap-2"
+                        >
+                            <RotateCcw size={16} />
+                            RESET FILTER
+                        </button>
+                    )}
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
+                {/* Data Grid */}
+                <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
+                        <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-50/50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
-                                    <th className="p-6 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                                        Pengguna
+                                <tr className="border-b border-white/5 bg-white/5 text-white/40 text-[10px] font-mono font-bold uppercase tracking-[0.2em]">
+                                    <th className="p-6">IDENTITAS</th>
+                                    <th className="p-6">KONTAK DIGITAL</th>
+                                    <th className="p-6">PROTOKOL AKSES</th>
+                                    <th className="p-6 text-right">
+                                        TERDAFTAR
                                     </th>
-                                    <th className="p-6 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                                        Kontak
-                                    </th>
-                                    <th className="p-6 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                                        Role Access
-                                    </th>
-                                    <th className="p-6 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                                        Bergabung
-                                    </th>
-                                    <th className="p-6 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-center">
-                                        Aksi
+                                    <th className="p-6 text-center">
+                                        TINDAKAN
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
+                            <tbody className="divide-y divide-white/5">
                                 {users.data.length > 0 ? (
                                     users.data.map((user) => (
                                         <tr
                                             key={user.id}
-                                            className="group hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors"
+                                            className="hover:bg-white/5 transition-colors group"
                                         >
                                             <td className="p-6">
                                                 <div className="flex items-center gap-4">
                                                     <div
-                                                        className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${getGradient(
+                                                        className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold font-mono text-lg text-white shadow-lg ${getGradient(
                                                             user.name
-                                                        )} flex items-center justify-center text-white font-bold text-lg shadow-sm group-hover:scale-105 transition-transform`}
+                                                        )}`}
                                                     >
                                                         {getInitials(user.name)}
                                                     </div>
                                                     <div>
-                                                        <div className="font-bold text-gray-900 dark:text-white text-base">
+                                                        <div className="font-bold text-white text-sm font-display uppercase tracking-wide group-hover:text-blue-400 transition-colors">
                                                             {user.name}
                                                         </div>
-                                                        <div className="text-xs text-gray-400 dark:text-gray-500 font-medium">
-                                                            ID: #{user.id}
+                                                        <div className="text-[10px] font-mono text-white/30 mt-1 uppercase tracking-wider flex items-center gap-2">
+                                                            ID: #
+                                                            {user.id
+                                                                .toString()
+                                                                .padStart(
+                                                                    6,
+                                                                    "0"
+                                                                )}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
+
                                             <td className="p-6">
-                                                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 font-medium">
+                                                <div className="flex items-center gap-3 group/mail p-2 rounded-lg hover:bg-white/5 w-fit transition-colors">
                                                     <Mail
-                                                        size={16}
-                                                        className="text-gray-300 dark:text-gray-500"
+                                                        size={14}
+                                                        className="text-white/30 group-hover/mail:text-blue-400 transition-colors"
                                                     />
-                                                    {user.email}
+                                                    <span className="font-mono text-xs text-white/60 group-hover/mail:text-white transition-colors">
+                                                        {user.email}
+                                                    </span>
                                                 </div>
                                             </td>
+
                                             <td className="p-6">
                                                 {user.role === "admin" ? (
-                                                    <span className="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">
-                                                        <Shield
-                                                            size={12}
-                                                            className="fill-blue-700 dark:fill-blue-300"
-                                                        />{" "}
-                                                        Administrator
+                                                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)] text-indigo-400 text-[10px] font-bold uppercase tracking-wider">
+                                                        <BadgeCheck size={14} />{" "}
+                                                        // Ganti Shield dengan
+                                                        BadgeCheck ADMINISTRATOR
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 px-3 py-1.5 rounded-full text-xs font-bold">
-                                                        <User size={12} /> User
-                                                        Regular
+                                                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/40 text-[10px] font-bold uppercase tracking-wider">
+                                                        <User size={14} />
+                                                        PENGGUNA STANDAR
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className="p-6">
-                                                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm">
-                                                    <Calendar
-                                                        size={16}
-                                                        className="text-gray-300 dark:text-gray-500"
-                                                    />
-                                                    {new Date(
-                                                        user.created_at
-                                                    ).toLocaleDateString(
-                                                        "id-ID",
-                                                        {
-                                                            day: "numeric",
-                                                            month: "short",
-                                                            year: "numeric",
-                                                        }
-                                                    )}
+
+                                            <td className="p-6 text-right">
+                                                <div className="text-[10px] font-mono text-white/40">
+                                                    <div className="flex items-center justify-end gap-1.5 mb-1">
+                                                        <Calendar size={10} />
+                                                        {new Date(
+                                                            user.created_at
+                                                        )
+                                                            .toLocaleDateString(
+                                                                "id-ID",
+                                                                {
+                                                                    day: "numeric",
+                                                                    month: "short",
+                                                                    year: "numeric",
+                                                                }
+                                                            )
+                                                            .toUpperCase()}
+                                                    </div>
                                                 </div>
                                             </td>
+
                                             <td className="p-6">
-                                                <div className="flex items-center justify-center gap-2 opacity-100">
-                                                    <button
-                                                        onClick={() =>
-                                                            confirmRoleChange(
-                                                                user,
-                                                                user.role ===
-                                                                    "admin"
-                                                                    ? "user"
-                                                                    : "admin"
-                                                            )
-                                                        }
-                                                        className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-sm border ${
-                                                            user.role ===
-                                                            "admin"
-                                                                ? "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/50"
-                                                                : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50"
-                                                        }`}
-                                                        title={
-                                                            user.role ===
-                                                            "admin"
-                                                                ? "Turunkan ke User"
-                                                                : "Jadikan Admin"
-                                                        }
-                                                    >
-                                                        {user.role ===
-                                                        "admin" ? (
+                                                <div className="flex items-center justify-center gap-2">
+                                                    {user.role === "admin" ? (
+                                                        <button
+                                                            onClick={() =>
+                                                                confirmRoleChange(
+                                                                    user,
+                                                                    "user"
+                                                                )
+                                                            }
+                                                            className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all group/btn"
+                                                            title="Turunkan ke Pengguna Biasa"
+                                                        >
                                                             <ShieldAlert
                                                                 size={16}
                                                             />
-                                                        ) : (
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() =>
+                                                                confirmRoleChange(
+                                                                    user,
+                                                                    "admin"
+                                                                )
+                                                            }
+                                                            className="p-2 rounded-lg bg-white/5 text-white/40 border border-white/10 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 transition-all group/btn"
+                                                            title="Promosikan ke Administrator"
+                                                        >
                                                             <Shield size={16} />
-                                                        )}
-                                                    </button>
+                                                        </button>
+                                                    )}
 
                                                     <button
                                                         onClick={() =>
                                                             confirmDelete(user)
                                                         }
-                                                        className="w-9 h-9 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800 flex items-center justify-center hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all shadow-sm"
-                                                        title="Hapus User"
+                                                        className="p-2 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all"
+                                                        title="Hapus Pengguna"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -311,20 +354,19 @@ export default function Index({ users, filters }) {
                                             colSpan="5"
                                             className="p-12 text-center"
                                         >
-                                            <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-600">
-                                                <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-full mb-4 transition-colors">
+                                            <div className="flex flex-col items-center justify-center text-white/20">
+                                                <div className="bg-white/5 p-4 rounded-full mb-4">
                                                     <User
                                                         size={48}
-                                                        className="opacity-50"
+                                                        strokeWidth={1}
                                                     />
                                                 </div>
-                                                <p className="text-lg font-bold text-gray-500 dark:text-gray-400">
-                                                    Tidak ada pengguna
-                                                    ditemukan.
+                                                <p className="text-lg font-bold font-display uppercase tracking-widest text-white/40">
+                                                    DATA NIHIL
                                                 </p>
-                                                <p className="text-sm">
-                                                    Coba kata kunci pencarian
-                                                    lain.
+                                                <p className="text-xs font-mono text-white/20 mt-2">
+                                                    TIDAK DITEMUKAN ENTITAS YANG
+                                                    COCOK
                                                 </p>
                                             </div>
                                         </td>
@@ -334,21 +376,23 @@ export default function Index({ users, filters }) {
                         </table>
                     </div>
 
+                    {/* Pagination */}
                     {users.links.length > 3 && (
-                        <div className="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-center bg-gray-50/30 dark:bg-gray-900/30 transition-colors">
+                        <div className="p-6 border-t border-white/5 flex justify-center bg-black/20">
                             <div className="flex flex-wrap gap-2 justify-center">
-                                {users.links.map((link, index) =>
-                                    link.url ? (
+                                {users.links.map((link, index) => {
+                                    if (!link.url && !link.label) return null;
+                                    return link.url ? (
                                         <Link
                                             key={index}
                                             href={link.url}
                                             dangerouslySetInnerHTML={{
                                                 __html: link.label,
                                             }}
-                                            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                                            className={`px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all border ${
                                                 link.active
-                                                    ? "bg-primary text-white shadow-primary/30 scale-105"
-                                                    : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                                                    ? "bg-blue-500 text-white border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                                                    : "bg-white/5 text-white/50 border-white/5 hover:border-white/20 hover:text-white"
                                             }`}
                                         />
                                     ) : (
@@ -357,10 +401,10 @@ export default function Index({ users, filters }) {
                                             dangerouslySetInnerHTML={{
                                                 __html: link.label,
                                             }}
-                                            className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed border border-transparent"
+                                            className="px-4 py-2 rounded-lg text-xs font-mono font-bold bg-white/5 text-white/20 border border-transparent cursor-not-allowed"
                                         />
-                                    )
-                                )}
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

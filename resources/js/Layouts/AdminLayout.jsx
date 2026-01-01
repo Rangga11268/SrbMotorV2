@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, usePage, Head } from "@inertiajs/react";
 import {
     LayoutDashboard,
@@ -14,6 +14,8 @@ import {
     ShoppingCart,
     CheckCircle,
     AlertCircle,
+    User,
+    Globe,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "../Contexts/ThemeContext";
@@ -24,6 +26,8 @@ function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [showFlash, setShowFlash] = useState(false);
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         if (flash.success || flash.error) {
@@ -32,6 +36,21 @@ function AdminLayoutContent({ children, title }) {
             return () => clearTimeout(timer);
         }
     }, [flash]);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setIsProfileDropdownOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -208,7 +227,9 @@ function AdminLayoutContent({ children, title }) {
                                 }`}
                             >
                                 <Settings size={18} />
-                                <span>Konfigurasi</span>
+                                <span className="relative z-10">
+                                    Konfigurasi
+                                </span>
                             </Link>
                             <a
                                 href="/"
@@ -288,18 +309,102 @@ function AdminLayoutContent({ children, title }) {
 
                         <div className="w-px h-8 bg-white/10 hidden md:block"></div>
 
-                        <div className="flex items-center gap-3">
-                            <div className="text-right hidden md:block">
-                                <span className="block text-sm font-bold text-white">
-                                    {auth.user.name}
-                                </span>
-                                <span className="block text-[10px] font-mono text-accent">
-                                    SUPER ADMIN
-                                </span>
-                            </div>
-                            <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-black font-bold shadow-[0_0_15px_rgba(225,29,72,0.4)]">
-                                {auth.user.name.charAt(0)}
-                            </div>
+                        {/* Admin Profile Dropdown */}
+                        <div className="relative" ref={dropdownRef}>
+                            <button
+                                onClick={() =>
+                                    setIsProfileDropdownOpen(
+                                        !isProfileDropdownOpen
+                                    )
+                                }
+                                className="flex items-center gap-3 hover:bg-white/5 p-2 rounded-xl transition-all border border-transparent hover:border-white/5"
+                            >
+                                <div className="text-right hidden md:block">
+                                    <span className="block text-sm font-bold text-white">
+                                        {auth.user.name}
+                                    </span>
+                                    <span className="block text-[10px] font-mono text-accent">
+                                        SUPER ADMIN
+                                    </span>
+                                </div>
+                                <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-black font-bold shadow-[0_0_15px_rgba(225,29,72,0.4)]">
+                                    {auth.user.name.charAt(0)}
+                                </div>
+                                <ChevronDown
+                                    size={16}
+                                    className={`text-white/50 transition-transform duration-300 ${
+                                        isProfileDropdownOpen
+                                            ? "rotate-180"
+                                            : ""
+                                    }`}
+                                />
+                            </button>
+
+                            <AnimatePresence>
+                                {isProfileDropdownOpen && (
+                                    <motion.div
+                                        initial={{
+                                            opacity: 0,
+                                            y: 10,
+                                            scale: 0.95,
+                                        }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{
+                                            opacity: 0,
+                                            y: 10,
+                                            scale: 0.95,
+                                        }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 backdrop-blur-xl"
+                                    >
+                                        <div className="p-3 border-b border-white/5">
+                                            <p className="text-xs font-bold text-white/40 uppercase tracking-widest px-2 mb-1">
+                                                Signed in as
+                                            </p>
+                                            <p className="text-sm font-bold text-white truncate px-2">
+                                                {auth.user.email}
+                                            </p>
+                                        </div>
+                                        <div className="p-2 space-y-1">
+                                            <Link
+                                                href={route(
+                                                    "admin.profile.show"
+                                                )}
+                                                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors group"
+                                            >
+                                                <User
+                                                    size={16}
+                                                    className="text-accent group-hover:scale-110 transition-transform"
+                                                />
+                                                Profile Saya
+                                            </Link>
+                                            <Link
+                                                href="/"
+                                                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors group"
+                                            >
+                                                <Globe
+                                                    size={16}
+                                                    className="text-blue-500 group-hover:scale-110 transition-transform"
+                                                />
+                                                Lihat Website
+                                            </Link>
+                                            <div className="h-px bg-white/5 my-1"></div>
+                                            <Link
+                                                href={route("logout")}
+                                                method="post"
+                                                as="button"
+                                                className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-500/10 rounded-lg transition-colors group"
+                                            >
+                                                <LogOut
+                                                    size={16}
+                                                    className="group-hover:-translate-x-1 transition-transform"
+                                                />
+                                                Sign Out
+                                            </Link>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
                 </header>
