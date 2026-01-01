@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import Modal from "@/Components/Modal";
 import {
     Search,
-    FileText,
-    Filter,
     CheckCircle,
-    XCircle,
     Clock,
-    Eye,
     RotateCcw,
     AlertTriangle,
     Plus,
     ChevronDown,
-    MoreHorizontal,
-    User,
     Bike,
     Calendar,
     ArrowRight,
+    DollarSign,
+    CreditCard,
+    FileText,
+    Eye,
+    Edit,
 } from "lucide-react";
 
 export default function Index({
@@ -31,29 +29,51 @@ export default function Index({
     const [type, setType] = useState(filters.type || "");
     const [status, setStatus] = useState(filters.status || "");
 
-    const [modalConfig, setModalConfig] = useState({
-        isOpen: false,
-        type: "info",
-        title: "",
-        message: "",
-        onConfirm: () => {},
-    });
-
     const handleSearch = (e) => {
         e.preventDefault();
-        applyFilters();
+        applyFilters(search, type, status);
     };
 
     const handleFilterChange = (key, value) => {
-        if (key === "type") setType(value);
-        if (key === "status") setStatus(value);
+        let newSearch = search;
+        let newType = type;
+        let newStatus = status;
 
+        if (key === "search") {
+            setSearch(value); // Update local state
+            newSearch = value;
+        }
+        if (key === "type") {
+            setType(value);
+            newType = value;
+        }
+        if (key === "status") {
+            setStatus(value);
+            newStatus = value;
+        }
+
+        // Only trigger router visit if not search (search is handled by form submit or blur)
+        if (key !== "search") {
+            router.get(
+                route("admin.transactions.index"),
+                {
+                    search: newSearch,
+                    type: newType,
+                    status: newStatus,
+                },
+                { preserveState: true, replace: true }
+            );
+        }
+    };
+
+    // Explicit filter application for search blur
+    const applySearch = () => {
         router.get(
             route("admin.transactions.index"),
             {
-                search: key === "search" ? value : search,
-                type: key === "type" ? value : type,
-                status: key === "status" ? value : status,
+                search: search,
+                type: type,
+                status: status,
             },
             { preserveState: true, replace: true }
         );
@@ -66,7 +86,7 @@ export default function Index({
         router.get(route("admin.transactions.index"));
     };
 
-    const getStatusColor = (status) => {
+    const getStatusStyle = (status) => {
         if (
             [
                 "completed",
@@ -75,7 +95,7 @@ export default function Index({
                 "payment_confirmed",
             ].includes(status)
         )
-            return "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            return "bg-green-500/10 text-green-400 border-green-500/20 shadow-[0_0_10px_rgba(74,222,128,0.1)]";
         if (
             [
                 "menunggu_persetujuan",
@@ -86,20 +106,18 @@ export default function Index({
                 "jadwal_survey",
             ].includes(status)
         )
-            return "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800";
+            return "bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_10px_rgba(251,191,36,0.1)]";
         if (
             ["ditolak", "data_tidak_valid", "cancelled", "rejected"].includes(
                 status
             )
         )
-            return "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
-        return "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800";
+            return "bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_10px_rgba(248,113,113,0.1)]";
+        return "bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]";
     };
 
     const formatStatus = (status) => {
-        return status
-            .replace(/_/g, " ")
-            .replace(/\b\w/g, (l) => l.toUpperCase());
+        return status.replace(/_/g, " ").toUpperCase();
     };
 
     const getInitials = (name) => {
@@ -113,93 +131,87 @@ export default function Index({
     };
 
     return (
-        <AdminLayout title="Manajemen Transaksi">
-            <Modal
-                isOpen={modalConfig.isOpen}
-                onClose={() =>
-                    setModalConfig((prev) => ({ ...prev, isOpen: false }))
-                }
-                title={modalConfig.title}
-                message={modalConfig.message}
-                confirmText="Confirm"
-                onConfirm={modalConfig.onConfirm}
-                type={modalConfig.type}
-            />
-
-            <div className="space-y-6">
-                <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+        <AdminLayout title="LOG TRANSAKSI">
+            <div className="space-y-8">
+                {/* Header Control Panel */}
+                <div className="flex flex-col xl:flex-row justify-between items-end gap-6">
                     <div>
-                        <p className="text-gray-500 dark:text-gray-400">
-                            Kelola semua transaksi penjualan unit motor.
-                        </p>
+                        <h2 className="text-white/50 font-mono uppercase tracking-widest text-xs mb-2">
+                            MODUL SISTEM
+                        </h2>
+                        <h1 className="text-3xl font-display font-bold text-white uppercase tracking-wide flex items-center gap-3">
+                            <span className="w-1 h-8 bg-accent rounded-full"></span>
+                            DATA TRANSAKSI
+                        </h1>
                     </div>
 
                     <Link
                         href={route("admin.transactions.create")}
-                        className="group inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold hover:bg-dark-blue transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95"
+                        className="group flex items-center gap-3 px-6 py-3 bg-accent text-black rounded-xl font-bold font-display uppercase tracking-wider hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all"
                     >
                         <Plus
                             size={20}
-                            className="group-hover:rotate-90 transition-transform duration-300"
+                            className="group-hover:rotate-90 transition-transform duration-500"
                         />
-                        <span>Transaksi Baru</span>
+                        <span>ENTRI BARU</span>
                     </Link>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col xl:flex-row gap-4 items-center justify-between transition-colors">
+                {/* Glassmorphic Filter Bar */}
+                <div className="bg-zinc-900/50 backdrop-blur-md p-4 rounded-3xl border border-white/5 flex flex-col xl:flex-row gap-4 items-center justify-between">
                     <form
                         onSubmit={handleSearch}
                         className="relative w-full xl:w-96 group"
                     >
                         <input
                             type="text"
-                            placeholder="Cari ID, nama pelanggan, atau motor..."
+                            placeholder="CARI ID JEJAK / KLIEN..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            onBlur={() => handleFilterChange("search", search)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-gray-600 transition-all font-medium text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 group-hover:bg-gray-50/80 dark:group-hover:bg-gray-700/80"
+                            onBlur={applySearch}
+                            className="w-full pl-12 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono text-sm transition-all"
                         />
                         <Search
-                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                            size={20}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-hover:text-accent transition-colors"
+                            size={18}
                         />
                     </form>
 
-                    <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto overflow-x-auto pb-1 sm:pb-0">
-                        <div className="relative min-w-[140px]">
+                    <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+                        <div className="relative min-w-[160px]">
                             <select
                                 value={type}
                                 onChange={(e) =>
                                     handleFilterChange("type", e.target.value)
                                 }
-                                className="w-full pl-10 pr-8 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-500 transition-colors"
+                                className="w-full pl-10 pr-10 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-accent/50 text-white font-mono text-xs uppercase tracking-wider appearance-none cursor-pointer hover:border-white/30 transition-all"
                             >
-                                <option value="">Semua Tipe</option>
+                                <option value="">SEMUA TIPE</option>
                                 {transactionTypes.map((t) => (
                                     <option key={t} value={t}>
-                                        {t === "CASH" ? "Tunai" : "Kredit"}
+                                        {t}
                                     </option>
                                 ))}
                             </select>
-                            <Filter
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            <CreditCard
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
                                 size={16}
                             />
                             <ChevronDown
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
                                 size={14}
                             />
                         </div>
 
-                        <div className="relative min-w-[180px]">
+                        <div className="relative min-w-[200px]">
                             <select
                                 value={status}
                                 onChange={(e) =>
                                     handleFilterChange("status", e.target.value)
                                 }
-                                className="w-full pl-10 pr-8 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-500 transition-colors"
+                                className="w-full pl-10 pr-10 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-accent/50 text-white font-mono text-xs uppercase tracking-wider appearance-none cursor-pointer hover:border-white/30 transition-all"
                             >
-                                <option value="">Semua Status</option>
+                                <option value="">SEMUA STATUS</option>
                                 {statuses.map((s) => (
                                     <option key={s} value={s}>
                                         {formatStatus(s)}
@@ -207,11 +219,11 @@ export default function Index({
                                 ))}
                             </select>
                             <CheckCircle
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
                                 size={16}
                             />
                             <ChevronDown
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
                                 size={14}
                             />
                         </div>
@@ -219,36 +231,37 @@ export default function Index({
                         {(search || type || status) && (
                             <button
                                 onClick={resetFilters}
-                                className="px-4 py-2 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:border-rose-200 transaction-all font-bold text-sm flex items-center gap-2 whitespace-nowrap"
+                                className="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold font-mono text-xs uppercase flex items-center gap-2"
                             >
                                 <RotateCcw size={16} />
-                                <span className="hidden sm:inline">Reset</span>
+                                <span className="hidden sm:inline">RESET</span>
                             </button>
                         )}
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
+                {/* Data Grid */}
+                <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-slate-50/50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700 text-gray-400 dark:text-gray-500 text-xs font-bold uppercase tracking-wider">
-                                    <th className="p-6">ID Transaksi</th>
-                                    <th className="p-6">Pelanggan</th>
-                                    <th className="p-6">Unit Motor</th>
-                                    <th className="p-6">Pembayaran</th>
-                                    <th className="p-6">Status</th>
-                                    <th className="p-6 text-right">Tanggal</th>
+                                <tr className="border-b border-white/5 bg-white/5 text-white/40 text-[10px] font-mono font-bold uppercase tracking-[0.2em]">
+                                    <th className="p-6">ID Jejak</th>
+                                    <th className="p-6">Identitas Klien</th>
+                                    <th className="p-6">Unit Target</th>
+                                    <th className="p-6">Nilai</th>
+                                    <th className="p-6">Protokol Status</th>
+                                    <th className="p-6 text-right">Waktu</th>
                                     <th className="p-6 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
+                            <tbody className="divide-y divide-white/5">
                                 {transactions.data.length > 0 ? (
                                     transactions.data.map((transaction) => {
                                         const customerName =
                                             transaction.customer_name ||
                                             transaction.user?.name ||
-                                            "Guest";
+                                            "ENTITAS_TIDAK_DIKENAL";
                                         const initials =
                                             getInitials(customerName);
                                         const isCash =
@@ -258,7 +271,7 @@ export default function Index({
                                         return (
                                             <tr
                                                 key={transaction.id}
-                                                className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors group cursor-pointer"
+                                                className="hover:bg-white/5 transition-colors group cursor-pointer"
                                                 onClick={() =>
                                                     router.visit(
                                                         route(
@@ -269,30 +282,32 @@ export default function Index({
                                                 }
                                             >
                                                 <td className="p-6">
-                                                    <span className="font-mono font-bold text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md group-hover:bg-white dark:group-hover:bg-gray-600 group-hover:text-primary transition-colors border border-gray-200 dark:border-gray-600">
-                                                        #{transaction.id}
+                                                    <span className="font-mono font-bold text-xs text-accent bg-accent/10 px-2 py-1 rounded-md border border-accent/20 group-hover:bg-accent group-hover:text-black transition-colors">
+                                                        #
+                                                        {transaction.id
+                                                            .toString()
+                                                            .padStart(6, "0")}
                                                     </span>
                                                 </td>
 
                                                 <td className="p-6">
                                                     <div className="flex items-center gap-4">
                                                         <div
-                                                            className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm
-                                                            ${
+                                                            className={`w-10 h-10 rounded-full flex items-center justify-center font-bold font-mono text-xs border border-white/10 ${
                                                                 isCash
-                                                                    ? "bg-gradient-to-br from-emerald-100 to-emerald-200 text-emerald-700 dark:from-emerald-900 dark:to-emerald-800 dark:text-emerald-300"
-                                                                    : "bg-gradient-to-br from-purple-100 to-purple-200 text-purple-700 dark:from-purple-900 dark:to-purple-800 dark:text-purple-300"
+                                                                    ? "bg-emerald-500/10 text-emerald-400"
+                                                                    : "bg-purple-500/10 text-purple-400"
                                                             }`}
                                                         >
                                                             {initials}
                                                         </div>
                                                         <div>
-                                                            <div className="font-bold text-gray-900 dark:text-white text-sm">
+                                                            <div className="font-bold text-white text-sm font-display uppercase tracking-wide">
                                                                 {customerName}
                                                             </div>
-                                                            <div className="text-xs text-gray-400 dark:text-gray-500 font-medium">
+                                                            <div className="text-[10px] text-white/40 font-mono mt-1">
                                                                 {transaction.customer_phone ||
-                                                                    "-"}
+                                                                    "TIDAK_ADA_KOMUNIKASI"}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -300,7 +315,7 @@ export default function Index({
 
                                                 <td className="p-6">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 overflow-hidden shrink-0">
+                                                        <div className="w-12 h-12 rounded-lg bg-black/40 border border-white/10 overflow-hidden shrink-0 group-hover:border-accent/30 transition-colors">
                                                             {transaction.motor
                                                                 ?.image_path ? (
                                                                 <img
@@ -313,28 +328,27 @@ export default function Index({
                                                                     className="w-full h-full object-cover"
                                                                 />
                                                             ) : (
-                                                                <div className="w-full h-full flex items-center justify-center text-gray-300 dark:text-gray-500">
+                                                                <div className="w-full h-full flex items-center justify-center text-white/20">
                                                                     <Bike
                                                                         size={
-                                                                            20
+                                                                            18
                                                                         }
                                                                     />
                                                                 </div>
                                                             )}
                                                         </div>
                                                         <div>
-                                                            <div className="font-bold text-gray-900 dark:text-white text-sm">
+                                                            <div className="font-bold text-white text-xs font-display uppercase tracking-wide">
                                                                 {transaction
                                                                     .motor
                                                                     ?.name ||
-                                                                    "Unknown Unit"}
+                                                                    "UNIT TIDAK DIKENAL"}
                                                             </div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                                {
-                                                                    transaction
-                                                                        .motor
-                                                                        ?.brand
-                                                                }
+                                                            <div className="text-[10px] text-white/40 font-mono mt-1">
+                                                                {transaction
+                                                                    .motor
+                                                                    ?.brand ||
+                                                                    "N/A"}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -342,7 +356,7 @@ export default function Index({
 
                                                 <td className="p-6">
                                                     <div className="space-y-1">
-                                                        <div className="font-bold text-gray-900 dark:text-white">
+                                                        <div className="font-mono font-bold text-white text-sm">
                                                             Rp{" "}
                                                             {new Intl.NumberFormat(
                                                                 "id-ID"
@@ -351,15 +365,31 @@ export default function Index({
                                                             )}
                                                         </div>
                                                         <div
-                                                            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                                                            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${
                                                                 isCash
-                                                                    ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800"
-                                                                    : "bg-purple-50 text-purple-700 border-purple-100 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800"
+                                                                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                                                                    : "bg-purple-500/10 text-purple-400 border-purple-500/20"
                                                             }`}
                                                         >
-                                                            {isCash
-                                                                ? "TUNAI"
-                                                                : "KREDIT"}
+                                                            {isCash ? (
+                                                                <>
+                                                                    <DollarSign
+                                                                        size={
+                                                                            10
+                                                                        }
+                                                                    />{" "}
+                                                                    TUNAI
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <CreditCard
+                                                                        size={
+                                                                            10
+                                                                        }
+                                                                    />{" "}
+                                                                    KREDIT
+                                                                </>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </td>
@@ -367,7 +397,7 @@ export default function Index({
                                                 <td className="p-6">
                                                     <div className="flex flex-col items-start gap-1">
                                                         <span
-                                                            className={`px-3 py-1.5 rounded-full text-xs font-bold border shadow-sm ${getStatusColor(
+                                                            className={`px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider border ${getStatusStyle(
                                                                 transaction.status
                                                             )}`}
                                                         >
@@ -379,36 +409,40 @@ export default function Index({
                                                         {transaction.transaction_type ===
                                                             "CREDIT" &&
                                                             !transaction.documents_complete && (
-                                                                <span className="flex items-center gap-1 text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md border border-orange-100 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800">
+                                                                <span className="flex items-center gap-1 text-[10px] font-mono text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20 mt-1">
                                                                     <AlertTriangle
                                                                         size={
                                                                             10
                                                                         }
                                                                     />{" "}
-                                                                    Dokumen
+                                                                    DOKUMEN
+                                                                    HILANG
                                                                 </span>
                                                             )}
                                                     </div>
                                                 </td>
 
                                                 <td className="p-6 text-right">
-                                                    <div className="text-xs font-bold text-gray-500 dark:text-gray-400 flex flex-col items-end">
-                                                        <span className="flex items-center gap-1.5">
+                                                    <div className="text-[10px] font-mono text-white/40">
+                                                        <div className="flex items-center justify-end gap-1.5 mb-1">
                                                             <Calendar
-                                                                size={12}
+                                                                size={10}
                                                             />
                                                             {new Date(
                                                                 transaction.created_at
-                                                            ).toLocaleDateString(
-                                                                "id-ID",
-                                                                {
-                                                                    day: "numeric",
-                                                                    month: "short",
-                                                                    year: "numeric",
-                                                                }
-                                                            )}
-                                                        </span>
-                                                        <span className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">
+                                                            )
+                                                                .toLocaleDateString(
+                                                                    "id-ID",
+                                                                    {
+                                                                        day: "numeric",
+                                                                        month: "short",
+                                                                        year: "numeric",
+                                                                    }
+                                                                )
+                                                                .toUpperCase()}
+                                                        </div>
+                                                        <div className="flex items-center justify-end gap-1.5">
+                                                            <Clock size={10} />
                                                             {new Date(
                                                                 transaction.created_at
                                                             ).toLocaleTimeString(
@@ -419,17 +453,33 @@ export default function Index({
                                                                 }
                                                             )}{" "}
                                                             WIB
-                                                        </span>
+                                                        </div>
                                                     </div>
                                                 </td>
 
                                                 <td className="p-6 text-center">
-                                                    <button
-                                                        className="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500 hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white flex items-center justify-center transition-all group-hover:scale-110 shadow-sm border border-gray-100 dark:border-gray-600"
-                                                        title="Lihat Detail"
-                                                    >
-                                                        <ArrowRight size={16} />
-                                                    </button>
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <Link
+                                                            href={route(
+                                                                "admin.transactions.show",
+                                                                transaction.id
+                                                            )}
+                                                            className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500 hover:text-white transition-all inline-flex group/btn"
+                                                            title="Lihat Detail"
+                                                        >
+                                                            <Eye size={16} />
+                                                        </Link>
+                                                        <Link
+                                                            href={route(
+                                                                "admin.transactions.edit",
+                                                                transaction.id
+                                                            )}
+                                                            className="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500 hover:text-black transition-all inline-flex group/btn"
+                                                            title="Edit Data"
+                                                        >
+                                                            <Edit size={16} />
+                                                        </Link>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );
@@ -440,18 +490,20 @@ export default function Index({
                                             colSpan="7"
                                             className="p-12 text-center"
                                         >
-                                            <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-600">
-                                                <FileText
-                                                    size={48}
-                                                    className="mb-4 opacity-50"
-                                                />
-                                                <p className="text-lg font-bold text-gray-500 dark:text-gray-400">
-                                                    Tidak ada transaksi
-                                                    ditemukan.
+                                            <div className="flex flex-col items-center justify-center text-white/20">
+                                                <div className="bg-white/5 p-4 rounded-full mb-4">
+                                                    <FileText
+                                                        size={48}
+                                                        strokeWidth={1}
+                                                    />
+                                                </div>
+                                                <p className="text-lg font-bold font-display uppercase tracking-widest text-white/40">
+                                                    Tidak Ditemukan Catatan
                                                 </p>
-                                                <p className="text-sm text-gray-400 dark:text-gray-500">
-                                                    Coba sesuaikan filter
-                                                    pencarian anda.
+                                                <p className="text-xs font-mono text-white/20 mt-2">
+                                                    SESUAIKAN PARAMETER
+                                                    PENCARIAN ATAU KONFIGURASI
+                                                    FILTER
                                                 </p>
                                             </div>
                                         </td>
@@ -461,8 +513,9 @@ export default function Index({
                         </table>
                     </div>
 
+                    {/* Pagination */}
                     {transactions.links.length > 3 && (
-                        <div className="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-center bg-gray-50/30 dark:bg-gray-900/30">
+                        <div className="p-6 border-t border-white/5 flex justify-center bg-black/20">
                             <div className="flex flex-wrap gap-2 justify-center">
                                 {transactions.links.map((link, index) => {
                                     if (!link.url && !link.label) return null;
@@ -473,10 +526,10 @@ export default function Index({
                                             dangerouslySetInnerHTML={{
                                                 __html: link.label,
                                             }}
-                                            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                                            className={`px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all border ${
                                                 link.active
-                                                    ? "bg-primary text-white shadow-primary/30 scale-105"
-                                                    : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
+                                                    ? "bg-accent text-black border-accent"
+                                                    : "bg-white/5 text-white/50 border-white/5 hover:border-white/20 hover:text-white"
                                             }`}
                                         />
                                     ) : (
@@ -485,7 +538,7 @@ export default function Index({
                                             dangerouslySetInnerHTML={{
                                                 __html: link.label,
                                             }}
-                                            className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed border border-transparent"
+                                            className="px-4 py-2 rounded-lg text-xs font-mono font-bold bg-white/5 text-white/20 border border-transparent cursor-not-allowed"
                                         />
                                     );
                                 })}

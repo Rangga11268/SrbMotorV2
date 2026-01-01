@@ -10,7 +10,9 @@ import {
     Settings,
     Info,
     Box,
+    ChevronDown,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
@@ -22,8 +24,6 @@ export default function Create() {
         type: "",
         tersedia: 1,
         image: null,
-        details: "",
-
         specifications: {
             engine_type: "",
             engine_size: "",
@@ -36,10 +36,22 @@ export default function Create() {
     });
 
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [isDirty, setIsDirty] = useState(false);
+
+    useEffect(() => {
+        const checkDirty = () => {
+            if (data.name || data.model || data.price || data.type) {
+                setIsDirty(true);
+            }
+        };
+        checkDirty();
+    }, [data]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("admin.motors.store"));
+        post(route("admin.motors.store"), {
+            onSuccess: () => toast.success("UNIT BERHASIL DITAMBAHKAN"),
+        });
     };
 
     const handleSpecChange = (key, value) => {
@@ -58,51 +70,77 @@ export default function Create() {
     };
 
     return (
-        <AdminLayout title="Tambah Motor Baru">
-            <div className="max-w-7xl mx-auto">
-                <Link
-                    href={route("admin.motors.index")}
-                    className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary mb-6 font-bold transition-colors group"
-                >
-                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                        <ArrowLeft size={16} />
+        <AdminLayout title="TAMBAH UNIT BARU">
+            <div className="max-w-7xl mx-auto space-y-6">
+                {/* Header Control */}
+                <div className="flex items-center justify-between">
+                    <Link
+                        href={route("admin.motors.index")}
+                        className="group flex items-center gap-3 text-white/50 hover:text-white transition-colors"
+                    >
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-accent group-hover:bg-accent/10 transition-all">
+                            <ArrowLeft size={18} />
+                        </div>
+                        <span className="font-mono text-sm tracking-wider uppercase">
+                            BATAL
+                        </span>
+                    </Link>
+
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold uppercase tracking-widest animate-pulse">
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        DATA BARU
                     </div>
-                    <span className="text-sm">Kembali ke Daftar</span>
-                </Link>
+                </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                    {/* Main Form Area */}
                     <div className="xl:col-span-2 space-y-6">
-                        <form onSubmit={handleSubmit}>
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <Info className="text-primary" size={20} />
-                                    Informasi Dasar
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Primary Data Module */}
+                            <div className="bg-zinc-900/50 backdrop-blur-md p-8 rounded-3xl border border-white/5 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:bg-accent/10 transition-all duration-700"></div>
+
+                                <h3 className="text-xl font-bold text-white mb-8 font-display uppercase tracking-wider flex items-center gap-3">
+                                    <span className="w-1 h-8 bg-accent rounded-full"></span>
+                                    DATA UTAMA UNIT
                                 </h3>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Nama Unit Motor
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            NAMA UNIT
                                         </label>
-                                        <input
-                                            type="text"
-                                            value={data.name}
-                                            onChange={(e) =>
-                                                setData("name", e.target.value)
-                                            }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white text-lg placeholder-gray-300 dark:placeholder-gray-600"
-                                            placeholder="Contoh: Yamaha NMAX 155 Connected"
-                                        />
+                                        <div className="relative group/input">
+                                            <input
+                                                type="text"
+                                                value={data.name}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "name",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-display text-lg tracking-wide transition-all"
+                                                placeholder="Contoh: ZX-25R ABS SE"
+                                            />
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-focus-within/input:opacity-100 transition-opacity">
+                                                <Bike
+                                                    size={20}
+                                                    className="text-accent"
+                                                />
+                                            </div>
+                                        </div>
                                         {errors.name && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
+                                            <div className="text-accent text-xs mt-2 font-mono flex items-center gap-2">
+                                                <span className="w-1 h-1 bg-accent rounded-full"></span>
                                                 {errors.name}
                                             </div>
                                         )}
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Brand / Merek
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            PABRIKAN (MERK)
                                         </label>
                                         <div className="relative">
                                             <select
@@ -113,46 +151,30 @@ export default function Create() {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white dark:bg-gray-900 appearance-none cursor-pointer font-bold text-gray-700 dark:text-white"
+                                                className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white font-mono appearance-none cursor-pointer"
                                             >
                                                 <option value="Yamaha">
-                                                    Yamaha
+                                                    YAMAHA
                                                 </option>
                                                 <option value="Honda">
-                                                    Honda
+                                                    HONDA
                                                 </option>
                                                 <option value="Kawasaki">
-                                                    Kawasaki
+                                                    KAWASAKI
                                                 </option>
                                                 <option value="Suzuki">
-                                                    Suzuki
+                                                    SUZUKI
                                                 </option>
                                             </select>
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                                <svg
-                                                    width="12"
-                                                    height="12"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
-                                                    <path d="m6 9 6 6 6-6" />
-                                                </svg>
+                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">
+                                                <ChevronDown size={16} />
                                             </div>
                                         </div>
-                                        {errors.brand && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
-                                                {errors.brand}
-                                            </div>
-                                        )}
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Kategori / Tipe
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            TIPE (KLASIFIKASI)
                                         </label>
                                         <input
                                             type="text"
@@ -160,22 +182,17 @@ export default function Create() {
                                             onChange={(e) =>
                                                 setData("type", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
-                                            placeholder="Matic, Sport, Cub..."
+                                            className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono transition-all"
+                                            placeholder="Contoh: SPORT"
                                         />
-                                        {errors.type && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
-                                                {errors.type}
-                                            </div>
-                                        )}
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Harga OTR (Rp)
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            HARGA OTR
                                         </label>
                                         <div className="relative">
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
+                                            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-accent font-mono font-bold">
                                                 Rp
                                             </span>
                                             <input
@@ -187,20 +204,15 @@ export default function Create() {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
+                                                className="w-full pl-12 pr-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono text-lg font-bold transition-all"
                                                 placeholder="0"
                                             />
                                         </div>
-                                        {errors.price && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
-                                                {errors.price}
-                                            </div>
-                                        )}
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Tahun Pembuatan
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            TAHUN PEMBUATAN
                                         </label>
                                         <input
                                             type="number"
@@ -208,126 +220,111 @@ export default function Create() {
                                             onChange={(e) =>
                                                 setData("year", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
+                                            className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono transition-all"
+                                            placeholder="YYYY"
                                         />
-                                        {errors.year && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
-                                                {errors.year}
-                                            </div>
-                                        )}
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Status Ketersediaan
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            STATUS KETERSEDIAAN
                                         </label>
-                                        <div className="grid grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-2 gap-4">
                                             <button
                                                 type="button"
                                                 onClick={() =>
                                                     setData("tersedia", 1)
                                                 }
-                                                className={`py-3 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
+                                                className={`py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
                                                     data.tersedia == 1
-                                                        ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 shadow-sm"
-                                                        : "bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                        ? "bg-green-500/10 text-green-400 border-green-500/50 shadow-[0_0_15px_rgba(74,222,128,0.2)]"
+                                                        : "bg-black/30 text-white/30 border-white/5 hover:border-white/20"
                                                 }`}
                                             >
-                                                Tersedia
+                                                TERSEDIA
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() =>
                                                     setData("tersedia", 0)
                                                 }
-                                                className={`py-3 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
+                                                className={`py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
                                                     data.tersedia == 0
-                                                        ? "bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800 shadow-sm"
-                                                        : "bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                        ? "bg-red-500/10 text-red-400 border-red-500/50 shadow-[0_0_15px_rgba(248,113,113,0.2)]"
+                                                        : "bg-black/30 text-white/30 border-white/5 hover:border-white/20"
                                                 }`}
                                             >
-                                                Habis
+                                                KOSONG
                                             </button>
                                         </div>
                                     </div>
 
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Foto Utama Unit
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            UPLOAD GAMBAR
                                         </label>
-                                        <div className="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-8 hover:border-primary/50 hover:bg-blue-50/10 dark:hover:bg-blue-900/10 transition-colors text-center cursor-pointer relative bg-gray-50 dark:bg-gray-700/50 group">
+                                        <div className="border-2 border-dashed border-white/10 rounded-2xl p-10 hover:border-accent/50 hover:bg-accent/5 transition-all text-center cursor-pointer relative bg-black/20 group">
                                             <input
                                                 type="file"
                                                 accept="image/*"
                                                 onChange={handleImageChange}
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             />
-                                            <div className="flex flex-col items-center gap-3 text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">
-                                                <div className="bg-white dark:bg-gray-800 p-4 rounded-full shadow-sm group-hover:shadow-md transition-all">
-                                                    <Upload
-                                                        size={24}
-                                                        className="text-primary"
-                                                    />
+                                            <div className="flex flex-col items-center gap-4 text-white/30 group-hover:text-accent transition-colors">
+                                                <div className="bg-black/40 p-5 rounded-full shadow-inner border border-white/5 group-hover:border-accent/20 transition-all">
+                                                    <Upload size={28} />
                                                 </div>
                                                 <div>
-                                                    <span className="font-bold text-gray-700 dark:text-gray-300 block text-sm">
-                                                        Klik untuk upload foto
-                                                        unit
+                                                    <span className="font-display font-bold text-white/70 block text-lg group-hover:text-white transition-colors">
+                                                        PILIH DOKUMEN VISUAL
                                                     </span>
-                                                    <span className="text-xs text-gray-400 dark:text-gray-500 block mt-1">
-                                                        JPG, PNG, WebP (Maks.
-                                                        2MB)
+                                                    <span className="text-xs font-mono opacity-50 block mt-2">
+                                                        KLIK ATAU DRAG & DROP
+                                                        GAMBAR DI SINI
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        {errors.image && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
-                                                {errors.image}
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <Settings
-                                        className="text-gray-400"
-                                        size={20}
-                                    />
-                                    Spesifikasi Teknis
+                            {/* Technical Specs Module */}
+                            <div className="bg-zinc-900/50 backdrop-blur-md p-8 rounded-3xl border border-white/5 relative overflow-hidden">
+                                <h3 className="text-xl font-bold text-white mb-8 font-display uppercase tracking-wider flex items-center gap-3">
+                                    <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
+                                    SPESIFIKASI TEKNIS
                                 </h3>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {[
                                         {
                                             key: "engine_type",
-                                            label: "Tipe Mesin",
+                                            label: "TIPE MESIN",
                                         },
                                         {
                                             key: "engine_size",
-                                            label: "Kapasitas Mesin (cc)",
+                                            label: "KAPASITAS (CC)",
                                         },
                                         {
                                             key: "fuel_system",
-                                            label: "Sistem Bahan Bakar",
+                                            label: "SISTEM BAHAN BAKAR",
                                         },
                                         {
                                             key: "transmission",
-                                            label: "Transmisi",
+                                            label: "TRANSMISI",
                                         },
                                         {
                                             key: "max_power",
-                                            label: "Tenaga Maksimum",
+                                            label: "TENAGA MAKSIMUM",
                                         },
                                         {
                                             key: "max_torque",
-                                            label: "Torsi Maksimum",
+                                            label: "TORSI MAKSIMUM",
                                         },
                                     ].map((spec) => (
                                         <div key={spec.key}>
-                                            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
+                                            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
                                                 {spec.label}
                                             </label>
                                             <input
@@ -343,26 +340,15 @@ export default function Create() {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
-                                                placeholder={`...`}
+                                                className="w-full px-5 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white placeholder-white/20 font-mono text-sm transition-all"
+                                                placeholder="-"
                                             />
-                                            {errors[
-                                                `specifications.${spec.key}`
-                                            ] && (
-                                                <div className="text-rose-500 text-xs mt-1 font-bold">
-                                                    {
-                                                        errors[
-                                                            `specifications.${spec.key}`
-                                                        ]
-                                                    }
-                                                </div>
-                                            )}
                                         </div>
                                     ))}
 
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Catatan Tambahan
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            CATATAN TAMBAHAN
                                         </label>
                                         <textarea
                                             value={
@@ -376,29 +362,47 @@ export default function Create() {
                                                 )
                                             }
                                             rows="4"
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
-                                            placeholder="Tuliskan spesifikasi unggulan lainnya..."
+                                            className="w-full px-5 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white placeholder-white/20 font-mono text-sm transition-all"
+                                            placeholder="Masukkan detail teknis tambahan jika ada..."
                                         ></textarea>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="hidden">
-                                <button type="submit">Submit</button>
+                            <div className="pt-6">
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full bg-accent text-black py-4 rounded-xl font-bold font-display uppercase tracking-wider hover:bg-white hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed text-lg group"
+                                >
+                                    {processing ? (
+                                        <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                                    ) : (
+                                        <Save
+                                            size={20}
+                                            className="group-hover:rotate-12 transition-transform"
+                                        />
+                                    )}
+                                    SIMPAN UNIT BARU
+                                </button>
                             </div>
                         </form>
                     </div>
 
-                    <div className="xl:col-span-1">
-                        <div className="sticky top-6 space-y-6">
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
-                                <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                    <Box size={18} className="text-primary" />
-                                    Live Preview
+                    {/* Sidebar Area */}
+                    <div className="xl:col-span-1 space-y-8">
+                        {/* Preview Feature */}
+                        <div className="sticky top-6">
+                            <div className="bg-zinc-900/50 backdrop-blur-md p-6 rounded-3xl border border-white/5 mb-8">
+                                <h3 className="text-xs font-bold text-white/50 mb-4 uppercase tracking-widest font-mono flex items-center gap-2">
+                                    <Box size={14} className="text-accent" />
+                                    PRATINJAU DATABASE
                                 </h3>
 
-                                <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-800 transition-colors">
-                                    <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-700 relative flex items-center justify-center">
+                                <div className="border border-white/10 rounded-2xl overflow-hidden bg-black/40 relative group">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+
+                                    <div className="aspect-[4/3] bg-zinc-800 relative flex items-center justify-center overflow-hidden">
                                         {previewUrl ? (
                                             <img
                                                 src={previewUrl}
@@ -406,38 +410,44 @@ export default function Create() {
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
-                                            <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-500">
-                                                <Bike size={48} />
+                                            <div className="flex flex-col items-center justify-center text-white/10">
+                                                <Bike
+                                                    size={64}
+                                                    strokeWidth={1}
+                                                />
+                                                <span className="text-[10px] font-mono mt-4 uppercase tracking-widest">
+                                                    TIDAK ADA GAMBAR
+                                                </span>
                                             </div>
                                         )}
-                                        <div className="absolute top-3 right-3">
+
+                                        <div className="absolute top-4 right-4 z-20">
                                             <span
-                                                className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase shadow-sm ${
+                                                className={`px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider backdrop-blur-md border ${
                                                     data.brand === "Yamaha"
-                                                        ? "bg-blue-600 text-white"
-                                                        : data.brand === "Honda"
-                                                        ? "bg-red-600 text-white"
-                                                        : "bg-gray-800 text-white"
+                                                        ? "bg-blue-500/20 text-blue-400 border-blue-500/50"
+                                                        : "bg-red-500/20 text-red-400 border-red-500/50"
                                                 }`}
                                             >
                                                 {data.brand}
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="p-4">
-                                        <h4 className="font-black text-gray-900 dark:text-white text-lg leading-tight mb-1">
-                                            {data.name || "Nama Motor"}
+
+                                    <div className="p-5 relative z-20">
+                                        <h4 className="font-display font-black text-white text-xl leading-none mb-2 uppercase italic tracking-wide">
+                                            {data.name || "NAMA UNIT"}
                                         </h4>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-3 uppercase">
-                                            {data.type || "Tipe"} &bull;{" "}
-                                            {data.year}
+                                        <p className="text-xs text-white/40 font-mono mb-4">
+                                            {data.type || "TIPE"} // {data.year}
                                         </p>
-                                        <div className="flex items-center justify-between">
+
+                                        <div className="flex items-center justify-between border-t border-white/10 pt-4">
                                             <div>
-                                                <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">
-                                                    Harga OTR
+                                                <p className="text-[10px] text-white/30 font-bold uppercase tracking-wider mb-1">
+                                                    ESTIMASI
                                                 </p>
-                                                <p className="text-primary font-black text-lg">
+                                                <p className="text-accent font-mono font-bold text-lg text-glow">
                                                     Rp{" "}
                                                     {data.price
                                                         ? new Intl.NumberFormat(
@@ -448,44 +458,34 @@ export default function Create() {
                                             </div>
                                             <div className="text-right">
                                                 {data.tersedia == 1 ? (
-                                                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md border border-emerald-100 dark:border-emerald-800">
-                                                        Stok Tersedia
+                                                    <span className="text-[10px] font-bold text-green-400 flex items-center gap-2">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                                        TERSEDIA
                                                     </span>
                                                 ) : (
-                                                    <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-1 rounded-md border border-rose-100 dark:border-rose-800">
-                                                        Stok Habis
+                                                    <span className="text-[10px] font-bold text-red-400 flex items-center gap-2">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                                        KOSONG
                                                     </span>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-4">
-                                    Tampilan kartu di atas adalah simulasi
-                                    katalog.
+                            {/* Info Box */}
+                            <div className="bg-blue-500/5 border border-blue-500/20 rounded-3xl p-6">
+                                <h3 className="text-blue-400 font-bold font-display uppercase tracking-wider mb-2 flex items-center gap-2">
+                                    <Info size={18} />
+                                    CATATAN SISTEM
+                                </h3>
+                                <p className="text-blue-400/60 text-xs font-mono leading-relaxed">
+                                    Semua unit yang ditambahkan akan otomatis
+                                    disinkronkan dengan galeri publik. Pastikan
+                                    gambar memiliki resolusi tinggi untuk
+                                    tampilan terbaik.
                                 </p>
-
-                                <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 space-y-3">
-                                    <button
-                                        onClick={handleSubmit}
-                                        disabled={processing}
-                                        className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-dark-blue transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:translate-y-px disabled:opacity-70 disabled:cursor-not-allowed"
-                                    >
-                                        {processing ? (
-                                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                        ) : (
-                                            <Save size={18} />
-                                        )}
-                                        Simpan Motor
-                                    </button>
-                                    <Link
-                                        href={route("admin.motors.index")}
-                                        className="w-full bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border border-gray-200 dark:border-gray-600 py-3 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
-                                    >
-                                        Batal
-                                    </Link>
-                                </div>
                             </div>
                         </div>
                     </div>

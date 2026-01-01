@@ -1,219 +1,288 @@
 import React, { useState } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import Modal from "@/Components/Modal";
 import {
-    Plus,
     Search,
+    Filter,
+    Plus,
+    MoreHorizontal,
     Edit,
     Trash2,
+    Eye,
+    ArrowUpDown,
     Bike,
+    AlertCircle,
     CheckCircle,
     XCircle,
-    Filter,
     ChevronDown,
-    ArrowRight,
-    TriangleAlert,
-    Eye,
+    RotateCcw,
 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function Index({ motors, filters }) {
     const [search, setSearch] = useState(filters.search || "");
-
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedMotor, setSelectedMotor] = useState(null);
-    const [processing, setProcessing] = useState(false);
+    const [brand, setBrand] = useState(filters.brand || "");
+    const [status, setStatus] = useState(filters.status || "");
 
     const handleSearch = (e) => {
         e.preventDefault();
         router.get(
             route("admin.motors.index"),
-            { search },
+            { search, brand, status },
             { preserveState: true, replace: true }
         );
     };
 
-    const confirmDelete = (motor) => {
-        setSelectedMotor(motor);
-        setIsDeleteModalOpen(true);
+    const handleFilterChange = (key, value) => {
+        if (key === "brand") setBrand(value);
+        if (key === "status") setStatus(value);
+
+        router.get(
+            route("admin.motors.index"),
+            {
+                search,
+                brand: key === "brand" ? value : brand,
+                status: key === "status" ? value : status,
+            },
+            { preserveState: true, replace: true }
+        );
     };
 
-    const handleDelete = () => {
-        if (!selectedMotor) return;
-        setProcessing(true);
-        router.delete(route("admin.motors.destroy", selectedMotor.id), {
-            onSuccess: () => {
-                setIsDeleteModalOpen(false);
-                setProcessing(false);
-                setSelectedMotor(null);
-                toast.success("Data motor berhasil dihapus.");
-            },
-            onError: () => {
-                setProcessing(false);
-                toast.error("Gagal menghapus data motor.");
-            },
-        });
+    const resetFilters = () => {
+        setSearch("");
+        setBrand("");
+        setStatus("");
+        router.get(route("admin.motors.index"));
+    };
+
+    const confirmDelete = (motor) => {
+        if (confirm(`Apakah Anda yakin ingin menghapus ${motor.name}?`)) {
+            router.delete(route("admin.motors.destroy", motor.id), {
+                onSuccess: () => toast.success("Data unit berhasil dihapus"),
+            });
+        }
     };
 
     return (
-        <AdminLayout title="Manajemen Motor">
-            <Modal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                title="Hapus Motor?"
-                message={`Apakah anda yakin ingin menghapus data motor "${selectedMotor?.name}"? Tindakan ini tidak dapat dibatalkan.`}
-                confirmText="Ya, Hapus"
-                cancelText="Batal"
-                onConfirm={handleDelete}
-                type="danger"
-                processing={processing}
-            />
-
-            <div className="space-y-6">
-                <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+        <AdminLayout title="MANAJEMEN ARMADA">
+            <div className="space-y-8">
+                {/* Header Control Panel */}
+                <div className="flex flex-col xl:flex-row justify-between items-end gap-6">
                     <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm">
-                            Kelola katalog unit motor yang tersedia.
-                        </p>
+                        <h2 className="text-white/50 font-mono uppercase tracking-widest text-xs mb-2">
+                            MODUL ARMADA
+                        </h2>
+                        <h1 className="text-3xl font-display font-bold text-white uppercase tracking-wide flex items-center gap-3">
+                            <span className="w-1 h-8 bg-accent rounded-full"></span>
+                            DAFTAR UNIT
+                        </h1>
                     </div>
 
                     <Link
                         href={route("admin.motors.create")}
-                        className="group inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold hover:bg-dark-blue transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95"
+                        className="group flex items-center gap-3 px-6 py-3 bg-accent text-black rounded-xl font-bold font-display uppercase tracking-wider hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all"
                     >
                         <Plus
                             size={20}
-                            className="group-hover:rotate-90 transition-transform duration-300"
+                            className="group-hover:rotate-90 transition-transform duration-500"
                         />
-                        <span>Tambah Motor</span>
+                        <span>TAMBAH UNIT</span>
                     </Link>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                {/* Glassmorphic Filter Bar */}
+                <div className="bg-zinc-900/50 backdrop-blur-md p-4 rounded-3xl border border-white/5 flex flex-col xl:flex-row gap-4 items-center justify-between">
                     <form
                         onSubmit={handleSearch}
-                        className="relative w-full md:max-w-md group"
+                        className="relative w-full xl:w-96 group"
                     >
                         <input
                             type="text"
-                            placeholder="Cari unit motor..."
+                            placeholder="CARI BERDASARKAN ID / NAMA..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-gray-600 transition-all font-medium text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 group-hover:bg-gray-50/80 dark:group-hover:bg-gray-700/80"
+                            className="w-full pl-12 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono text-sm transition-all"
                         />
                         <Search
-                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors"
-                            size={20}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-hover:text-accent transition-colors"
+                            size={18}
                         />
                     </form>
+
+                    <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+                        <div className="relative min-w-[160px]">
+                            <select
+                                value={brand}
+                                onChange={(e) =>
+                                    handleFilterChange("brand", e.target.value)
+                                }
+                                className="w-full pl-10 pr-10 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-accent/50 text-white font-mono text-xs uppercase tracking-wider appearance-none cursor-pointer hover:border-white/30 transition-all"
+                            >
+                                <option value="">SEMUA MERK</option>
+                                <option value="Yamaha">Yamaha</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Kawasaki">Kawasaki</option>
+                                <option value="Suzuki">Suzuki</option>
+                            </select>
+                            <Filter
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
+                                size={16}
+                            />
+                            <ChevronDown
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
+                                size={14}
+                            />
+                        </div>
+
+                        <div className="relative min-w-[160px]">
+                            <select
+                                value={status}
+                                onChange={(e) =>
+                                    handleFilterChange("status", e.target.value)
+                                }
+                                className="w-full pl-10 pr-10 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-accent/50 text-white font-mono text-xs uppercase tracking-wider appearance-none cursor-pointer hover:border-white/30 transition-all"
+                            >
+                                <option value="">SEMUA STATUS</option>
+                                <option value="1">Tersedia</option>
+                                <option value="0">Kosong</option>
+                            </select>
+                            <AlertCircle
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
+                                size={16}
+                            />
+                            <ChevronDown
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
+                                size={14}
+                            />
+                        </div>
+
+                        {(search || brand || status) && (
+                            <button
+                                onClick={resetFilters}
+                                className="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold font-mono text-xs uppercase flex items-center gap-2"
+                            >
+                                <RotateCcw size={16} />
+                                <span className="hidden sm:inline">RESET</span>
+                            </button>
+                        )}
+                    </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors">
+                {/* Data Grid */}
+                <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-slate-50/50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700 text-gray-400 dark:text-gray-500 text-xs font-bold uppercase tracking-wider">
-                                    <th className="p-6">Unit Motor</th>
-                                    <th className="p-6">Brand</th>
-                                    <th className="p-6">Harga OTR</th>
-                                    <th className="p-6">Tahun</th>
-                                    <th className="p-6">Status</th>
-                                    <th className="p-6 text-center">Aksi</th>
+                                <tr className="border-b border-white/5 bg-white/5 text-white/40 text-[10px] font-mono font-bold uppercase tracking-[0.2em]">
+                                    <th className="p-6">IDENTITAS UNIT</th>
+                                    <th className="p-6">SPESIFIKASI</th>
+                                    <th className="p-6">NILAI ASET</th>
+                                    <th className="p-6">STATUS</th>
+                                    <th className="p-6 text-right">AKSI</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
+                            <tbody className="divide-y divide-white/5">
                                 {motors.data.length > 0 ? (
                                     motors.data.map((motor) => (
                                         <tr
                                             key={motor.id}
-                                            className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors group"
+                                            className="hover:bg-white/5 transition-colors group"
                                         >
                                             <td className="p-6">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 overflow-hidden shrink-0 group-hover:scale-105 transition-transform duration-300">
-                                                        <img
-                                                            src={`/storage/${motor.image_path}`}
-                                                            alt={motor.name}
-                                                            className="w-full h-full object-cover"
-                                                        />
+                                                    <div className="w-16 h-12 rounded-lg bg-black/40 border border-white/10 overflow-hidden shrink-0 group-hover:border-accent/30 transition-colors">
+                                                        {motor.image_path ? (
+                                                            <img
+                                                                src={`/storage/${motor.image_path}`}
+                                                                alt={motor.name}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center text-white/20">
+                                                                <Bike
+                                                                    size={20}
+                                                                />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <div>
-                                                        <div className="font-bold text-gray-900 dark:text-white text-base">
+                                                        <div className="font-bold text-white text-sm font-display uppercase tracking-wide">
                                                             {motor.name}
                                                         </div>
-                                                        <div className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">
-                                                            {motor.type ||
-                                                                "Standard"}
+                                                        <div className="text-[10px] text-white/40 font-mono mt-1">
+                                                            ID:{" "}
+                                                            {motor.id
+                                                                .toString()
+                                                                .padStart(
+                                                                    4,
+                                                                    "0"
+                                                                )}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="p-6">
-                                                <span
-                                                    className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                                                        motor.brand === "Yamaha"
-                                                            ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
-                                                            : "bg-red-50 text-red-700 border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
-                                                    }`}
-                                                >
-                                                    {motor.brand}
-                                                </span>
+                                                <div className="space-y-1">
+                                                    <div className="text-xs font-bold text-white uppercase tracking-wider">
+                                                        {motor.brand}
+                                                    </div>
+                                                    <div className="text-[10px] text-white/40 font-mono">
+                                                        {motor.type} •{" "}
+                                                        {motor.year}
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td className="p-6">
-                                                <div className="font-bold text-gray-900 dark:text-white">
+                                                <div className="font-mono font-bold text-accent text-sm text-glow">
                                                     Rp{" "}
                                                     {new Intl.NumberFormat(
                                                         "id-ID"
                                                     ).format(motor.price)}
                                                 </div>
                                             </td>
-                                            <td className="p-6 text-gray-600 dark:text-gray-300 font-medium">
-                                                {motor.year}
-                                            </td>
                                             <td className="p-6">
                                                 {motor.tersedia ? (
-                                                    <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full text-xs font-bold border border-emerald-100 dark:border-emerald-800">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                        Tersedia
+                                                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-green-500/10 border border-green-500/20 text-green-400 text-[10px] font-bold uppercase tracking-wider">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                                        TERSEDIA
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center gap-1.5 text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-3 py-1 rounded-full text-xs font-bold border border-rose-100 dark:border-rose-800">
-                                                        <XCircle size={10} />{" "}
-                                                        Stok Habis
+                                                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold uppercase tracking-wider">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                                        KOSONG
                                                     </span>
                                                 )}
                                             </td>
                                             <td className="p-6">
-                                                <div className="flex items-center justify-center gap-2">
+                                                <div className="flex items-center justify-end gap-2 text-right">
                                                     <Link
                                                         href={route(
                                                             "admin.motors.show",
                                                             motor.id
                                                         )}
-                                                        className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 dark:hover:text-white transition-all shadow-sm"
+                                                        className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500 hover:text-white transition-all inline-flex"
                                                         title="Lihat Detail"
                                                     >
-                                                        <Eye size={14} />
+                                                        <Eye size={16} />
                                                     </Link>
                                                     <Link
                                                         href={route(
                                                             "admin.motors.edit",
                                                             motor.id
                                                         )}
-                                                        className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 flex items-center justify-center hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all shadow-sm"
-                                                        title="Edit Motor"
+                                                        className="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500 hover:text-black transition-all inline-flex"
+                                                        title="Edit Data"
                                                     >
-                                                        <Edit size={14} />
+                                                        <Edit size={16} />
                                                     </Link>
                                                     <button
                                                         onClick={() =>
                                                             confirmDelete(motor)
                                                         }
-                                                        className="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800 flex items-center justify-center hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all shadow-sm"
-                                                        title="Hapus Motor"
+                                                        className="p-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all inline-flex"
+                                                        title="Hapus Unit"
                                                     >
-                                                        <Trash2 size={14} />
+                                                        <Trash2 size={16} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -223,21 +292,9 @@ export default function Index({ motors, filters }) {
                                     <tr>
                                         <td
                                             colSpan="6"
-                                            className="p-12 text-center"
+                                            className="p-12 text-center text-white/30 font-mono"
                                         >
-                                            <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-600">
-                                                <Bike
-                                                    size={48}
-                                                    className="mb-4 opacity-50"
-                                                />
-                                                <p className="text-lg font-bold text-gray-500 dark:text-gray-400">
-                                                    Tidak ada motor ditemukan.
-                                                </p>
-                                                <p className="text-sm">
-                                                    Mulai dengan menambahkan
-                                                    unit motor baru.
-                                                </p>
-                                            </div>
+                                            DATA TIDAK DITEMUKAN.
                                         </td>
                                     </tr>
                                 )}
@@ -245,21 +302,23 @@ export default function Index({ motors, filters }) {
                         </table>
                     </div>
 
+                    {/* Pagination */}
                     {motors.links.length > 3 && (
-                        <div className="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-center bg-gray-50/30 dark:bg-gray-900/30">
+                        <div className="p-6 border-t border-white/5 flex justify-center bg-black/20">
                             <div className="flex flex-wrap gap-2 justify-center">
-                                {motors.links.map((link, index) =>
-                                    link.url ? (
+                                {motors.links.map((link, index) => {
+                                    if (!link.url && !link.label) return null;
+                                    return link.url ? (
                                         <Link
                                             key={index}
                                             href={link.url}
                                             dangerouslySetInnerHTML={{
                                                 __html: link.label,
                                             }}
-                                            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                                            className={`px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all border ${
                                                 link.active
-                                                    ? "bg-primary text-white shadow-primary/30 scale-105"
-                                                    : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+                                                    ? "bg-accent text-black border-accent"
+                                                    : "bg-white/5 text-white/50 border-white/5 hover:border-white/20 hover:text-white"
                                             }`}
                                         />
                                     ) : (
@@ -268,10 +327,10 @@ export default function Index({ motors, filters }) {
                                             dangerouslySetInnerHTML={{
                                                 __html: link.label,
                                             }}
-                                            className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 dark:bg-gray-700 text-gray-300 dark:text-gray-500 cursor-not-allowed border border-transparent"
+                                            className="px-4 py-2 rounded-lg text-xs font-mono font-bold bg-white/5 text-white/20 border border-transparent cursor-not-allowed"
                                         />
-                                    )
-                                )}
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

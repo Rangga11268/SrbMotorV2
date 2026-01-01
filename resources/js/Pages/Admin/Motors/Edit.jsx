@@ -1,31 +1,20 @@
 import React, { useState } from "react";
-import { Link, useForm, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import Modal from "@/Components/Modal";
+import { Head, Link, useForm, router } from "@inertiajs/react";
 import {
     ArrowLeft,
     Save,
+    Trash2,
     Upload,
-    Bike,
-    FileText,
-    Settings,
+    AlertTriangle,
     Info,
     Box,
-    Trash2,
-    AlertTriangle,
+    Bike,
+    ChevronDown,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function Edit({ motor }) {
-    const parseSpecs = (specsArray) => {
-        if (!Array.isArray(specsArray)) return {};
-        return specsArray.reduce((acc, spec) => {
-            acc[spec.spec_key] = spec.spec_value;
-            return acc;
-        }, {});
-    };
-
-    const initialSpecs = parseSpecs(motor.specifications);
-
     const { data, setData, post, processing, errors } = useForm({
         _method: "PUT",
         name: motor.name || "",
@@ -34,17 +23,16 @@ export default function Edit({ motor }) {
         price: motor.price || "",
         year: motor.year || new Date().getFullYear(),
         type: motor.type || "",
-        tersedia: motor.tersedia ? 1 : 0,
+        tersedia: motor.tersedia,
         image: null,
-        details: motor.details || "",
-        specifications: {
-            engine_type: initialSpecs.engine_type || "",
-            engine_size: initialSpecs.engine_size || "",
-            fuel_system: initialSpecs.fuel_system || "",
-            transmission: initialSpecs.transmission || "",
-            max_power: initialSpecs.max_power || "",
-            max_torque: initialSpecs.max_torque || "",
-            additional_specs: initialSpecs.additional_specs || "",
+        specifications: motor.specifications || {
+            engine_type: "",
+            engine_size: "",
+            fuel_system: "",
+            transmission: "",
+            max_power: "",
+            max_torque: "",
+            additional_specs: "",
         },
     });
 
@@ -52,25 +40,17 @@ export default function Edit({ motor }) {
         motor.image_path ? `/storage/${motor.image_path}` : null
     );
 
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("admin.motors.update", motor.id));
+        post(route("admin.motors.update", motor.id), {
+            onSuccess: () => toast.success("DATA UNIT BERHASIL DIPERBARUI"),
+        });
     };
 
     const handleDelete = () => {
-        setIsDeleting(true);
-        router.delete(route("admin.motors.destroy", motor.id), {
-            onSuccess: () => {
-                setIsDeleteModalOpen(false);
-                setIsDeleting(false);
-            },
-            onError: () => {
-                setIsDeleting(false);
-            },
-        });
+        if (confirm("PERINGATAN: TINDAKAN INI PERMANEN. HAPUS UNIT?")) {
+            router.delete(route("admin.motors.destroy", motor.id));
+        }
     };
 
     const handleSpecChange = (key, value) => {
@@ -89,43 +69,43 @@ export default function Edit({ motor }) {
     };
 
     return (
-        <AdminLayout title={`Edit Motor: ${motor.name}`}>
-            <Modal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                title="Hapus Motor Permanen?"
-                message={`PERINGATAN: Anda akan menghapus "${motor.name}". Tindakan ini tidak dapat dibatalkan dan motor akan hilang dari katalog.`}
-                confirmText="Ya, Hapus Permanen"
-                cancelText="Batal"
-                onConfirm={handleDelete}
-                type="danger"
-                processing={isDeleting}
-            />
+        <AdminLayout title="EDIT DATA UNIT">
+            <div className="max-w-7xl mx-auto space-y-6">
+                {/* Header Control */}
+                <div className="flex items-center justify-between">
+                    <Link
+                        href={route("admin.motors.index")}
+                        className="group flex items-center gap-3 text-white/50 hover:text-white transition-colors"
+                    >
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-accent group-hover:bg-accent/10 transition-all">
+                            <ArrowLeft size={18} />
+                        </div>
+                        <span className="font-mono text-sm tracking-wider uppercase">
+                            Batal
+                        </span>
+                    </Link>
 
-            <div className="max-w-7xl mx-auto">
-                <Link
-                    href={route("admin.motors.index")}
-                    className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary mb-6 font-bold transition-colors group"
-                >
-                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                        <ArrowLeft size={16} />
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest animate-pulse">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        Mode Edit Aktif
                     </div>
-                    <span className="text-sm">Kembali ke Daftar</span>
-                </Link>
+                </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    <div className="xl:col-span-2 space-y-8">
-                        <form onSubmit={handleSubmit} id="edit-motor-form">
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <Info className="text-primary" size={20} />
-                                    Informasi Dasar
+                    {/* Main Form Area */}
+                    <div className="xl:col-span-2 space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Primary Data Module */}
+                            <div className="bg-zinc-900/50 backdrop-blur-md p-8 rounded-3xl border border-white/5 relative overflow-hidden group">
+                                <h3 className="text-xl font-bold text-white mb-8 font-display uppercase tracking-wider flex items-center gap-3">
+                                    <span className="w-1 h-8 bg-accent rounded-full"></span>
+                                    Data Utama Unit
                                 </h3>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Nama Unit Motor
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            Nama Unit
                                         </label>
                                         <input
                                             type="text"
@@ -133,18 +113,19 @@ export default function Edit({ motor }) {
                                             onChange={(e) =>
                                                 setData("name", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white text-lg placeholder-gray-300 dark:placeholder-gray-600"
+                                            className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-display text-lg tracking-wide transition-all"
                                         />
                                         {errors.name && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
+                                            <div className="text-accent text-xs mt-2 font-mono flex items-center gap-2">
+                                                <span className="w-1 h-1 bg-accent rounded-full"></span>
                                                 {errors.name}
                                             </div>
                                         )}
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Brand / Merek
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            Pabrikan (Merk)
                                         </label>
                                         <div className="relative">
                                             <select
@@ -155,41 +136,30 @@ export default function Edit({ motor }) {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none cursor-pointer font-bold text-gray-700 dark:text-white"
+                                                className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white font-mono appearance-none cursor-pointer"
                                             >
                                                 <option value="Yamaha">
-                                                    Yamaha
+                                                    YAMAHA
                                                 </option>
                                                 <option value="Honda">
-                                                    Honda
+                                                    HONDA
                                                 </option>
                                                 <option value="Kawasaki">
-                                                    Kawasaki
+                                                    KAWASAKI
                                                 </option>
                                                 <option value="Suzuki">
-                                                    Suzuki
+                                                    SUZUKI
                                                 </option>
                                             </select>
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                                <svg
-                                                    width="12"
-                                                    height="12"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
-                                                    <path d="m6 9 6 6 6-6" />
-                                                </svg>
+                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">
+                                                <ChevronDown size={16} />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Kategori / Tipe
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            Klasifikasi (Tipe)
                                         </label>
                                         <input
                                             type="text"
@@ -197,16 +167,16 @@ export default function Edit({ motor }) {
                                             onChange={(e) =>
                                                 setData("type", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-600"
+                                            className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono transition-all"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Harga OTR (Rp)
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            Nilai Aset (OTR)
                                         </label>
                                         <div className="relative">
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
+                                            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-accent font-mono font-bold">
                                                 Rp
                                             </span>
                                             <input
@@ -218,14 +188,14 @@ export default function Edit({ motor }) {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white"
+                                                className="w-full pl-12 pr-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono text-lg font-bold transition-all"
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Tahun Pembuatan
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            Tahun Produksi
                                         </label>
                                         <input
                                             type="number"
@@ -233,24 +203,24 @@ export default function Edit({ motor }) {
                                             onChange={(e) =>
                                                 setData("year", e.target.value)
                                             }
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-gray-900 dark:text-white"
+                                            className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-accent/50 focus:ring-1 focus:ring-accent/50 text-white placeholder-white/20 font-mono transition-all"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Status Ketersediaan
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            Status Stok
                                         </label>
-                                        <div className="grid grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-2 gap-4">
                                             <button
                                                 type="button"
                                                 onClick={() =>
                                                     setData("tersedia", 1)
                                                 }
-                                                className={`py-3 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
+                                                className={`py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
                                                     data.tersedia == 1
-                                                        ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 shadow-sm"
-                                                        : "bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                        ? "bg-green-500/10 text-green-400 border-green-500/50 shadow-[0_0_15px_rgba(74,222,128,0.2)]"
+                                                        : "bg-black/30 text-white/30 border-white/5 hover:border-white/20"
                                                 }`}
                                             >
                                                 Tersedia
@@ -260,62 +230,52 @@ export default function Edit({ motor }) {
                                                 onClick={() =>
                                                     setData("tersedia", 0)
                                                 }
-                                                className={`py-3 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
+                                                className={`py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
                                                     data.tersedia == 0
-                                                        ? "bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800 shadow-sm"
-                                                        : "bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                        ? "bg-red-500/10 text-red-400 border-red-500/50 shadow-[0_0_15px_rgba(248,113,113,0.2)]"
+                                                        : "bg-black/30 text-white/30 border-white/5 hover:border-white/20"
                                                 }`}
                                             >
-                                                Habis
+                                                Kosong
                                             </button>
                                         </div>
                                     </div>
 
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                            Ubah Foto Unit (Opsional)
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
+                                            Update Visual Data
                                         </label>
-                                        <div className="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-8 hover:border-primary/50 hover:bg-blue-50/10 dark:hover:bg-blue-900/10 transition-colors text-center cursor-pointer relative bg-gray-50 dark:bg-gray-700/50 group">
+                                        <div className="border-2 border-dashed border-white/10 rounded-2xl p-10 hover:border-accent/50 hover:bg-accent/5 transition-all text-center cursor-pointer relative bg-black/20 group">
                                             <input
                                                 type="file"
                                                 accept="image/*"
                                                 onChange={handleImageChange}
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             />
-                                            <div className="flex flex-col items-center gap-3 text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">
-                                                <div className="bg-white dark:bg-gray-800 p-4 rounded-full shadow-sm group-hover:shadow-md transition-all">
-                                                    <Upload
-                                                        size={24}
-                                                        className="text-primary"
-                                                    />
+                                            <div className="flex flex-col items-center gap-4 text-white/30 group-hover:text-accent transition-colors">
+                                                <div className="bg-black/40 p-5 rounded-full shadow-inner border border-white/5 group-hover:border-accent/20 transition-all">
+                                                    <Upload size={28} />
                                                 </div>
                                                 <div>
-                                                    <span className="font-bold text-gray-700 dark:text-gray-300 block text-sm">
-                                                        Klik untuk ganti foto
-                                                        unit
+                                                    <span className="font-display font-bold text-white/70 block text-lg group-hover:text-white transition-colors">
+                                                        UNGGAH VISUAL BARU
                                                     </span>
-                                                    <span className="text-xs text-gray-400 dark:text-gray-500 block mt-1">
-                                                        Biarkan kosong jika
-                                                        tidak ingin mengubah
+                                                    <span className="text-xs font-mono opacity-50 block mt-2">
+                                                        BIARKAN KOSONG UNTUK
+                                                        TETAP MENGGUNAKAN GAMBAR
+                                                        SAAT INI
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        {errors.image && (
-                                            <div className="text-rose-500 text-xs mt-1 font-bold">
-                                                {errors.image}
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 transition-colors">
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <Settings
-                                        className="text-gray-400"
-                                        size={20}
-                                    />
+                            {/* Technical Specs Module */}
+                            <div className="bg-zinc-900/50 backdrop-blur-md p-8 rounded-3xl border border-white/5 relative overflow-hidden">
+                                <h3 className="text-xl font-bold text-white mb-8 font-display uppercase tracking-wider flex items-center gap-3">
+                                    <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
                                     Spesifikasi Teknis
                                 </h3>
 
@@ -324,81 +284,59 @@ export default function Edit({ motor }) {
                                         {
                                             key: "engine_type",
                                             label: "Tipe Mesin",
-                                            placeholder: "4-Stroke, SOHC",
                                         },
                                         {
                                             key: "engine_size",
-                                            label: "Kapasitas Mesin",
-                                            suffix: "cc",
-                                            placeholder: "155",
+                                            label: "Kapasitas (CC)",
                                         },
                                         {
                                             key: "fuel_system",
                                             label: "Sistem Bahan Bakar",
-                                            placeholder: "Fuel Injection",
                                         },
                                         {
                                             key: "transmission",
                                             label: "Transmisi",
-                                            placeholder: "Otomatis",
                                         },
                                         {
                                             key: "max_power",
                                             label: "Tenaga Maksimum",
-                                            suffix: "kW",
-                                            placeholder: "11.3",
                                         },
                                         {
                                             key: "max_torque",
                                             label: "Torsi Maksimum",
-                                            suffix: "Nm",
-                                            placeholder: "13.9",
                                         },
                                     ].map((spec) => (
                                         <div key={spec.key}>
-                                            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
+                                            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
                                                 {spec.label}
                                             </label>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    value={
-                                                        data.specifications[
-                                                            spec.key
-                                                        ]
-                                                    }
-                                                    onChange={(e) =>
-                                                        handleSpecChange(
-                                                            spec.key,
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className={`w-full pl-4 ${
-                                                        spec.suffix
-                                                            ? "pr-12"
-                                                            : "pr-4"
-                                                    } py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm text-gray-900 dark:text-white`}
-                                                    placeholder={
-                                                        spec.placeholder
-                                                    }
-                                                />
-                                                {spec.suffix && (
-                                                    <div className="absolute right-0 top-0 bottom-0 px-4 bg-gray-50 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 rounded-r-xl flex items-center text-gray-500 dark:text-gray-400 font-bold text-xs pointer-events-none">
-                                                        {spec.suffix}
-                                                    </div>
-                                                )}
-                                            </div>
+                                            <input
+                                                type="text"
+                                                value={
+                                                    data.specifications[
+                                                        spec.key
+                                                    ] || ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleSpecChange(
+                                                        spec.key,
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full px-5 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white placeholder-white/20 font-mono text-sm transition-all"
+                                                placeholder="-"
+                                            />
                                         </div>
                                     ))}
 
                                     <div className="col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
+                                        <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
                                             Catatan Tambahan
                                         </label>
                                         <textarea
                                             value={
                                                 data.specifications
-                                                    .additional_specs
+                                                    .additional_specs || ""
                                             }
                                             onChange={(e) =>
                                                 handleSpecChange(
@@ -407,45 +345,47 @@ export default function Edit({ motor }) {
                                                 )
                                             }
                                             rows="4"
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                                            placeholder="Tuliskan spesifikasi unggulan lainnya..."
+                                            className="w-full px-5 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white placeholder-white/20 font-mono text-sm transition-all"
+                                            placeholder="Masukkan detail teknis tambahan..."
                                         ></textarea>
                                     </div>
                                 </div>
                             </div>
-                        </form>
 
-                        <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border border-red-100 dark:border-red-900/50 transition-colors">
-                            <h3 className="text-lg font-bold text-rose-700 dark:text-rose-400 mb-2 flex items-center gap-2">
-                                <AlertTriangle size={20} />
-                                Danger Zone
-                            </h3>
-                            <p className="text-sm text-rose-600 dark:text-rose-300 mb-4">
-                                Tindakan ini akan menghapus motor ini secara
-                                permanen dari database. Data yang sudah dihapus
-                                tidak dapat dikembalikan.
-                            </p>
-                            <button
-                                type="button"
-                                onClick={() => setIsDeleteModalOpen(true)}
-                                className="px-6 py-2.5 bg-white dark:bg-red-900/30 border border-rose-200 dark:border-red-800 text-rose-600 dark:text-rose-400 rounded-xl font-bold hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all shadow-sm text-sm"
-                            >
-                                <Trash2 size={16} className="inline mr-2" />
-                                Hapus Motor Ini
-                            </button>
-                        </div>
+                            <div className="pt-6">
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full bg-blue-600/20 border border-blue-500/50 text-blue-400 py-4 rounded-xl font-bold font-display uppercase tracking-wider hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed text-lg group"
+                                >
+                                    {processing ? (
+                                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        <Save
+                                            size={20}
+                                            className="group-hover:scale-110 transition-transform"
+                                        />
+                                    )}
+                                    SIMPAN PERUBAHAN
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
-                    <div className="xl:col-span-1">
-                        <div className="sticky top-6 space-y-6">
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
-                                <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                    <Box size={18} className="text-primary" />
-                                    Live Preview
+                    {/* Sidebar Area */}
+                    <div className="xl:col-span-1 space-y-8">
+                        {/* Preview Module */}
+                        <div className="sticky top-6">
+                            <div className="bg-zinc-900/50 backdrop-blur-md p-6 rounded-3xl border border-white/5 mb-8">
+                                <h3 className="text-xs font-bold text-white/50 mb-4 uppercase tracking-widest font-mono flex items-center gap-2">
+                                    <Box size={14} className="text-accent" />
+                                    Pratinjau Database
                                 </h3>
 
-                                <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-800 transition-colors">
-                                    <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-700 relative flex items-center justify-center">
+                                <div className="border border-white/10 rounded-2xl overflow-hidden bg-black/40 relative group">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+
+                                    <div className="aspect-[4/3] bg-zinc-800 relative flex items-center justify-center overflow-hidden">
                                         {previewUrl ? (
                                             <img
                                                 src={previewUrl}
@@ -453,38 +393,44 @@ export default function Edit({ motor }) {
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
-                                            <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-500">
-                                                <Bike size={48} />
+                                            <div className="flex flex-col items-center justify-center text-white/10">
+                                                <Bike
+                                                    size={64}
+                                                    strokeWidth={1}
+                                                />
+                                                <span className="text-[10px] font-mono mt-4 uppercase tracking-widest">
+                                                    Tidak Ada Data Visual
+                                                </span>
                                             </div>
                                         )}
-                                        <div className="absolute top-3 right-3">
+
+                                        <div className="absolute top-4 right-4 z-20">
                                             <span
-                                                className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase shadow-sm ${
+                                                className={`px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider backdrop-blur-md border ${
                                                     data.brand === "Yamaha"
-                                                        ? "bg-blue-600 text-white"
-                                                        : data.brand === "Honda"
-                                                        ? "bg-red-600 text-white"
-                                                        : "bg-gray-800 text-white"
+                                                        ? "bg-blue-500/20 text-blue-400 border-blue-500/50"
+                                                        : "bg-red-500/20 text-red-400 border-red-500/50"
                                                 }`}
                                             >
                                                 {data.brand}
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="p-4">
-                                        <h4 className="font-black text-gray-900 dark:text-white text-lg leading-tight mb-1">
-                                            {data.name || "Nama Motor"}
+
+                                    <div className="p-5 relative z-20">
+                                        <h4 className="font-display font-black text-white text-xl leading-none mb-2 uppercase italic tracking-wide">
+                                            {data.name || "NAMA UNIT"}
                                         </h4>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-3 uppercase">
-                                            {data.type || "Tipe"} &bull;{" "}
-                                            {data.year}
+                                        <p className="text-xs text-white/40 font-mono mb-4">
+                                            {data.type || "TIPE"} // {data.year}
                                         </p>
-                                        <div className="flex items-center justify-between">
+
+                                        <div className="flex items-center justify-between border-t border-white/10 pt-4">
                                             <div>
-                                                <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">
-                                                    Harga OTR
+                                                <p className="text-[10px] text-white/30 font-bold uppercase tracking-wider mb-1">
+                                                    Estimasi Nilai
                                                 </p>
-                                                <p className="text-primary font-black text-lg">
+                                                <p className="text-accent font-mono font-bold text-lg text-glow">
                                                     Rp{" "}
                                                     {data.price
                                                         ? new Intl.NumberFormat(
@@ -495,39 +441,47 @@ export default function Edit({ motor }) {
                                             </div>
                                             <div className="text-right">
                                                 {data.tersedia == 1 ? (
-                                                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md border border-emerald-100 dark:border-emerald-800">
-                                                        Stok Tersedia
+                                                    <span className="text-[10px] font-bold text-green-400 flex items-center gap-2">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                                        TERSEDIA
                                                     </span>
                                                 ) : (
-                                                    <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-1 rounded-md border border-rose-100 dark:border-rose-800">
-                                                        Stok Habis
+                                                    <span className="text-[10px] font-bold text-red-400 flex items-center gap-2">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                                        KOSONG
                                                     </span>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 space-y-3">
-                                    <button
-                                        onClick={handleSubmit}
-                                        disabled={processing}
-                                        className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-dark-blue transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:translate-y-px disabled:opacity-70 disabled:cursor-not-allowed"
-                                    >
-                                        {processing ? (
-                                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                        ) : (
-                                            <Save size={18} />
-                                        )}
-                                        Simpan Perubahan
-                                    </button>
-                                    <Link
-                                        href={route("admin.motors.index")}
-                                        className="w-full bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-200 border border-gray-200 dark:border-gray-600 py-3 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
-                                    >
-                                        Batal
-                                    </Link>
+                            {/* Danger Zone */}
+                            <div className="bg-red-500/5 border border-red-500/20 rounded-3xl p-6 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-10">
+                                    <AlertTriangle
+                                        size={64}
+                                        className="text-red-500"
+                                    />
                                 </div>
+                                <h3 className="text-red-500 font-bold font-display uppercase tracking-wider mb-2 flex items-center gap-2">
+                                    <Trash2 size={18} />
+                                    Zona Bahaya
+                                </h3>
+                                <p className="text-red-400/60 text-xs font-mono mb-6 leading-relaxed">
+                                    TINDAKAN PERMANEN. Menghapus unit ini akan
+                                    menghilangkan seluruh data terkait dari
+                                    klaster database utama.
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={handleDelete}
+                                    className="w-full py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-bold uppercase tracking-widest hover:bg-red-500 hover:text-white hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Trash2 size={14} />
+                                    Eksekusi Penghapusan
+                                </button>
                             </div>
                         </div>
                     </div>
